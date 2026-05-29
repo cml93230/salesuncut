@@ -30,7 +30,6 @@
     .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-160px) translateY(0) rotate(-18deg); }
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
     .hero-stage:hover .tcard:nth-child(3) { transform: translateX(160px) translateY(0) rotate(16deg); }
-    .hero-meta { position: absolute; bottom: -30px; right: 0; font-family: var(--font-mono); font-size: 11px; color: var(--teal-3); letter-spacing: .1em; text-transform: uppercase; }
 
     /* ---- Steps ---- */
     .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
@@ -103,6 +102,7 @@
           <p class="lede">
             30 minutes de simulation commerciale réelle. Des recruteurs qui filtrent par score, pas par intuition.
           </p>
+          <p class="hero-nav-hint">Côté sales ↓ · Côté recruteur ↓</p>
           <div class="hero-cta">
             <a href="candidat.html" class="btn gold">▶ Montrer ce que je vaux</a>
             <a href="marketplace.html" class="btn outline">Voir les profils sans inscription →</a>
@@ -116,7 +116,6 @@
 
         <div class="hero-stage">
           <div class="hero-card-stack" id="heroStack"></div>
-          <div class="hero-meta">↳ Survole la pile · clique pour ouvrir</div>
         </div>
 
       </div>
@@ -128,10 +127,12 @@
     <div class="marquee-track">
       <span>Écoute &gt; CV</span><span class="gold-text">★</span>
       <span>30 min de vérité</span><span class="gold-text">★</span>
-      <span>7 dimensions notées par IA</span><span class="gold-text">★</span>
-      <span>Certifié 18 mois</span><span class="gold-text">★</span>
+      <span>6 dimensions évaluées</span><span class="gold-text">★</span>
+      <span>Filtre par score, pas par instinct</span><span class="gold-text">★</span>
       <span>Écoute &gt; CV</span><span class="gold-text">★</span>
       <span>30 min de vérité</span><span class="gold-text">★</span>
+      <span>6 dimensions évaluées</span><span class="gold-text">★</span>
+      <span>Filtre par score, pas par instinct</span><span class="gold-text">★</span>
     </div>
   </div>
 
@@ -287,7 +288,7 @@
   <script src="data.js"></script>
   <script src="components.js"></script>
   <script>
-    // Hero card stack — on évite F5 (cadenas) en vitrine
+    // Hero card stack — profils avec photos uniquement
     const heroIds = ['c001', 'c003', 'c004'];
     document.getElementById('heroStack').innerHTML =
       heroIds.map(id => {
@@ -295,11 +296,12 @@
         return c ? renderCard(c, { compact: true }) : '';
       }).join('');
 
-    // Featured cards (5 derniers)
+    // Featured cards — profils avec photos uniquement
+    const featuredCandidates = SU_DATA.candidates.filter(c => c.photo);
     document.getElementById('featuredCards').innerHTML =
-      SU_DATA.candidates.slice(0, 5).map(c => renderCard(c)).join('');
+      featuredCandidates.slice(0, 4).map(c => renderCard(c)).join('');
 
-    // Leaderboard top 8
+    // Leaderboard top 8 — tous candidats
     const top8 = [...SU_DATA.candidates].sort((a,b) => b.score - a.score).slice(0, 8);
     document.getElementById('leaderboardRows').innerHTML = top8.map((c, i) => {
       const fam = SU_DATA.getFamilyById(c.family);
