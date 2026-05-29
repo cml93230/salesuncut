@@ -70,6 +70,73 @@ function bindCardClicks(container) {
   });
 }
 
+/* ---------- Menu mobile (hamburger + drawer) ---------- */
+function setupMobileMenu() {
+  const nav = document.querySelector('.nav');
+  if (!nav || nav.querySelector('.nav-burger')) return;
+
+  // Bouton hamburger inséré à la fin du nav
+  const burger = document.createElement('button');
+  burger.className = 'nav-burger';
+  burger.setAttribute('aria-label', 'Ouvrir le menu');
+  burger.setAttribute('aria-expanded', 'false');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  nav.appendChild(burger);
+
+  // Drawer (overlay plein écran avec panneau à droite)
+  const drawer = document.createElement('div');
+  drawer.className = 'nav-drawer';
+  drawer.setAttribute('aria-hidden', 'true');
+  drawer.innerHTML = `
+    <div class="nav-drawer-inner" role="dialog" aria-label="Menu de navigation">
+      <button class="nav-drawer-close" aria-label="Fermer le menu">×</button>
+      <a class="nav-drawer-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
+      <nav class="nav-drawer-links">
+        <a href="index.html">Accueil</a>
+        <a href="candidat.html">Pour candidats</a>
+        <a href="marketplace.html">Pour recruteurs</a>
+        <a href="profil.html?id=c001">Voir un profil</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="candidat.html" class="btn gold">▶ Passer le test</a>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(drawer);
+
+  // Marquer le lien actif dans le drawer
+  const path = (window.location.pathname.split('/').pop() || 'index.html').split('?')[0];
+  drawer.querySelectorAll('.nav-drawer-links a').forEach(link => {
+    const href = link.getAttribute('href').split('/').pop().split('?')[0];
+    if (href === path) link.classList.add('active');
+  });
+
+  // Toggle helpers
+  const open = () => {
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    burger.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-locked');
+  };
+  const close = () => {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-locked');
+  };
+
+  burger.addEventListener('click', open);
+  drawer.querySelector('.nav-drawer-close').addEventListener('click', close);
+  drawer.addEventListener('click', e => {
+    if (e.target === drawer) close();
+  });
+
+  // Esc pour fermer
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) close();
+  });
+}
+
 /* ---------- Charger le footer commun ---------- */
 function renderFooter() {
   const el = document.getElementById('site-footer');
@@ -134,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.head.appendChild(style);
 
   setActiveNav();
+  setupMobileMenu();
   renderFooter();
   bindCardClicks();
 });
