@@ -18,10 +18,22 @@
     }
     .nav-cta-profil:hover { background: var(--ink); border-color: var(--ink); }
 
-    /* --- Hero --- */
-    .profil-hero { padding: 28px 0 20px; }
+    /* --- Above fold : hero + divider + action bar = 100vh - nav --- */
+    .profil-above-fold {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - var(--nav-height, 71px));
+      min-height: 560px;
+    }
+    .profil-hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
     .profil-hero-grid {
-      display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: start;
+      display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: center;
+      padding: 20px 0;
+      width: 100%;
     }
 
     /* Card ×1.1 */
@@ -74,7 +86,7 @@
     .profil-divider { border: none; border-top: 1px solid var(--cream-3); margin: 0; }
 
     /* --- Action bar --- */
-    .profil-action-bar { background: var(--ink); color: var(--cream); padding: 24px 0; }
+    .profil-action-bar { background: var(--ink); color: var(--cream); padding: 24px 0; flex-shrink: 0; }
     .profil-action-inner { display: flex; justify-content: space-between; align-items: center; }
     .profil-action-title {
       font-family: var(--font-display); font-weight: 900; font-size: 20px;
@@ -214,6 +226,7 @@
 
     /* --- Responsive --- */
     @media (max-width: 900px) {
+      .profil-above-fold { height: auto; min-height: auto; }
       .profil-hero-grid, .profil-two-col { grid-template-columns: 1fr; }
       .profil-action-inner { flex-direction: column; gap: 16px; text-align: center; }
       .profil-pf-grid { grid-template-columns: 1fr; }
@@ -224,7 +237,7 @@
 <body class="page-enter">
 
   <!-- NAV -->
-  <nav class="nav">
+  <nav class="nav" id="main-nav">
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
@@ -235,34 +248,37 @@
     <a href="marketplace.html" class="nav-cta-profil">← Retour au pool</a>
   </nav>
 
-  <!-- HERO -->
-  <section class="profil-hero">
-    <div class="container">
-      <div class="profil-hero-grid">
-        <div id="profil-card"></div>
-        <div id="profil-info"></div>
-      </div>
-    </div>
-  </section>
+  <!-- ABOVE FOLD : hero + divider + action bar = exactement 100vh - nav -->
+  <div class="profil-above-fold">
 
-  <hr class="profil-divider">
-
-  <!-- ACTION BAR -->
-  <div class="profil-action-bar" id="action-bar">
-    <div class="container">
-      <div class="profil-action-inner">
-        <div>
-          <div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div>
-          <div class="profil-action-sub" id="action-sub">★ Vérifié · Certifiat valide 18 mois</div>
-        </div>
-        <div class="profil-action-btns">
-          <a href="#" class="action-btn primary">★ Contacter ce sales</a>
-          <a href="#" class="action-btn secondary">↓ Télécharger PDF</a>
-          <a href="marketplace.html" class="action-btn secondary">× Comparer</a>
+    <section class="profil-hero">
+      <div class="container">
+        <div class="profil-hero-grid">
+          <div id="profil-card"></div>
+          <div id="profil-info"></div>
         </div>
       </div>
+    </section>
+
+    <hr class="profil-divider">
+
+    <div class="profil-action-bar" id="action-bar">
+      <div class="container">
+        <div class="profil-action-inner">
+          <div>
+            <div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div>
+            <div class="profil-action-sub" id="action-sub">★ Vérifié · Certifiat valide 18 mois</div>
+          </div>
+          <div class="profil-action-btns">
+            <a href="#" class="action-btn primary">★ Contacter ce sales</a>
+            <a href="#" class="action-btn secondary">↓ Télécharger PDF</a>
+            <a href="marketplace.html" class="action-btn secondary">× Comparer</a>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+
+  </div><!-- end above-fold -->
 
   <!-- RADAR + AUDIO -->
   <section class="profil-section">
@@ -298,8 +314,8 @@
         </div>
         <div>
           <div class="full-call-box">
-            <div class="full-call-title">Écouter l’appel complet ?</div>
-            <p class="full-call-desc">Téléchargement de l’audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
+            <div class="full-call-title">Écouter l'appel complet ?</div>
+            <p class="full-call-desc">Téléchargement de l'audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
             <a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>
           </div>
         </div>
@@ -314,6 +330,12 @@
   <script src="data.js"></script>
   <script src="components.js"></script>
   <script>
+    // Mesure la hauteur réelle du nav et l'injecte en CSS variable
+    const navEl = document.getElementById('main-nav');
+    if (navEl) {
+      document.documentElement.style.setProperty('--nav-height', navEl.offsetHeight + 'px');
+    }
+
     const params = new URLSearchParams(window.location.search);
     const cid = params.get('id') || 'c001';
     const c = SU_DATA.candidates.find(x => x.id === cid) || SU_DATA.candidates[0];
@@ -325,18 +347,18 @@
 
     const candidateExtras = {
       'c001': {
-        quote: '« Fait émerger les enjeux avant de présenter une solution. »',
+        quote: '« Fait émerger les enjeux avant de présenter une solution. »',
         tags: ['Scale-up (50-250)', 'Full remote', '90% Chasse / 10% Élevage'],
         weaknesses: ['Closing à consolider', 'Accroche à personnaliser davantage'],
         validity: 'Nov 2027',
         serial: '#0001/200',
         audioMoments: [
-          { key: 'accroche',   moment: 'Ouverture du cold call',           ts: '00:42', dur: '28s', featured: false },
-          { key: 'decouverte', moment: 'Question de qualification budget',  ts: '04:12', dur: '35s', featured: true  },
-          { key: 'besoin',     moment: 'Construction du besoin latent',     ts: '07:55', dur: '40s', featured: false },
-          { key: 'objections', moment: 'Réponse « trop cher » sous pression', ts: '14:08', dur: '30s', featured: false },
-          { key: 'valeur',     moment: 'Pitch de valeur orienté ROI',       ts: '18:30', dur: '32s', featured: false },
-          { key: 'closing',    moment: 'Demande de signature directe',      ts: '26:10', dur: '22s', featured: false },
+          { key: 'accroche',   moment: 'Ouverture du cold call',              ts: '00:42', dur: '28s', featured: false },
+          { key: 'decouverte', moment: 'Question de qualification budget',     ts: '04:12', dur: '35s', featured: true  },
+          { key: 'besoin',     moment: 'Construction du besoin latent',        ts: '07:55', dur: '40s', featured: false },
+          { key: 'objections', moment: 'Réponse « trop cher » sous pression',  ts: '14:08', dur: '30s', featured: false },
+          { key: 'valeur',     moment: 'Pitch de valeur orienté ROI',          ts: '18:30', dur: '32s', featured: false },
+          { key: 'closing',    moment: 'Demande de signature directe',         ts: '26:10', dur: '22s', featured: false },
         ],
         dimDetails: {
           accroche:   'Ouverture directe et personnalisée. Hook sur le contexte prospect en moins de 20 secondes. Très peu de chauffe inutile.',
@@ -349,7 +371,7 @@
       },
     };
     const extras = candidateExtras[c.id] || {
-      quote: '« Profil certifié SalesUncut. »',
+      quote: '« Profil certifié SalesUncut. »',
       tags: [c.remote], weaknesses: ['Axe à préciser'],
       validity: 'Nov 2027', serial: '#0001/200',
       audioMoments: dims.map((d, i) => ({ key: d.key, moment: 'Extrait ' + d.label, ts: '0' + (i*4) + ':00', dur: '30s', featured: i === 1 })),
@@ -375,7 +397,7 @@
         <div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">${c.location}</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Salaire visé</div><div class="profil-meta-value">${c.target_salary}€</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Dispo</div><div class="profil-meta-value">${availLabel}</div></div>
-        <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu’à</div><div class="profil-meta-value">${extras.validity}</div></div>
+        <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu'à</div><div class="profil-meta-value">${extras.validity}</div></div>
       </div>`;
 
     // ACTION BAR
@@ -383,6 +405,12 @@
       c.availability === 'Immédiat' ? 'Ce profil est dispo immédiatement' : `Disponible dans ${c.availability}`;
     document.getElementById('action-sub').innerHTML =
       `★ Vérifié · ${new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})} · Certifiat valide 18 mois · ${extras.serial}`;
+
+    // Recalcule --nav-height après DOMContentLoaded (fonts chargées)
+    window.addEventListener('load', () => {
+      const h = document.getElementById('main-nav').offsetHeight;
+      document.documentElement.style.setProperty('--nav-height', h + 'px');
+    });
 
     // RADAR SVG
     const svg = document.getElementById('radar-svg');
@@ -467,7 +495,7 @@
           <div class="dim-score-num">${val}<span class="dim-score-max">/${d.max}</span></div>
         </div>
         <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${pct}%"></div></div>
-        ${detail ? `<div class="dim-detail">${detail}${am ? `<br><button class="dim-detail-cta">▶ Écouter l’extrait · ${am.ts}</button>` : ''}</div>` : ''}
+        ${detail ? `<div class="dim-detail">${detail}${am ? `<br><button class="dim-detail-cta">▶ Écouter l'extrait · ${am.ts}</button>` : ''}</div>` : ''}
       </div>`;
     }).join('');
 
