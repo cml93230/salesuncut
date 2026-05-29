@@ -15,7 +15,8 @@
     .hero h1 .strike { position: relative; color: var(--teal-3); }
     .hero h1 .strike::after { content: ''; position: absolute; left: -4%; right: -4%; top: 50%; height: 8px; background: var(--rust); transform: rotate(-2deg); }
     .hero p.lede { font-size: 19px; color: var(--teal-2); max-width: 540px; margin-bottom: 36px; line-height: 1.55; }
-    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-cta { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+    .hero-cta-item { display: flex; flex-direction: column; gap: 8px; }
     .hero-kpi { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 36px; }
     .hero-kpi .kpi-num { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--gold-deep); line-height: 1; }
     .hero-kpi .kpi-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 4px; }
@@ -30,16 +31,6 @@
     .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-160px) translateY(0) rotate(-18deg); }
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
     .hero-stage:hover .tcard:nth-child(3) { transform: translateX(160px) translateY(0) rotate(16deg); }
-
-    /* ---- Steps ---- */
-    .steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
-    .step { padding: 32px 24px; background: var(--cream); border-right: 1.5px solid var(--ink); position: relative; min-height: 280px; display: flex; flex-direction: column; }
-    .step:last-child { border-right: none; }
-    .step:nth-child(odd) { background: var(--cream-2); }
-    .step-num { font-family: var(--font-display); font-size: 80px; font-weight: 900; color: var(--gold); line-height: .8; margin-bottom: 16px; text-shadow: 2px 2px 0 var(--ink); }
-    .step h3 { font-size: 22px; margin-bottom: 10px; }
-    .step p { color: var(--teal-2); font-size: 14px; line-height: 1.55; }
-    .step .step-tag { margin-top: auto; font-family: var(--font-mono); font-size: 10px; color: var(--teal-3); letter-spacing: .1em; text-transform: uppercase; padding-top: 16px; }
 
     /* ---- Two-col candidat / recruteur ---- */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
@@ -67,10 +58,10 @@
     .faq p { margin-top: 12px; color: var(--teal-2); font-size: 15px; line-height: 1.55; }
 
     @media (max-width: 900px) {
-      .hero-grid, .two-col, .steps, .faq { grid-template-columns: 1fr; }
-      .steps .step { border-right: none; border-bottom: 1.5px solid var(--ink); }
+      .hero-grid, .two-col, .faq { grid-template-columns: 1fr; }
       .col-recruteur { border-left: none; border-top: 1.5px solid var(--ink); }
       .hero-stage { display: none; }
+      .hero-cta { flex-direction: column; }
     }
   </style>
 </head>
@@ -96,16 +87,21 @@
         <div>
           <span class="eyebrow">Recrutement commercial. Pas par le CV, par la preuve.</span>
           <h1>
-            Les CV racontent.<br>
-            <span class="gold-word">Les appels prouvent.</span>
+            <span class="gold-word">Les CV racontent.</span><br>
+            Les appels prouvent.
           </h1>
           <p class="lede">
             30 minutes de simulation commerciale réelle. Des recruteurs qui filtrent par score, pas par intuition.
           </p>
-          <p class="hero-nav-hint">Côté sales ↓ · Côté recruteur ↓</p>
           <div class="hero-cta">
-            <a href="candidat.html" class="btn gold">▶ Montrer ce que je vaux</a>
-            <a href="marketplace.html" class="btn outline">Voir les profils sans inscription →</a>
+            <div class="hero-cta-item">
+              <p class="hero-nav-hint">Côté sales ↓</p>
+              <a href="candidat.html" class="btn gold">▶ Montrer ce que je vaux</a>
+            </div>
+            <div class="hero-cta-item">
+              <p class="hero-nav-hint">Côté recruteur ↓</p>
+              <a href="marketplace.html" class="btn outline">Voir les profils sans inscription →</a>
+            </div>
           </div>
           <div class="hero-kpi">
             <div><div class="kpi-num">30s</div><div class="kpi-lbl">Pour qualifier</div></div>
@@ -136,42 +132,8 @@
     </div>
   </div>
 
-  <!-- COMMENT ÇA MARCHE -->
-  <section class="section">
-    <div class="container">
-      <span class="eyebrow">Comment ça marche</span>
-      <h1 style="font-size:64px;margin:16px 0 48px;">Ici, on recrute autrement.<br><small style="font-size:0.4em;font-weight:400;opacity:0.6;letter-spacing:0.05em;">Côté sales ↓ · Côté recruteur ↓</small></h1>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <h3>Choisis ta famille</h3>
-          <p>10 verticales possibles : SaaS RH, Sales CRM, Finance, Cyber, Énergie… Tu choisis ton terrain de chasse.</p>
-          <div class="step-tag">→ 10 familles × 3 scénarios</div>
-        </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <h3>30 min en live</h3>
-          <p>30 minutes. Un prospect qui ne fait pas de cadeaux. Tu gères ou tu gères pas.</p>
-          <div class="step-tag">→ Aucun rattrapage. Une prise.</div>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <h3>Ta carte sort</h3>
-          <p>Sept dimensions notées sur 100. Sept extraits horodatés. Un niveau Bronze, Silver ou Gold tamponné dessus.</p>
-          <div class="step-tag">→ Notation IA + validation humaine</div>
-        </div>
-        <div class="step">
-          <div class="step-num">04</div>
-          <h3>Le pool te trouve</h3>
-          <p>Tu apparais dans la marketplace recruteurs avec tes critères. Eux filtrent, écoutent, te contactent — ou pas.</p>
-          <div class="step-tag">→ Validité 18 mois</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- CANDIDAT / RECRUTEUR -->
-  <section class="section" style="padding-top:0">
+  <section class="section">
     <div class="container">
       <div class="two-col">
         <div class="col col-candidat">
@@ -222,7 +184,7 @@
       <span class="eyebrow">Hall of fame</span>
       <h1 style="font-size:56px;margin:12px 0 32px;">Top 8 du pool · mai 2026</h1>
       <div class="leaderboard">
-        <div class="lb-header">
+        <div class="lb-header" style="display:flex;justify-content:space-between;align-items:center;">
           <span>Classement général</span>
           <span class="mono" style="font-size:12px;letter-spacing:.1em;">MIS À JOUR EN TEMPS RÉEL</span>
         </div>
