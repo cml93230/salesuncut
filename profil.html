@@ -19,31 +19,31 @@
     .nav-cta-profil:hover { background: var(--ink); border-color: var(--ink); }
 
     /* --- Hero --- */
-    .profil-hero { padding: 48px 0 40px; }
+    .profil-hero { padding: 28px 0 20px; }
     .profil-hero-grid {
-      display: grid; grid-template-columns: 340px 1fr; gap: 64px; align-items: start;
+      display: grid; grid-template-columns: 260px 1fr; gap: 56px; align-items: start;
     }
 
-    /* Card +50% */
-    #profil-card .tcard { zoom: 1.5; }
+    /* Card ×1.1 */
+    #profil-card .tcard { zoom: 1.1; }
 
     /* --- Candidate info --- */
     .profil-eyebrow {
       font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em;
       text-transform: uppercase; color: var(--gold-deep);
-      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
     }
     .profil-eyebrow::before { content: '●'; font-size: 8px; }
     .profil-name {
-      font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 6vw, 88px);
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(48px, 5.5vw, 80px);
       text-transform: uppercase; letter-spacing: -.02em; line-height: .9;
-      color: var(--ink); margin-bottom: 20px;
+      color: var(--ink); margin-bottom: 16px;
     }
     .profil-quote {
-      font-family: var(--font-serif); font-style: italic; font-size: 20px;
-      color: var(--teal-2); margin-bottom: 28px; line-height: 1.4;
+      font-family: var(--font-serif); font-style: italic; font-size: 18px;
+      color: var(--teal-2); margin-bottom: 20px; line-height: 1.4;
     }
-    .profil-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .profil-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
     .profil-tag {
       font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
       text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
@@ -51,45 +51,45 @@
       display: inline-flex; align-items: center; gap: 6px;
     }
     .profil-tag.gold-tag { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+
+    /* 2×2 meta grid */
     .profil-meta {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
       border: 1.5px solid var(--cream-3); border-radius: 6px; overflow: hidden;
     }
-    .profil-meta-cell { padding: 16px 20px; border-right: 1.5px solid var(--cream-3); }
-    .profil-meta-cell:last-child { border-right: none; }
+    .profil-meta-cell { padding: 14px 18px; }
+    .profil-meta-cell:nth-child(1) { border-right: 1.5px solid var(--cream-3); border-bottom: 1.5px solid var(--cream-3); }
+    .profil-meta-cell:nth-child(2) { border-bottom: 1.5px solid var(--cream-3); }
+    .profil-meta-cell:nth-child(3) { border-right: 1.5px solid var(--cream-3); }
     .profil-meta-label {
       font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
-      text-transform: uppercase; color: var(--teal-3); margin-bottom: 6px;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 5px;
     }
     .profil-meta-value {
-      font-family: var(--font-display); font-weight: 900; font-size: 18px;
+      font-family: var(--font-display); font-weight: 900; font-size: 17px;
       text-transform: uppercase; letter-spacing: -.01em; color: var(--ink);
     }
 
     /* --- Divider --- */
     .profil-divider { border: none; border-top: 1px solid var(--cream-3); margin: 0; }
 
-    /* --- Action bar (mid-page) --- */
-    .profil-action-bar {
-      background: var(--ink); color: var(--cream); padding: 28px 0;
-    }
-    .profil-action-inner {
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    /* --- Action bar --- */
+    .profil-action-bar { background: var(--ink); color: var(--cream); padding: 24px 0; }
+    .profil-action-inner { display: flex; justify-content: space-between; align-items: center; }
     .profil-action-title {
-      font-family: var(--font-display); font-weight: 900; font-size: 22px;
+      font-family: var(--font-display); font-weight: 900; font-size: 20px;
       text-transform: uppercase; letter-spacing: -.01em; color: var(--cream);
     }
     .profil-action-sub {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
       text-transform: uppercase; color: var(--gold); margin-top: 4px;
     }
-    .profil-action-btns { display: flex; gap: 12px; }
+    .profil-action-btns { display: flex; gap: 10px; }
     .action-btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: var(--font-mono); font-size: 11px; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
-      padding: 12px 22px; border-radius: 4px; cursor: pointer; transition: all .2s; white-space: nowrap;
+      padding: 10px 18px; border-radius: 4px; cursor: pointer; transition: all .2s; white-space: nowrap;
     }
     .action-btn.primary { background: var(--gold-deep); color: var(--cream); border: 1.5px solid var(--gold-deep); }
     .action-btn.primary:hover { background: var(--gold-glow); border-color: var(--gold-glow); }
@@ -97,23 +97,23 @@
     .action-btn.secondary:hover { border-color: var(--cream); }
 
     /* --- Two-col sections --- */
-    .profil-section { padding: 48px 0; }
-    .profil-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    .profil-section { padding: 40px 0; }
+    .profil-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
     .profil-panel {
       border: 1.5px solid var(--cream-3); border-radius: 8px;
-      padding: 32px; background: var(--cream);
+      padding: 28px; background: var(--cream);
     }
     .profil-panel-eyebrow {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
-      text-transform: uppercase; color: var(--gold-deep); margin-bottom: 8px;
+      text-transform: uppercase; color: var(--gold-deep); margin-bottom: 6px;
     }
     .profil-panel-title {
-      font-family: var(--font-display); font-weight: 900; font-size: 28px;
-      text-transform: uppercase; letter-spacing: -.01em; color: var(--ink); margin-bottom: 8px;
+      font-family: var(--font-display); font-weight: 900; font-size: 26px;
+      text-transform: uppercase; letter-spacing: -.01em; color: var(--ink); margin-bottom: 6px;
     }
     .profil-panel-sub {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--teal-3); margin-bottom: 28px;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 24px;
     }
 
     /* --- Radar --- */
@@ -121,7 +121,7 @@
     .radar-click-hint {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
       text-transform: uppercase; color: var(--teal-3);
-      margin-top: 16px; display: flex; align-items: center; gap: 6px;
+      margin-top: 12px; display: flex; align-items: center; gap: 6px;
     }
     .radar-click-hint::before { content: '→'; color: var(--gold-deep); }
 
@@ -129,63 +129,63 @@
     .dim-list { display: flex; flex-direction: column; gap: 8px; }
     .dim-card {
       border: 1.5px solid var(--cream-3); border-radius: 6px;
-      padding: 16px 20px; cursor: pointer; transition: border-color .2s; background: var(--cream);
+      padding: 14px 18px; cursor: pointer; transition: border-color .2s; background: var(--cream);
     }
     .dim-card:hover { border-color: var(--gold); }
     .dim-card.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
     .dim-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-    .dim-label { font-family: var(--font-display); font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: -.01em; }
+    .dim-label { font-family: var(--font-display); font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: -.01em; }
     .dim-sublabel { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--teal-3); margin-top: 2px; }
     .dim-card.active .dim-sublabel { color: rgba(255,248,231,.5); }
-    .dim-score-num { font-family: var(--font-display); font-weight: 900; font-size: 22px; color: var(--ink); line-height: 1; }
-    .dim-score-max { font-size: 13px; color: var(--teal-3); font-weight: 400; }
+    .dim-score-num { font-family: var(--font-display); font-weight: 900; font-size: 20px; color: var(--ink); line-height: 1; }
+    .dim-score-max { font-size: 12px; color: var(--teal-3); font-weight: 400; }
     .dim-card.active .dim-score-num { color: var(--gold); }
     .dim-bar-track { height: 4px; background: var(--cream-3); border-radius: 2px; overflow: hidden; }
     .dim-card.active .dim-bar-track { background: rgba(255,248,231,.15); }
     .dim-bar-fill { height: 100%; background: var(--ink); border-radius: 2px; transition: width .4s ease; }
     .dim-card.active .dim-bar-fill { background: var(--gold); }
-    .dim-detail { display: none; margin-top: 14px; font-size: 14px; line-height: 1.55; color: rgba(255,248,231,.8); }
+    .dim-detail { display: none; margin-top: 12px; font-size: 14px; line-height: 1.55; color: rgba(255,248,231,.8); }
     .dim-detail.open { display: block; }
     .dim-detail-cta {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: var(--font-mono); font-size: 11px; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase;
-      padding: 10px 20px; border-radius: 4px; margin-top: 12px;
+      padding: 10px 20px; border-radius: 4px; margin-top: 10px;
       background: var(--gold-deep); color: var(--cream); cursor: pointer; border: none;
     }
 
-    /* --- Points forts / axes --- */
-    .profil-pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
-    .pf-box { border: 1.5px solid var(--cream-3); border-radius: 6px; padding: 20px; }
+    /* --- Points forts --- */
+    .profil-pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+    .pf-box { border: 1.5px solid var(--cream-3); border-radius: 6px; padding: 18px; }
     .pf-box-title {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
-      text-transform: uppercase; color: var(--ink); margin-bottom: 14px;
+      text-transform: uppercase; color: var(--ink); margin-bottom: 12px;
       display: flex; align-items: center; gap: 8px;
     }
-    .pf-box-title .arrow { color: var(--gold-deep); font-size: 14px; }
+    .pf-box-title .arrow { color: var(--gold-deep); font-size: 13px; }
     .pf-box-title .arrow-down { color: var(--rust); }
-    .pf-item { font-size: 14px; color: var(--teal-2); padding: 8px 0; border-bottom: 1px solid var(--cream-3); line-height: 1.4; }
+    .pf-item { font-size: 14px; color: var(--teal-2); padding: 7px 0; border-bottom: 1px solid var(--cream-3); line-height: 1.4; }
     .pf-item:last-child { border-bottom: none; }
 
     /* --- Audio players --- */
-    .audio-list { display: flex; flex-direction: column; gap: 12px; }
-    .audio-card { border-radius: 6px; padding: 18px 20px; background: var(--cream-2); border: 1.5px solid var(--cream-3); }
+    .audio-list { display: flex; flex-direction: column; gap: 10px; }
+    .audio-card { border-radius: 6px; padding: 16px 18px; background: var(--cream-2); border: 1.5px solid var(--cream-3); }
     .audio-card.featured { background: var(--ink); color: var(--cream); border-color: var(--ink); }
-    .audio-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .audio-dim-name { font-family: var(--font-display); font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: -.01em; }
+    .audio-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .audio-dim-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: -.01em; }
     .audio-moment { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 2px; }
     .audio-card.featured .audio-moment { color: rgba(255,248,231,.4); }
-    .audio-score { font-family: var(--font-display); font-weight: 900; font-size: 20px; color: var(--gold-deep); }
+    .audio-score { font-family: var(--font-display); font-weight: 900; font-size: 18px; color: var(--gold-deep); }
     .audio-card.featured .audio-score { color: var(--gold); }
-    .audio-player { display: flex; align-items: center; gap: 12px; }
+    .audio-player { display: flex; align-items: center; gap: 10px; }
     .audio-play-btn {
-      width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-      background: var(--ink); color: var(--cream); font-size: 12px; transition: all .2s;
+      background: var(--ink); color: var(--cream); font-size: 11px; transition: all .2s;
     }
     .audio-card.featured .audio-play-btn { background: var(--gold-deep); }
     .audio-play-btn:hover { transform: scale(1.08); }
-    .waveform { flex: 1; display: flex; align-items: center; gap: 2px; height: 32px; overflow: hidden; }
+    .waveform { flex: 1; display: flex; align-items: center; gap: 2px; height: 28px; overflow: hidden; }
     .waveform-bar { flex-shrink: 0; width: 3px; border-radius: 2px; background: rgba(26,34,34,.2); }
     .audio-card.featured .waveform-bar { background: rgba(255,248,231,.2); }
     .waveform-bar.played { background: var(--gold-deep); }
@@ -193,20 +193,20 @@
     .audio-meta { font-family: var(--font-mono); font-size: 10px; color: var(--teal-3); white-space: nowrap; }
     .audio-card.featured .audio-meta { color: rgba(255,248,231,.4); }
 
-    /* --- Full call CTA box --- */
-    .full-call-box { border: 1.5px dashed var(--cream-3); border-radius: 8px; padding: 28px; margin-top: 12px; }
+    /* --- Full call CTA --- */
+    .full-call-box { border: 1.5px dashed var(--cream-3); border-radius: 8px; padding: 24px; margin-top: 10px; }
     .full-call-title {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
       text-transform: uppercase; color: var(--gold-deep); margin-bottom: 10px;
       display: flex; align-items: center; gap: 6px;
     }
     .full-call-title::before { content: '★'; }
-    .full-call-desc { font-size: 14px; color: var(--teal-2); line-height: 1.55; margin-bottom: 20px; }
+    .full-call-desc { font-size: 14px; color: var(--teal-2); line-height: 1.55; margin-bottom: 18px; }
     .full-call-btn {
       display: inline-flex; align-items: center; gap: 8px;
       font-family: var(--font-mono); font-size: 11px; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
-      padding: 12px 24px; border-radius: 4px;
+      padding: 11px 22px; border-radius: 4px;
       background: var(--gold-deep); color: var(--cream);
       border: 1.5px solid var(--gold-deep); cursor: pointer; transition: all .2s;
     }
@@ -215,11 +215,9 @@
     /* --- Responsive --- */
     @media (max-width: 900px) {
       .profil-hero-grid, .profil-two-col { grid-template-columns: 1fr; }
-      .profil-meta { grid-template-columns: 1fr 1fr; }
-      .profil-meta-cell:nth-child(2) { border-right: none; }
-      .profil-action-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .profil-action-inner { flex-direction: column; gap: 16px; text-align: center; }
       .profil-pf-grid { grid-template-columns: 1fr; }
-      #profil-card .tcard { zoom: 1.2; }
+      #profil-card .tcard { zoom: 1; }
     }
   </style>
 </head>
@@ -249,7 +247,7 @@
 
   <hr class="profil-divider">
 
-  <!-- ACTION BAR — entre hero et performance -->
+  <!-- ACTION BAR -->
   <div class="profil-action-bar" id="action-bar">
     <div class="container">
       <div class="profil-action-inner">
@@ -270,7 +268,6 @@
   <section class="profil-section">
     <div class="container">
       <div class="profil-two-col">
-
         <div class="profil-panel" id="radar-panel">
           <div class="profil-panel-eyebrow">Performance globale</div>
           <div class="profil-panel-title">Radar 6 dimensions</div>
@@ -278,14 +275,12 @@
           <svg class="radar-svg" viewBox="0 0 550 450" id="radar-svg"></svg>
           <p class="radar-click-hint">Clique une dimension pour le détail</p>
         </div>
-
         <div class="profil-panel">
           <div class="profil-panel-eyebrow">Extraits audio horodatés</div>
           <div class="profil-panel-title">Écoute la voix.</div>
           <div class="profil-panel-sub" id="audio-sub"></div>
           <div class="audio-list" id="audio-list"></div>
         </div>
-
       </div>
     </div>
   </section>
@@ -293,24 +288,21 @@
   <hr class="profil-divider">
 
   <!-- DIMENSIONS + FULL CALL -->
-  <section class="profil-section" style="padding-top:32px">
+  <section class="profil-section" style="padding-top:28px">
     <div class="container">
       <div class="profil-two-col">
-
         <div class="profil-panel">
-          <div class="profil-panel-sub" style="margin-bottom:16px;">→ Clique une dimension pour le détail</div>
+          <div class="profil-panel-sub" style="margin-bottom:14px;">→ Clique une dimension pour le détail</div>
           <div class="dim-list" id="dim-list"></div>
           <div class="profil-pf-grid" id="pf-grid"></div>
         </div>
-
         <div>
           <div class="full-call-box">
-            <div class="full-call-title">Écouter l'appel complet ?</div>
-            <p class="full-call-desc">Téléchargement de l'audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
+            <div class="full-call-title">Écouter l’appel complet ?</div>
+            <p class="full-call-desc">Téléchargement de l’audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
             <a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>
           </div>
         </div>
-
       </div>
     </div>
   </section>
@@ -333,7 +325,7 @@
 
     const candidateExtras = {
       'c001': {
-        quote: '\u00ab\u00a0Fait émerger les enjeux avant de présenter une solution.\u00a0\u00bb',
+        quote: '« Fait émerger les enjeux avant de présenter une solution. »',
         tags: ['Scale-up (50-250)', 'Full remote', '90% Chasse / 10% Élevage'],
         weaknesses: ['Closing à consolider', 'Accroche à personnaliser davantage'],
         validity: 'Nov 2027',
@@ -342,7 +334,7 @@
           { key: 'accroche',   moment: 'Ouverture du cold call',           ts: '00:42', dur: '28s', featured: false },
           { key: 'decouverte', moment: 'Question de qualification budget',  ts: '04:12', dur: '35s', featured: true  },
           { key: 'besoin',     moment: 'Construction du besoin latent',     ts: '07:55', dur: '40s', featured: false },
-          { key: 'objections', moment: 'Réponse "trop cher" sous pression', ts: '14:08', dur: '30s', featured: false },
+          { key: 'objections', moment: 'Réponse « trop cher » sous pression', ts: '14:08', dur: '30s', featured: false },
           { key: 'valeur',     moment: 'Pitch de valeur orienté ROI',       ts: '18:30', dur: '32s', featured: false },
           { key: 'closing',    moment: 'Demande de signature directe',      ts: '26:10', dur: '22s', featured: false },
         ],
@@ -356,20 +348,18 @@
         },
       },
     };
-
     const extras = candidateExtras[c.id] || {
-      quote: '\u00ab\u00a0Profil certifié SalesUncut.\u00a0\u00bb',
-      tags: [c.remote],
-      weaknesses: ['Axe à préciser'],
+      quote: '« Profil certifié SalesUncut. »',
+      tags: [c.remote], weaknesses: ['Axe à préciser'],
       validity: 'Nov 2027', serial: '#0001/200',
       audioMoments: dims.map((d, i) => ({ key: d.key, moment: 'Extrait ' + d.label, ts: '0' + (i*4) + ':00', dur: '30s', featured: i === 1 })),
       dimDetails: {},
     };
 
-    // ===== CARD =====
+    // CARD
     document.getElementById('profil-card').innerHTML = renderCard(c);
 
-    // ===== INFO =====
+    // INFO
     const tagsHtml = [
       `<span class="profil-tag gold-tag">★ ${levelLabel} · ${c.score}/100</span>`,
       `<span class="profil-tag">${fam.name}</span>`,
@@ -385,16 +375,16 @@
         <div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">${c.location}</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Salaire visé</div><div class="profil-meta-value">${c.target_salary}€</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Dispo</div><div class="profil-meta-value">${availLabel}</div></div>
-        <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu'à</div><div class="profil-meta-value">${extras.validity}</div></div>
+        <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu’à</div><div class="profil-meta-value">${extras.validity}</div></div>
       </div>`;
 
-    // ===== ACTION BAR =====
+    // ACTION BAR
     document.getElementById('action-title').textContent =
       c.availability === 'Immédiat' ? 'Ce profil est dispo immédiatement' : `Disponible dans ${c.availability}`;
     document.getElementById('action-sub').innerHTML =
       `★ Vérifié · ${new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})} · Certifiat valide 18 mois · ${extras.serial}`;
 
-    // ===== RADAR SVG =====
+    // RADAR SVG
     const svg = document.getElementById('radar-svg');
     const cx = 255, cy = 215, maxR = 130, labelOffset = 38;
     const n = dims.length;
@@ -422,48 +412,25 @@
       const dp = pt(r, i);
       const lp = pt(maxR + labelOffset, i);
       gridHtml += `<circle cx="${dp.x.toFixed(1)}" cy="${dp.y.toFixed(1)}" r="4" fill="#a3854f"/>`;
-
       const ax = angle(i);
       let anchor = 'middle';
       if (Math.cos(ax) > 0.3) anchor = 'start';
       else if (Math.cos(ax) < -0.3) anchor = 'end';
-
-      const labelWords = d.label.toUpperCase().split(' ');
-      let labelSvg;
-      if (labelWords.length > 2) {
-        const line1 = labelWords.slice(0, 2).join(' ');
-        const line2 = labelWords.slice(2).join(' ');
-        labelSvg = `<text text-anchor="${anchor}"
-          font-family="'Big Shoulders Display',Impact,sans-serif" font-weight="700"
-          font-size="11" fill="#1a2222" letter-spacing="0.5">
-          <tspan x="${lp.x.toFixed(1)}" y="${(lp.y - 10).toFixed(1)}">${line1}</tspan>
-          <tspan x="${lp.x.toFixed(1)}" dy="13">${line2}</tspan>
-        </text>
-        <text x="${lp.x.toFixed(1)}" y="${(lp.y + 18).toFixed(1)}" text-anchor="${anchor}"
-          font-family="'JetBrains Mono',monospace" font-size="10" fill="#a3854f">
-          ${val}/${d.max}
-        </text>`;
+      const words = d.label.toUpperCase().split(' ');
+      if (words.length > 2) {
+        const l1 = words.slice(0, 2).join(' '), l2 = words.slice(2).join(' ');
+        gridHtml += `<text text-anchor="${anchor}" font-family="'Big Shoulders Display',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5"><tspan x="${lp.x.toFixed(1)}" y="${(lp.y-10).toFixed(1)}">${l1}</tspan><tspan x="${lp.x.toFixed(1)}" dy="13">${l2}</tspan></text><text x="${lp.x.toFixed(1)}" y="${(lp.y+18).toFixed(1)}" text-anchor="${anchor}" font-family="'JetBrains Mono',monospace" font-size="10" fill="#a3854f">${val}/${d.max}</text>`;
       } else {
-        labelSvg = `<text x="${lp.x.toFixed(1)}" y="${(lp.y - 5).toFixed(1)}" text-anchor="${anchor}"
-          font-family="'Big Shoulders Display',Impact,sans-serif" font-weight="700"
-          font-size="11" fill="#1a2222" letter-spacing="0.5">
-          ${d.label.toUpperCase()}
-        </text>
-        <text x="${lp.x.toFixed(1)}" y="${(lp.y + 11).toFixed(1)}" text-anchor="${anchor}"
-          font-family="'JetBrains Mono',monospace" font-size="10" fill="#a3854f">
-          ${val}/${d.max}
-        </text>`;
+        gridHtml += `<text x="${lp.x.toFixed(1)}" y="${(lp.y-5).toFixed(1)}" text-anchor="${anchor}" font-family="'Big Shoulders Display',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5">${d.label.toUpperCase()}</text><text x="${lp.x.toFixed(1)}" y="${(lp.y+11).toFixed(1)}" text-anchor="${anchor}" font-family="'JetBrains Mono',monospace" font-size="10" fill="#a3854f">${val}/${d.max}</text>`;
       }
-      gridHtml += labelSvg;
     });
     svg.innerHTML = gridHtml;
 
-    // Sub labels
     document.getElementById('radar-sub').textContent = `Scénario ${fam.name}`;
     const dateStr = new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long'}) + ' 2026';
     document.getElementById('audio-sub').textContent = `6 moments calibrés sur les 6 dimensions du call · ${dateStr}`;
 
-    // ===== AUDIO =====
+    // AUDIO
     function makeWave(n, played) {
       const h = [3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];
       return h.slice(0, n).map((v, i) =>
@@ -487,20 +454,20 @@
       </div>`;
     }).join('');
 
-    // ===== DIMENSIONS =====
-    const dimSubLabels = { accroche:'Dim 1 · ACR', decouverte:'Dim 2 · DEC', besoin:'Dim 3 · BSN', objections:'Dim 4 · OBJ', valeur:'Dim 5 · VAL', closing:'Dim 6 · CLO' };
-    document.getElementById('dim-list').innerHTML = dims.map((d, i) => {
+    // DIMENSIONS
+    const dimSubs = { accroche:'Dim 1 · ACR', decouverte:'Dim 2 · DEC', besoin:'Dim 3 · BSN', objections:'Dim 4 · OBJ', valeur:'Dim 5 · VAL', closing:'Dim 6 · CLO' };
+    document.getElementById('dim-list').innerHTML = dims.map((d) => {
       const val = c.stats[d.key] || 0;
       const pct = Math.round(val / d.max * 100);
       const detail = (extras.dimDetails || {})[d.key] || '';
       const am = extras.audioMoments.find(m => m.key === d.key);
       return `<div class="dim-card" onclick="toggleDim(this)">
         <div class="dim-card-header">
-          <div><div class="dim-label">${d.label}</div><div class="dim-sublabel">${dimSubLabels[d.key] || d.key}</div></div>
+          <div><div class="dim-label">${d.label}</div><div class="dim-sublabel">${dimSubs[d.key] || d.key}</div></div>
           <div class="dim-score-num">${val}<span class="dim-score-max">/${d.max}</span></div>
         </div>
         <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${pct}%"></div></div>
-        ${detail ? `<div class="dim-detail">${detail}${am ? `<br><button class="dim-detail-cta">▶ Écouter l'extrait · ${am.ts}</button>` : ''}</div>` : ''}
+        ${detail ? `<div class="dim-detail">${detail}${am ? `<br><button class="dim-detail-cta">▶ Écouter l’extrait · ${am.ts}</button>` : ''}</div>` : ''}
       </div>`;
     }).join('');
 
@@ -515,7 +482,7 @@
       if (!wasActive && detail) { el.classList.add('active'); detail.classList.add('open'); }
     }
 
-    // ===== POINTS FORTS =====
+    // POINTS FORTS
     document.getElementById('pf-grid').innerHTML = `
       <div class="pf-box">
         <div class="pf-box-title"><span class="arrow">▲</span>Points forts</div>

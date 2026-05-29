@@ -22,7 +22,6 @@ function renderCard(c, opts = {}) {
   }).join('');
 
   const displayName = c.anonymous ? 'Anonyme' : c.name;
-  const serial = `SU-26-${String(c.id).replace('c','').padStart(4,'0')}`;
 
   return `
     <div class="tcard ${level} ${compact ? 'sm' : ''}" data-candidate-id="${c.id}">
@@ -46,7 +45,6 @@ function renderCard(c, opts = {}) {
         <div class="tcard-stats">${statsHtml}</div>
         <div class="tcard-footer">
           <span>${fam.name}</span>
-          <span>${serial}</span>
         </div>
       </div>
     </div>`;
@@ -84,7 +82,7 @@ function renderFooter() {
               <span class="dot"></span>SalesUncut
             </a>
             <p style="margin-top:16px;opacity:.7;font-size:14px;max-width:320px;">
-              La première marketplace qui certifie les commerciaux par l'oreille, pas par le papier. Made in Nice.
+              La première marketplace qui certifie les commerciaux par l’oreille, pas par le papier. Made in Nice.
             </p>
           </div>
           <div>
