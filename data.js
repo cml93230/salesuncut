@@ -20,13 +20,23 @@ const SU_DATA = {
 
   // Dimensions scorées — Total : 100
   dimensions: [
-    { key: 'accroche',   label: 'Accroche',        max: 16 },
+    { key: 'accroche',   label: 'Accroche',         max: 16 },
     { key: 'decouverte', label: 'Découverte',       max: 16 },
     { key: 'besoin',     label: 'Créer le besoin',  max: 20 },
     { key: 'objections', label: 'Objections',       max: 16 },
     { key: 'valeur',     label: 'Valeur',           max: 16 },
     { key: 'closing',    label: 'Closing',          max: 16 },
   ],
+
+  // Référentiels rôles
+  roles: {
+    SDR:  { label: 'SDR',  full: 'Sales Development Rep' },
+    BDR:  { label: 'BDR',  full: 'Business Development Rep' },
+    AE:   { label: 'AE',   full: 'Account Executive' },
+    AM:   { label: 'AM',   full: 'Account Manager' },
+    KAM:  { label: 'KAM',  full: 'Key Account Manager' },
+    BD:   { label: 'BD',   full: 'Business Developer' },
+  },
 
   candidates: [
     {
@@ -45,6 +55,27 @@ const SU_DATA = {
       date: '2026-05-20',
       stats: { accroche: 15, decouverte: 15, besoin: 19, objections: 14, valeur: 14, closing: 11 },
       strengths: ['Fermeture naturelle', 'Création de besoin percutante', 'Gestion pression'],
+      // === Nouvelles données enrichies ===
+      role_type: 'AE',
+      experience_years: 5,
+      experience_level: 'Senior',
+      deal_size: '15-50k€',
+      sales_cycle: '6-12 sem.',
+      prospection_channels: ['Cold call', 'LinkedIn', 'Events'],
+      hunting_pct: 90,
+      quota_attainment: 112,
+      sectors_mastered: ['SaaS B2B', 'FinTech', 'MarTech'],
+      company_size_target: ['Scale-up (50-250)', 'Mid-Market (250-1k)'],
+      ote: { fixed: '55-65k', variable: '20-25k', total: '75-90k' },
+      status: 'En poste',
+      notice: '3 mois négociable',
+      mobility: ['Paris IDF', 'Lyon', 'Full remote'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'C1' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/lucas-renard-demo',
+      cv: 'cv-lucas-renard.pdf',
     },
     {
       id: 'c002',
@@ -61,6 +92,27 @@ const SU_DATA = {
       date: '2026-05-18',
       stats: { accroche: 14, decouverte: 15, besoin: 18, objections: 13, valeur: 13, closing: 10 },
       strengths: ['Maîtrise technique', 'Crédibilité secteur', 'Objections complexes'],
+      role_type: 'AE',
+      experience_years: 4,
+      experience_level: 'Confirmé',
+      deal_size: '20-80k€',
+      sales_cycle: '8-16 sem.',
+      prospection_channels: ['LinkedIn', 'Events', 'Referrals'],
+      hunting_pct: 70,
+      quota_attainment: 104,
+      sectors_mastered: ['Cybersécurité', 'IT services', 'Banque'],
+      company_size_target: ['Mid-Market (250-1k)', 'ETI (1k-5k)'],
+      ote: { fixed: '50-60k', variable: '20-30k', total: '70-90k' },
+      status: 'En poste',
+      notice: '2 mois',
+      mobility: ['Lyon', 'Genève', 'Hybride'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'C1' },
+        { name: 'Arabe',    level: 'Natif' },
+      ],
+      linkedin: '',
+      cv: '',
     },
     {
       id: 'c003',
@@ -78,6 +130,26 @@ const SU_DATA = {
       date: '2026-05-15',
       stats: { accroche: 14, decouverte: 14, besoin: 16, objections: 12, valeur: 12, closing: 10 },
       strengths: ['Accroche originale', 'Empathie forte', 'Découverte profonde'],
+      role_type: 'BDR',
+      experience_years: 3,
+      experience_level: 'Confirmé',
+      deal_size: '8-30k€',
+      sales_cycle: '4-8 sem.',
+      prospection_channels: ['Cold call', 'Cold email', 'LinkedIn'],
+      hunting_pct: 95,
+      quota_attainment: 98,
+      sectors_mastered: ['SaaS RH', 'HR Tech'],
+      company_size_target: ['Startup', 'Scale-up (50-250)'],
+      ote: { fixed: '45-55k', variable: '15-22k', total: '60-77k' },
+      status: 'En poste',
+      notice: '2 mois',
+      mobility: ['Bordeaux', 'Toulouse'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'B2' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/theo-blanc-demo',
+      cv: 'cv-theo-blanc.pdf',
     },
     {
       id: 'c004',
@@ -95,6 +167,27 @@ const SU_DATA = {
       date: '2026-05-14',
       stats: { accroche: 13, decouverte: 13, besoin: 16, objections: 12, valeur: 12, closing: 9 },
       strengths: ['Storytelling', 'Créativité commerciale', 'Closing doux'],
+      role_type: 'AE',
+      experience_years: 3,
+      experience_level: 'Confirmé',
+      deal_size: '10-40k€',
+      sales_cycle: '5-10 sem.',
+      prospection_channels: ['LinkedIn', 'Content', 'Events'],
+      hunting_pct: 60,
+      quota_attainment: 105,
+      sectors_mastered: ['MarTech', 'AdTech', 'E-commerce'],
+      company_size_target: ['Startup', 'Scale-up (50-250)'],
+      ote: { fixed: '42-52k', variable: '15-20k', total: '57-72k' },
+      status: 'Entre deux postes',
+      notice: '—',
+      mobility: ['Nantes', 'Full remote'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'C1' },
+        { name: 'Espagnol', level: 'B2' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/camille-faure-demo',
+      cv: 'cv-camille-faure.pdf',
     },
     {
       id: 'c005',
@@ -112,6 +205,26 @@ const SU_DATA = {
       date: '2026-05-12',
       stats: { accroche: 12, decouverte: 14, besoin: 15, objections: 12, valeur: 11, closing: 8 },
       strengths: ['Vocabulaire financier', 'Structuration du besoin', 'Patience'],
+      role_type: 'KAM',
+      experience_years: 7,
+      experience_level: 'Senior',
+      deal_size: '50-250k€',
+      sales_cycle: '4-9 mois',
+      prospection_channels: ['Referrals', 'Events', 'LinkedIn'],
+      hunting_pct: 40,
+      quota_attainment: 101,
+      sectors_mastered: ['Finance', 'Asset Management', 'Banque privée'],
+      company_size_target: ['ETI (1k-5k)', 'Grands comptes'],
+      ote: { fixed: '55-70k', variable: '30-50k', total: '85-120k' },
+      status: 'En poste',
+      notice: '3 mois',
+      mobility: ['Paris IDF', 'Hybride'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'C2' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/julien-perrot-demo',
+      cv: 'cv-julien-perrot.pdf',
     },
     {
       id: 'c006',
@@ -128,6 +241,26 @@ const SU_DATA = {
       date: '2026-05-10',
       stats: { accroche: 12, decouverte: 13, besoin: 15, objections: 11, valeur: 11, closing: 8 },
       strengths: ['ROI énergétique', 'Durée de pitch', 'Reformulation'],
+      role_type: 'AE',
+      experience_years: 4,
+      experience_level: 'Confirmé',
+      deal_size: '30-150k€',
+      sales_cycle: '3-6 mois',
+      prospection_channels: ['LinkedIn', 'Events', 'Salons'],
+      hunting_pct: 75,
+      quota_attainment: 96,
+      sectors_mastered: ['Énergie', 'Industrie', 'B2B Technique'],
+      company_size_target: ['Mid-Market (250-1k)', 'ETI (1k-5k)'],
+      ote: { fixed: '48-58k', variable: '18-25k', total: '66-83k' },
+      status: 'En poste',
+      notice: '1 mois',
+      mobility: ['Toulouse', 'Bordeaux', 'Hybride'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'B2' },
+      ],
+      linkedin: '',
+      cv: '',
     },
     {
       id: 'c007',
@@ -145,6 +278,27 @@ const SU_DATA = {
       date: '2026-05-08',
       stats: { accroche: 11, decouverte: 12, besoin: 14, objections: 11, valeur: 11, closing: 8 },
       strengths: ['Expertise terrain', 'Connaissance ERP', 'Humour contrôlé'],
+      role_type: 'AE',
+      experience_years: 4,
+      experience_level: 'Confirmé',
+      deal_size: '20-100k€',
+      sales_cycle: '3-6 mois',
+      prospection_channels: ['Cold call', 'Events', 'Salons'],
+      hunting_pct: 65,
+      quota_attainment: 92,
+      sectors_mastered: ['ERP', 'Logistique', 'Manufacturing'],
+      company_size_target: ['Mid-Market (250-1k)', 'PME (50-250)'],
+      ote: { fixed: '40-50k', variable: '15-22k', total: '55-72k' },
+      status: 'Démissionnaire',
+      notice: '15 jours',
+      mobility: ['Lille', 'Bruxelles', 'Présentiel'],
+      languages: [
+        { name: 'Français',  level: 'Natif' },
+        { name: 'Anglais',   level: 'B2' },
+        { name: 'Néerlandais', level: 'B1' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/nicolas-roy-demo',
+      cv: 'cv-nicolas-roy.pdf',
     },
     {
       id: 'c008',
@@ -162,6 +316,27 @@ const SU_DATA = {
       date: '2026-05-05',
       stats: { accroche: 11, decouverte: 11, besoin: 13, objections: 10, valeur: 10, closing: 8 },
       strengths: ['Technicité réseau', 'Écoute active', 'Reformulation'],
+      role_type: 'SDR',
+      experience_years: 2,
+      experience_level: 'Junior',
+      deal_size: '5-25k€',
+      sales_cycle: '3-6 sem.',
+      prospection_channels: ['Cold call', 'Cold email', 'LinkedIn'],
+      hunting_pct: 100,
+      quota_attainment: 88,
+      sectors_mastered: ['Télécom', 'IT Services'],
+      company_size_target: ['Startup', 'Scale-up (50-250)'],
+      ote: { fixed: '38-48k', variable: '10-15k', total: '48-63k' },
+      status: 'En poste',
+      notice: '2 mois',
+      mobility: ['Marseille', 'Nice', 'Full remote'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'B2' },
+        { name: 'Italien',  level: 'B1' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/elodie-morin-demo',
+      cv: 'cv-elodie-morin.pdf',
     },
     {
       id: 'c009',
@@ -179,6 +354,27 @@ const SU_DATA = {
       date: '2026-05-03',
       stats: { accroche: 10, decouverte: 11, besoin: 13, objections: 10, valeur: 9, closing: 7 },
       strengths: ['Crédibilité sécurité', 'Découverte terrain', 'Présence vocale'],
+      role_type: 'BD',
+      experience_years: 2,
+      experience_level: 'Junior',
+      deal_size: '10-50k€',
+      sales_cycle: '5-12 sem.',
+      prospection_channels: ['Cold call', 'Door-to-door', 'Events'],
+      hunting_pct: 85,
+      quota_attainment: 82,
+      sectors_mastered: ['Sécurité physique', 'Surveillance', 'B2B Services'],
+      company_size_target: ['PME (50-250)', 'Mid-Market (250-1k)'],
+      ote: { fixed: '38-46k', variable: '10-18k', total: '48-64k' },
+      status: 'Entre deux postes',
+      notice: '—',
+      mobility: ['Strasbourg', 'Mulhouse', 'Présentiel'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Allemand', level: 'C1' },
+        { name: 'Anglais',  level: 'B1' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/antoine-leroy-demo',
+      cv: 'cv-antoine-leroy.pdf',
     },
     {
       id: 'c010',
@@ -196,6 +392,26 @@ const SU_DATA = {
       date: '2026-05-01',
       stats: { accroche: 10, decouverte: 10, besoin: 11, objections: 9, valeur: 9, closing: 7 },
       strengths: ['Connaissances produit', 'Écoute', 'Dynamisme'],
+      role_type: 'SDR',
+      experience_years: 1,
+      experience_level: 'Junior',
+      deal_size: '2-15k€',
+      sales_cycle: '2-5 sem.',
+      prospection_channels: ['Cold email', 'LinkedIn', 'Inbound'],
+      hunting_pct: 80,
+      quota_attainment: 78,
+      sectors_mastered: ['Assurance', 'InsurTech'],
+      company_size_target: ['Startup', 'PME (50-250)'],
+      ote: { fixed: '35-45k', variable: '8-12k', total: '43-57k' },
+      status: 'En poste',
+      notice: '1 mois',
+      mobility: ['Rennes', 'Nantes', 'Hybride'],
+      languages: [
+        { name: 'Français', level: 'Natif' },
+        { name: 'Anglais',  level: 'B2' },
+      ],
+      linkedin: 'https://www.linkedin.com/in/ines-garnier-demo',
+      cv: 'cv-ines-garnier.pdf',
     },
   ],
 
@@ -214,5 +430,44 @@ const SU_DATA = {
 
   getFamilyById(id) {
     return this.families.find(f => f.id === id) || { name: id, icon: '●' };
+  },
+
+  // === Méthodes utilitaires (enrichies) ===
+
+  /** Retourne le rôle complet à partir du code */
+  getRoleLabel(code) {
+    return (this.roles && this.roles[code]) ? this.roles[code].full : code;
+  },
+
+  /** Calcule le percentile du candidat dans le pool global (rank-based) */
+  getPercentile(candidateId) {
+    const sorted = [...this.candidates].sort((a, b) => b.score - a.score);
+    const rank = sorted.findIndex(c => c.id === candidateId) + 1;
+    if (rank === 0) return null;
+    return Math.ceil(rank / sorted.length * 100);
+  },
+
+  /** Calcule le percentile dans une famille donnée */
+  getPercentileInFamily(candidateId, familyId) {
+    const familyPool = this.candidates.filter(c => c.family === familyId);
+    if (familyPool.length === 0) return null;
+    const sorted = [...familyPool].sort((a, b) => b.score - a.score);
+    const rank = sorted.findIndex(c => c.id === candidateId) + 1;
+    if (rank === 0) return null;
+    return Math.ceil(rank / sorted.length * 100);
+  },
+
+  /** Total OTE moyen pour le pool (utile pour benchmarks) */
+  getPoolAverageOte() {
+    const values = this.candidates
+      .map(c => c.ote && c.ote.total)
+      .filter(Boolean)
+      .map(s => {
+        const match = String(s).match(/(\d+)\D+(\d+)/);
+        return match ? (parseInt(match[1]) + parseInt(match[2])) / 2 : null;
+      })
+      .filter(Boolean);
+    if (!values.length) return null;
+    return Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   },
 };
