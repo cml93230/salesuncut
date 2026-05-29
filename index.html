@@ -22,15 +22,15 @@
     .hero-kpi .kpi-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 4px; }
 
     /* ---- Hero card stack ---- */
-    .hero-stage { position: relative; aspect-ratio: 0.65; perspective: 1400px; }
+    .hero-stage { position: relative; aspect-ratio: 0.8; perspective: 1400px; overflow: visible; }
     .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
-    .hero-card-stack .tcard:nth-child(1) { transform: translateX(-90px) translateY(20px) rotate(-12deg); z-index: 1; }
+    .hero-card-stack .tcard:nth-child(1) { transform: translateX(-110px) translateY(20px) rotate(-12deg); z-index: 1; }
     .hero-card-stack .tcard:nth-child(2) { transform: translateY(0) rotate(2deg); z-index: 3; }
-    .hero-card-stack .tcard:nth-child(3) { transform: translateX(90px) translateY(20px) rotate(10deg); z-index: 2; }
-    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-160px) translateY(0) rotate(-18deg); }
+    .hero-card-stack .tcard:nth-child(3) { transform: translateX(110px) translateY(20px) rotate(10deg); z-index: 2; }
+    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-190px) translateY(0) rotate(-18deg); }
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
-    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(160px) translateY(0) rotate(16deg); }
+    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(190px) translateY(0) rotate(16deg); }
 
     /* ---- Two-col candidat / recruteur ---- */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
@@ -297,7 +297,7 @@
     document.getElementById('heroStack').innerHTML =
       heroIds.map(id => {
         const c = SU_DATA.candidates.find(x => x.id === id);
-        return c ? renderCard(c, { compact: true }) : '';
+        return c ? renderCard(c) : '';
       }).join('');
 
     const featuredCandidates = SU_DATA.candidates.filter(c => c.photo);
