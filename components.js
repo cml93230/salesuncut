@@ -21,7 +21,7 @@ function renderCard(c, opts = {}) {
       </div>`;
   }).join('');
 
-  const displayName = c.anonymous ? c.handle : c.name;
+  const displayName = c.anonymous ? 'Anonyme' : c.name;
   const serial = `SU-26-${String(c.id).replace('c','').padStart(4,'0')}`;
 
   return `
@@ -31,12 +31,10 @@ function renderCard(c, opts = {}) {
         <div class="tcard-header">
           <div>
             <div class="tcard-name">${displayName}</div>
-            <div class="tcard-handle">${c.handle}</div>
           </div>
           <div class="tcard-score">${c.score}<small>/100</small></div>
         </div>
         <div class="tcard-portrait">
-          <div class="tcard-family-badge">${fam.id}</div>
           ${c.photo
             ? `<img class="tcard-photo" src="${c.photo}" alt="${displayName}" loading="lazy">`
             : `<span class="silhouette">${fam.icon}</span>`
@@ -46,7 +44,7 @@ function renderCard(c, opts = {}) {
         <div class="tcard-stats">${statsHtml}</div>
         <div class="tcard-footer">
           <span>${fam.name}</span>
-          <span class="serial">${serial}</span>
+          <span>${c.location}</span>
         </div>
       </div>
     </div>`;
@@ -127,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
       display: block;
     }
     .tcard-photo + .tcard-rarity-stamp { z-index: 2; }
-    .tcard-family-badge { z-index: 2; }
   `;
   document.head.appendChild(style);
 

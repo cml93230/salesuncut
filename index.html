@@ -50,12 +50,24 @@
     .col ul li::before { content: '→'; font-family: var(--font-display); color: var(--gold); flex-shrink: 0; }
 
     /* ---- Two-col hints row ---- */
-    .two-col-hints {
+    .two-col-hints { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 16px; }
+
+    /* ---- Leaderboard sub-header ---- */
+    .lb-cols {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      margin-bottom: 16px;
+      grid-template-columns: 64px 40px 1fr 140px 120px 100px 64px;
+      padding: 8px 24px 10px;
+      border-bottom: 1.5px solid var(--ink);
+      background: var(--cream-2);
     }
+    .lb-cols span {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--teal-3);
+    }
+    .lb-cols span.score-col { text-align: right; color: var(--gold-deep); }
 
     /* ---- FAQ ---- */
     .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
@@ -65,12 +77,18 @@
     .faq details[open] summary::after { content: '−'; }
     .faq p { margin-top: 12px; color: var(--teal-2); font-size: 15px; line-height: 1.55; }
 
+    @media (max-width: 1100px) {
+      .lb-cols { grid-template-columns: 48px 36px 1fr 120px 0 0 56px; }
+      .lb-cols span:nth-child(5), .lb-cols span:nth-child(6) { display: none; }
+    }
     @media (max-width: 900px) {
       .hero-grid, .two-col, .faq { grid-template-columns: 1fr; }
       .col-recruteur { border-left: none; border-top: 1.5px solid var(--ink); }
       .hero-stage { display: none; }
       .hero-cta { flex-wrap: wrap; }
       .two-col-hints { grid-template-columns: 1fr; }
+      .lb-cols { grid-template-columns: 40px 32px 1fr 56px; }
+      .lb-cols span:nth-child(4), .lb-cols span:nth-child(5), .lb-cols span:nth-child(6) { display: none; }
     }
   </style>
 </head>
@@ -141,7 +159,7 @@
     </div>
   </div>
 
-  <!-- DERNIERS ARRIVANTS — juste après la marquee -->
+  <!-- DERNIERS ARRIVANTS -->
   <section class="section">
     <div class="container">
       <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:24px;">
@@ -168,24 +186,24 @@
         <div class="col col-candidat">
           <span class="eyebrow" style="color:var(--gold)">Pour les sales</span>
           <h2><small>Côté candidat</small>Sors du<br>CV-bingo. Place à la preuve.</h2>
-          <p>Tu en as marre d'envoyer 80 candidatures pour trois entretiens où on te demande « vendez-moi ce stylo ». On t'écoute vendre, point.</p>
+          <p>Tu en as marre d’envoyer 80 candidatures pour trois entretiens ? Prouve ce que tu sais faire et laisse les recruteurs venir à toi.</p>
           <ul>
-            <li>Ta carte active dans le pool pendant 18 mois : les recruteurs te trouvent, tu n'as rien à faire</li>
+            <li>Ta carte active dans le pool pendant 18 mois : les recruteurs te trouvent, tu n’as rien à faire</li>
             <li>Tu fixes tes conditions (salaire, remote, taille) — le matching vient à toi</li>
-            <li>Anonymat complet possible : tu valides avant de te révéler</li>
-            <li>Badge LinkedIn certifié SalesUncut : prouve tes scores directement sur ton profil</li>
+            <li>Anonymat complet possible : tu valides avant de te révéler</li>
+            <li>Badge LinkedIn certifié SalesUncut : prouve tes scores directement sur ton profil</li>
           </ul>
           <a href="candidat.html" class="btn gold">Passer ma simulation →</a>
         </div>
         <div class="col col-recruteur">
           <span class="eyebrow">Pour les recruteurs</span>
           <h2><small>Côté recruteur</small>Filtre.<br>Écoute. Recrute.</h2>
-          <p>Plus de pré-quali interminables au téléphone. Tu vois la carte, tu cliques l'extrait closing, tu sais en 30 secondes si le profil mérite un entretien.</p>
+          <p>Plus de pré-quali interminables au téléphone. Tu vois la carte, tu cliques l’extrait closing, tu sais en 30 secondes si le profil mérite un entretien.</p>
           <ul>
             <li>30 secondes pour décider si un profil mérite un entretien</li>
             <li>Filtres sur les vraies compétences (closing, discovery, gestion objections)</li>
-            <li>Extraits audio horodatés : tu entends la voix, les réactions, la posture</li>
-            <li><strong>Essai gratuit : 1 profil complet sans CB</strong></li>
+            <li>Extraits audio horodatés : tu entends la voix, les réactions, la posture</li>
+            <li><strong>Essai gratuit : 1 profil complet sans CB</strong></li>
           </ul>
           <a href="marketplace.html" class="btn">Voir le pool →</a>
         </div>
@@ -203,6 +221,15 @@
           <span>Classement général</span>
           <span class="mono" style="font-size:12px;letter-spacing:.1em;">MIS À JOUR EN TEMPS RÉEL</span>
         </div>
+        <div class="lb-cols">
+          <span>#</span>
+          <span></span>
+          <span>Candidat</span>
+          <span>Secteur</span>
+          <span>Ville</span>
+          <span>Disponibilité</span>
+          <span class="score-col">Score</span>
+        </div>
         <div id="leaderboardRows"></div>
       </div>
     </div>
@@ -215,27 +242,27 @@
       <h1 style="font-size:48px;margin:12px 0 32px;">Ce que tout le monde demande.</h1>
       <div class="faq">
         <details>
-          <summary>C'est quoi le prix ?</summary>
+          <summary>C’est quoi le prix ?</summary>
           <p>5€ pour passer la simulation. Un profil qui reste actif 18 mois dans le pool recruteurs.</p>
         </details>
         <details>
-          <summary>Ça sert à quoi si j'ai déjà un bon CV ?</summary>
-          <p>Le CV dit ce que tu as fait. L'appel dit comment tu vends. Les recruteurs qui recrutent des sales veulent entendre le deuxième, pas lire le premier.</p>
+          <summary>Ça sert à quoi si j’ai déjà un bon CV ?</summary>
+          <p>Le CV dit ce que tu as fait. L’appel dit comment tu vends. Les recruteurs qui recrutent des sales veulent entendre le deuxième, pas lire le premier.</p>
         </details>
         <details>
-          <summary>Comment vous notez ?</summary>
+          <summary>Comment vous notez ?</summary>
           <p>6 dimensions scorées sur 100 — accroche, découverte, objections, valeur, closing, création de valeur.</p>
         </details>
         <details>
-          <summary>Je peux retenter ?</summary>
+          <summary>Je peux retenter ?</summary>
           <p>Oui, après 30 jours. Tu peux aussi passer une autre famille sectorielle pour montrer que ton profil tient sur plusieurs terrains.</p>
         </details>
         <details>
-          <summary>Et si mon score est mauvais ?</summary>
+          <summary>Et si mon score est mauvais ?</summary>
           <p>Tu reçois ton rapport complet avec les axes de progression. Tu décides toi-même si tu publies ton profil dans le pool.</p>
         </details>
         <details>
-          <summary>Je suis recruteur. Comment j'accède au pool ?</summary>
+          <summary>Je suis recruteur. Comment j’accède au pool ?</summary>
           <p>1 profil complet gratuit sans CB. Filtre par score, secteur, disponibilité. Tu cliques sur un extrait audio, tu sais en 30 secondes. Abonnement si tu veux accès complet.</p>
         </details>
       </div>
@@ -245,7 +272,7 @@
   <!-- CTA FINAL -->
   <section style="background:var(--ink);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;">
     <div class="container" style="text-align:center;position:relative;">
-      <span class="eyebrow" style="color:var(--gold)">L'heure de vérité</span>
+      <span class="eyebrow" style="color:var(--gold)">L’heure de vérité</span>
       <h1 style="font-size:clamp(64px,9vw,140px);margin:24px 0;color:var(--cream);">
         Tu sais vendre.<br>
         <span style="color:var(--gold);font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400;">Prouve-le.</span>
@@ -264,7 +291,6 @@
   <script src="data.js"></script>
   <script src="components.js"></script>
   <script>
-    // Hero card stack — profils avec photos uniquement
     const heroIds = ['c001', 'c003', 'c004'];
     document.getElementById('heroStack').innerHTML =
       heroIds.map(id => {
@@ -272,23 +298,19 @@
         return c ? renderCard(c, { compact: true }) : '';
       }).join('');
 
-    // Featured cards — profils avec photos uniquement
     const featuredCandidates = SU_DATA.candidates.filter(c => c.photo);
     document.getElementById('featuredCards').innerHTML =
       featuredCandidates.slice(0, 4).map(c => renderCard(c)).join('');
 
-    // Leaderboard top 8 — tous candidats
     const top8 = [...SU_DATA.candidates].sort((a,b) => b.score - a.score).slice(0, 8);
     document.getElementById('leaderboardRows').innerHTML = top8.map((c, i) => {
       const fam = SU_DATA.getFamilyById(c.family);
+      const displayName = c.anonymous ? 'Anonyme' : c.name;
       return `
         <div class="lb-row ${i === 0 ? 'gold' : ''}">
           <div class="lb-rank ${i === 0 ? 'gold' : ''}">${String(i+1).padStart(2,'0')}</div>
           <div>${i===0?'👑':i===1?'🥈':i===2?'🥉':'·'}</div>
-          <div class="lb-name">
-            ${c.anonymous ? c.handle : c.name}
-            <span class="mono" style="color:var(--teal-3);font-size:11px;margin-left:6px;">${c.handle}</span>
-          </div>
+          <div class="lb-name">${displayName}</div>
           <div><span class="lb-tag">${fam.name}</span></div>
           <div class="mono" style="font-size:12px;color:var(--teal-2);">${c.location}</div>
           <div class="mono" style="font-size:12px;color:var(--teal-2);">${c.availability}</div>

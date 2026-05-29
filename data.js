@@ -19,7 +19,6 @@ const SU_DATA = {
   ],
 
   // Dimensions scorées — Total : 100
-  // Accroche 16 / Découverte 16 / Créer le besoin 20 / Objections 16 / Valeur 16 / Closing 16
   dimensions: [
     { key: 'accroche',   label: 'Accroche',        max: 16 },
     { key: 'decouverte', label: 'Découverte',       max: 16 },
@@ -32,7 +31,7 @@ const SU_DATA = {
   candidates: [
     {
       id: 'c001',
-      handle: 'KAIROS-11',
+      handle: 'Paris',
       name: 'Lucas Renard',
       anonymous: false,
       photo: 'G1.png',
@@ -49,7 +48,7 @@ const SU_DATA = {
     },
     {
       id: 'c002',
-      handle: 'ARES-04',
+      handle: 'Lyon',
       name: 'Sara Mourad',
       anonymous: true,
       family: 'F5',
@@ -65,7 +64,7 @@ const SU_DATA = {
     },
     {
       id: 'c003',
-      handle: 'NOVA-41',
+      handle: 'Bordeaux',
       name: 'Théo Blanc',
       anonymous: false,
       photo: 'G2.png',
@@ -82,7 +81,7 @@ const SU_DATA = {
     },
     {
       id: 'c004',
-      handle: 'ORION-77',
+      handle: 'Nantes',
       name: 'Camille Faure',
       anonymous: false,
       photo: 'F1.png',
@@ -99,7 +98,7 @@ const SU_DATA = {
     },
     {
       id: 'c005',
-      handle: 'VEGA-03',
+      handle: 'Paris',
       name: 'Julien Perrot',
       anonymous: false,
       photo: 'G3.png',
@@ -116,7 +115,7 @@ const SU_DATA = {
     },
     {
       id: 'c006',
-      handle: 'SIRIUS-22',
+      handle: 'Toulouse',
       name: 'Marie Duval',
       anonymous: true,
       family: 'F8',
@@ -132,7 +131,7 @@ const SU_DATA = {
     },
     {
       id: 'c007',
-      handle: 'ATHOS-09',
+      handle: 'Lille',
       name: 'Nicolas Roy',
       anonymous: false,
       photo: 'G4.png',
@@ -149,7 +148,7 @@ const SU_DATA = {
     },
     {
       id: 'c008',
-      handle: 'LYRA-55',
+      handle: 'Marseille',
       name: 'Élodie Morin',
       anonymous: false,
       photo: 'F2.png',
@@ -166,7 +165,7 @@ const SU_DATA = {
     },
     {
       id: 'c009',
-      handle: 'DRACO-18',
+      handle: 'Strasbourg',
       name: 'Antoine Leroy',
       anonymous: false,
       photo: 'G5.png',
@@ -183,7 +182,7 @@ const SU_DATA = {
     },
     {
       id: 'c010',
-      handle: 'CLEO-31',
+      handle: 'Rennes',
       name: 'Inès Garnier',
       anonymous: false,
       photo: 'F3.png',
