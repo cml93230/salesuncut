@@ -15,8 +15,34 @@
     .hero h1 .strike { position: relative; color: var(--teal-3); }
     .hero h1 .strike::after { content: ''; position: absolute; left: -4%; right: -4%; top: 50%; height: 8px; background: var(--rust); transform: rotate(-2deg); }
     .hero p.lede { font-size: 19px; color: var(--teal-2); max-width: 540px; margin-bottom: 36px; line-height: 1.55; }
-    .hero-cta { display: flex; gap: 24px; flex-wrap: nowrap; align-items: flex-start; }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: nowrap; align-items: flex-start; }
     .hero-cta-item { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ---- Hero CTA buttons ---- */
+    .btn-hero-sales {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+      padding: 18px 36px; border-radius: 4px; cursor: pointer;
+      background: var(--gold-deep); color: var(--cream);
+      border: 1.5px solid var(--gold-deep);
+      transition: all .2s; white-space: nowrap;
+    }
+    .btn-hero-sales:hover { background: var(--ink); border-color: var(--ink); }
+
+    .btn-hero-recruteur {
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: var(--font-mono); font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; text-decoration: none;
+      padding: 14px 36px; border-radius: 4px; cursor: pointer;
+      background: var(--ink); color: var(--cream);
+      border: 1.5px solid var(--ink);
+      transition: all .2s; white-space: nowrap; gap: 3px;
+    }
+    .btn-hero-recruteur .main-label { font-size: 13px; }
+    .btn-hero-recruteur .sub-label { font-size: 9px; letter-spacing: .18em; opacity: .55; }
+    .btn-hero-recruteur:hover { background: var(--teal); border-color: var(--teal); }
+
     .hero-kpi { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 36px; }
     .hero-kpi .kpi-num { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--gold-deep); line-height: 1; }
     .hero-kpi .kpi-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 4px; }
@@ -125,11 +151,14 @@
           <div class="hero-cta">
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté sales ↓</p>
-              <a href="candidat.html" class="btn gold">▶ Montrer ce que je vaux</a>
+              <a href="candidat.html" class="btn-hero-sales">▶ Passer le test (29 min)</a>
             </div>
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté recruteur ↓</p>
-              <a href="marketplace.html" class="btn" style="background:var(--ink);color:var(--cream);border-color:var(--ink);">Voir les profils sans inscription →</a>
+              <a href="marketplace.html" class="btn-hero-recruteur">
+                <span class="main-label">Accès recruteurs</span>
+                <span class="sub-label">Sans inscription</span>
+              </a>
             </div>
           </div>
           <div class="hero-kpi">
