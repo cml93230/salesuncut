@@ -307,10 +307,10 @@
     .status-cell { padding: 14px 16px; background: var(--cream-2); }
     .status-cell:nth-child(odd) { border-right: 1.5px solid var(--cream-3); }
 
-    /* ============ FORCES & AXES — SECTION FINALE ============ */
+    /* ============ FORCES & AXES — SECTION FINALE (rééquilibrée) ============ */
     .forces-section {
       background: var(--cream-2);
-      padding: 100px 0 100px;
+      padding: 48px 0 56px;
       border-top: 1px solid var(--cream-3);
       position: relative;
       overflow: hidden;
@@ -318,35 +318,35 @@
     .forces-section::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0;
-      height: 4px;
+      height: 3px;
       background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent);
     }
     .forces-header {
       text-align: center;
-      margin-bottom: 64px;
-      max-width: 720px;
+      margin-bottom: 32px;
+      max-width: 580px;
       margin-left: auto;
       margin-right: auto;
     }
     .forces-eyebrow {
-      font-family: var(--font-mono); font-size: 11px;
-      letter-spacing: .3em; text-transform: uppercase;
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: .25em; text-transform: uppercase;
       color: var(--gold-deep);
-      margin-bottom: 20px;
-      display: flex; justify-content: center; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+      display: flex; justify-content: center; align-items: center; gap: 12px;
     }
     .forces-eyebrow::before, .forces-eyebrow::after {
-      content: ''; width: 32px; height: 1px; background: var(--gold-deep); opacity: .6;
+      content: ''; width: 26px; height: 1px; background: var(--gold-deep); opacity: .5;
     }
     .forces-title {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: clamp(64px, 8vw, 120px);
+      font-size: clamp(38px, 4.8vw, 56px);
       text-transform: uppercase;
-      letter-spacing: -.025em;
+      letter-spacing: -.02em;
       color: var(--ink);
-      line-height: .9;
-      margin-bottom: 20px;
+      line-height: .95;
+      margin-bottom: 14px;
     }
     .forces-title .accent {
       color: var(--gold-deep);
@@ -357,9 +357,9 @@
       letter-spacing: -.01em;
     }
     .forces-subtitle {
-      font-size: 17px;
+      font-size: 15px;
       color: var(--teal-2);
-      line-height: 1.55;
+      line-height: 1.5;
     }
     .forces-grid {
       display: grid;
@@ -367,33 +367,31 @@
       gap: 28px;
     }
     .force-panel {
-      border-radius: 12px;
-      padding: 40px;
+      border-radius: 8px;
+      padding: 28px;
       position: relative;
       transition: transform .35s cubic-bezier(.22,1,.36,1);
     }
-    .force-panel:hover { transform: translateY(-4px); }
+    .force-panel:hover { transform: translateY(-3px); }
     .force-panel.strengths {
       background: var(--cream);
       border: 1.5px solid var(--gold);
-      box-shadow: 0 4px 24px rgba(201,168,106,.08);
     }
     .force-panel.weaknesses {
       background: var(--ink);
       color: var(--cream);
-      box-shadow: 0 4px 24px rgba(26,34,34,.15);
     }
     .force-panel-header {
-      display: flex; align-items: center; gap: 18px;
-      margin-bottom: 32px;
-      padding-bottom: 24px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 18px;
       border-bottom: 1px solid;
     }
     .force-panel.strengths .force-panel-header { border-bottom-color: var(--cream-3); }
     .force-panel.weaknesses .force-panel-header { border-bottom-color: rgba(255,248,231,.12); }
     .force-icon {
-      font-size: 24px;
-      width: 48px; height: 48px;
+      font-size: 16px;
+      width: 36px; height: 36px;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
       flex-shrink: 0;
@@ -409,16 +407,16 @@
     .force-panel-titlebox h3 {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: 28px;
+      font-size: 22px;
       text-transform: uppercase;
       letter-spacing: -.01em;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       line-height: 1;
     }
     .force-panel-titlebox .sub {
       font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: .18em;
+      font-size: 9px;
+      letter-spacing: .15em;
       text-transform: uppercase;
       color: var(--teal-3);
     }
@@ -427,23 +425,23 @@
       display: flex; flex-direction: column;
     }
     .force-item {
-      display: flex; gap: 20px; align-items: flex-start;
-      padding: 18px 0;
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 12px 0;
       border-bottom: 1px dashed;
-      transition: transform .25s ease, padding-left .25s ease;
+      transition: padding-left .25s ease;
     }
-    .force-item:last-child { border-bottom: none; padding-bottom: 4px; }
-    .force-item:first-child { padding-top: 4px; }
+    .force-item:last-child { border-bottom: none; padding-bottom: 2px; }
+    .force-item:first-child { padding-top: 2px; }
     .force-panel.strengths .force-item { border-bottom-color: var(--cream-3); }
     .force-panel.weaknesses .force-item { border-bottom-color: rgba(255,248,231,.08); }
-    .force-item:hover { padding-left: 8px; }
+    .force-item:hover { padding-left: 6px; }
     .force-num {
       font-family: var(--font-display);
       font-weight: 900;
-      font-size: 38px;
-      line-height: .85;
+      font-size: 24px;
+      line-height: .9;
       flex-shrink: 0;
-      width: 56px;
+      width: 36px;
       letter-spacing: -.03em;
       padding-top: 4px;
     }
@@ -453,10 +451,10 @@
       flex: 1;
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 1.3;
       letter-spacing: -.01em;
-      padding-top: 8px;
+      padding-top: 6px;
       text-transform: none;
     }
     .force-panel.strengths .force-text { color: var(--ink); }
@@ -478,11 +476,11 @@
       .exp-mini-cell:last-child { border-bottom: none; }
       .status-cell { border-right: none !important; border-bottom: 1.5px solid var(--cream-3); }
       .status-cell:last-child { border-bottom: none; }
-      .forces-grid { grid-template-columns: 1fr; gap: 20px; }
-      .forces-section { padding: 60px 0; }
-      .force-panel { padding: 28px; }
-      .force-num { font-size: 30px; width: 44px; }
-      .force-text { font-size: 17px; }
+      .forces-grid { grid-template-columns: 1fr; gap: 16px; }
+      .forces-section { padding: 40px 0; }
+      .force-panel { padding: 22px; }
+      .force-num { font-size: 22px; width: 32px; }
+      .force-text { font-size: 15px; }
     }
   </style>
 </head>
@@ -625,7 +623,6 @@
     const roleDemand = { SDR: 5, BDR: 4, AE: 8, AM: 3, KAM: 6, BD: 2 };
     const matchPct = Math.min(99, c.score + (roleDemand[c.role_type] || 0));
 
-    // Audio moments par candidat (gardés en local pour la démo)
     const audioMomentsByCandidate = {
       'c001': [
         { key: 'accroche',   moment: 'Ouverture du cold call',             ts: '00:42', dur: '28s', featured: false },
@@ -649,8 +646,6 @@
       d.setMonth(d.getMonth() + 18);
       return d.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
     })();
-    const quote = c.quote || '« Profil certifié SalesUncut. »';
-    // Quote spécifique Lucas (sera étendu par candidat si besoin)
     const candidateQuotes = {
       'c001': '« Fait émerger les enjeux avant de présenter une solution. »',
       'c002': '« La cyber expliquée comme du business, pas comme une menace. »',
@@ -663,7 +658,7 @@
       'c009': '« Crédibilité terrain et ton calme face aux objections sécurité. »',
       'c010': '« Pose les bonnes questions assurance avant de penser produit. »',
     };
-    const finalQuote = candidateQuotes[c.id] || quote;
+    const finalQuote = candidateQuotes[c.id] || '« Profil certifié SalesUncut. »';
 
     document.getElementById('profil-card').innerHTML = renderCard(c);
 
@@ -903,7 +898,7 @@
       </div>
     `;
 
-    // ===== FORCES & AXES — SECTION FINALE =====
+    // ===== FORCES & AXES =====
     const strengthsHtml = (c.strengths || []).map((s, i) => `
       <div class="force-item">
         <div class="force-num">${String(i+1).padStart(2,'0')}</div>
