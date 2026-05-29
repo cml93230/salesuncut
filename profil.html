@@ -30,7 +30,6 @@
       padding: 20px 0; width: 100%;
     }
 
-    /* Card ×1.1 */
     #profil-card .tcard { zoom: 1.1; }
 
     /* --- Candidate info --- */
@@ -49,14 +48,21 @@
       font-family: var(--font-serif); font-style: italic; font-size: 18px;
       color: var(--teal-2); margin-bottom: 20px; line-height: 1.4;
     }
-    .profil-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .profil-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
     .profil-tag {
       font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
-      text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
+      text-transform: uppercase; padding: 6px 12px; border-radius: 20px;
       border: 1.5px solid var(--ink); color: var(--ink); background: transparent;
-      display: inline-flex; align-items: center; gap: 6px;
+      display: inline-flex; align-items: center; gap: 5px;
     }
     .profil-tag.gold-tag { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+    .profil-tag.benchmark-tag {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+      color: var(--ink); border: none; font-weight: 800;
+    }
+    .profil-tag.role-tag {
+      background: var(--rust); color: var(--cream); border-color: var(--rust);
+    }
 
     /* 2×2 meta grid */
     .profil-meta {
@@ -81,7 +87,7 @@
 
     /* --- Action bar --- */
     .profil-action-bar { background: var(--ink); color: var(--cream); padding: 24px 0; flex-shrink: 0; }
-    .profil-action-inner { display: flex; justify-content: space-between; align-items: center; }
+    .profil-action-inner { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
     .profil-action-title {
       font-family: var(--font-display); font-weight: 900; font-size: 20px;
       text-transform: uppercase; letter-spacing: -.01em; color: var(--cream);
@@ -90,19 +96,21 @@
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
       text-transform: uppercase; color: var(--gold); margin-top: 4px;
     }
-    .profil-action-btns { display: flex; gap: 10px; }
+    .profil-action-btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .action-btn {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 6px;
       font-family: var(--font-mono); font-size: 11px; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
-      padding: 10px 18px; border-radius: 4px; cursor: pointer; transition: all .2s; white-space: nowrap;
+      padding: 10px 16px; border-radius: 4px; cursor: pointer; transition: all .2s; white-space: nowrap;
     }
     .action-btn.primary { background: var(--gold-deep); color: var(--cream); border: 1.5px solid var(--gold-deep); }
     .action-btn.primary:hover { background: var(--gold-glow); border-color: var(--gold-glow); }
     .action-btn.secondary { background: transparent; color: var(--cream); border: 1.5px solid rgba(255,248,231,.3); }
     .action-btn.secondary:hover { border-color: var(--cream); }
+    .action-btn.linkedin-btn { background: #0a66c2; border-color: #0a66c2; color: #fff; }
+    .action-btn.linkedin-btn:hover { background: #084d92; border-color: #084d92; }
 
-    /* --- Two-col sections --- */
+    /* --- Sections --- */
     .profil-section { padding: 40px 0; }
     .profil-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: stretch; }
     .profil-panel {
@@ -132,8 +140,9 @@
     }
     .radar-click-hint::before { content: '→'; color: var(--gold-deep); }
 
-    /* --- Dimension bars (pleine largeur) --- */
-    .dim-list { display: flex; flex-direction: column; gap: 8px; }
+    /* --- Dimensions bars --- */
+    .dim-list, .dim-grid { display: flex; flex-direction: column; gap: 8px; }
+    .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .dim-card {
       border: 1.5px solid var(--cream-3); border-radius: 6px;
       padding: 14px 18px; cursor: pointer; transition: border-color .2s; background: var(--cream);
@@ -161,9 +170,6 @@
       background: var(--gold-deep); color: var(--cream); cursor: pointer; border: none;
     }
 
-    /* Dim grid 2 colonnes dans la section pleine largeur */
-    .dim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
     /* --- Points forts --- */
     .profil-pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
     .pf-box { border: 1.5px solid var(--cream-3); border-radius: 6px; padding: 18px; }
@@ -177,7 +183,7 @@
     .pf-item { font-size: 14px; color: var(--teal-2); padding: 7px 0; border-bottom: 1px solid var(--cream-3); line-height: 1.4; }
     .pf-item:last-child { border-bottom: none; }
 
-    /* --- Audio players — grille 2 colonnes --- */
+    /* --- Audio --- */
     .audio-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
     .audio-card { border-radius: 6px; padding: 12px 14px; background: var(--cream-2); border: 1.5px solid var(--cream-3); }
     .audio-card.featured { background: var(--ink); color: var(--cream); border-color: var(--ink); }
@@ -203,11 +209,10 @@
     .audio-meta { font-family: var(--font-mono); font-size: 9px; color: var(--teal-3); white-space: nowrap; }
     .audio-card.featured .audio-meta { color: rgba(255,248,231,.4); }
 
-    /* --- Full call CTA — dans le panel audio --- */
+    /* --- Full call CTA --- */
     .full-call-box {
       border: 1.5px dashed var(--cream-3); border-radius: 8px; padding: 20px;
-      margin-top: auto; padding-top: 20px;
-      grid-column: span 2; /* spans toute la largeur dans la grille audio */
+      margin-top: auto; grid-column: span 2;
     }
     .full-call-title {
       font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
@@ -226,14 +231,144 @@
     }
     .full-call-btn:hover { background: var(--ink); border-color: var(--ink); }
 
+    /* ============ NOUVELLES SECTIONS ============ */
+
+    /* Expérience — mini grid 2×2 */
+    .exp-mini-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1.5px solid var(--cream-3); border-radius: 6px; overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .exp-mini-cell { padding: 14px 16px; background: var(--cream-2); }
+    .exp-mini-cell:nth-child(1), .exp-mini-cell:nth-child(2) { border-bottom: 1.5px solid var(--cream-3); }
+    .exp-mini-cell:nth-child(odd) { border-right: 1.5px solid var(--cream-3); }
+    .exp-mini-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 5px;
+    }
+    .exp-mini-value {
+      font-family: var(--font-display); font-weight: 900; font-size: 17px;
+      text-transform: uppercase; letter-spacing: -.01em; color: var(--ink); line-height: 1.1;
+    }
+    .exp-mini-sub { font-size: 11px; color: var(--teal-2); margin-top: 3px; }
+
+    /* Quota highlight */
+    .quota-box {
+      background: var(--ink); color: var(--cream);
+      border-radius: 6px; padding: 16px 20px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .quota-num {
+      font-family: var(--font-display); font-weight: 900; font-size: 36px;
+      color: var(--gold); line-height: 1;
+    }
+    .quota-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+      text-transform: uppercase; color: rgba(255,248,231,.5); margin-top: 4px;
+    }
+    .quota-text { flex: 1; font-size: 12px; line-height: 1.4; color: rgba(255,248,231,.7); }
+
+    /* Hunt/Farm bar */
+    .hf-bar { margin-bottom: 18px; }
+    .hf-bar-labels {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 8px;
+    }
+    .hf-bar-track {
+      height: 10px; background: var(--cream-3); border-radius: 5px;
+      overflow: hidden; display: flex;
+    }
+    .hf-hunt { background: var(--gold-deep); height: 100%; }
+    .hf-farm { background: var(--teal); height: 100%; }
+    .hf-bar-values {
+      display: flex; justify-content: space-between;
+      font-family: var(--font-display); font-weight: 900; font-size: 14px; margin-top: 6px;
+    }
+    .hf-bar-values .hunt-val { color: var(--gold-deep); }
+    .hf-bar-values .farm-val { color: var(--teal); }
+
+    /* Tag groups */
+    .tag-group { margin-bottom: 14px; }
+    .tag-group:last-child { margin-bottom: 0; }
+    .tag-group-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 8px;
+    }
+    .tag-group .profil-tags { margin-bottom: 0; }
+    .tag-group .profil-tag { font-size: 10px; padding: 5px 10px; }
+    .profil-tag .lang-level {
+      font-weight: 700; color: var(--gold-deep); margin-left: 3px;
+    }
+
+    /* Match score box */
+    .match-box {
+      background: var(--cream-2); border: 1.5px solid var(--gold);
+      border-radius: 8px; padding: 16px 18px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .match-visual {
+      flex-shrink: 0; position: relative;
+      width: 80px; height: 80px;
+    }
+    .match-visual svg { width: 80px; height: 80px; transform: rotate(-90deg); }
+    .match-num {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-family: var(--font-display); font-weight: 900; font-size: 20px;
+      color: var(--ink);
+    }
+    .match-text { flex: 1; }
+    .match-title {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--gold-deep); margin-bottom: 4px;
+    }
+    .match-desc { font-size: 12px; line-height: 1.4; color: var(--teal-2); }
+
+    /* OTE grid 3 cells */
+    .ote-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0;
+      border: 1.5px solid var(--cream-3); border-radius: 6px; overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .ote-cell { padding: 14px 8px; text-align: center; background: var(--cream-2); }
+    .ote-cell:not(:last-child) { border-right: 1.5px solid var(--cream-3); }
+    .ote-cell.total { background: var(--ink); color: var(--cream); }
+    .ote-cell.total .ote-label { color: var(--gold); }
+    .ote-cell.total .ote-value { color: var(--gold); }
+    .ote-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 5px;
+    }
+    .ote-value {
+      font-family: var(--font-display); font-weight: 900; font-size: 16px;
+      color: var(--ink); white-space: nowrap;
+    }
+
+    /* Status grid */
+    .status-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+      border: 1.5px solid var(--cream-3); border-radius: 6px; overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .status-cell { padding: 14px 16px; background: var(--cream-2); }
+    .status-cell:nth-child(odd) { border-right: 1.5px solid var(--cream-3); }
+
     /* --- Responsive --- */
     @media (max-width: 900px) {
       .profil-above-fold { height: auto; min-height: auto; }
       .profil-hero-grid, .profil-two-col { grid-template-columns: 1fr; }
       .profil-action-inner { flex-direction: column; gap: 16px; text-align: center; }
+      .profil-action-btns { justify-content: center; }
       .profil-pf-grid, .audio-list, .dim-grid { grid-template-columns: 1fr; }
       .full-call-box { grid-column: span 1; }
       #profil-card .tcard { zoom: 1; }
+      .ote-grid { grid-template-columns: 1fr; }
+      .ote-cell:not(:last-child) { border-right: none; border-bottom: 1.5px solid var(--cream-3); }
+      .exp-mini-grid, .status-grid { grid-template-columns: 1fr; }
+      .exp-mini-cell { border-right: none !important; border-bottom: 1.5px solid var(--cream-3); }
+      .exp-mini-cell:last-child { border-bottom: none; }
+      .status-cell { border-right: none !important; border-bottom: 1.5px solid var(--cream-3); }
+      .status-cell:last-child { border-bottom: none; }
     }
   </style>
 </head>
@@ -267,22 +402,16 @@
             <div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div>
             <div class="profil-action-sub" id="action-sub">★ Vérifié · Certifiat valide 18 mois</div>
           </div>
-          <div class="profil-action-btns">
-            <a href="#" class="action-btn primary">★ Contacter ce sales</a>
-            <a href="#" class="action-btn secondary">↓ Télécharger PDF</a>
-            <a href="marketplace.html" class="action-btn secondary">× Comparer</a>
-          </div>
+          <div class="profil-action-btns" id="action-btns"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- RADAR + AUDIO (avec full-call CTA intégré) -->
+  <!-- RADAR + AUDIO -->
   <section class="profil-section">
     <div class="container">
       <div class="profil-two-col">
-
-        <!-- Panel radar -->
         <div class="profil-panel" id="radar-panel">
           <div class="profil-panel-eyebrow">Performance globale</div>
           <div class="profil-panel-title">Radar 6 dimensions</div>
@@ -290,29 +419,52 @@
           <svg class="radar-svg" viewBox="0 0 550 450" id="radar-svg"></svg>
           <p class="radar-click-hint">Clique une dimension pour le détail</p>
         </div>
-
-        <!-- Panel audio + full-call CTA en bas -->
         <div class="profil-panel" style="gap:0">
           <div class="profil-panel-eyebrow">Extraits audio horodatés</div>
           <div class="profil-panel-title">Écoute la voix.</div>
           <div class="profil-panel-sub" id="audio-sub"></div>
-          <!-- grille audio 2×3 + CTA en bas (span 2) -->
           <div class="audio-list" id="audio-list"></div>
         </div>
-
       </div>
     </div>
   </section>
 
   <hr class="profil-divider">
 
-  <!-- DIMENSIONS — pleine largeur -->
+  <!-- DIMENSIONS pleine largeur -->
   <section class="profil-section" style="padding-top:28px">
     <div class="container">
       <div class="profil-panel">
         <div class="profil-panel-sub" style="margin-bottom:14px;">→ Clique une dimension pour le détail</div>
         <div class="dim-grid" id="dim-list"></div>
         <div class="profil-pf-grid" id="pf-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="profil-divider">
+
+  <!-- NOUVELLES SECTIONS : Expérience commerciale + Recherche & disponibilité -->
+  <section class="profil-section" style="padding-top:28px">
+    <div class="container">
+      <div class="profil-two-col">
+
+        <!-- Panel gauche : Expérience commerciale -->
+        <div class="profil-panel" id="exp-panel">
+          <div class="profil-panel-eyebrow">Profil terrain</div>
+          <div class="profil-panel-title">Expérience commerciale</div>
+          <div class="profil-panel-sub">Données déclaratives signées par le candidat</div>
+          <div id="exp-content"></div>
+        </div>
+
+        <!-- Panel droit : Recherche & disponibilité -->
+        <div class="profil-panel" id="search-panel">
+          <div class="profil-panel-eyebrow">Profil recherche</div>
+          <div class="profil-panel-title">Ce qu'il cherche</div>
+          <div class="profil-panel-sub">Conditions actuelles · package &amp; mobilité</div>
+          <div id="search-content"></div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -333,11 +485,16 @@
     const levelLabel = SU_DATA.levels[level].label;
     const displayName = c.anonymous ? 'Anonyme' : c.name;
     const dims = SU_DATA.dimensions;
+    const percentile = SU_DATA.getPercentile(c.id);
+    const roleLabel = SU_DATA.getRoleLabel(c.role_type);
+
+    // Match score recruteur (cosmétique mais stable par candidat)
+    const roleDemand = { SDR: 5, BDR: 4, AE: 8, AM: 3, KAM: 6, BD: 2 };
+    const matchPct = Math.min(99, c.score + (roleDemand[c.role_type] || 0));
 
     const candidateExtras = {
       'c001': {
         quote: '« Fait émerger les enjeux avant de présenter une solution. »',
-        tags: ['Scale-up (50-250)', 'Full remote', '90% Chasse / 10% Élevage'],
         weaknesses: ['Closing à consolider', 'Accroche à personnaliser davantage'],
         validity: 'Nov 2027', serial: '#0001/200',
         audioMoments: [
@@ -359,7 +516,7 @@
       },
     };
     const extras = candidateExtras[c.id] || {
-      quote: '« Profil certifié SalesUncut. »', tags: [c.remote], weaknesses: ['Axe à préciser'],
+      quote: '« Profil certifié SalesUncut. »', weaknesses: ['Axe à préciser'],
       validity: 'Nov 2027', serial: '#0001/200',
       audioMoments: dims.map((d, i) => ({ key: d.key, moment: 'Extrait ' + d.label, ts: '0' + (i*4) + ':00', dur: '30s', featured: i === 1 })),
       dimDetails: {},
@@ -367,11 +524,16 @@
 
     document.getElementById('profil-card').innerHTML = renderCard(c);
 
+    // ===== HERO INFO =====
     const tagsHtml = [
       `<span class="profil-tag gold-tag">★ ${levelLabel} · ${c.score}/100</span>`,
+      `<span class="profil-tag benchmark-tag">↑ TOP ${percentile}% du pool</span>`,
+      `<span class="profil-tag role-tag">${c.role_type} · ${roleLabel}</span>`,
       `<span class="profil-tag">${fam.name}</span>`,
-      ...extras.tags.map(t => `<span class="profil-tag">${t}</span>`),
+      `<span class="profil-tag">${c.experience_years} ans · ${c.experience_level}</span>`,
+      `<span class="profil-tag">${c.remote}</span>`,
     ].join('');
+
     const availLabel = c.availability === 'Immédiat' ? 'IMMÉDIATE' : c.availability.toUpperCase();
     document.getElementById('profil-info').innerHTML = `
       <div class="profil-eyebrow">Profil ${c.location} · Certifié SalesUncut</div>
@@ -380,21 +542,30 @@
       <div class="profil-tags">${tagsHtml}</div>
       <div class="profil-meta">
         <div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">${c.location}</div></div>
-        <div class="profil-meta-cell"><div class="profil-meta-label">Salaire visé</div><div class="profil-meta-value">${c.target_salary}€</div></div>
+        <div class="profil-meta-cell"><div class="profil-meta-label">OTE Total visé</div><div class="profil-meta-value">${c.ote.total}€</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Dispo</div><div class="profil-meta-value">${availLabel}</div></div>
         <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu'à</div><div class="profil-meta-value">${extras.validity}</div></div>
       </div>`;
 
+    // ===== ACTION BAR =====
     document.getElementById('action-title').textContent =
       c.availability === 'Immédiat' ? 'Ce profil est dispo immédiatement' : `Disponible dans ${c.availability}`;
     document.getElementById('action-sub').innerHTML =
       `★ Vérifié · ${new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})} · Certifiat valide 18 mois · ${extras.serial}`;
 
+    const btnsHtml = [
+      `<a href="#" class="action-btn primary">★ Contacter ce sales</a>`,
+      c.linkedin ? `<a href="${c.linkedin}" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>` : '',
+      c.cv ? `<a href="${c.cv}" download class="action-btn secondary">↓ CV</a>` : '<span class="action-btn secondary" style="opacity:.4;cursor:not-allowed">CV non fourni</span>',
+      `<a href="#" onclick="window.print();return false;" class="action-btn secondary">↓ Rapport PDF</a>`,
+    ].filter(Boolean).join('');
+    document.getElementById('action-btns').innerHTML = btnsHtml;
+
     window.addEventListener('load', () => {
       document.documentElement.style.setProperty('--nav-height', document.getElementById('main-nav').offsetHeight + 'px');
     });
 
-    // RADAR
+    // ===== RADAR =====
     const svg = document.getElementById('radar-svg');
     const cx = 255, cy = 215, maxR = 130, labelOffset = 38;
     const n = dims.length;
@@ -432,7 +603,7 @@
     const dateStr = new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long'}) + ' 2026';
     document.getElementById('audio-sub').textContent = `6 moments calibrés sur les 6 dimensions du call · ${dateStr}`;
 
-    // AUDIO + CTA intégré en bas
+    // ===== AUDIO + FULL CALL =====
     function makeWave(n, played) {
       const h = [3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];
       return h.slice(0, n).map((v, i) =>
@@ -461,10 +632,9 @@
       <p class="full-call-desc">Téléchargement de l'audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
       <a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>
     </div>`;
-
     document.getElementById('audio-list').innerHTML = audioCards + fullCallCta;
 
-    // DIMENSIONS — en grille 2 colonnes dans le panel pleine largeur
+    // ===== DIMENSIONS =====
     const dimSubs = { accroche:'Dim 1 · ACR', decouverte:'Dim 2 · DEC', besoin:'Dim 3 · BSN', objections:'Dim 4 · OBJ', valeur:'Dim 5 · VAL', closing:'Dim 6 · CLO' };
     document.getElementById('dim-list').innerHTML = dims.map((d) => {
       const val = c.stats[d.key] || 0;
@@ -501,6 +671,133 @@
         <div class="pf-box-title"><span class="arrow arrow-down">▼</span>Axes de progression</div>
         ${(extras.weaknesses || []).map(w => `<div class="pf-item">${w}</div>`).join('')}
       </div>`;
+
+    // ===== NOUVELLE SECTION : Expérience commerciale =====
+    document.getElementById('exp-content').innerHTML = `
+      <div class="exp-mini-grid">
+        <div class="exp-mini-cell">
+          <div class="exp-mini-label">Rôle</div>
+          <div class="exp-mini-value">${c.role_type}</div>
+          <div class="exp-mini-sub">${roleLabel}</div>
+        </div>
+        <div class="exp-mini-cell">
+          <div class="exp-mini-label">Expérience</div>
+          <div class="exp-mini-value">${c.experience_years} ans</div>
+          <div class="exp-mini-sub">${c.experience_level}</div>
+        </div>
+        <div class="exp-mini-cell">
+          <div class="exp-mini-label">Taille de deal</div>
+          <div class="exp-mini-value">${c.deal_size}</div>
+        </div>
+        <div class="exp-mini-cell">
+          <div class="exp-mini-label">Cycle de vente</div>
+          <div class="exp-mini-value">${c.sales_cycle}</div>
+        </div>
+      </div>
+
+      <div class="quota-box">
+        <div>
+          <div class="quota-num">${c.quota_attainment}%</div>
+          <div class="quota-label">Atteinte quota</div>
+        </div>
+        <div class="quota-text">Performance déclarée sur les 3 derniers semestres. Cohérence validée par la simulation SalesUncut.</div>
+      </div>
+
+      <div class="hf-bar">
+        <div class="hf-bar-labels">
+          <span>Chasse (Hunting)</span>
+          <span>Élevage (Farming)</span>
+        </div>
+        <div class="hf-bar-track">
+          <div class="hf-hunt" style="width:${c.hunting_pct}%"></div>
+          <div class="hf-farm" style="width:${100 - c.hunting_pct}%"></div>
+        </div>
+        <div class="hf-bar-values">
+          <span class="hunt-val">${c.hunting_pct}%</span>
+          <span class="farm-val">${100 - c.hunting_pct}%</span>
+        </div>
+      </div>
+
+      <div class="tag-group">
+        <div class="tag-group-label">Canaux de prospection</div>
+        <div class="profil-tags">
+          ${c.prospection_channels.map(ch => `<span class="profil-tag">${ch}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="tag-group">
+        <div class="tag-group-label">Secteurs maîtrisés</div>
+        <div class="profil-tags">
+          ${c.sectors_mastered.map(s => `<span class="profil-tag">${s}</span>`).join('')}
+        </div>
+      </div>
+    `;
+
+    // ===== NOUVELLE SECTION : Recherche & disponibilité =====
+    document.getElementById('search-content').innerHTML = `
+      <div class="match-box">
+        <div class="match-visual">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6"
+              stroke-dasharray="${(matchPct/100 * 251.3).toFixed(1)} 251.3"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="match-num">${matchPct}%</div>
+        </div>
+        <div class="match-text">
+          <div class="match-title">Match recruteur</div>
+          <div class="match-desc">Ce profil correspond à ${matchPct}% des recherches actives sur <strong>${c.role_type} · ${fam.name}</strong> dans le pool recruteur.</div>
+        </div>
+      </div>
+
+      <div class="ote-grid">
+        <div class="ote-cell">
+          <div class="ote-label">Fixe</div>
+          <div class="ote-value">${c.ote.fixed}€</div>
+        </div>
+        <div class="ote-cell">
+          <div class="ote-label">Variable</div>
+          <div class="ote-value">${c.ote.variable}€</div>
+        </div>
+        <div class="ote-cell total">
+          <div class="ote-label">OTE Total</div>
+          <div class="ote-value">${c.ote.total}€</div>
+        </div>
+      </div>
+
+      <div class="status-grid">
+        <div class="status-cell">
+          <div class="exp-mini-label">Statut actuel</div>
+          <div class="exp-mini-value">${c.status}</div>
+        </div>
+        <div class="status-cell">
+          <div class="exp-mini-label">Préavis</div>
+          <div class="exp-mini-value">${c.notice}</div>
+        </div>
+      </div>
+
+      <div class="tag-group">
+        <div class="tag-group-label">Type d'entreprise visée</div>
+        <div class="profil-tags">
+          ${c.company_size_target.map(s => `<span class="profil-tag">${s}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="tag-group">
+        <div class="tag-group-label">Mobilité géographique</div>
+        <div class="profil-tags">
+          ${c.mobility.map(m => `<span class="profil-tag">${m}</span>`).join('')}
+        </div>
+      </div>
+
+      <div class="tag-group">
+        <div class="tag-group-label">Langues parlées</div>
+        <div class="profil-tags">
+          ${c.languages.map(l => `<span class="profil-tag">${l.name}<span class="lang-level">${l.level}</span></span>`).join('')}
+        </div>
+      </div>
+    `;
 
     document.title = `SalesUncut — Profil ${displayName}`;
   </script>
