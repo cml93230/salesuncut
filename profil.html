@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SalesUncut — Profil candidat</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ======= PROFIL PAGE ======= */
+
+    /* --- Nav override --- */
+    .nav-cta-profil {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; text-decoration: none;
+      padding: 10px 20px; border-radius: 4px;
+      background: var(--gold-deep); color: var(--cream);
+      border: 1.5px solid var(--gold-deep); transition: all .2s;
+    }
+    .nav-cta-profil:hover { background: var(--ink); border-color: var(--ink); }
+
+    /* --- Hero --- */
+    .profil-hero { padding: 48px 0 40px; }
+    .profil-hero-grid {
+      display: grid; grid-template-columns: 300px 1fr; gap: 64px; align-items: start;
+    }
+
+    /* --- Candidate info (right) --- */
+    .profil-eyebrow {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold-deep);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    }
+    .profil-eyebrow::before { content: '●'; font-size: 8px; }
+    .profil-name {
+      font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 6vw, 88px);
+      text-transform: uppercase; letter-spacing: -.02em; line-height: .9;
+      color: var(--ink); margin-bottom: 20px;
+    }
+    .profil-quote {
+      font-family: var(--font-serif); font-style: italic; font-size: 20px;
+      color: var(--teal-2); margin-bottom: 28px; line-height: 1.4;
+    }
+    .profil-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .profil-tag {
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em;
+      text-transform: uppercase; padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--ink); color: var(--ink); background: transparent;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .profil-tag.gold-tag {
+      background: var(--ink); color: var(--gold);
+      border-color: var(--ink);
+    }
+    .profil-meta {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+      border: 1.5px solid var(--cream-3); border-radius: 6px; overflow: hidden;
+    }
+    .profil-meta-cell {
+      padding: 16px 20px; border-right: 1.5px solid var(--cream-3);
+    }
+    .profil-meta-cell:last-child { border-right: none; }
+    .profil-meta-label {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 6px;
+    }
+    .profil-meta-value {
+      font-family: var(--font-display); font-weight: 900; font-size: 18px;
+      text-transform: uppercase; letter-spacing: -.01em; color: var(--ink);
+    }
+
+    /* --- Divider --- */
+    .profil-divider { border: none; border-top: 1px solid var(--cream-3); margin: 0; }
+
+    /* --- Two-col sections --- */
+    .profil-section { padding: 48px 0; }
+    .profil-two-col {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
+    }
+    .profil-panel {
+      border: 1.5px solid var(--cream-3); border-radius: 8px;
+      padding: 32px; background: var(--cream);
+    }
+    .profil-panel-eyebrow {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold-deep); margin-bottom: 8px;
+    }
+    .profil-panel-title {
+      font-family: var(--font-display); font-weight: 900; font-size: 28px;
+      text-transform: uppercase; letter-spacing: -.01em; color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .profil-panel-sub {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal-3); margin-bottom: 28px;
+    }
+
+    /* --- Radar --- */
+    .radar-svg { width: 100%; max-width: 360px; margin: 0 auto; display: block; }
+    .radar-click-hint {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal-3);
+      margin-top: 16px; display: flex; align-items: center; gap: 6px;
+    }
+    .radar-click-hint::before { content: '→'; color: var(--gold-deep); }
+
+    /* --- Dimension bars --- */
+    .dim-list { display: flex; flex-direction: column; gap: 8px; }
+    .dim-card {
+      border: 1.5px solid var(--cream-3); border-radius: 6px;
+      padding: 16px 20px; cursor: pointer; transition: border-color .2s;
+      background: var(--cream);
+    }
+    .dim-card:hover { border-color: var(--gold); }
+    .dim-card.active {
+      background: var(--ink); color: var(--cream); border-color: var(--ink);
+    }
+    .dim-card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .dim-label {
+      font-family: var(--font-display); font-weight: 700; font-size: 16px;
+      text-transform: uppercase; letter-spacing: -.01em;
+    }
+    .dim-sublabel {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal-3); margin-top: 2px;
+    }
+    .dim-card.active .dim-sublabel { color: rgba(255,248,231,.5); }
+    .dim-score-num {
+      font-family: var(--font-display); font-weight: 900; font-size: 22px;
+      color: var(--ink); line-height: 1;
+    }
+    .dim-score-max { font-size: 13px; color: var(--teal-3); font-weight: 400; }
+    .dim-card.active .dim-score-num { color: var(--gold); }
+    .dim-bar-track {
+      height: 4px; background: var(--cream-3); border-radius: 2px; overflow: hidden;
+    }
+    .dim-card.active .dim-bar-track { background: rgba(255,248,231,.15); }
+    .dim-bar-fill {
+      height: 100%; background: var(--ink); border-radius: 2px;
+      transition: width .4s ease;
+    }
+    .dim-card.active .dim-bar-fill { background: var(--gold); }
+    .dim-detail {
+      display: none; margin-top: 14px; font-size: 14px; line-height: 1.55;
+      color: rgba(255,248,231,.8);
+    }
+    .dim-detail.open { display: block; }
+    .dim-detail-cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 10px 20px; border-radius: 4px; margin-top: 12px;
+      background: var(--gold-deep); color: var(--cream); text-decoration: none;
+      cursor: pointer; border: none;
+    }
+
+    /* --- Points forts / axes --- */
+    .profil-pf-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;
+    }
+    .pf-box { border: 1.5px solid var(--cream-3); border-radius: 6px; padding: 20px; }
+    .pf-box-title {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--ink); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pf-box-title .arrow { color: var(--gold-deep); font-size: 14px; }
+    .pf-box-title .arrow-down { color: var(--rust); }
+    .pf-item {
+      font-size: 14px; color: var(--teal-2); padding: 8px 0;
+      border-bottom: 1px solid var(--cream-3); line-height: 1.4;
+    }
+    .pf-item:last-child { border-bottom: none; }
+
+    /* --- Audio players --- */
+    .audio-list { display: flex; flex-direction: column; gap: 12px; }
+    .audio-card {
+      border-radius: 6px; padding: 18px 20px;
+      background: var(--cream-2); border: 1.5px solid var(--cream-3);
+    }
+    .audio-card.featured {
+      background: var(--ink); color: var(--cream); border-color: var(--ink);
+    }
+    .audio-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .audio-dim-name {
+      font-family: var(--font-display); font-weight: 700; font-size: 15px;
+      text-transform: uppercase; letter-spacing: -.01em;
+    }
+    .audio-moment {
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal-3); margin-top: 2px;
+    }
+    .audio-card.featured .audio-moment { color: rgba(255,248,231,.4); }
+    .audio-score {
+      font-family: var(--font-display); font-weight: 900; font-size: 20px;
+      color: var(--gold-deep);
+    }
+    .audio-card.featured .audio-score { color: var(--gold); }
+    .audio-player { display: flex; align-items: center; gap: 12px; }
+    .audio-play-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: var(--ink); color: var(--cream); font-size: 12px;
+      transition: all .2s;
+    }
+    .audio-card.featured .audio-play-btn { background: var(--gold-deep); color: var(--cream); }
+    .audio-play-btn:hover { transform: scale(1.08); }
+    .waveform {
+      flex: 1; display: flex; align-items: center; gap: 2px; height: 32px; overflow: hidden;
+    }
+    .waveform-bar {
+      flex-shrink: 0; width: 3px; border-radius: 2px;
+      background: rgba(26,34,34,.2);
+    }
+    .audio-card.featured .waveform-bar { background: rgba(255,248,231,.2); }
+    .waveform-bar.played { background: var(--gold-deep); }
+    .audio-card.featured .waveform-bar.played { background: var(--gold); }
+    .audio-meta {
+      font-family: var(--font-mono); font-size: 10px; color: var(--teal-3);
+      white-space: nowrap;
+    }
+    .audio-card.featured .audio-meta { color: rgba(255,248,231,.4); }
+
+    /* --- Full call CTA box --- */
+    .full-call-box {
+      border: 1.5px dashed var(--cream-3); border-radius: 8px; padding: 28px;
+      margin-top: 12px;
+    }
+    .full-call-title {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em;
+      text-transform: uppercase; color: var(--gold-deep); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .full-call-title::before { content: '★'; }
+    .full-call-desc { font-size: 14px; color: var(--teal-2); line-height: 1.55; margin-bottom: 20px; }
+    .full-call-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+      padding: 12px 24px; border-radius: 4px;
+      background: var(--gold-deep); color: var(--cream);
+      border: 1.5px solid var(--gold-deep); cursor: pointer; transition: all .2s;
+    }
+    .full-call-btn:hover { background: var(--ink); border-color: var(--ink); }
+
+    /* --- Bottom action bar --- */
+    .profil-action-bar {
+      background: var(--ink); color: var(--cream); padding: 28px 0;
+    }
+    .profil-action-inner {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .profil-action-title {
+      font-family: var(--font-display); font-weight: 900; font-size: 22px;
+      text-transform: uppercase; letter-spacing: -.01em; color: var(--cream);
+    }
+    .profil-action-sub {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--gold); margin-top: 4px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .profil-action-btns { display: flex; gap: 12px; }
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+      padding: 12px 22px; border-radius: 4px; cursor: pointer; transition: all .2s;
+      white-space: nowrap;
+    }
+    .action-btn.primary { background: var(--gold-deep); color: var(--cream); border: 1.5px solid var(--gold-deep); }
+    .action-btn.primary:hover { background: var(--gold-glow); border-color: var(--gold-glow); }
+    .action-btn.secondary { background: transparent; color: var(--cream); border: 1.5px solid rgba(255,248,231,.3); }
+    .action-btn.secondary:hover { border-color: var(--cream); }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+      .profil-hero-grid, .profil-two-col { grid-template-columns: 1fr; }
+      .profil-meta { grid-template-columns: 1fr 1fr; }
+      .profil-meta-cell:nth-child(2) { border-right: none; }
+      .profil-action-inner { flex-direction: column; gap: 20px; text-align: center; }
+      .profil-pf-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="page-enter">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="candidat.html">Pour candidats</a>
+      <a href="marketplace.html">Pour recruteurs</a>
+      <a href="profil.html" class="active">Voir un profil</a>
+    </div>
+    <a href="marketplace.html" class="nav-cta-profil">← Retour au pool</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="profil-hero">
+    <div class="container">
+      <div class="profil-hero-grid">
+
+        <!-- Card -->
+        <div id="profil-card"></div>
+
+        <!-- Info -->
+        <div id="profil-info">
+          <!-- injected by JS -->
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="profil-divider">
+
+  <!-- RADAR + AUDIO -->
+  <section class="profil-section">
+    <div class="container">
+      <div class="profil-two-col">
+
+        <!-- Radar -->
+        <div class="profil-panel" id="radar-panel">
+          <div class="profil-panel-eyebrow">Performance globale</div>
+          <div class="profil-panel-title">Radar 6 dimensions</div>
+          <div class="profil-panel-sub" id="radar-sub">Note IA · Grille publique</div>
+          <svg class="radar-svg" viewBox="0 0 400 430" id="radar-svg"></svg>
+          <p class="radar-click-hint">Clique une dimension pour le détail</p>
+        </div>
+
+        <!-- Audio -->
+        <div class="profil-panel">
+          <div class="profil-panel-eyebrow">Extraits audio horodatés</div>
+          <div class="profil-panel-title">Écoute la voix.</div>
+          <div class="profil-panel-sub" id="audio-sub">6 moments calibrés sur les 6 dimensions du call</div>
+          <div class="audio-list" id="audio-list"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="profil-divider">
+
+  <!-- DIMENSIONS + FULL CALL -->
+  <section class="profil-section" style="padding-top:32px">
+    <div class="container">
+      <div class="profil-two-col">
+
+        <!-- Dimension bars + points forts -->
+        <div class="profil-panel">
+          <div class="profil-panel-sub" style="margin-bottom:16px;font-size:10px;color:var(--teal-3);letter-spacing:.12em;text-transform:uppercase;">→ Clique une dimension pour le détail</div>
+          <div class="dim-list" id="dim-list"></div>
+          <div class="profil-pf-grid" id="pf-grid"></div>
+        </div>
+
+        <!-- Full call CTA -->
+        <div>
+          <div class="full-call-box">
+            <div class="full-call-title">Tu veux écouter l’appel complet ?</div>
+            <p class="full-call-desc">Téléchargement de l’audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
+            <a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM ACTION BAR -->
+  <div class="profil-action-bar" id="action-bar">
+    <div class="container">
+      <div class="profil-action-inner">
+        <div>
+          <div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div>
+          <div class="profil-action-sub" id="action-sub">★ Vérifié &middot; Certifiat valide 18 mois</div>
+        </div>
+        <div class="profil-action-btns">
+          <a href="#" class="action-btn primary">★ Contacter ce sales</a>
+          <a href="#" class="action-btn secondary">↓ Télécharger PDF</a>
+          <a href="marketplace.html" class="action-btn secondary">× Comparer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+    // ===== LOAD CANDIDATE =====
+    const params = new URLSearchParams(window.location.search);
+    const cid = params.get('id') || 'c001';
+    const c = SU_DATA.candidates.find(x => x.id === cid) || SU_DATA.candidates[0];
+    const fam = SU_DATA.getFamilyById(c.family);
+    const level = c.level || SU_DATA.getLevel(c.score);
+    const levelLabel = SU_DATA.levels[level].label;
+    const displayName = c.anonymous ? 'Anonyme' : c.name;
+    const dims = SU_DATA.dimensions;
+
+    // Candidate-specific data (will come from backend later)
+    const candidateExtras = {
+      'c001': {
+        quote: '\u00ab\u00a0Crée le besoin avant même que le prospect comprenne pourquoi.\u00a0\u00bb',
+        tags: ['Scale-up (50-250)', 'Full remote', '90% Chasse'],
+        weaknesses: ['Closing \u00e0 consolider', 'Accroche \u00e0 personnaliser davantage'],
+        validity: 'Nov 2027',
+        serial: '#0001/200',
+        audioMoments: [
+          { key: 'accroche',   moment: 'Ouverture du cold call',           ts: '00:42', dur: '28s', featured: false },
+          { key: 'decouverte', moment: 'Question de qualification budget',  ts: '04:12', dur: '35s', featured: true  },
+          { key: 'besoin',     moment: 'Construction du besoin latent',     ts: '07:55', dur: '40s', featured: false },
+          { key: 'objections', moment: 'Réponse "trop cher" sous pression', ts: '14:08', dur: '30s', featured: false },
+          { key: 'valeur',     moment: 'Pitch de valeur orienté ROI',       ts: '18:30', dur: '32s', featured: false },
+          { key: 'closing',    moment: 'Demande de signature directe',      ts: '26:10', dur: '22s', featured: false },
+        ],
+        dimDetails: {
+          accroche:   'Ouverture directe et personnalisée. Hook sur le contexte prospect en moins de 20 secondes. Très peu de chauffe inutile.',
+          decouverte: '15 questions ouvertes sur les 30 premières minutes, dont 9 sur la douleur business avant le produit. Reformulation précise, très bonne écoute active.',
+          besoin:     'Construction du besoin implicite en besoin explicite maîtrisée. Le prospect exprime lui-même le problème sans que Lucas force.',
+          objections: 'Gestion solide sur le prix et la concurrence. Quelques rebonds mécaniques sur les objections complexes.',
+          valeur:     'ROI clairement articulé, chiffres concrets. Quelques généralités sur la valeur produit à viter.',
+          closing:    'Demande directe mais quelques hésitations sur le timing. Closing \u00e0 anticiper plus tôt dans le call.',
+        },
+      },
+    };
+    const extras = candidateExtras[c.id] || {
+      quote: '\u00ab\u00a0Profil certifié SalesUncut.\u00a0\u00bb',
+      tags: [c.remote],
+      weaknesses: ['Axe \u00e0 préciser'],
+      validity: 'Nov 2027',
+      serial: '#0001/200',
+      audioMoments: dims.map((d, i) => ({ key: d.key, moment: 'Extrait ' + d.label, ts: '0' + (i*4) + ':00', dur: '30s', featured: i === 1 })),
+      dimDetails: {},
+    };
+
+    // ===== RENDER CARD =====
+    document.getElementById('profil-card').innerHTML = renderCard(c);
+
+    // ===== RENDER INFO =====
+    const tagsHtml = [
+      `<span class="profil-tag gold-tag">★ ${levelLabel} &middot; ${c.score}/100</span>`,
+      `<span class="profil-tag">${fam.id} &middot; ${fam.name}</span>`,
+      ...extras.tags.map(t => `<span class="profil-tag">${t}</span>`),
+    ].join('');
+
+    const availLabel = c.availability === 'Immédiat' ? 'IMMÉDIATE' : c.availability.toUpperCase();
+
+    document.getElementById('profil-info').innerHTML = `
+      <div class="profil-eyebrow">Profil ${c.location} &middot; Certifié SalesUncut</div>
+      <div class="profil-name">${displayName.replace(' ', '<br>')}</div>
+      <div class="profil-quote">${extras.quote}</div>
+      <div class="profil-tags">${tagsHtml}</div>
+      <div class="profil-meta">
+        <div class="profil-meta-cell">
+          <div class="profil-meta-label">Localisation</div>
+          <div class="profil-meta-value">${c.location}</div>
+        </div>
+        <div class="profil-meta-cell">
+          <div class="profil-meta-label">Salaire visé</div>
+          <div class="profil-meta-value">${c.target_salary}€</div>
+        </div>
+        <div class="profil-meta-cell">
+          <div class="profil-meta-label">Dispo</div>
+          <div class="profil-meta-value">${availLabel}</div>
+        </div>
+        <div class="profil-meta-cell">
+          <div class="profil-meta-label">Valide jusqu’à</div>
+          <div class="profil-meta-value">${extras.validity}</div>
+        </div>
+      </div>`;
+
+    // ===== RENDER RADAR SVG =====
+    const svg = document.getElementById('radar-svg');
+    const cx = 200, cy = 210, maxR = 140;
+    const n = dims.length;
+    const angle = i => -Math.PI / 2 + i * 2 * Math.PI / n;
+    const pt = (r, i) => ({
+      x: cx + r * Math.cos(angle(i)),
+      y: cy + r * Math.sin(angle(i)),
+    });
+    const ptStr = r => dims.map((_, i) => { const p = pt(r, i); return p.x + ',' + p.y; }).join(' ');
+
+    // Grid
+    let gridHtml = '';
+    [0.25, 0.5, 0.75, 1].forEach(ratio => {
+      gridHtml += `<polygon points="${ptStr(maxR * ratio)}" fill="${ratio === 1 ? 'rgba(201,168,106,.08)' : 'none'}" stroke="rgba(201,168,106,${ratio === 1 ? '.4' : '.15'})" stroke-width="1" />`;
+    });
+
+    // Axes
+    dims.forEach((_, i) => {
+      const p = pt(maxR, i);
+      gridHtml += `<line x1="${cx}" y1="${cy}" x2="${p.x}" y2="${p.y}" stroke="rgba(201,168,106,.15)" stroke-width="1" />`;
+    });
+
+    // Data polygon
+    const dataPts = dims.map((d, i) => {
+      const val = c.stats[d.key] || 0;
+      const r = maxR * (val / d.max);
+      const p = pt(r, i);
+      return p.x + ',' + p.y;
+    }).join(' ');
+    gridHtml += `<polygon points="${dataPts}" fill="rgba(163,133,79,.25)" stroke="var(--gold-deep)" stroke-width="2" />`;
+
+    // Dots + labels
+    dims.forEach((d, i) => {
+      const val = c.stats[d.key] || 0;
+      const r = maxR * (val / d.max);
+      const dp = pt(r, i);
+      const lp = pt(maxR + 30, i);
+      gridHtml += `<circle cx="${dp.x}" cy="${dp.y}" r="4" fill="var(--gold-deep)" />`;
+
+      // Label positioning
+      const ax = angle(i);
+      let anchor = 'middle';
+      if (Math.cos(ax) > 0.3) anchor = 'start';
+      else if (Math.cos(ax) < -0.3) anchor = 'end';
+
+      gridHtml += `
+        <text x="${lp.x}" y="${lp.y - 6}" text-anchor="${anchor}"
+          font-family="'Big Shoulders Display', Impact, sans-serif" font-weight="700"
+          font-size="12" text-transform="uppercase" fill="#1a2222" letter-spacing="1">
+          ${d.label.toUpperCase()}
+        </text>
+        <text x="${lp.x}" y="${lp.y + 10}" text-anchor="${anchor}"
+          font-family="'JetBrains Mono', monospace" font-size="11" fill="#a3854f">
+          ${val}/${d.max}
+        </text>`;
+    });
+
+    svg.innerHTML = gridHtml;
+
+    // Sub
+    document.getElementById('radar-sub').textContent =
+      `Note IA validée humainement · Grille publique · Scénario ${fam.id}-B2`;
+    document.getElementById('audio-sub').textContent =
+      `6 moments calibrés sur les 6 dimensions du call ${fam.id}-B2 · ${new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long'})} 2026`;
+
+    // ===== RENDER AUDIO =====
+    function makeWave(n, played) {
+      const heights = [3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];
+      return heights.slice(0, n).map((h, i) => {
+        const cls = i < played ? 'waveform-bar played' : 'waveform-bar';
+        return `<div class="${cls}" style="height:${h * 2}px"></div>`;
+      }).join('');
+    }
+
+    const audioHtml = extras.audioMoments.map((m, idx) => {
+      const dim = dims.find(d => d.key === m.key);
+      const val = c.stats[m.key] || 0;
+      const played = Math.round(30 * (idx / extras.audioMoments.length));
+      return `
+        <div class="audio-card ${m.featured ? 'featured' : ''}">
+          <div class="audio-header">
+            <div>
+              <div class="audio-dim-name">${dim ? dim.label : m.key}</div>
+              <div class="audio-moment">${m.moment}</div>
+            </div>
+            <div class="audio-score">${val}/${dim ? dim.max : '?'}</div>
+          </div>
+          <div class="audio-player">
+            <button class="audio-play-btn">&#9654;</button>
+            <div class="waveform">${makeWave(30, played)}</div>
+            <div class="audio-meta">${m.ts} &middot; ${m.dur}</div>
+          </div>
+        </div>`;
+    }).join('');
+    document.getElementById('audio-list').innerHTML = audioHtml;
+
+    // ===== RENDER DIMENSION BARS =====
+    const dimSubLabels = {
+      accroche:   'Dimension 1 · ACR',
+      decouverte: 'Dimension 2 · DEC',
+      besoin:     'Dimension 3 · BSN',
+      objections: 'Dimension 4 · OBJ',
+      valeur:     'Dimension 5 · VAL',
+      closing:    'Dimension 6 · CLO',
+    };
+    const dimHtml = dims.map((d, i) => {
+      const val = c.stats[d.key] || 0;
+      const pct = Math.round(val / d.max * 100);
+      const detail = (extras.dimDetails || {})[d.key] || '';
+      const am = extras.audioMoments.find(m => m.key === d.key);
+      return `
+        <div class="dim-card" data-idx="${i}" onclick="toggleDim(this)">
+          <div class="dim-card-header">
+            <div>
+              <div class="dim-label">${d.label}</div>
+              <div class="dim-sublabel">${dimSubLabels[d.key] || d.key}</div>
+            </div>
+            <div class="dim-score-num">${val}<span class="dim-score-max">/${d.max}</span></div>
+          </div>
+          <div class="dim-bar-track"><div class="dim-bar-fill" style="width:${pct}%"></div></div>
+          ${detail ? `<div class="dim-detail">${detail}${am ? `<br><button class="dim-detail-cta">▶ Écouter l’extrait &middot; ${am.ts}</button>` : ''}</div>` : ''}
+        </div>`;
+    }).join('');
+    document.getElementById('dim-list').innerHTML = dimHtml;
+
+    function toggleDim(el) {
+      const detail = el.querySelector('.dim-detail');
+      const wasActive = el.classList.contains('active');
+      document.querySelectorAll('.dim-card').forEach(c => {
+        c.classList.remove('active');
+        const d = c.querySelector('.dim-detail');
+        if (d) d.classList.remove('open');
+      });
+      if (!wasActive && detail) {
+        el.classList.add('active');
+        detail.classList.add('open');
+      }
+    }
+
+    // ===== RENDER POINTS FORTS / AXES =====
+    const strengths = c.strengths || [];
+    const weaknesses = extras.weaknesses || [];
+    const pfHtml = `
+      <div class="pf-box">
+        <div class="pf-box-title"><span class="arrow">▲</span>Points forts</div>
+        ${strengths.map(s => `<div class="pf-item">${s}</div>`).join('')}
+      </div>
+      <div class="pf-box">
+        <div class="pf-box-title"><span class="arrow arrow-down">▼</span>Axes de progression</div>
+        ${weaknesses.map(w => `<div class="pf-item">${w}</div>`).join('')}
+      </div>`;
+    document.getElementById('pf-grid').innerHTML = pfHtml;
+
+    // ===== ACTION BAR =====
+    if (c.availability === 'Immédiat') {
+      document.getElementById('action-title').textContent = 'Ce profil est dispo immédiatement';
+    } else {
+      document.getElementById('action-title').textContent = `Disponible dans ${c.availability}`;
+    }
+    document.getElementById('action-sub').innerHTML =
+      `★ Vérifié &middot; ${new Date(c.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'})} &middot; Certifiat valide 18 mois &middot; ${extras.serial}`;
+
+    // Update page title
+    document.title = `SalesUncut — Profil ${displayName}`;
+  </script>
+
+</body>
+</html>
