@@ -458,20 +458,18 @@
     const roleDemand = { SDR: 5, BDR: 4, AE: 8, AM: 3, KAM: 6, BD: 2 };
     const matchPct = Math.min(99, c.score + (roleDemand[c.role_type] || 0));
 
-    // ===== Benchmark (point 10) =====
     const sameRole = SU_DATA.candidates.filter(x => x.role_type === c.role_type);
     const avgScore = sameRole.length > 1
       ? Math.round(sameRole.reduce((s, x) => s + x.score, 0) / sameRole.length)
       : null;
 
-    // ===== Audio moments =====
     const audioMomentsByCandidate = {
       'c001': [
         { key: 'accroche',   moment: 'Ouverture du cold call',             ts: '00:42', dur: '28s', featured: false },
         { key: 'decouverte', moment: 'Question de qualification budget',    ts: '04:12', dur: '35s', featured: true  },
         { key: 'besoin',     moment: 'Construction du besoin latent',       ts: '07:55', dur: '40s', featured: false },
-        { key: 'objections', moment: 'Réponse « trop cher » sous pression', ts: '14:08', dur: '30s', featured: false },
-        { key: 'valeur',     moment: 'Pitch de valeur orienté ROI',         ts: '18:30', dur: '32s', featured: false },
+        { key: 'objections', moment: 'Reponse trop cher sous pression',     ts: '14:08', dur: '30s', featured: false },
+        { key: 'valeur',     moment: 'Pitch de valeur oriente ROI',         ts: '18:30', dur: '32s', featured: false },
         { key: 'closing',    moment: 'Demande de signature directe',        ts: '26:10', dur: '22s', featured: false },
       ],
     };
@@ -481,36 +479,34 @@
       dur: (25 + i * 3) + 's', featured: i === 1
     }));
 
-    // ===== Transcript data (point 9) =====
     const transcriptData = {
       'c001': [
-        { ts: '02:14', who: 'L', text: '« Monsieur Delorme, vos équipes perdent combien de temps par semaine à ressaisir des données entre vos outils ? »' },
-        { ts: '02:31', who: 'P', text: '« Honnêtement... 4 à 5 heures par commercial, facilement. »' },
-        { ts: '02:46', who: 'L', text: '« 12 commerciaux × 5h × 45 semaines — c\'est 2 700 heures perdues par an. On est d\'accord ? »' },
-        { ts: '14:23', who: 'L', text: '« Vous dites 18 000€ c\'est cher. Mais 2 700 heures à votre taux moyen, c\'est un ROI 5x en année 1. »' },
-        { ts: '26:10', who: 'L', text: '« On se cale 30 minutes avec votre DSI la semaine prochaine — mardi ou jeudi ? »' },
+        { ts: '02:14', who: 'L', text: 'Monsieur Delorme, vos equipes perdent combien de temps par semaine a ressaisir des donnees entre vos outils ?' },
+        { ts: '02:31', who: 'P', text: 'Honnêtement... 4 à 5 heures par commercial, facilement.' },
+        { ts: '02:46', who: 'L', text: '12 commerciaux x 5h x 45 semaines — c\'est 2 700 heures perdues par an. On est d\'accord ?' },
+        { ts: '14:23', who: 'L', text: 'Vous dites 18 000€ c\'est cher. Mais 2 700 heures a votre taux moyen, c\'est un ROI 5x en annee 1.' },
+        { ts: '26:10', who: 'L', text: 'On se cale 30 minutes avec votre DSI la semaine prochaine — mardi ou jeudi ?' },
       ],
     };
 
-    // ===== Candidate quotes =====
+    // NOTE CRITIQUE : toutes les strings JS avec apostrophes doivent être en double-quotes
     const candidateQuotes = {
-      'c001': '« Fait émerger les enjeux avant de présenter une solution. »',
-      'c002': '« La cyber expliquée comme du business, pas comme une menace. »',
-      'c003': '« Pose les vraies questions RH avant de proposer un démo. »',
-      'c004': '« Vend une histoire avant de vendre une plateforme marketing. »',
-      'c005': '« Parle finance avec la rigueur d'un analyste et la chaleur d'un partenaire. »',
-      'c006': '« Quantifie le ROI énergétique avant même de pitcher la solution. »',
-      'c007': '« Connaît le terrain ERP par cœur — et le fait sentir. »',
-      'c008': '« Sait écouter avant de pitcher — rare en télécom. »',
-      'c009': '« Crédibilité terrain et ton calme face aux objections sécurité. »',
-      'c010': '« Pose les bonnes questions assurance avant de penser produit. »',
+      'c001': "« Fait émerger les enjeux avant de présenter une solution. »",
+      'c002': "« La cyber expliquée comme du business, pas comme une menace. »",
+      'c003': "« Pose les vraies questions RH avant de proposer un démo. »",
+      'c004': "« Vend une histoire avant de vendre une plateforme marketing. »",
+      'c005': "« Parle finance avec la rigueur d'un analyste et la chaleur d'un partenaire. »",
+      'c006': "« Quantifie le ROI énergétique avant même de pitcher la solution. »",
+      'c007': "« Connaît le terrain ERP par coeur — et le fait sentir. »",
+      'c008': "« Sait écouter avant de pitcher — rare en télécom. »",
+      'c009': "« Crédibilité terrain et ton calme face aux objections sécurité. »",
+      'c010': "« Pose les bonnes questions assurance avant de penser produit. »",
     };
     const finalQuote = candidateQuotes[c.id] || '« Profil certifié SalesUncut. »';
 
     const serial   = `#${String(parseInt(c.id.replace('c',''))).padStart(4,'0')}/200`;
     const validity = (() => { const d = new Date(c.date); d.setMonth(d.getMonth()+18); return d.toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); })();
 
-    // ===== HERO INFO =====
     document.getElementById('profil-card').innerHTML = renderCard(c);
 
     const tagsHtml = [
@@ -522,7 +518,6 @@
       `<span class="profil-tag">${c.remote}</span>`,
     ].join('');
 
-    // Benchmark bar
     const bmHtml = avgScore && avgScore !== c.score ? `
       <div class="benchmark-row">
         <div class="bm-label">Score vs moyenne <strong>${c.role_type}</strong> du pool</div>
@@ -551,7 +546,6 @@
         <div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu'à</div><div class="profil-meta-value">${validity}</div></div>
       </div>`;
 
-    // ===== ACTION BAR — copy link (point 6) =====
     document.getElementById('action-title').textContent =
       c.availability === 'Immédiat' ? 'Ce profil est dispo immédiatement' : `Disponible dans ${c.availability}`;
     document.getElementById('action-sub').innerHTML =
@@ -574,7 +568,6 @@
       else { const el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); doCopy(); }
     }
 
-    // ===== RADAR =====
     const svg = document.getElementById('radar-svg');
     const cx = 255, cy = 215, maxR = 130, labelOffset = 38;
     const angle = i => -Math.PI/2 + i * 2*Math.PI/dims.length;
@@ -597,7 +590,6 @@
     document.getElementById('radar-sub').textContent = `Scénario ${fam.name}`;
     document.getElementById('audio-sub').textContent = `6 moments calibrés · ${new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long'})} 2026`;
 
-    // ===== MINI-PLAYER (point 12) =====
     let mpInterval = null, mpTime = 0, mpPaused = false, mpDuration = 30;
     const mpEl    = document.getElementById('mini-player');
     const mpName  = document.getElementById('mp-name');
@@ -610,7 +602,7 @@
       mpTime = 0; mpPaused = false;
       mpDuration = parseInt(dur) || 30;
       mpName.textContent = displayName;
-      mpDim.textContent  = `${dimLabel} · ${ts}`;
+      mpDim.textContent  = dimLabel + ' · ' + ts;
       mpFill.style.width = '0%';
       mpTime0.textContent = '0:00';
       mpBtn.textContent = '⏸';
@@ -621,101 +613,104 @@
         mpTime++;
         if (mpTime >= mpDuration) { clearInterval(mpInterval); mpBtn.textContent = '▶'; return; }
         mpFill.style.width = (mpTime/mpDuration*100).toFixed(1)+'%';
-        mpTime0.textContent = `0:${String(mpTime).padStart(2,'0')}`;
+        mpTime0.textContent = '0:' + String(mpTime).padStart(2,'0');
       }, 1000);
     }
 
-    mpBtn.addEventListener('click', () => {
-      mpPaused = !mpPaused;
-      mpBtn.textContent = mpPaused ? '▶' : '⏸';
-    });
-    document.getElementById('mp-close').addEventListener('click', () => {
-      clearInterval(mpInterval); mpEl.classList.remove('visible');
-    });
+    mpBtn.addEventListener('click', () => { mpPaused = !mpPaused; mpBtn.textContent = mpPaused ? '▶' : '⏸'; });
+    document.getElementById('mp-close').addEventListener('click', () => { clearInterval(mpInterval); mpEl.classList.remove('visible'); });
 
-    // ===== AUDIO CARDS =====
     function makeWave(n, played) {
       const h=[3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];
-      return h.slice(0,n).map((v,i)=>`<div class="${i<played?'waveform-bar played':'waveform-bar'}" style="height:${v*2}px"></div>`).join('');
+      return h.slice(0,n).map((v,i) => '<div class="' + (i<played?'waveform-bar played':'waveform-bar') + '" style="height:' + (v*2) + 'px"></div>').join('');
     }
+
     const audioCards = audioMoments.map((m, idx) => {
       const dim = dims.find(d=>d.key===m.key);
       const val = c.stats[m.key]||0;
       const played = Math.round(24 * idx / audioMoments.length);
       const dimLabel = dim ? dim.label : m.key;
-      return `<div class="audio-card ${m.featured?'featured':''}">
-        <div class="audio-header">
-          <div><div class="audio-dim-name">${dimLabel}</div><div class="audio-moment">${m.moment}</div></div>
-          <div class="audio-score">${val}/${dim?dim.max:'?'}</div>
-        </div>
-        <div class="audio-player">
-          <button class="audio-play-btn" onclick="startMiniPlayer('${dimLabel}','${m.ts}','${m.dur.replace('s','')}');this.textContent='⏸';setTimeout(()=>this.textContent='▶',parseInt('${m.dur}')*1000||30000)">&#9654;</button>
-          <div class="waveform">${makeWave(24,played)}</div>
-          <div class="audio-meta">${m.ts} · ${m.dur}</div>
-        </div>
-      </div>`;
+      const durNum = parseInt(m.dur) || 30;
+      return '<div class="audio-card ' + (m.featured?'featured':'') + '">'
+        + '<div class="audio-header">'
+        + '<div><div class="audio-dim-name">' + dimLabel + '</div><div class="audio-moment">' + m.moment + '</div></div>'
+        + '<div class="audio-score">' + val + '/' + (dim?dim.max:'?') + '</div>'
+        + '</div>'
+        + '<div class="audio-player">'
+        + '<button class="audio-play-btn" data-dim="' + dimLabel + '" data-ts="' + m.ts + '" data-dur="' + durNum + '">&#9654;</button>'
+        + '<div class="waveform">' + makeWave(24,played) + '</div>'
+        + '<div class="audio-meta">' + m.ts + ' · ' + m.dur + '</div>'
+        + '</div></div>';
     }).join('');
-    document.getElementById('audio-list').innerHTML = audioCards + `<div class="full-call-box">
-      <div class="full-call-title">Écouter l'appel complet ?</div>
-      <p class="full-call-desc">Téléchargement audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>
-      <a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>
-    </div>`;
 
-    // ===== TRANSCRIPT (point 9) =====
+    document.getElementById('audio-list').innerHTML = audioCards
+      + '<div class="full-call-box">'
+      + '<div class="full-call-title">Écouter l\'appel complet ?</div>'
+      + '<p class="full-call-desc">Téléchargement audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p>'
+      + '<a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a>'
+      + '</div>';
+
+    // Bind play buttons sans inline JS (évite les problèmes de quotes)
+    document.querySelectorAll('.audio-play-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        startMiniPlayer(this.dataset.dim, this.dataset.ts, this.dataset.dur);
+        this.textContent = '⏸';
+        const self = this;
+        setTimeout(() => { self.textContent = '▶'; }, (parseInt(this.dataset.dur)||30) * 1000);
+      });
+    });
+
     const lines = transcriptData[c.id];
     if (lines && lines.length) {
       document.getElementById('transcript-content').innerHTML =
-        lines.map(l => `<div class="transcript-line">
-          <div class="tr-ts">${l.ts}</div>
-          <div class="tr-who ${l.who==='L'?'candidate':''}">${l.who==='L'?'↗':'↙'}</div>
-          <div class="tr-text">${l.text}</div>
-        </div>`).join('') +
-        `<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>`;
+        lines.map(l =>
+          '<div class="transcript-line">'
+          + '<div class="tr-ts">' + l.ts + '</div>'
+          + '<div class="tr-who ' + (l.who==='L'?'candidate':'') + '">' + (l.who==='L'?'↗':'↙') + '</div>'
+          + '<div class="tr-text">' + l.text + '</div>'
+          + '</div>'
+        ).join('')
+        + '<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>';
     } else {
       document.getElementById('transcript-content').innerHTML =
-        `<div class="tr-lock">Transcript disponible sur abonnement recruteur</div>`;
+        '<div class="tr-lock">Transcript disponible sur abonnement recruteur</div>';
     }
 
-    // ===== EXPÉRIENCE COMMERCIALE =====
-    document.getElementById('exp-content').innerHTML = `
-      <div class="exp-mini-grid">
-        <div class="exp-mini-cell"><div class="exp-mini-label">Rôle</div><div class="exp-mini-value">${c.role_type}</div><div class="exp-mini-sub">${roleLabel}</div></div>
-        <div class="exp-mini-cell"><div class="exp-mini-label">Expérience</div><div class="exp-mini-value">${c.experience_years} ans</div><div class="exp-mini-sub">${c.experience_level}</div></div>
-        <div class="exp-mini-cell"><div class="exp-mini-label">Taille de deal</div><div class="exp-mini-value">${c.deal_size}</div></div>
-        <div class="exp-mini-cell"><div class="exp-mini-label">Cycle de vente</div><div class="exp-mini-value">${c.sales_cycle}</div></div>
-      </div>
-      <div class="quota-box"><div><div class="quota-num">${c.quota_attainment}%</div><div class="quota-label">Atteinte quota</div></div><div class="quota-text">Performance déclarée sur les 3 derniers semestres.</div></div>
-      <div class="hf-bar">
-        <div class="hf-bar-labels"><span>Chasse (Hunting)</span><span>Élevage (Farming)</span></div>
-        <div class="hf-bar-track"><div class="hf-hunt" style="width:${c.hunting_pct}%"></div><div class="hf-farm" style="width:${100-c.hunting_pct}%"></div></div>
-        <div class="hf-bar-values"><span class="hunt-val">${c.hunting_pct}%</span><span class="farm-val">${100-c.hunting_pct}%</span></div>
-      </div>
-      <div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">${c.prospection_channels.map(ch=>`<span class="profil-tag">${ch}</span>`).join('')}</div></div>
-      <div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">${c.sectors_mastered.map(s=>`<span class="profil-tag">${s}</span>`).join('')}</div></div>`;
+    document.getElementById('exp-content').innerHTML =
+      '<div class="exp-mini-grid">'
+      + '<div class="exp-mini-cell"><div class="exp-mini-label">Rôle</div><div class="exp-mini-value">' + c.role_type + '</div><div class="exp-mini-sub">' + roleLabel + '</div></div>'
+      + '<div class="exp-mini-cell"><div class="exp-mini-label">Expérience</div><div class="exp-mini-value">' + c.experience_years + ' ans</div><div class="exp-mini-sub">' + c.experience_level + '</div></div>'
+      + '<div class="exp-mini-cell"><div class="exp-mini-label">Taille de deal</div><div class="exp-mini-value">' + c.deal_size + '</div></div>'
+      + '<div class="exp-mini-cell"><div class="exp-mini-label">Cycle de vente</div><div class="exp-mini-value">' + c.sales_cycle + '</div></div>'
+      + '</div>'
+      + '<div class="quota-box"><div><div class="quota-num">' + c.quota_attainment + '%</div><div class="quota-label">Atteinte quota</div></div><div class="quota-text">Performance déclarée sur les 3 derniers semestres.</div></div>'
+      + '<div class="hf-bar">'
+      + '<div class="hf-bar-labels"><span>Chasse (Hunting)</span><span>Élevage (Farming)</span></div>'
+      + '<div class="hf-bar-track"><div class="hf-hunt" style="width:' + c.hunting_pct + '%"></div><div class="hf-farm" style="width:' + (100-c.hunting_pct) + '%"></div></div>'
+      + '<div class="hf-bar-values"><span class="hunt-val">' + c.hunting_pct + '%</span><span class="farm-val">' + (100-c.hunting_pct) + '%</span></div>'
+      + '</div>'
+      + '<div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">' + c.prospection_channels.map(ch=>'<span class="profil-tag">'+ch+'</span>').join('') + '</div></div>'
+      + '<div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">' + c.sectors_mastered.map(s=>'<span class="profil-tag">'+s+'</span>').join('') + '</div></div>';
 
-    // ===== RECHERCHE & DISPONIBILITÉ =====
-    document.getElementById('search-content').innerHTML = `
-      <div class="match-box">
-        <div class="match-visual">
-          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6" stroke-dasharray="${(matchPct/100*251.3).toFixed(1)} 251.3" stroke-linecap="round"/></svg>
-          <div class="match-num">${matchPct}%</div>
-        </div>
-        <div class="match-text"><div class="match-title">Match recruteur</div><div class="match-desc">Ce profil correspond à ${matchPct}% des recherches actives sur <strong>${c.role_type} · ${fam.name}</strong>.</div></div>
-      </div>
-      <div class="ote-grid">
-        <div class="ote-cell"><div class="ote-label">Fixe</div><div class="ote-value">${c.ote.fixed}€</div></div>
-        <div class="ote-cell"><div class="ote-label">Variable</div><div class="ote-value">${c.ote.variable}€</div></div>
-        <div class="ote-cell total"><div class="ote-label">OTE Total</div><div class="ote-value">${c.ote.total}€</div></div>
-      </div>
-      <div class="status-grid">
-        <div class="status-cell"><div class="exp-mini-label">Statut actuel</div><div class="exp-mini-value">${c.status}</div></div>
-        <div class="status-cell"><div class="exp-mini-label">Préavis</div><div class="exp-mini-value">${c.notice}</div></div>
-      </div>
-      <div class="tag-group"><div class="tag-group-label">Type d'entreprise visée</div><div class="profil-tags">${c.company_size_target.map(s=>`<span class="profil-tag">${s}</span>`).join('')}</div></div>
-      <div class="tag-group"><div class="tag-group-label">Mobilité géographique</div><div class="profil-tags">${c.mobility.map(m=>`<span class="profil-tag">${m}</span>`).join('')}</div></div>
-      <div class="tag-group"><div class="tag-group-label">Langues parlées</div><div class="profil-tags">${c.languages.map(l=>`<span class="profil-tag">${l.name}<span class="lang-level">${l.level}</span></span>`).join('')}</div></div>`;
+    const circleLen = (matchPct/100*251.3).toFixed(1);
+    document.getElementById('search-content').innerHTML =
+      '<div class="match-box">'
+      + '<div class="match-visual"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6" stroke-dasharray="' + circleLen + ' 251.3" stroke-linecap="round"/></svg><div class="match-num">' + matchPct + '%</div></div>'
+      + '<div class="match-text"><div class="match-title">Match recruteur</div><div class="match-desc">Ce profil correspond à ' + matchPct + '% des recherches actives sur <strong>' + c.role_type + ' · ' + fam.name + '</strong>.</div></div>'
+      + '</div>'
+      + '<div class="ote-grid">'
+      + '<div class="ote-cell"><div class="ote-label">Fixe</div><div class="ote-value">' + c.ote.fixed + '€</div></div>'
+      + '<div class="ote-cell"><div class="ote-label">Variable</div><div class="ote-value">' + c.ote.variable + '€</div></div>'
+      + '<div class="ote-cell total"><div class="ote-label">OTE Total</div><div class="ote-value">' + c.ote.total + '€</div></div>'
+      + '</div>'
+      + '<div class="status-grid">'
+      + '<div class="status-cell"><div class="exp-mini-label">Statut actuel</div><div class="exp-mini-value">' + c.status + '</div></div>'
+      + '<div class="status-cell"><div class="exp-mini-label">Préavis</div><div class="exp-mini-value">' + c.notice + '</div></div>'
+      + '</div>'
+      + '<div class="tag-group"><div class="tag-group-label">Type d\'entreprise visée</div><div class="profil-tags">' + c.company_size_target.map(s=>'<span class="profil-tag">'+s+'</span>').join('') + '</div></div>'
+      + '<div class="tag-group"><div class="tag-group-label">Mobilité géographique</div><div class="profil-tags">' + c.mobility.map(m=>'<span class="profil-tag">'+m+'</span>').join('') + '</div></div>'
+      + '<div class="tag-group"><div class="tag-group-label">Langues parlées</div><div class="profil-tags">' + c.languages.map(l=>'<span class="profil-tag">'+l.name+'<span class="lang-level">'+l.level+'</span></span>').join('') + '</div></div>';
 
-    // ===== PROFILS SIMILAIRES (point 7) =====
     const similar = SU_DATA.candidates
       .filter(x => x.id !== c.id && (x.family === c.family || x.role_type === c.role_type))
       .sort((a, b) => Math.abs(a.score - c.score) - Math.abs(b.score - c.score))
@@ -724,11 +719,14 @@
       ? similar.map(s => renderCard(s)).join('')
       : '<p style="color:var(--teal-3);font-family:var(--font-mono);font-size:12px;">Aucun profil similaire pour le moment.</p>';
 
-    // ===== FORCES & AXES =====
-    document.getElementById('strengths-list').innerHTML = (c.strengths||[]).map((s,i)=>`<div class="force-item"><div class="force-num">${String(i+1).padStart(2,'0')}</div><div class="force-text">${s}</div></div>`).join('');
-    document.getElementById('weaknesses-list').innerHTML = (c.weaknesses||[]).map((w,i)=>`<div class="force-item"><div class="force-num">${String(i+1).padStart(2,'0')}</div><div class="force-text">${w}</div></div>`).join('');
+    document.getElementById('strengths-list').innerHTML = (c.strengths||[]).map((s,i) =>
+      '<div class="force-item"><div class="force-num">' + String(i+1).padStart(2,'0') + '</div><div class="force-text">' + s + '</div></div>'
+    ).join('');
+    document.getElementById('weaknesses-list').innerHTML = (c.weaknesses||[]).map((w,i) =>
+      '<div class="force-item"><div class="force-num">' + String(i+1).padStart(2,'0') + '</div><div class="force-text">' + w + '</div></div>'
+    ).join('');
 
-    document.title = `SalesUncut — Profil ${displayName}`;
+    document.title = 'SalesUncut — Profil ' + displayName;
   </script>
 
 </body>
