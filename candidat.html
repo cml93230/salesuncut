@@ -4,88 +4,56 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SalesUncut — Passe la simulation, prouve ce que tu vaux.</title>
-  <meta name="description" content="30 minutes d'un vrai discovery call simulé, 6 dimensions scôrées, ta carte dans le pool recruteurs pendant 18 mois. À partir de 39€.">
+  <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
   <link rel="stylesheet" href="style.css">
   <style>
     /* ---- Hero candidat ---- */
     .cand-hero { padding: 60px 0 80px; position: relative; overflow: hidden; }
     .cand-hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
-    .cand-hero h1 { font-size: clamp(48px, 6.5vw, 88px); margin: 20px 0 24px; }
+    .cand-hero h1 { font-size: clamp(48px, 6.5vw, 88px); margin: 20px 0 20px; }
     .cand-hero h1 .accent { color: var(--gold-deep); font-family: var(--font-serif); font-style: italic; text-transform: none; font-weight: 400; }
     .cand-hero p.lede { font-size: 18px; color: var(--teal-2); max-width: 520px; margin-bottom: 32px; line-height: 1.55; }
-    .cand-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
-    .cand-hero-stats { display: flex; gap: 36px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid var(--cream-3); }
-    .cand-hero-stats .stat-num { font-family: var(--font-display); font-weight: 900; font-size: 36px; color: var(--gold-deep); line-height: 1; }
-    .cand-hero-stats .stat-lbl { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 4px; max-width: 140px; }
-
+    .cand-hero p.lede-sub { font-size: 16px; color: var(--teal-3); max-width: 520px; margin-bottom: 32px; line-height: 1.6; border-left: 3px solid var(--gold-deep); padding-left: 16px; }
+    .cand-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
     .cand-hero-visual { display: flex; justify-content: center; align-items: center; }
     .cand-hero-visual .tcard { transform: rotate(-3deg); }
 
-    /* ---- Steps section ---- */
-    .cand-steps-section { background: var(--cream-2); padding: 80px 0; }
-
-    /* ---- What you get ---- */
-    .deliverables { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .deliv-card {
-      background: var(--cream); border: 1.5px solid var(--cream-3); border-radius: 8px;
-      padding: 32px 28px; transition: transform .25s, border-color .25s;
+    /* ---- Ce que ca change ---- */
+    .cand-change-section { background: var(--cream-2); padding: 80px 0; }
+    .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
+    .change-list { display: flex; flex-direction: column; gap: 0; }
+    .change-item {
+      display: flex; align-items: flex-start; gap: 18px;
+      padding: 20px 0; border-bottom: 1px dashed var(--cream-3);
     }
-    .deliv-card:hover { transform: translateY(-4px); border-color: var(--gold); }
-    .deliv-icon {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--cream-2); color: var(--gold-deep);
+    .change-item:last-child { border-bottom: none; }
+    .change-arrow {
+      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--ink); color: var(--gold);
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; margin-bottom: 18px;
+      font-size: 14px; margin-top: 2px;
     }
-    .deliv-title { font-family: var(--font-display); font-weight: 900; font-size: 22px; text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 10px; }
-    .deliv-desc { color: var(--teal-2); font-size: 14px; line-height: 1.55; }
-    .deliv-card ul { list-style: none; margin-top: 14px; padding: 0; }
-    .deliv-card ul li { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; color: var(--teal-2); padding: 6px 0; border-bottom: 1px dashed var(--cream-3); }
-    .deliv-card ul li:last-child { border-bottom: none; }
-    .deliv-card ul li::before { content: '✓ '; color: var(--gold-deep); font-weight: 700; }
-
-    /* ---- Pricing ---- */
-    .pricing-section { background: var(--ink); color: var(--cream); padding: 80px 0; }
-    .pricing-section .eyebrow { color: var(--gold); }
-    .pricing-section .eyebrow::before { background: var(--gold); }
-    .pricing-section h2 { color: var(--cream); font-size: clamp(40px, 5vw, 64px); margin: 16px 0 16px; }
-    .pricing-section .lede { font-size: 16px; opacity: .7; max-width: 540px; margin-bottom: 48px; }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .price-card {
-      background: var(--teal); border: 1.5px solid rgba(255,248,231,.12);
-      border-radius: 10px; padding: 32px 28px; position: relative;
-      display: flex; flex-direction: column;
+    .change-text { font-size: 17px; color: var(--ink); line-height: 1.45; }
+    .change-visual {
+      background: var(--ink); border-radius: 10px; padding: 40px 36px;
+      color: var(--cream);
     }
-    .price-card.featured {
-      background: linear-gradient(160deg, #c9a86a 0%, #a3854f 100%);
-      color: var(--ink); border-color: var(--gold);
-      transform: scale(1.04);
+    .change-visual-eyebrow {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
     }
-    .price-card.featured .price-name,
-    .price-card.featured .price-num,
-    .price-card.featured ul li { color: var(--ink); }
-    .price-card.featured .price-sub { color: rgba(26,34,34,.7); }
-    .price-card.featured .price-tag { background: var(--ink); color: var(--gold); }
-    .price-tag {
-      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-      font-family: var(--font-mono); font-size: 10px; font-weight: 700;
-      letter-spacing: .15em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 4px;
-      background: var(--gold); color: var(--ink);
+    .change-visual-title {
+      font-family: var(--font-display); font-weight: 900; font-size: 28px;
+      text-transform: uppercase; letter-spacing: -.01em; line-height: .95;
+      color: var(--cream); margin-bottom: 24px;
     }
-    .price-name { font-family: var(--font-display); font-weight: 900; font-size: 28px; text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 6px; color: var(--cream); }
-    .price-sub { font-family: var(--font-mono); font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,248,231,.5); margin-bottom: 20px; }
-    .price-amount { display: flex; align-items: baseline; gap: 6px; margin-bottom: 24px; }
-    .price-num { font-family: var(--font-display); font-weight: 900; font-size: 64px; color: var(--gold); line-height: 1; }
-    .price-unit { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; opacity: .6; }
-    .price-card ul { list-style: none; flex: 1; margin-bottom: 24px; padding: 0; }
-    .price-card ul li { font-size: 14px; padding: 10px 0; border-bottom: 1px solid rgba(255,248,231,.1); color: rgba(255,248,231,.85); }
-    .price-card.featured ul li { border-bottom-color: rgba(26,34,34,.15); }
-    .price-card ul li::before { content: '→ '; color: var(--gold); font-weight: 700; }
-    .price-card.featured ul li::before { color: var(--ink); }
-    .price-card .btn { width: 100%; justify-content: center; }
-    .price-card.featured .btn { background: var(--ink); color: var(--gold); border-color: var(--ink); }
-    .price-card.featured .btn:hover { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+    .change-visual-steps { display: flex; flex-direction: column; gap: 14px; }
+    .cvs-item { display: flex; align-items: center; gap: 14px; }
+    .cvs-num {
+      font-family: var(--font-display); font-weight: 900; font-size: 22px;
+      color: var(--gold-deep); width: 32px; flex-shrink: 0; line-height: 1;
+    }
+    .cvs-txt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; color: rgba(255,248,231,.8); line-height: 1.4; }
 
     /* ---- CTA final ---- */
     .cta-final {
@@ -109,16 +77,9 @@
       .cand-hero-visual .tcard { transform: rotate(-2deg) scale(.85); }
       .cand-hero-cta { flex-direction: column; align-items: stretch; }
       .cand-hero-cta .btn { justify-content: center; }
-      .cand-hero-stats { gap: 24px; }
-      .cand-hero-stats .stat-num { font-size: 28px; }
-      .deliverables { grid-template-columns: 1fr; gap: 16px; }
-      .deliv-card { padding: 24px 22px; }
-      .pricing-section { padding: 56px 0; }
-      .pricing-grid { grid-template-columns: 1fr; gap: 32px; }
-      .price-card.featured { transform: none; }
-      .price-num { font-size: 52px; }
+      .cand-change-section { padding: 56px 0; }
+      .change-grid { grid-template-columns: 1fr; gap: 32px; }
       .cta-final { padding: 56px 0; }
-      .cand-steps-section { padding: 56px 0; }
     }
     @media (max-width: 560px) {
       .cand-hero-visual .tcard { transform: rotate(-1deg) scale(.75); }
@@ -135,7 +96,7 @@
       <a href="marketplace.html">Recruteurs</a>
       <a href="profil.html?id=c001">Voir un profil</a>
     </div>
-    <a href="#pricing" class="btn sm gold">Passer le test</a>
+    <a href="profil.html?id=c001" class="btn sm gold">Voir un exemple</a>
   </nav>
 
   <!-- HERO -->
@@ -145,30 +106,17 @@
         <div>
           <span class="eyebrow">Pour les sales</span>
           <h1>
-            Sors du<br>
-            <span class="accent">CV-bingo.</span><br>
-            Place à la preuve.
+            Arr&ecirc;te d&rsquo;&ecirc;tre jug&eacute;<br>
+            sur un CV.<br>
+            <span class="accent">Fais &eacute;couter ta vraie<br>valeur commerciale.</span>
           </h1>
-          <p class="lede">
-            30 minutes d'un vrai discovery call simulé. 6 dimensions scôrées par IA. Ta carte dans le pool recruteurs pendant 18 mois. Les recruteurs viennent à toi.
+          <p class="lede-sub">
+            SalesUncut transforme un appel de vente simul&eacute; en preuve concr&egrave;te&nbsp;:
+            score, extraits audio, rapport d&eacute;taill&eacute; et profil consultable par les recruteurs.
           </p>
           <div class="cand-hero-cta">
-            <a href="#pricing" class="btn gold">▶ Passer ma simulation</a>
-            <a href="profil.html?id=c001" class="btn outline">Voir un exemple →</a>
-          </div>
-          <div class="cand-hero-stats">
-            <div>
-              <div class="stat-num">30 min</div>
-              <div class="stat-lbl">Durée du test</div>
-            </div>
-            <div>
-              <div class="stat-num">18 mois</div>
-              <div class="stat-lbl">Validité du profil</div>
-            </div>
-            <div>
-              <div class="stat-num">39€</div>
-              <div class="stat-lbl">À partir de</div>
-            </div>
+            <a href="profil.html?id=c001" class="btn gold">Voir un exemple &rarr;</a>
+            <a href="marketplace.html" class="btn outline">Explorer le pool</a>
           </div>
         </div>
         <div class="cand-hero-visual" id="hero-card"></div>
@@ -179,151 +127,66 @@
   <!-- MARQUEE -->
   <div class="marquee">
     <div class="marquee-track">
-      <span>30 min de vérité</span><span class="gold-text">★</span>
-      <span>Ton score, pas ton CV</span><span class="gold-text">★</span>
-      <span>Anonyme si tu veux</span><span class="gold-text">★</span>
-      <span>Badge LinkedIn certifié</span><span class="gold-text">★</span>
-      <span>30 min de vérité</span><span class="gold-text">★</span>
-      <span>Ton score, pas ton CV</span><span class="gold-text">★</span>
-      <span>Anonyme si tu veux</span><span class="gold-text">★</span>
-      <span>Badge LinkedIn certifié</span><span class="gold-text">★</span>
+      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&#9733;</span>
+      <span>Ton score, pas ton CV</span><span class="gold-text">&#9733;</span>
+      <span>Anonyme si tu veux</span><span class="gold-text">&#9733;</span>
+      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&#9733;</span>
+      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&#9733;</span>
+      <span>Ton score, pas ton CV</span><span class="gold-text">&#9733;</span>
+      <span>Anonyme si tu veux</span><span class="gold-text">&#9733;</span>
+      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&#9733;</span>
     </div>
   </div>
 
-  <!-- COMMENT ÇA MARCHE -->
-  <section class="cand-steps-section">
+  <!-- CE QUE CA CHANGE -->
+  <section class="cand-change-section">
     <div class="container">
-      <span class="eyebrow">Comment ça marche</span>
-      <h1 style="font-size:clamp(36px,5vw,56px);margin:12px 0 40px;">Du paiement au profil public, 30 minutes.</h1>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num">01</div>
-          <h3>Choisis ta famille</h3>
-          <p>10 familles séctorielles disponibles : SaaS RH, Finance, Cyber, ERP, Marketing, Énergie, Télécom... Tu vends ce que tu connais.</p>
-          <div class="step-tag">5 min</div>
-        </div>
-        <div class="step">
-          <div class="step-num">02</div>
-          <h3>Reçois ton brief</h3>
-          <p>Fiche produit à J-1, brief prospect 5 minutes avant l'appel. Pas de piège, pas de surprise. Tu prospectes comme dans la vraie vie.</p>
-          <div class="step-tag">J-1</div>
-        </div>
-        <div class="step">
-          <div class="step-num">03</div>
-          <h3>Décroche</h3>
-          <p>30 minutes au tél avec un prospect IA. Discovery, objections, valeur, closing. L'IA réagit en temps réel comme un vrai décideur.</p>
-          <div class="step-tag">30 min</div>
-        </div>
-        <div class="step">
-          <div class="step-num">04</div>
-          <h3>Reçois ta carte</h3>
-          <p>Score sur 100, rapport PDF détaillé, badge LinkedIn, page profil publique avec extraits audio. Le pool recruteurs te trouve.</p>
-          <div class="step-tag">Sous 1h</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CE QUE TU OBTIENS -->
-  <section class="section">
-    <div class="container">
-      <span class="eyebrow">Ce que tu obtiens</span>
-      <h1 style="font-size:clamp(36px,5vw,56px);margin:12px 0 40px;">Une preuve, pas une promesse.</h1>
-      <div class="deliverables">
-        <div class="deliv-card">
-          <div class="deliv-icon">📊</div>
-          <div class="deliv-title">Rapport complet</div>
-          <p class="deliv-desc">PDF détaillé avec ton score global et ta performance sur les 6 dimensions clés.</p>
-          <ul>
-            <li>Score global /100</li>
-            <li>Détail des 6 dimensions</li>
-            <li>Points forts identifiés</li>
-            <li>Axes de progression IA</li>
-            <li>Extraits horodatés</li>
-          </ul>
-        </div>
-        <div class="deliv-card">
-          <div class="deliv-icon">★</div>
-          <div class="deliv-title">Carte publique</div>
-          <p class="deliv-desc">Ta carte dans le pool recruteurs filtrable, valide 18 mois. Anonymat possible.</p>
-          <ul>
-            <li>URL profil unique</li>
-            <li>Extraits audio publics</li>
-            <li>Tags rechercheables</li>
-            <li>Mode anonyme dispo</li>
-            <li>QR code partageable</li>
-          </ul>
-        </div>
-        <div class="deliv-card">
-          <div class="deliv-icon">in</div>
-          <div class="deliv-title">Badge LinkedIn</div>
-          <p class="deliv-desc">Affiche ta certification directement sur ton profil LinkedIn pour que tes connexions voient.</p>
-          <ul>
-            <li>Badge officiel SalesUncut</li>
-            <li>Lien vers ton profil</li>
-            <li>Niveau Bronze / Silver / Gold</li>
-            <li>Vu par tous tes contacts</li>
-            <li>Renouvelable</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section class="pricing-section" id="pricing">
-    <div class="container">
-      <span class="eyebrow">Tarifs</span>
-      <h2>Choisis ton niveau d'engagement.</h2>
-      <p class="lede">3 formules, même qualité de scoring. La différence : ce que tu obtiens en plus du score.</p>
-      <div class="pricing-grid">
-        <div class="price-card">
-          <div class="price-name">Bronze</div>
-          <div class="price-sub">Pour tester</div>
-          <div class="price-amount">
-            <span class="price-num">39€</span>
-            <span class="price-unit">une fois</span>
+      <span class="eyebrow">Ce que &ccedil;a change pour toi</span>
+      <h1 style="font-size:clamp(36px,5vw,56px);margin:12px 0 0;">Ce que SalesUncut change<br>dans ta recherche.</h1>
+      <div class="change-grid">
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text">Tu ne d&eacute;pends plus uniquement de ton CV.</div>
           </div>
-          <ul>
-            <li>1 simulation 30 min</li>
-            <li>Rapport PDF complet</li>
-            <li>Score global + détail dimensions</li>
-            <li>Carte profil 6 mois</li>
-          </ul>
-          <a href="#" class="btn gold">Commencer en Bronze</a>
-        </div>
-        <div class="price-card featured">
-          <div class="price-tag">Le plus choisi</div>
-          <div class="price-name">Silver</div>
-          <div class="price-sub">Recommandé</div>
-          <div class="price-amount">
-            <span class="price-num">59€</span>
-            <span class="price-unit">une fois</span>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text">Tu montres ta vraie posture commerciale.</div>
           </div>
-          <ul>
-            <li>Tout Bronze inclus</li>
-            <li>Carte profil <strong>18 mois</strong></li>
-            <li>Badge LinkedIn certifié</li>
-            <li>Extraits audio publics</li>
-            <li>Priorité dans le pool</li>
-          </ul>
-          <a href="#" class="btn">Choisir Silver →</a>
-        </div>
-        <div class="price-card">
-          <div class="price-name">Gold</div>
-          <div class="price-sub">Pour aller loin</div>
-          <div class="price-amount">
-            <span class="price-num">89€</span>
-            <span class="price-unit">une fois</span>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text">Tu aides le recruteur &agrave; te qualifier plus vite.</div>
           </div>
-          <ul>
-            <li>Tout Silver inclus</li>
-            <li>2 simulations (familles différentes)</li>
-            <li>Coaching debrief IA personnalisé</li>
-            <li>Retake gratuit à -30% après 90j</li>
-            <li>Mise en avant Top profils</li>
-          </ul>
-          <a href="#" class="btn gold">Passer en Gold</a>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text">Tu peux partager une preuve concr&egrave;te dans tes candidatures.</div>
+          </div>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text">Tu transformes ton profil en actif visible pendant plusieurs mois.</div>
+          </div>
+        </div>
+        <div class="change-visual">
+          <div class="change-visual-eyebrow">Comment &ccedil;a marche</div>
+          <div class="change-visual-title">Du paiement au profil public,<br>30 minutes.</div>
+          <div class="change-visual-steps">
+            <div class="cvs-item">
+              <div class="cvs-num">01</div>
+              <div class="cvs-txt">Choisis ta famille sectorielle &mdash; tu vends ce que tu connais.</div>
+            </div>
+            <div class="cvs-item">
+              <div class="cvs-num">02</div>
+              <div class="cvs-txt">Re&ccedil;ois ton brief prospect la veille, d&eacute;croche le lendemain.</div>
+            </div>
+            <div class="cvs-item">
+              <div class="cvs-num">03</div>
+              <div class="cvs-txt">30 min avec un prospect IA &mdash; discovery, objections, closing.</div>
+            </div>
+            <div class="cvs-item">
+              <div class="cvs-num">04</div>
+              <div class="cvs-txt">Rapport PDF + profil audio public dans le pool recruteurs sous 1h.</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -332,32 +195,32 @@
   <!-- FAQ -->
   <section class="section">
     <div class="container">
-      <span class="eyebrow">Questions fréquentes</span>
+      <span class="eyebrow">Questions fr&eacute;quentes</span>
       <h1 style="font-size:clamp(32px,4.5vw,48px);margin:12px 0 32px;">Ce que les sales nous demandent.</h1>
       <div class="faq">
         <details>
-          <summary>L'IA est vraiment crédible au téléphone ?</summary>
-          <p>Oui. Voix ElevenLabs en français natif, GPT-4o avec un comportement de décideur calibré : objections réalistes, silences stratégiques, questions piège. La plupart des candidats oublient après 3 minutes que c'est une IA.</p>
+          <summary>L&rsquo;IA est vraiment cr&eacute;dible au t&eacute;l&eacute;phone&nbsp;?</summary>
+          <p>Oui. Voix ElevenLabs en fran&ccedil;ais natif, GPT-4o avec un comportement de d&eacute;cideur calibr&eacute;&nbsp;: objections r&eacute;alistes, silences strat&eacute;giques, questions pi&egrave;ge. La plupart des candidats oublient apr&egrave;s 3 minutes que c&rsquo;est une IA.</p>
         </details>
         <details>
-          <summary>Je peux être anonyme dans le pool ?</summary>
-          <p>Oui. Tu peux publier ton profil sous "Anonyme" et n'apparaitre nominativement qu'après avoir validé le premier contact recruteur. Tu gardes la main.</p>
+          <summary>Je peux &ecirc;tre anonyme dans le pool&nbsp;?</summary>
+          <p>Oui. Tu peux publier ton profil sous &laquo;&nbsp;Anonyme&nbsp;&raquo; et n&rsquo;appara&icirc;tre nominativement qu&rsquo;apr&egrave;s avoir valid&eacute; le premier contact recruteur. Tu gardes la main.</p>
         </details>
         <details>
-          <summary>Et si je rate ?</summary>
-          <p>Tu reçois ton rapport complet avec les axes à travailler. Tu décides toi-même si tu publies dans le pool. Retake autorisé après 30 jours (-30% en Gold).</p>
+          <summary>Et si je rate&nbsp;?</summary>
+          <p>Tu re&ccedil;ois ton rapport complet avec les axes &agrave; travailler. Tu d&eacute;cides toi-m&ecirc;me si tu publies dans le pool. Retake autoris&eacute; apr&egrave;s 30 jours.</p>
         </details>
         <details>
-          <summary>Combien de temps avant d'avoir des contacts ?</summary>
-          <p>Variable. Les profils Gold dispo immédiatement reçoivent en moyenne 3 contacts dans les 14 jours. Les profils Bronze sans dispo immédiate peuvent attendre plus.</p>
+          <summary>Combien de temps avant d&rsquo;avoir des contacts&nbsp;?</summary>
+          <p>Variable. Les profils disponibles imm&eacute;diatement re&ccedil;oivent en moyenne 3 contacts dans les 14 jours. Les profils sans dispo imm&eacute;diate peuvent attendre plus.</p>
         </details>
         <details>
-          <summary>Quelles familles séctorielles ?</summary>
-          <p>10 familles disponibles : SaaS RH, SaaS CRM, Finance, ERP/Ops, Cybersécurité, Sécurité physique, Marketing, Énergie, Télécom, Assurance. Tu choisis ce que tu connais le mieux.</p>
+          <summary>Quelles familles sectorielles&nbsp;?</summary>
+          <p>10 familles disponibles&nbsp;: SaaS RH, SaaS CRM, Finance, ERP/Ops, Cybers&eacute;curit&eacute;, S&eacute;curit&eacute; physique, Marketing, &Eacute;nergie, T&eacute;l&eacute;com, Assurance. Tu choisis ce que tu connais le mieux.</p>
         </details>
         <details>
-          <summary>C'est compatible avec mon poste actuel ?</summary>
-          <p>Oui. Tu décides quand publier ton profil. Tu peux passer la simulation pour avoir ton score sans rien rendre public.</p>
+          <summary>C&rsquo;est compatible avec mon poste actuel&nbsp;?</summary>
+          <p>Oui. Tu d&eacute;cides quand publier ton profil. Tu peux passer la simulation pour avoir ton score sans rien rendre public.</p>
         </details>
       </div>
     </div>
@@ -366,10 +229,10 @@
   <!-- CTA FINAL -->
   <section class="cta-final">
     <div class="container">
-      <span class="eyebrow">L'heure de vérité</span>
+      <span class="eyebrow">L&rsquo;heure de v&eacute;rit&eacute;</span>
       <h2>Tu sais vendre.<br><span class="accent">Prouve-le.</span></h2>
-      <p>30 minutes, une carte qui reste 18 mois, des recruteurs qui te trouvent. À toi de jouer.</p>
-      <a href="#pricing" class="btn gold">▶ Voir les formules</a>
+      <p>30 minutes, un profil qui reste visible, des recruteurs qui t&rsquo;entendent avant de te rencontrer.</p>
+      <a href="profil.html?id=c001" class="btn gold">Voir un exemple de profil &rarr;</a>
     </div>
   </section>
 
