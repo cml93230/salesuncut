@@ -345,49 +345,50 @@
   <script src="data.js"></script>
   <script src="components.js"></script>
   <script>
-    const navEl=document.getElementById('main-nav');
+    var navEl=document.getElementById('main-nav');
     if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px');
-    window.addEventListener('load',()=>{ if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px'); });
+    window.addEventListener('load',function(){ if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px'); });
 
-    const params=new URLSearchParams(window.location.search);
-    const cid=params.get('id')||'c001';
-    const c=SU_DATA.candidates.find(x=>x.id===cid)||SU_DATA.candidates[0];
-    const fam=SU_DATA.getFamilyById(c.family);
-    const level=c.level||SU_DATA.getLevel(c.score);
-    const levelLabel=SU_DATA.levels[level].label;
-    const displayName=c.anonymous?'Anonyme':c.name;
-    const dims=SU_DATA.dimensions;
-    const percentile=SU_DATA.getPercentile(c.id);
-    const roleLabel=SU_DATA.getRoleLabel(c.role_type);
-    const roleDemand={SDR:5,BDR:4,AE:8,AM:3,KAM:6,BD:2};
-    const matchPct=Math.min(99,c.score+(roleDemand[c.role_type]||0));
-    const viewCount=(SU_DATA.viewCounts&&SU_DATA.viewCounts[c.id])||0;
-    const sameRole=SU_DATA.candidates.filter(x=>x.role_type===c.role_type);
-    const avgScore=sameRole.length>1?Math.round(sameRole.reduce((s,x)=>s+x.score,0)/sameRole.length):null;
+    var params=new URLSearchParams(window.location.search);
+    var cid=params.get('id')||'c001';
+    var c=SU_DATA.candidates.find(function(x){return x.id===cid;})||SU_DATA.candidates[0];
+    var fam=SU_DATA.getFamilyById(c.family);
+    var level=c.level||SU_DATA.getLevel(c.score);
+    var levelLabel=SU_DATA.levels[level].label;
+    var displayName=c.anonymous?'Anonyme':c.name;
+    var dims=SU_DATA.dimensions;
+    var percentile=SU_DATA.getPercentile(c.id);
+    var roleLabel=SU_DATA.getRoleLabel(c.role_type);
+    var roleDemand={SDR:5,BDR:4,AE:8,AM:3,KAM:6,BD:2};
+    var matchPct=Math.min(99,c.score+(roleDemand[c.role_type]||0));
+    var viewCount=(SU_DATA.viewCounts&&SU_DATA.viewCounts[c.id])||0;
+    var sameRole=SU_DATA.candidates.filter(function(x){return x.role_type===c.role_type;});
+    var avgScore=sameRole.length>1?Math.round(sameRole.reduce(function(s,x){return s+x.score;},0)/sameRole.length):null;
 
-    const pool=getPoolFromSession();
-    const poolPos=pool.indexOf(c.id);
+    // Prev/Next
+    var pool=getPoolFromSession();
+    var poolPos=pool.indexOf(c.id);
     if(pool.length>0&&poolPos>=0){
       document.getElementById('pn-pos').textContent='Profil '+(poolPos+1)+'/'+pool.length;
-      const prevBtn=document.getElementById('pn-prev'),nextBtn=document.getElementById('pn-next');
+      var prevBtn=document.getElementById('pn-prev'),nextBtn=document.getElementById('pn-next');
       if(poolPos>0){
-        const prevId=pool[poolPos-1];const prevC=SU_DATA.candidates.find(x=>x.id===prevId);
+        var prevId=pool[poolPos-1];var prevC=SU_DATA.candidates.find(function(x){return x.id===prevId;});
         prevBtn.classList.remove('disabled');
         prevBtn.textContent='← '+(prevC?(prevC.anonymous?'Anonyme':prevC.name.split(' ')[0]):'Précédent');
-        prevBtn.onclick=()=>navigateWithPool(prevId,pool);
+        prevBtn.onclick=function(){navigateWithPool(prevId,pool);};
       }
       if(poolPos<pool.length-1){
-        const nextId=pool[poolPos+1];const nextC=SU_DATA.candidates.find(x=>x.id===nextId);
+        var nextId=pool[poolPos+1];var nextC=SU_DATA.candidates.find(function(x){return x.id===nextId;});
         nextBtn.classList.remove('disabled');
         nextBtn.textContent=(nextC?(nextC.anonymous?'Anonyme':nextC.name.split(' ')[0]):'Suivant')+' →';
-        nextBtn.onclick=()=>navigateWithPool(nextId,pool);
+        nextBtn.onclick=function(){navigateWithPool(nextId,pool);};
       }
     } else { document.getElementById('prevnext-bar').style.display='none'; }
 
-    const audioMoments=SU_DATA.getAudioMoments(c.id);
-    const serial='#'+String(parseInt(c.id.replace('c',''))).padStart(4,'0')+'/200';
-    const validity=(()=>{ const d=new Date(c.date); d.setMonth(d.getMonth()+18); return d.toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); })();
-    const candidateQuotes={
+    var audioMoments=SU_DATA.getAudioMoments(c.id);
+    var serial='#'+String(parseInt(c.id.replace('c',''))).padStart(4,'0')+'/200';
+    var validity=(function(){ var d=new Date(c.date); d.setMonth(d.getMonth()+18); return d.toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); })();
+    var candidateQuotes={
       c001:"Fait emerger les enjeux avant de presenter une solution.",
       c002:"La cyber expliquee comme du business, pas comme une menace.",
       c003:"Pose les vraies questions RH avant de proposer un demo.",
@@ -399,11 +400,11 @@
       c009:"Credibilite terrain et ton calme face aux objections securite.",
       c010:"Pose les bonnes questions assurance avant de penser produit.",
     };
-    const finalQuote=candidateQuotes[c.id]||'Profil certifie SalesUncut.';
+    var finalQuote=candidateQuotes[c.id]||'Profil certifie SalesUncut.';
 
     document.getElementById('profil-card').innerHTML=renderCard(c);
 
-    const tagsHtml=[
+    var tagsHtml=[
       '<span class="profil-tag gold-tag">★ '+levelLabel+' · '+c.score+'/100</span>',
       '<span class="profil-tag benchmark-tag">↑ TOP '+percentile+'% du pool</span>',
       '<span class="profil-tag role-tag">'+c.role_type+' · '+roleLabel+'</span>',
@@ -411,8 +412,8 @@
       '<span class="profil-tag">'+c.experience_years+' ans · '+c.experience_level+'</span>',
       '<span class="profil-tag">'+c.remote+'</span>',
     ].join('');
-    const bmHtml=avgScore&&avgScore!==c.score?'<div class="benchmark-row"><div class="bm-label">Score vs moyenne <strong>'+c.role_type+'</strong> du pool</div><div class="bm-track"><div class="bm-fill" style="width:'+c.score+'%"></div><div class="bm-avg-marker" style="left:'+avgScore+'%"></div><div class="bm-avg-label" style="left:'+avgScore+'%">⌀ '+avgScore+'</div></div><div class="bm-values"><span>Moy. '+c.role_type+' : '+avgScore+'/100</span><span class="bm-self-val">'+c.score+'/100</span></div></div>':'';
-    const availLabel=c.availability==='Immédiat'?'IMMED.':c.availability.toUpperCase();
+    var bmHtml=avgScore&&avgScore!==c.score?'<div class="benchmark-row"><div class="bm-label">Score vs moyenne <strong>'+c.role_type+'</strong> du pool</div><div class="bm-track"><div class="bm-fill" style="width:'+c.score+'%"></div><div class="bm-avg-marker" style="left:'+avgScore+'%"></div><div class="bm-avg-label" style="left:'+avgScore+'%">⌀ '+avgScore+'</div></div><div class="bm-values"><span>Moy. '+c.role_type+' : '+avgScore+'/100</span><span class="bm-self-val">'+c.score+'/100</span></div></div>':'';
+    var availLabel=c.availability==='Immédiat'?'IMMED.':c.availability.toUpperCase();
     document.getElementById('profil-info').innerHTML=
       '<div class="profil-eyebrow">Profil '+c.location+' · Certifié SalesUncut<span class="view-badge">👁 '+viewCount+' vues cette semaine</span></div>'
       +'<div class="profil-name">'+displayName.replace(' ','<br>')+'</div>'
@@ -437,31 +438,31 @@
     ].filter(Boolean).join('');
 
     function copyProfilLink(){
-      const url=window.location.href;const btn=document.getElementById('copy-btn');const orig=btn.innerHTML;
-      const done=()=>{btn.innerHTML='✓ Copié !';btn.classList.add('copied');setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');},2200);};
-      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(()=>{const el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();});
-      else{const el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();}
+      var url=window.location.href;var btn=document.getElementById('copy-btn');var orig=btn.innerHTML;
+      var done=function(){btn.innerHTML='✓ Copié !';btn.classList.add('copied');setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('copied');},2200);};
+      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(function(){var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();});
+      else{var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();}
     }
 
-    // Radar cliquable
-    const svgEl=document.getElementById('radar-svg');
-    const cx=255,cy=215,maxR=130,lOff=38;
-    const ang=i=>-Math.PI/2+i*2*Math.PI/dims.length;
-    const pt=(r,i)=>({x:cx+r*Math.cos(ang(i)),y:cy+r*Math.sin(ang(i))});
-    const ptStr=r=>dims.map((_,i)=>{const p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ');
-    let gh='';
-    [0.25,0.5,0.75,1].forEach(r=>{gh+='<polygon points="'+ptStr(maxR*r)+'" fill="'+(r===1?'rgba(201,168,106,.08)':'none')+'" stroke="rgba(201,168,106,'+(r===1?'.4':'.15')+'" stroke-width="1"/>';});
-    dims.forEach((_,i)=>{const p=pt(maxR,i);gh+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x.toFixed(1)+'" y2="'+p.y.toFixed(1)+'" stroke="rgba(201,168,106,.15)" stroke-width="1"/>';});
-    gh+='<polygon points="'+dims.map((d,i)=>{const r=maxR*((c.stats[d.key]||0)/d.max);const p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+'" fill="rgba(163,133,79,.25)" stroke="#a3854f" stroke-width="2"/>';
-    dims.forEach((d,i)=>{
-      const val=c.stats[d.key]||0,r=maxR*(val/d.max),dp=pt(r,i),lp=pt(maxR+lOff,i);
+    // ===== RADAR CLIQUABLE =====
+    var svgEl=document.getElementById('radar-svg');
+    var cx=255,cy=215,maxR=130,lOff=38;
+    var ang=function(i){return -Math.PI/2+i*2*Math.PI/dims.length;};
+    var pt=function(r,i){return{x:cx+r*Math.cos(ang(i)),y:cy+r*Math.sin(ang(i))};}
+    var ptStr=function(r){return dims.map(function(_,i){var p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ');};
+    var gh='';
+    [0.25,0.5,0.75,1].forEach(function(r){gh+='<polygon points="'+ptStr(maxR*r)+'" fill="'+(r===1?'rgba(201,168,106,.08)':'none')+'" stroke="rgba(201,168,106,'+(r===1?'.4':'.15')+'" stroke-width="1"/>';});
+    dims.forEach(function(_,i){var p=pt(maxR,i);gh+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x.toFixed(1)+'" y2="'+p.y.toFixed(1)+'" stroke="rgba(201,168,106,.15)" stroke-width="1"/>';});
+    gh+='<polygon points="'+dims.map(function(d,i){var r=maxR*((c.stats[d.key]||0)/d.max);var p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+'" fill="rgba(163,133,79,.25)" stroke="#a3854f" stroke-width="2"/>';
+    dims.forEach(function(d,i){
+      var val=c.stats[d.key]||0,r=maxR*(val/d.max),dp=pt(r,i),lp=pt(maxR+lOff,i);
       gh+='<circle cx="'+dp.x.toFixed(1)+'" cy="'+dp.y.toFixed(1)+'" r="4" fill="#a3854f"/>';
-      const ax=ang(i);let anchor='middle';
+      var ax=ang(i);var anchor='middle';
       if(Math.cos(ax)>0.3)anchor='start';else if(Math.cos(ax)<-0.3)anchor='end';
-      const href='dimension.html?dim='+d.key+'&id='+c.id;
-      const words=d.label.toUpperCase().split(' ');
+      var href='dimension.html?dim='+d.key+'&id='+c.id;
+      var words=d.label.toUpperCase().split(' ');
       if(words.length>2){
-        const l1=words.slice(0,2).join(' '),l2=words.slice(2).join(' ');
+        var l1=words.slice(0,2).join(' '),l2=words.slice(2).join(' ');
         gh+='<a href="'+href+'" style="cursor:pointer"><text text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5"><tspan x="'+lp.x.toFixed(1)+'" y="'+(lp.y-10).toFixed(1)+'">'+l1+'</tspan><tspan x="'+lp.x.toFixed(1)+'" dy="13">'+l2+'</tspan></text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+18).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';
       } else {
         gh+='<a href="'+href+'" style="cursor:pointer"><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y-5).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5">'+d.label.toUpperCase()+'</text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+11).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';
@@ -470,52 +471,116 @@
     svgEl.innerHTML=gh;
     document.getElementById('radar-sub').textContent='Scénario '+fam.name+' — Clique un axe pour explorer';
 
-    // Mini player
-    let mpInterval=null,mpTime=0,mpPaused=false,mpDur=30;
-    const mpEl=document.getElementById('mini-player'),mpName=document.getElementById('mp-name'),mpDim=document.getElementById('mp-dim'),mpFill=document.getElementById('mp-fill'),mpTimeEl=document.getElementById('mp-time'),mpBtn=document.getElementById('mp-playpause');
-    function startMiniPlayer(label,ts,dur){
-      mpTime=0;mpPaused=false;mpDur=parseInt(dur)||30;
-      mpName.textContent=displayName;mpDim.textContent=label+' · '+ts;
-      mpFill.style.width='0%';mpTimeEl.textContent='0:00';mpBtn.textContent='⏸';
-      mpEl.classList.add('visible');clearInterval(mpInterval);
-      mpInterval=setInterval(()=>{
-        if(mpPaused)return;mpTime++;
+    // ===== WEB SPEECH API =====
+    var synthVoice=null;
+    function initSynthVoice(){
+      if(!window.speechSynthesis)return;
+      var vv=speechSynthesis.getVoices();
+      synthVoice=vv.find(function(v){return v.lang==='fr-FR'&&v.localService;})
+        ||vv.find(function(v){return v.lang==='fr-FR';})
+        ||vv.find(function(v){return v.lang.startsWith('fr');})
+        ||null;
+    }
+    if(window.speechSynthesis){initSynthVoice();speechSynthesis.onvoiceschanged=initSynthVoice;}
+
+    function buildSpeechText(lines){
+      if(!lines||!lines.length)return null;
+      return lines.map(function(l){return l.text;}).join('... ');
+    }
+
+    // ===== MINI PLAYER + TTS =====
+    var mpInterval=null,mpTime=0,mpPaused=false,mpDur=30;
+    var mpEl=document.getElementById('mini-player');
+    var mpName=document.getElementById('mp-name');
+    var mpDim=document.getElementById('mp-dim');
+    var mpFill=document.getElementById('mp-fill');
+    var mpTimeEl=document.getElementById('mp-time');
+    var mpBtn=document.getElementById('mp-playpause');
+
+    function startMiniPlayer(label,ts,dur,dimKey){
+      if(window.speechSynthesis)speechSynthesis.cancel();
+      clearInterval(mpInterval);
+      mpTime=0;mpPaused=false;
+
+      var lines=dimKey?SU_DATA.getTranscriptLines(c.id,dimKey):[];
+      var text=buildSpeechText(lines);
+      var wordCount=text?text.split(' ').length:0;
+      mpDur=wordCount>5?Math.round(wordCount/2.2):(parseInt(dur)||30);
+
+      mpName.textContent=displayName;
+      mpDim.textContent=label+' · '+ts;
+      mpFill.style.width='0%';
+      mpTimeEl.textContent='0:00';
+      mpBtn.textContent='⏸';
+      mpEl.classList.add('visible');
+
+      mpInterval=setInterval(function(){
+        if(mpPaused)return;
+        mpTime++;
         if(mpTime>=mpDur){clearInterval(mpInterval);mpBtn.textContent='▶';return;}
         mpFill.style.width=(mpTime/mpDur*100).toFixed(1)+'%';
         mpTimeEl.textContent='0:'+String(mpTime).padStart(2,'0');
       },1000);
-    }
-    mpBtn.addEventListener('click',()=>{mpPaused=!mpPaused;mpBtn.textContent=mpPaused?'▶':'⏸';});
-    document.getElementById('mp-close').addEventListener('click',()=>{clearInterval(mpInterval);mpEl.classList.remove('visible');});
 
-    // Audio cards
-    function makeWave(n,played){const h=[3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];return h.slice(0,n).map((v,i)=>'<div class="'+(i<played?'waveform-bar played':'waveform-bar')+'" style="height:'+(v*2)+'px"></div>').join('');}
-    const audioHtml=audioMoments.map((m,idx)=>{
-      const dim=dims.find(d=>d.key===m.key);const val=c.stats[m.key]||0;const played=Math.round(24*idx/audioMoments.length);
-      const label=dim?dim.label:m.key;
-      return '<div class="audio-card '+(m.featured?'featured':'')+' " data-dim="'+label+'" data-ts="'+m.ts+'" data-dur="'+parseInt(m.dur)+'">'
+      if(text&&window.speechSynthesis){
+        var utt=new SpeechSynthesisUtterance(text);
+        utt.lang='fr-FR';
+        utt.rate=0.92;
+        utt.pitch=1.0;
+        if(synthVoice)utt.voice=synthVoice;
+        utt.onend=function(){clearInterval(mpInterval);mpFill.style.width='100%';mpBtn.textContent='▶';};
+        utt.onerror=function(){clearInterval(mpInterval);mpBtn.textContent='▶';};
+        speechSynthesis.speak(utt);
+      }
+    }
+
+    mpBtn.addEventListener('click',function(){
+      if(!mpPaused){
+        mpPaused=true;mpBtn.textContent='▶';
+        if(window.speechSynthesis&&speechSynthesis.speaking)speechSynthesis.pause();
+      } else {
+        mpPaused=false;mpBtn.textContent='⏸';
+        if(window.speechSynthesis&&speechSynthesis.paused)speechSynthesis.resume();
+      }
+    });
+    document.getElementById('mp-close').addEventListener('click',function(){
+      clearInterval(mpInterval);
+      if(window.speechSynthesis)speechSynthesis.cancel();
+      mpEl.classList.remove('visible');
+    });
+
+    // ===== AUDIO CARDS (data-dimkey pour relier chaque bouton a sa dimension) =====
+    function makeWave(n,played){var h=[3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];return h.slice(0,n).map(function(v,i){return'<div class="'+(i<played?'waveform-bar played':'waveform-bar')+'" style="height:'+(v*2)+'px"></div>';}).join('');}
+    var audioHtml=audioMoments.map(function(m,idx){
+      var dim=dims.find(function(d){return d.key===m.key;});var val=c.stats[m.key]||0;var played=Math.round(24*idx/audioMoments.length);
+      var label=dim?dim.label:m.key;
+      return '<div class="audio-card '+(m.featured?'featured':'')+' " data-dim="'+label+'" data-dimkey="'+m.key+'" data-ts="'+m.ts+'" data-dur="'+parseInt(m.dur)+'">'
         +'<div class="audio-header"><div><div class="audio-dim-name">'+label+'</div><div class="audio-moment">'+m.moment+'</div></div><div class="audio-score">'+val+'/'+(dim?dim.max:'?')+'</div></div>'
         +'<div class="audio-player"><button class="audio-play-btn">&#9654;</button><div class="waveform">'+makeWave(24,played)+'</div><div class="audio-meta">'+m.ts+' · '+m.dur+'</div></div>'
         +'</div>';
     }).join('');
     document.getElementById('audio-list').innerHTML=audioHtml+'<div class="full-call-box"><div class="full-call-title">Écouter l\'appel complet ?</div><p class="full-call-desc">Téléchargement audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p><a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a></div>';
-    document.querySelectorAll('.audio-play-btn').forEach(btn=>{
+
+    document.querySelectorAll('.audio-play-btn').forEach(function(btn){
       btn.addEventListener('click',function(){
-        const card=this.closest('.audio-card');
-        startMiniPlayer(card.dataset.dim,card.dataset.ts,card.dataset.dur);
+        var card=this.closest('.audio-card');
+        startMiniPlayer(card.dataset.dim,card.dataset.ts,card.dataset.dur,card.dataset.dimkey);
         this.textContent='⏸';
-        const self=this;setTimeout(()=>{self.textContent='▶';},parseInt(card.dataset.dur)*1000||30000);
+        var self=this;
+        // Reset le bouton de la card quand le speech se termine
+        var origText='▶';
+        setTimeout(function(){self.textContent=origText;},Math.max(parseInt(card.dataset.dur)||30,5)*1000);
       });
     });
     document.getElementById('audio-sub').textContent='6 moments calibrés · '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long'})+' 2026';
 
-    // Transcript — FIX : getTranscriptLines('all') renvoie maintenant d.all directement
-    const lines=SU_DATA.getTranscriptLines(c.id,'all');
+    // ===== TRANSCRIPT =====
+    var lines=SU_DATA.getTranscriptLines(c.id,'all');
     document.getElementById('transcript-content').innerHTML=lines.length
-      ?lines.map(l=>'<div class="transcript-line"><div class="tr-ts">'+l.ts+'</div><div class="tr-who '+(l.who==='L'?'candidate':'')+'">'+(l.who==='L'?'↗':'↙')+'</div><div class="tr-text">'+l.text+'</div></div>').join('')+'<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>'
+      ?lines.map(function(l){return'<div class="transcript-line"><div class="tr-ts">'+l.ts+'</div><div class="tr-who '+(l.who==='L'?'candidate':'')+'">'+(l.who==='L'?'↗':'↙')+'</div><div class="tr-text">'+l.text+'</div></div>';}).join('')+'<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>'
       :'<div class="tr-lock">Transcript disponible sur abonnement recruteur</div>';
 
-    // Experience
+    // ===== EXPERIENCE =====
     document.getElementById('exp-content').innerHTML=
       '<div class="exp-mini-grid">'
       +'<div class="exp-mini-cell"><div class="exp-mini-label">Rôle</div><div class="exp-mini-value">'+c.role_type+'</div><div class="exp-mini-sub">'+roleLabel+'</div></div>'
@@ -525,26 +590,26 @@
       +'</div>'
       +'<div class="quota-box"><div><div class="quota-num">'+c.quota_attainment+'%</div><div class="quota-label">Atteinte quota</div></div><div class="quota-text">Performance declarée sur les 3 derniers semestres.</div></div>'
       +'<div class="hf-bar"><div class="hf-bar-labels"><span>Chasse (Hunting)</span><span>Élevage (Farming)</span></div><div class="hf-bar-track"><div class="hf-hunt" style="width:'+c.hunting_pct+'%"></div><div class="hf-farm" style="width:'+(100-c.hunting_pct)+'%"></div></div><div class="hf-bar-values"><span class="hunt-val">'+c.hunting_pct+'%</span><span class="farm-val">'+(100-c.hunting_pct)+'%</span></div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">'+c.prospection_channels.map(ch=>'<span class="profil-tag">'+ch+'</span>').join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">'+c.sectors_mastered.map(s=>'<span class="profil-tag">'+s+'</span>').join('')+'</div></div>';
+      +'<div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">'+c.prospection_channels.map(function(ch){return'<span class="profil-tag">'+ch+'</span>';}).join('')+'</div></div>'
+      +'<div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">'+c.sectors_mastered.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div>';
 
-    // Recherche
-    const cl=(matchPct/100*251.3).toFixed(1);
+    // ===== RECHERCHE =====
+    var cl=(matchPct/100*251.3).toFixed(1);
     document.getElementById('search-content').innerHTML=
       '<div class="match-box"><div class="match-visual"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6" stroke-dasharray="'+cl+' 251.3" stroke-linecap="round"/></svg><div class="match-num">'+matchPct+'%</div></div><div class="match-text"><div class="match-title">Match recruteur</div><div class="match-desc">Ce profil correspond a '+matchPct+'% des recherches actives sur <strong>'+c.role_type+' · '+fam.name+'</strong>.</div></div></div>'
       +'<div class="ote-grid"><div class="ote-cell"><div class="ote-label">Fixe</div><div class="ote-value">'+c.ote.fixed+'€</div></div><div class="ote-cell"><div class="ote-label">Variable</div><div class="ote-value">'+c.ote.variable+'€</div></div><div class="ote-cell total"><div class="ote-label">OTE Total</div><div class="ote-value">'+c.ote.total+'€</div></div></div>'
       +'<div class="status-grid"><div class="status-cell"><div class="exp-mini-label">Statut actuel</div><div class="exp-mini-value">'+c.status+'</div></div><div class="status-cell"><div class="exp-mini-label">Préavis</div><div class="exp-mini-value">'+c.notice+'</div></div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Type entreprise visée</div><div class="profil-tags">'+c.company_size_target.map(s=>'<span class="profil-tag">'+s+'</span>').join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Mobilité</div><div class="profil-tags">'+c.mobility.map(m=>'<span class="profil-tag">'+m+'</span>').join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Langues</div><div class="profil-tags">'+c.languages.map(l=>'<span class="profil-tag">'+l.name+'<span class="lang-level">'+l.level+'</span></span>').join('')+'</div></div>';
+      +'<div class="tag-group"><div class="tag-group-label">Type entreprise visée</div><div class="profil-tags">'+c.company_size_target.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div>'
+      +'<div class="tag-group"><div class="tag-group-label">Mobilité</div><div class="profil-tags">'+c.mobility.map(function(m){return'<span class="profil-tag">'+m+'</span>';}).join('')+'</div></div>'
+      +'<div class="tag-group"><div class="tag-group-label">Langues</div><div class="profil-tags">'+c.languages.map(function(l){return'<span class="profil-tag">'+l.name+'<span class="lang-level">'+l.level+'</span></span>';}).join('')+'</div></div>';
 
-    // Similaires
-    const similar=SU_DATA.candidates.filter(x=>x.id!==c.id&&(x.family===c.family||x.role_type===c.role_type)).sort((a,b)=>Math.abs(a.score-c.score)-Math.abs(b.score-c.score)).slice(0,3);
-    document.getElementById('similar-cards').innerHTML=similar.length?similar.map(s=>renderCard(s)).join(''):'<p style="color:var(--teal-3);font-family:var(--font-mono);font-size:12px">Aucun profil similaire.</p>';
+    // ===== SIMILAIRES =====
+    var similar=SU_DATA.candidates.filter(function(x){return x.id!==c.id&&(x.family===c.family||x.role_type===c.role_type);}).sort(function(a,b){return Math.abs(a.score-c.score)-Math.abs(b.score-c.score);}).slice(0,3);
+    document.getElementById('similar-cards').innerHTML=similar.length?similar.map(function(s){return renderCard(s);}).join(''):'<p style="color:var(--teal-3);font-family:var(--font-mono);font-size:12px">Aucun profil similaire.</p>';
 
-    // Forces
-    document.getElementById('strengths-list').innerHTML=(c.strengths||[]).map((s,i)=>'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+s+'</div></div>').join('');
-    document.getElementById('weaknesses-list').innerHTML=(c.weaknesses||[]).map((w,i)=>'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+w+'</div></div>').join('');
+    // ===== FORCES =====
+    document.getElementById('strengths-list').innerHTML=(c.strengths||[]).map(function(s,i){return'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+s+'</div></div>';}).join('');
+    document.getElementById('weaknesses-list').innerHTML=(c.weaknesses||[]).map(function(w,i){return'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+w+'</div></div>';}).join('');
 
     document.title='SalesUncut — Profil '+displayName;
   </script>
