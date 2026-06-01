@@ -115,8 +115,6 @@ function openVSModal() {
   const topWinner = topDiffDim && (a.stats[topDiffDim.key]||0) >= (b.stats[topDiffDim.key]||0) ? shortA : shortB;
   const topColor = topWinner === shortA ? CA : CB;
   const closeCount = dims.filter(d => Math.abs((a.stats[d.key]||0)-(b.stats[d.key]||0)) <= 1).length;
-  const insightTxt = '<span style="color:'+topColor+';font-weight:700">'+topWinner+'</span> domine sur <span style="color:'+topColor+';font-weight:600">'+topDiffDim.label+' (+'+topDiff+' pts)</span>.'
-    + (closeCount > 0 ? ' <span style="color:#999;font-style:italic">'+closeCount+' dimension'+(closeCount>1?'s':'')+' serrée'+(closeCount>1?'s':'')+' (≤ 1 pt).</span>' : '');
 
   let summaryText = '';
   if (Math.abs(diff) > 10) {
@@ -180,14 +178,13 @@ function openVSModal() {
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'
       +'<div style="font-size:7.5px;color:#999;font-family:var(--font-mono);text-align:center;line-height:1.25;min-height:22px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.08em;text-transform:uppercase;padding:0 2px">'+d.label+'</div>'
       +'<div style="display:flex;gap:4px;align-items:flex-end;height:100px">'
-        +'<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
-          +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+'">'+va+'</div>'
-          +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CA+','+CA+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60)+'ms"></div></div>'
-        +'</div>'
-        +'<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
-          +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CB+'">'+vb+'</div>'
-          +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CB+','+CB+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60+30)+'ms"></div></div>'
-        +'</div>'
+        +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CA+','+CA+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60)+'ms"></div></div>'
+        +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CB+','+CB+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60+30)+'ms"></div></div>'
+      +'</div>'
+      +'<div style="display:flex;gap:4px;justify-content:center">'
+        +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span>'
+        +'<span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span>'
+        +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span>'
       +'</div>'
       +'<div style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-mono);background:'+deltaBg+';color:#fff;min-width:24px;text-align:center">'+deltaTxt+'</div>'
     +'</div>';
@@ -229,19 +226,17 @@ function openVSModal() {
       +'</div>'
     +'</div>'
 
-    +'<div style="display:flex;justify-content:center;align-items:center;gap:28px;padding:10px 0;background:#faf6ee;border-top:1px solid #e8dfc8;border-bottom:1px solid #e8dfc8">'
-      +'<span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10px;color:#666;letter-spacing:.06em"><span style="width:10px;height:3px;border-radius:2px;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
-      +'<span style="width:1px;height:14px;background:#ddd;display:inline-block"></span>'
-      +'<span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10px;color:#666;letter-spacing:.06em"><span style="width:10px;height:3px;border-radius:2px;background:'+CB+';display:inline-block"></span>'+shortB+'</span>'
-    +'</div>'
-
-    +'<div style="padding:20px 28px 8px;background:#faf6ee">'
-      +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-bottom:14px">Radar superposé</div>'
-      +'<div style="display:flex;justify-content:center"><canvas id="vs-modal-radar" width="320" height="240" style="display:block"></canvas></div>'
-    +'</div>'
-
-    +'<div style="margin:8px 24px 16px;background:#fff;border-radius:10px;padding:14px 18px;border-left:3px solid '+topColor+';box-shadow:0 1px 8px rgba(0,0,0,.06)">'
-      +'<div style="font-size:13px;color:#3a3a3a;line-height:1.65">'+insightTxt+'</div>'
+    +'<div style="padding:16px 28px 16px;background:#faf6ee">'
+      +'<div style="background:#fff;border:1.5px solid #e8dfc8;border-radius:14px;padding:20px;position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.03)">'
+        +'<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#fff;padding:0 12px">'
+          +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap">Radar superposé</span>'
+        +'</div>'
+        +'<div style="display:flex;justify-content:center;align-items:center"><canvas id="vs-modal-radar" width="320" height="240" style="display:block"></canvas></div>'
+        +'<div style="display:flex;justify-content:center;gap:20px;margin-top:10px">'
+          +'<span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:18px;height:2.5px;border-radius:2px;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
+          +'<span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:18px;height:2.5px;border-radius:2px;background:'+CB+';display:inline-block"></span>'+shortB+'</span>'
+        +'</div>'
+      +'</div>'
     +'</div>'
 
     +'<div style="padding:0 24px 24px;background:#faf6ee">'
@@ -321,7 +316,9 @@ function openVSModal() {
               font: { size: 8 },
               color: '#c8bea0',
               backdropColor: 'transparent',
-              callback: function(value) { return value === 100 ? '' : value; }
+              callback: function(value) {
+                return (value === 25 || value === 50 || value === 100) ? '' : value;
+              }
             },
             grid: { color: '#ddd8cc' },
             angleLines: { color: '#ddd8cc' },
