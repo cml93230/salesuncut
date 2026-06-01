@@ -18,9 +18,10 @@
     .dim-subtitle{font-family:var(--font-serif);font-style:italic;font-size:20px;color:var(--gold);line-height:1.4;margin-bottom:24px;}
     .dim-candidate-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,248,231,.5);text-decoration:none;transition:color .2s;}
     .dim-candidate-link:hover{color:var(--gold);}
+    /* Fix 4 : score lisible — taille réduite pour éviter chevauchement sur 2 chiffres */
     .dim-score-card{background:rgba(255,248,231,.06);border:1.5px solid rgba(255,248,231,.12);border-radius:12px;padding:28px;text-align:center;}
-    .dim-score-big{font-family:var(--font-display);font-weight:900;font-size:80px;line-height:1;color:var(--gold);letter-spacing:-.04em;white-space:nowrap;}
-    .dim-score-max{font-size:24px;color:rgba(255,248,231,.3);font-weight:400;letter-spacing:0;}
+    .dim-score-big{font-family:var(--font-display);font-weight:900;font-size:64px;line-height:1;color:var(--gold);letter-spacing:-.02em;white-space:nowrap;display:flex;align-items:baseline;justify-content:center;gap:2px;}
+    .dim-score-max{font-size:22px;color:rgba(255,248,231,.3);font-weight:400;letter-spacing:0;}
     .dim-score-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,248,231,.4);margin:8px 0 16px;}
     .dim-score-bar-wrap{background:rgba(255,248,231,.1);border-radius:4px;height:8px;overflow:hidden;margin-bottom:12px;}
     .dim-score-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:4px;}
@@ -72,7 +73,8 @@
     .dim-tr-text{font-family:var(--font-mono);font-size:12px;line-height:1.5;color:rgba(255,248,231,.8);}
     .dim-tr-empty{text-align:center;padding:24px;font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.25);}
     .dim-score-row{display:flex;align-items:baseline;gap:8px;margin-bottom:16px;}
-    .dim-score-big2{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--ink);line-height:1;letter-spacing:-.03em;}
+    /* Fix 4 : score lisible dans le panel droit aussi */
+    .dim-score-big2{font-family:var(--font-display);font-weight:900;font-size:52px;color:var(--ink);line-height:1;letter-spacing:-.02em;}
     .dim-score-max2{font-family:var(--font-display);font-size:20px;color:var(--teal-3);font-weight:400;}
     .dim-score-track{height:10px;background:var(--cream-3);border-radius:5px;overflow:hidden;margin-bottom:20px;}
     .dim-score-track-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:5px;}
@@ -83,8 +85,9 @@
     .dim-weak{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px dashed var(--cream-3);font-size:14px;color:var(--teal-2);line-height:1.4;}
     .dim-weak:last-child{border-bottom:none;}
     .dim-weak-arrow{color:var(--rust);font-weight:700;flex-shrink:0;margin-top:1px;}
-    /* SW panel : deux colonnes forces/axes */
-    .sw-two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    /* Fix 5 : sw-panel pleine largeur sous les deux colonnes */
+    .sw-panel-fullwidth{margin-top:28px;background:var(--cream);border:1.5px solid var(--cream-3);border-radius:8px;padding:28px;}
+    .sw-two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
     .sw-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;}
     .sw-col-title.strengths{color:var(--gold-deep);}
     .sw-col-title.weaknesses{color:var(--rust);}
@@ -112,7 +115,7 @@
     .mp-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,248,231,.1);color:var(--cream);font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
     .mp-btn:hover{background:rgba(255,248,231,.2);}
     @media(max-width:900px){.dim-hero-grid{grid-template-columns:1fr;gap:32px;}.dim-score-card{max-width:280px;}.dim-stats-row{grid-template-columns:1fr;gap:14px;}.dim-candidate-grid{grid-template-columns:1fr;}.dim-corr-grid{grid-template-columns:1fr 1fr;gap:12px;}.dim-section{padding:48px 0;}.dim-stat-num{font-size:36px;}.sw-two-col{grid-template-columns:1fr;}}
-    @media(max-width:560px){.dim-corr-grid{grid-template-columns:1fr;}.dim-score-big{font-size:64px;}.mini-player-sticky{bottom:12px;right:12px;left:12px;min-width:0;max-width:none;}}
+    @media(max-width:560px){.dim-corr-grid{grid-template-columns:1fr;}.dim-score-big{font-size:52px;}.mini-player-sticky{bottom:12px;right:12px;left:12px;min-width:0;max-width:none;}}
   </style>
 </head>
 <body class="page-enter">
@@ -142,6 +145,7 @@
   <section class="dim-section"><div class="container">
     <div class="dim-section-eyebrow" id="cand-eyebrow">Sur cette dimension</div>
     <h2 class="dim-section-h2" id="cand-h2"></h2>
+    <!-- Deux colonnes : audio+transcript à gauche | score+signaux à droite -->
     <div class="dim-candidate-grid">
       <div class="dim-panel dim-panel-dark">
         <div class="dim-panel-title">Extrait audio</div>
@@ -149,11 +153,17 @@
         <div class="dim-audio-card" id="dim-audio-card"></div>
         <div style="margin-top:20px"><div class="dim-panel-title">Transcript horodaté</div><div class="dim-panel-sub">Lignes associées à cette dimension</div><div id="dim-transcript"></div></div>
       </div>
-      <div>
-        <div class="dim-panel" style="margin-bottom:20px"><div class="dim-panel-title">Score sur cette dimension</div><div class="dim-panel-sub" id="score-sub"></div><div class="dim-score-row" id="score-row"></div><div class="dim-score-track"><div class="dim-score-track-fill" id="score-fill"></div></div><div class="dim-signals-title">Signaux observés dans l'appel</div><div id="dim-signals"></div></div>
-        <div class="dim-panel" id="sw-panel"></div>
+      <div class="dim-panel" id="score-panel">
+        <div class="dim-panel-title">Score sur cette dimension</div>
+        <div class="dim-panel-sub" id="score-sub"></div>
+        <div class="dim-score-row" id="score-row"></div>
+        <div class="dim-score-track"><div class="dim-score-track-fill" id="score-fill"></div></div>
+        <div class="dim-signals-title">Signaux observés dans l'appel</div>
+        <div id="dim-signals"></div>
       </div>
     </div>
+    <!-- Fix 5 : sw-panel en pleine largeur sous les deux colonnes -->
+    <div class="sw-panel-fullwidth" id="sw-panel"></div>
   </div></section>
   <section class="dim-section dim-section-cream"><div class="container">
     <div class="dim-section-eyebrow">A explorer aussi</div>
@@ -193,7 +203,8 @@
       document.getElementById('dim-subtitle').textContent=dc.subtitle;
       document.getElementById('dim-back-link').href='profil.html?id='+cid;
       document.getElementById('dim-back-link').textContent='← Retour au profil de '+name;
-      document.getElementById('dim-score-card').innerHTML='<div class="dim-score-big">'+score+'<span class="dim-score-max">/'+dim.max+'</span></div><div class="dim-score-lbl">Score de '+firstName+'</div><div class="dim-score-bar-wrap"><div class="dim-score-bar-fill" style="width:'+pct+'%"></div></div><div class="dim-level-badge">'+level.toUpperCase()+' · '+pct+'%</div>';
+      /* Fix 4 : score lisible avec span séparé pour le /max */
+      document.getElementById('dim-score-card').innerHTML='<div class="dim-score-big"><span>'+score+'</span><span class="dim-score-max">/'+dim.max+'</span></div><div class="dim-score-lbl">Score de '+firstName+'</div><div class="dim-score-bar-wrap"><div class="dim-score-bar-fill" style="width:'+pct+'%"></div></div><div class="dim-level-badge">'+level.toUpperCase()+' · '+pct+'%</div>';
       document.getElementById('def-h2').textContent="Qu'est-ce que "+dc.headline.toLowerCase()+" ?";
       document.getElementById('dim-definition').textContent=dc.definition;
       document.getElementById('dim-stats').innerHTML=dc.stats.map(function(s){return'<div class="dim-stat-box"><div class="dim-stat-num">'+s.num+'</div><div class="dim-stat-lbl">'+s.label+'</div></div>';}).join('');
@@ -230,12 +241,13 @@
       document.getElementById('mp-close').addEventListener('click',function(){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}mpEl.style.display='none';playBtn.innerHTML='&#9654;';});
       var lines=SU_DATA.getTranscriptLines(cid,dimKey);
       if(!lines||!lines.length)lines=SU_DATA.getTranscriptLines(cid,'decouverte');
-      document.getElementById('dim-transcript').innerHTML=lines&&lines.length?lines.map(function(l){return'<div class="dim-tr-grid"><div class="dim-tr-ts">'+l.ts+'</div><div class="dim-tr-who '+(l.who==='L'?'cand':'')+'">'+( l.who==='L'?'\u2197':'\u2199')+'</div><div class="dim-tr-text">'+l.text+'</div></div>';}).join(''):'<div class="dim-tr-empty">Transcript complet disponible sur abonnement recruteur</div>';
+      document.getElementById('dim-transcript').innerHTML=lines&&lines.length?lines.map(function(l){return'<div class="dim-tr-grid"><div class="dim-tr-ts">'+l.ts+'</div><div class="dim-tr-who '+(l.who==='L'?'cand':'')+'">'+(l.who==='L'?'\u2197':'\u2199')+'</div><div class="dim-tr-text">'+l.text+'</div></div>';}).join(''):'<div class="dim-tr-empty">Transcript complet disponible sur abonnement recruteur</div>';
       document.getElementById('score-sub').textContent=dim.label+' · Session '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long'})+' 2026';
+      /* Fix 4 : score-row avec taille lisible */
       document.getElementById('score-row').innerHTML='<div class="dim-score-big2">'+score+'</div><div class="dim-score-max2">/'+dim.max+'</div>';
       document.getElementById('score-fill').style.width=pct+'%';
       document.getElementById('dim-signals').innerHTML=dc.signals.map(function(s){return'<div class="dim-signal"><span class="dim-signal-tick">✓</span>'+s+'</div>';}).join('');
-      // Forces & axes spécifiques à cette dimension
+      /* Fix 5+6 : sw-panel pleine largeur avec forces/axes spécifiques à la dimension */
       var dsw=SU_DATA.dimStrengthsWeaknesses&&SU_DATA.dimStrengthsWeaknesses[cid]&&SU_DATA.dimStrengthsWeaknesses[cid][dimKey];
       var shownStrengths=dsw?dsw.s:(c.strengths||[]).slice(0,2);
       var shownWeaknesses=dsw?dsw.w:(c.weaknesses||[]).slice(0,2);
