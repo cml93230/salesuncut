@@ -16,7 +16,7 @@ const SU_SHORTLIST = {
   getCandidates() { return this.get().map(id=>SU_DATA.candidates.find(c=>c.id===id)).filter(Boolean); },
 };
 
-/* ============ COMPARE ============ */
+/* ============ COMPARE (modal uniquement — pas de bouton sur les cards) ============ */
 const SU_COMPARE = {
   ids: [], MAX: 3,
   has(id) { return this.ids.includes(id); },
@@ -47,30 +47,39 @@ function renderCard(c, opts) {
   const fam   = SU_DATA.getFamilyById(c.family);
   const level = c.level || SU_DATA.getLevel(c.score);
   const dims  = SU_DATA.dimensions;
-  const daysSince = c.date ? Math.floor((Date.now()-new Date(c.date))/86400000) : 999;
-  const isNew  = daysSince <= 14;
-  const isImm  = c.availability === 'Immédiat';
-  const name   = c.anonymous ? 'Anonyme' : c.name;
+  const isImm = c.availability === 'Immédiat';
+  const name  = c.anonymous ? 'Anonyme' : c.name;
   const rolePrefix = c.role_type ? '<span class="tcard-role">' + c.role_type + '</span> · ' : '';
-  const inSL   = SU_SHORTLIST.has(c.id);
-  const inCmp  = SU_COMPARE.has(c.id);
-  const stats  = dims.map(d => {
+  const inSL  = SU_SHORTLIST.has(c.id);
+
+  const stats = dims.map(d => {
     const v=c.stats[d.key]||0; const p=Math.round(v/d.max*100);
     return '<div class="tcard-stat"><span class="lbl">' + d.label + '</span><div class="bar"><i style="width:' + p + '%"></i></div><span class="val">' + v + '</span></div>';
   }).join('');
-  const photo = c.photo ? '<img class="tcard-photo" src="' + c.photo + '" alt="' + name + '" loading="lazy">' : '<span class="silhouette">' + fam.icon + '</span>';
+
+  const photo = c.photo
+    ? '<img class="tcard-photo" src="' + c.photo + '" alt="' + name + '" loading="lazy">'
+    : '<span class="silhouette">' + fam.icon + '</span>';
+
+  // Bouton shortlist positionné en bas-gauche de la photo
+  const slBtn = '<button class="tcard-sl-btn' + (inSL ? ' active' : '') + '" data-id="' + c.id + '">'
+    + (inSL ? '\u2713 SHORTLIST' : '+ SHORTLIST')
+    + '</button>';
+
   return '<div class="tcard ' + level + (compact?' sm':'') + '" data-candidate-id="' + c.id + '">'
     + '<div class="holo"></div>'
-    + (isNew ? '<div class="tcard-new-badge">✦ Nouveau</div>' : '')
-    + '<div class="tcard-actions">'
-    + '<button class="tcard-heart ' + (inSL?'active':'') + '" data-id="' + c.id + '" title="Shortlist">' + (inSL?'\u2665':'\u2661') + '</button>'
-    + '<button class="tcard-cmp ' + (inCmp?'active':'') + '" data-id="' + c.id + '" title="Comparer">' + (inCmp?'\u2713':'+') + '</button>'
-    + '</div>'
     + '<div class="tcard-inner">'
-    + '<div class="tcard-header"><div><div class="tcard-name">' + name + '</div>'
-    + '<div class="tcard-handle">' + (isImm?'<span class="dispo-dot"></span>':'') + 'DISPO · ' + c.availability + '</div></div>'
-    + '<div class="tcard-score">' + c.score + '<small>/100</small></div></div>'
-    + '<div class="tcard-portrait"><div class="tcard-family-badge">' + c.location + '</div>' + photo + '<div class="tcard-rarity-stamp">' + level.toUpperCase() + '</div></div>'
+    + '<div class="tcard-header">'
+    +   '<div><div class="tcard-name">' + name + '</div>'
+    +   '<div class="tcard-handle">' + (isImm ? '<span class="dispo-dot"></span>' : '') + 'DISPO · ' + c.availability + '</div></div>'
+    +   '<div class="tcard-score">' + c.score + '<small>/100</small></div>'
+    + '</div>'
+    + '<div class="tcard-portrait">'
+    +   '<div class="tcard-family-badge">' + c.location + '</div>'
+    +   photo
+    +   '<div class="tcard-rarity-stamp">' + level.toUpperCase() + '</div>'
+    +   slBtn
+    + '</div>'
     + '<div class="tcard-stats">' + stats + '</div>'
     + '<div class="tcard-footer"><span>' + rolePrefix + fam.name + '</span></div>'
     + '</div></div>';
@@ -115,24 +124,27 @@ function openCompareModal() {
     const fam = SU_DATA.getFamilyById(c.family);
     const name = c.anonymous ? 'Anonyme' : c.name;
     const level = c.level || SU_DATA.getLevel(c.score);
-    const photo = c.photo ? '<img src="' + c.photo + '" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid var(--gold)">' : '<div style="width:80px;height:80px;border-radius:50%;background:var(--cream-3);display:flex;align-items:center;justify-content:center;font-size:32px">' + fam.icon + '</div>';
+    const photo = c.photo
+      ? '<img src="' + c.photo + '" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid var(--gold)">'
+      : '<div style="width:80px;height:80px;border-radius:50%;background:var(--cream-3);display:flex;align-items:center;justify-content:center;font-size:32px">' + fam.icon + '</div>';
     const bars = dims.map(d => {
       const v=c.stats[d.key]||0; const p=Math.round(v/d.max*100);
       return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3)">' + d.label + '</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--gold-deep);font-weight:700">' + v + '/' + d.max + '</span></div><div style="height:4px;background:var(--cream-3);border-radius:2px;overflow:hidden"><div style="width:' + p + '%;height:100%;background:var(--gold-deep);border-radius:2px"></div></div></div>';
     }).join('');
     return '<div class="cmp-col">'
-      + '<div style="text-align:center;margin-bottom:20px">' + photo + '<div style="font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;margin-top:10px">' + name + '</div>'
+      + '<div style="text-align:center;margin-bottom:20px">' + photo
+      + '<div style="font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;margin-top:10px">' + name + '</div>'
       + '<div style="display:inline-block;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;padding:4px 10px;border-radius:4px;margin-top:4px">' + level.toUpperCase() + ' · ' + c.score + '/100</div>'
       + '<div style="font-family:var(--font-mono);font-size:10px;color:var(--teal-3);margin-top:8px">' + fam.name + ' · ' + c.location + '</div></div>'
       + '<div style="margin-bottom:16px">' + bars + '</div>'
       + '<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px">Points forts</div>'
-      + (c.strengths||[]).map(s=>'<div style="font-size:13px;color:var(--teal-2);padding:5px 0;border-bottom:1px dashed var(--cream-3)">→ ' + s + '</div>').join('')
+      + (c.strengths||[]).map(s => '<div style="font-size:13px;color:var(--teal-2);padding:5px 0;border-bottom:1px dashed var(--cream-3)">→ ' + s + '</div>').join('')
       + '<div style="margin-top:16px"><a href="profil.html?id=' + c.id + '" style="display:block;text-align:center;background:var(--gold-deep);color:var(--cream);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px;border-radius:4px;text-decoration:none">Voir le profil complet →</a></div>'
       + '</div>';
   };
-  modal.innerHTML = '<div class="cmp-overlay" onclick="document.getElementById(\"su-cmp-modal\").style.display=\"none\""></div>'
+  modal.innerHTML = '<div class="cmp-overlay" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'"></div>'
     + '<div class="cmp-inner">'
-    + '<div class="cmp-header"><div style="font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase">Comparaison</div><button class="cmp-close" onclick="document.getElementById(\"su-cmp-modal\").style.display=\"none\"">✕</button></div>'
+    + '<div class="cmp-header"><div style="font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase">Comparaison</div><button class="cmp-close" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">✕</button></div>'
     + '<div class="cmp-cols">' + cands.map(col).join('') + '</div>'
     + '</div>';
   modal.style.display = 'flex';
@@ -166,7 +178,7 @@ function setupMobileMenu() {
   document.body.appendChild(drawer);
   const path = (window.location.pathname.split('/').pop()||'index.html').split('?')[0];
   drawer.querySelectorAll('.nav-drawer-links a').forEach(a => {
-    if(a.getAttribute('href').split('/').pop().split('?')[0]===path) a.classList.add('active');
+    if (a.getAttribute('href').split('/').pop().split('?')[0] === path) a.classList.add('active');
   });
   const open  = () => { drawer.classList.add('open'); burger.setAttribute('aria-expanded','true'); document.body.classList.add('nav-locked'); };
   const close = () => { drawer.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.classList.remove('nav-locked'); };
@@ -196,14 +208,44 @@ document.addEventListener('DOMContentLoaded', () => {
     .tcard-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
     .tcard-photo + .tcard-rarity-stamp, .tcard-family-badge { z-index: 2; }
     .tcard-role { font-weight: 800; color: var(--rust); letter-spacing: .08em; }
-    .tcard-new-badge { position: absolute; top: 10px; right: 10px; z-index: 10; background: var(--rust); color: var(--cream); font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 7px; border-radius: 3px; }
-    .tcard-actions { position: absolute; top: 10px; left: 10px; z-index: 10; display: flex; gap: 4px; }
-    .tcard-heart, .tcard-cmp { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid rgba(26,34,34,.2); background: rgba(255,248,231,.9); color: var(--teal-2); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; backdrop-filter: blur(4px); }
-    .tcard-heart.active { background: var(--rust); color: var(--cream); border-color: var(--rust); }
-    .tcard-cmp.active { background: var(--ink); color: var(--gold); border-color: var(--ink); }
-    .tcard-heart:hover, .tcard-cmp:hover { transform: scale(1.1); }
+
+    /* Bouton shortlist — bas-gauche de la photo */
+    .tcard-sl-btn {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 10;
+      background: rgba(255,248,231,.92);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 3px;
+      border: 1.5px solid rgba(26,34,34,.15);
+      cursor: pointer;
+      transition: all .2s;
+      backdrop-filter: blur(4px);
+      white-space: nowrap;
+      line-height: 1;
+    }
+    .tcard-sl-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+    .tcard-sl-btn.active {
+      background: var(--rust);
+      color: var(--cream);
+      border-color: var(--rust);
+    }
+
+    /* Pastille dispo immédiate */
     .dispo-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-right: 4px; vertical-align: middle; animation: pulse-dot 1.6s ease-in-out infinite; }
     @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
     /* Compare bar */
     .su-compare-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 300; background: var(--ink); color: var(--cream); padding: 14px 24px; display: flex; align-items: center; gap: 16px; box-shadow: 0 -4px 24px rgba(26,34,34,.4); }
     .cbar-count { font-family: var(--font-display); font-weight: 900; font-size: 28px; color: var(--gold); line-height: 1; }
@@ -217,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .cbar-hint { font-family: var(--font-mono); font-size: 10px; color: rgba(255,248,231,.4); white-space: nowrap; }
     .cbar-clear { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(255,248,231,.2); background: transparent; color: rgba(255,248,231,.5); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .2s; flex-shrink: 0; }
     .cbar-clear:hover { border-color: var(--cream); color: var(--cream); }
+
     /* Compare modal */
     .su-cmp-modal { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; }
     .cmp-overlay { position: absolute; inset: 0; background: rgba(26,34,34,.7); backdrop-filter: blur(8px); }
@@ -235,41 +278,31 @@ document.addEventListener('DOMContentLoaded', () => {
   setupMobileMenu();
   renderFooter();
 
-  // Card click delegation (profile navigation + shortlist + compare)
+  // Délégation de clics
   document.addEventListener('click', e => {
-    const heart = e.target.closest('.tcard-heart');
-    if (heart) {
+    // Shortlist
+    const slBtn = e.target.closest('.tcard-sl-btn');
+    if (slBtn) {
       e.stopPropagation();
-      const id = heart.dataset.id;
+      const id = slBtn.dataset.id;
       SU_SHORTLIST.toggle(id);
       const isNow = SU_SHORTLIST.has(id);
-      heart.classList.toggle('active', isNow);
-      heart.textContent = isNow ? '\u2665' : '\u2661';
-      document.querySelectorAll('.tcard-heart[data-id="' + id + '"]').forEach(b => {
+      // Mettre à jour tous les boutons de cette card
+      document.querySelectorAll('.tcard-sl-btn[data-id="' + id + '"]').forEach(b => {
         b.classList.toggle('active', isNow);
-        b.textContent = isNow ? '\u2665' : '\u2661';
+        b.textContent = isNow ? '\u2713 SHORTLIST' : '+ SHORTLIST';
       });
+      // Mettre à jour le compteur dans le tab marketplace
       const slCount = document.getElementById('sl-count');
       if (slCount) slCount.textContent = SU_SHORTLIST.count() || '';
       return;
     }
-    const cmp = e.target.closest('.tcard-cmp');
-    if (cmp) {
-      e.stopPropagation();
-      const id = cmp.dataset.id;
-      const ok = SU_COMPARE.toggle(id);
-      if (!ok) { cmp.textContent = '!'; setTimeout(()=>{ cmp.textContent='+'; }, 900); return; }
-      const isNow = SU_COMPARE.has(id);
-      cmp.classList.toggle('active', isNow);
-      cmp.textContent = isNow ? '\u2713' : '+';
-      updateCompareBar();
-      return;
-    }
+
+    // Navigation vers le profil (clic sur la card)
     const card = e.target.closest('.tcard');
     if (card && card.dataset.candidateId) {
-      // Collect current visible pool order
       const allCards = [...document.querySelectorAll('.tcard[data-candidate-id]')];
-      const poolIds = allCards.map(c => c.dataset.candidateId);
+      const poolIds  = allCards.map(c => c.dataset.candidateId);
       navigateWithPool(card.dataset.candidateId, poolIds);
     }
   });
