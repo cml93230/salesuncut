@@ -6,14 +6,7 @@
   <title>SalesUncut — Profil candidat</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    @media print {
-      .nav,.profil-action-bar,.mini-player-sticky,.full-call-box,#site-footer,.audio-play-btn,.waveform,.radar-click-hint,.forces-section,.similar-section,.profil-divider,.profil-prevnext{display:none!important;}
-      body{background:white!important;background-image:none!important;font-size:11pt;}
-      .container{max-width:100%!important;padding:0 24px!important;}
-      .profil-above-fold{height:auto!important;min-height:auto!important;}
-      .profil-section{padding:16pt 0!important;break-inside:avoid;}
-      .profil-panel{border:1pt solid #ccc!important;background:white!important;break-inside:avoid;}
-    }
+    @media print{.nav,.profil-action-bar,.mini-player-sticky,.full-call-box,#site-footer,.audio-play-btn,.waveform,.radar-click-hint,.forces-section,.similar-section,.profil-divider,.profil-prevnext{display:none!important;}body{background:white!important;background-image:none!important;font-size:11pt;}.container{max-width:100%!important;padding:0 24px!important;}.profil-above-fold{height:auto!important;min-height:auto!important;}.profil-section{padding:16pt 0!important;break-inside:avoid;}.profil-panel{border:1pt solid #ccc!important;background:white!important;break-inside:avoid;}}
     .nav-cta-profil{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;padding:10px 20px;border-radius:4px;background:var(--gold-deep);color:var(--cream);border:1.5px solid var(--gold-deep);transition:all .2s;}
     .nav-cta-profil:hover{background:var(--ink);border-color:var(--ink);}
     .profil-above-fold{display:flex;flex-direction:column;height:calc(100vh - var(--nav-height,71px));min-height:560px;}
@@ -87,7 +80,8 @@
     .audio-player{display:flex;align-items:center;gap:8px;}
     .audio-play-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--ink);color:var(--cream);font-size:10px;transition:all .2s;}
     .audio-card.featured .audio-play-btn{background:var(--gold-deep);}
-    .audio-play-btn:hover{transform:scale(1.08);}
+    .audio-play-btn:hover:not(:disabled){transform:scale(1.08);}
+    .audio-play-btn:disabled{opacity:.35;cursor:default;font-size:7px;letter-spacing:.05em;}
     .waveform{flex:1;display:flex;align-items:center;gap:1.5px;height:24px;overflow:hidden;}
     .waveform-bar{flex-shrink:0;width:2.5px;border-radius:2px;background:rgba(26,34,34,.2);}
     .audio-card.featured .waveform-bar{background:rgba(255,248,231,.2);}
@@ -201,81 +195,38 @@
     .mp-dim{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:2px;}
     .mp-bar-wrap{display:flex;align-items:center;gap:6px;margin-top:6px;}
     .mp-bar{flex:1;height:3px;background:rgba(255,248,231,.15);border-radius:2px;overflow:hidden;}
-    .mp-fill{height:100%;background:var(--gold-deep);border-radius:2px;width:0;transition:width .8s linear;}
+    .mp-fill{height:100%;background:var(--gold-deep);border-radius:2px;width:0;transition:width .5s linear;}
     .mp-time{font-family:var(--font-mono);font-size:9px;color:rgba(255,248,231,.4);white-space:nowrap;}
     .mp-controls{display:flex;gap:4px;flex-shrink:0;}
     .mp-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,248,231,.1);color:var(--cream);font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
     .mp-btn:hover{background:rgba(255,248,231,.2);}
-    @media(max-width:900px){
-      .profil-above-fold{height:auto;min-height:auto;}
-      .profil-hero-grid,.profil-two-col{grid-template-columns:1fr;}
-      .profil-action-inner{flex-direction:column;gap:16px;text-align:center;}
-      .profil-action-btns{justify-content:center;}
-      .audio-list{grid-template-columns:1fr;}
-      .full-call-box{grid-column:span 1;}
-      #profil-card .tcard{zoom:1;}
-      .ote-grid{grid-template-columns:1fr;}
-      .ote-cell:not(:last-child){border-right:none;border-bottom:1.5px solid var(--cream-3);}
-      .exp-mini-grid,.status-grid{grid-template-columns:1fr;}
-      .exp-mini-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3);}
-      .exp-mini-cell:last-child{border-bottom:none;}
-      .status-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3);}
-      .status-cell:last-child{border-bottom:none;}
-      .forces-grid{grid-template-columns:1fr;gap:16px;}
-      .similar-cards{grid-template-columns:1fr 1fr;gap:14px;}
-      .mini-player-sticky{bottom:12px;right:12px;left:12px;min-width:0;max-width:none;}
-    }
-    @media(max-width:560px){
-      .similar-cards{grid-template-columns:1fr;}
-      .profil-meta{grid-template-columns:1fr;}
-      .profil-meta-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3)!important;}
-      .profil-meta-cell:last-child{border-bottom:none!important;}
-    }
+    @media(max-width:900px){.profil-above-fold{height:auto;min-height:auto;}.profil-hero-grid,.profil-two-col{grid-template-columns:1fr;}.profil-action-inner{flex-direction:column;gap:16px;text-align:center;}.profil-action-btns{justify-content:center;}.audio-list{grid-template-columns:1fr;}.full-call-box{grid-column:span 1;}#profil-card .tcard{zoom:1;}.ote-grid{grid-template-columns:1fr;}.ote-cell:not(:last-child){border-right:none;border-bottom:1.5px solid var(--cream-3);}.exp-mini-grid,.status-grid{grid-template-columns:1fr;}.exp-mini-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3);}.exp-mini-cell:last-child{border-bottom:none;}.status-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3);}.status-cell:last-child{border-bottom:none;}.forces-grid{grid-template-columns:1fr;gap:16px;}.similar-cards{grid-template-columns:1fr 1fr;gap:14px;}.mini-player-sticky{bottom:12px;right:12px;left:12px;min-width:0;max-width:none;}}
+    @media(max-width:560px){.similar-cards{grid-template-columns:1fr;}.profil-meta{grid-template-columns:1fr;}.profil-meta-cell{border-right:none!important;border-bottom:1.5px solid var(--cream-3)!important;}.profil-meta-cell:last-child{border-bottom:none!important;}}
   </style>
 </head>
 <body class="page-enter">
   <nav class="nav" id="main-nav">
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
-    <div class="nav-links">
-      <a href="index.html">Accueil</a><a href="candidat.html">Pour candidats</a>
-      <a href="marketplace.html">Pour recruteurs</a><a href="profil.html" class="active">Voir un profil</a>
-    </div>
+    <div class="nav-links"><a href="index.html">Accueil</a><a href="candidat.html">Pour candidats</a><a href="marketplace.html">Pour recruteurs</a><a href="profil.html" class="active">Voir un profil</a></div>
     <a href="marketplace.html" class="nav-cta-profil">← Retour au pool</a>
   </nav>
-
   <div class="profil-above-fold">
-    <section class="profil-hero"><div class="container"><div class="profil-hero-grid">
-      <div id="profil-card"></div><div id="profil-info"></div>
-    </div></div></section>
+    <section class="profil-hero"><div class="container"><div class="profil-hero-grid"><div id="profil-card"></div><div id="profil-info"></div></div></div></section>
     <hr class="profil-divider">
     <div class="profil-action-bar"><div class="container"><div class="profil-action-inner">
       <div><div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div><div class="profil-action-sub" id="action-sub">★ Vérifié</div></div>
       <div class="profil-action-btns" id="action-btns"></div>
     </div></div></div>
   </div>
-
   <div class="profil-prevnext" id="prevnext-bar"><div class="container"><div class="profil-prevnext-inner">
     <button class="pn-btn disabled" id="pn-prev">← Précédent</button>
     <span class="pn-pos" id="pn-pos"></span>
     <button class="pn-btn disabled" id="pn-next">Suivant →</button>
   </div></div></div>
-
   <section class="profil-section"><div class="container"><div class="profil-two-col">
-    <div class="profil-panel">
-      <div class="profil-panel-eyebrow">Performance globale</div>
-      <div class="profil-panel-title">Radar 6 dimensions</div>
-      <div class="profil-panel-sub" id="radar-sub"></div>
-      <svg class="radar-svg" viewBox="0 0 550 450" id="radar-svg"></svg>
-      <p class="radar-click-hint">Clique une dimension pour l'explorer en détail</p>
-    </div>
-    <div class="profil-panel" style="gap:0">
-      <div class="profil-panel-eyebrow">Extraits audio horodatés</div>
-      <div class="profil-panel-title">Écoute la voix.</div>
-      <div class="profil-panel-sub" id="audio-sub"></div>
-      <div class="audio-list" id="audio-list"></div>
-    </div>
+    <div class="profil-panel"><div class="profil-panel-eyebrow">Performance globale</div><div class="profil-panel-title">Radar 6 dimensions</div><div class="profil-panel-sub" id="radar-sub"></div><svg class="radar-svg" viewBox="0 0 550 450" id="radar-svg"></svg><p class="radar-click-hint">Clique une dimension pour l'explorer en détail</p></div>
+    <div class="profil-panel" style="gap:0"><div class="profil-panel-eyebrow">Extraits audio horodatés</div><div class="profil-panel-title">Écoute la voix.</div><div class="profil-panel-sub" id="audio-sub"></div><div class="audio-list" id="audio-list"></div></div>
   </div></div></section>
-
   <section class="profil-section" style="padding-top:0"><div class="container">
     <div class="profil-panel transcript-panel">
       <div class="profil-panel-eyebrow">Extrait du transcript · IA certifié</div>
@@ -284,71 +235,33 @@
       <div id="transcript-content"></div>
     </div>
   </div></section>
-
   <hr class="profil-divider">
-
   <section class="profil-section" style="padding-top:28px"><div class="container"><div class="profil-two-col">
-    <div class="profil-panel">
-      <div class="profil-panel-eyebrow">Profil terrain</div>
-      <div class="profil-panel-title">Expérience commerciale</div>
-      <div class="profil-panel-sub">Données déclaratives signées par le candidat</div>
-      <div id="exp-content"></div>
-    </div>
-    <div class="profil-panel">
-      <div class="profil-panel-eyebrow">Profil recherche</div>
-      <div class="profil-panel-title">Ce qu'il cherche</div>
-      <div class="profil-panel-sub">Conditions actuelles &middot; package &amp; mobilité</div>
-      <div id="search-content"></div>
-    </div>
+    <div class="profil-panel"><div class="profil-panel-eyebrow">Profil terrain</div><div class="profil-panel-title">Expérience commerciale</div><div class="profil-panel-sub">Données déclaratives signées par le candidat</div><div id="exp-content"></div></div>
+    <div class="profil-panel"><div class="profil-panel-eyebrow">Profil recherche</div><div class="profil-panel-title">Ce qu'il cherche</div><div class="profil-panel-sub">Conditions actuelles &middot; package &amp; mobilité</div><div id="search-content"></div></div>
   </div></div></section>
-
   <section class="similar-section"><div class="container">
-    <div class="similar-header">
-      <div class="profil-panel-eyebrow">Dans la même famille · Rôle proche</div>
-      <div class="profil-panel-title">Profils similaires</div>
-    </div>
+    <div class="similar-header"><div class="profil-panel-eyebrow">Dans la même famille · Rôle proche</div><div class="profil-panel-title">Profils similaires</div></div>
     <div class="similar-cards" id="similar-cards"></div>
   </div></section>
-
   <section class="forces-section"><div class="container">
-    <div class="forces-header">
-      <div class="forces-eyebrow">Synthèse du profil</div>
-      <h2 class="forces-title">Forces <span class="accent">&amp; axes.</span></h2>
-      <p class="forces-subtitle">Ce qui distingue ce profil — et les leviers à activer pour passer au niveau supérieur.</p>
-    </div>
+    <div class="forces-header"><div class="forces-eyebrow">Synthèse du profil</div><h2 class="forces-title">Forces <span class="accent">&amp; axes.</span></h2><p class="forces-subtitle">Ce qui distingue ce profil — et les leviers à activer pour passer au niveau supérieur.</p></div>
     <div class="forces-grid">
-      <div class="force-panel strengths">
-        <div class="force-panel-header"><div class="force-icon">▲</div><div class="force-panel-titlebox"><h3>Points forts</h3><div class="sub">Signatures observées dans l'appel</div></div></div>
-        <div class="force-list" id="strengths-list"></div>
-      </div>
-      <div class="force-panel weaknesses">
-        <div class="force-panel-header"><div class="force-icon">▼</div><div class="force-panel-titlebox"><h3>Axes de progression</h3><div class="sub">Leviers identifiés par l'IA</div></div></div>
-        <div class="force-list" id="weaknesses-list"></div>
-      </div>
+      <div class="force-panel strengths"><div class="force-panel-header"><div class="force-icon">▲</div><div class="force-panel-titlebox"><h3>Points forts</h3><div class="sub">Signatures observées dans l'appel</div></div></div><div class="force-list" id="strengths-list"></div></div>
+      <div class="force-panel weaknesses"><div class="force-panel-header"><div class="force-icon">▼</div><div class="force-panel-titlebox"><h3>Axes de progression</h3><div class="sub">Leviers identifiés par l'IA</div></div></div><div class="force-list" id="weaknesses-list"></div></div>
     </div>
   </div></section>
-
   <div id="site-footer"></div>
-
   <div class="mini-player-sticky" id="mini-player">
-    <div class="mp-info">
-      <div class="mp-name" id="mp-name">—</div>
-      <div class="mp-dim" id="mp-dim">—</div>
-      <div class="mp-bar-wrap"><div class="mp-bar"><div class="mp-fill" id="mp-fill"></div></div><div class="mp-time" id="mp-time">0:00</div></div>
-    </div>
-    <div class="mp-controls">
-      <button class="mp-btn" id="mp-playpause">⏸</button>
-      <button class="mp-btn" id="mp-close">✕</button>
-    </div>
+    <div class="mp-info"><div class="mp-name" id="mp-name">—</div><div class="mp-dim" id="mp-dim">—</div><div class="mp-bar-wrap"><div class="mp-bar"><div class="mp-fill" id="mp-fill"></div></div><div class="mp-time" id="mp-time">0:00</div></div></div>
+    <div class="mp-controls"><button class="mp-btn" id="mp-playpause">⏸</button><button class="mp-btn" id="mp-close">✕</button></div>
   </div>
-
   <script src="data.js"></script>
   <script src="components.js"></script>
   <script>
     var navEl=document.getElementById('main-nav');
     if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px');
-    window.addEventListener('load',function(){ if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px'); });
-
+    window.addEventListener('load',function(){if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px');});
     var params=new URLSearchParams(window.location.search);
     var cid=params.get('id')||'c001';
     var c=SU_DATA.candidates.find(function(x){return x.id===cid;})||SU_DATA.candidates[0];
@@ -364,253 +277,112 @@
     var viewCount=(SU_DATA.viewCounts&&SU_DATA.viewCounts[c.id])||0;
     var sameRole=SU_DATA.candidates.filter(function(x){return x.role_type===c.role_type;});
     var avgScore=sameRole.length>1?Math.round(sameRole.reduce(function(s,x){return s+x.score;},0)/sameRole.length):null;
-
-    // Prev/Next
     var pool=getPoolFromSession();
     var poolPos=pool.indexOf(c.id);
     if(pool.length>0&&poolPos>=0){
       document.getElementById('pn-pos').textContent='Profil '+(poolPos+1)+'/'+pool.length;
       var prevBtn=document.getElementById('pn-prev'),nextBtn=document.getElementById('pn-next');
-      if(poolPos>0){
-        var prevId=pool[poolPos-1];var prevC=SU_DATA.candidates.find(function(x){return x.id===prevId;});
-        prevBtn.classList.remove('disabled');
-        prevBtn.textContent='← '+(prevC?(prevC.anonymous?'Anonyme':prevC.name.split(' ')[0]):'Précédent');
-        prevBtn.onclick=function(){navigateWithPool(prevId,pool);};
-      }
-      if(poolPos<pool.length-1){
-        var nextId=pool[poolPos+1];var nextC=SU_DATA.candidates.find(function(x){return x.id===nextId;});
-        nextBtn.classList.remove('disabled');
-        nextBtn.textContent=(nextC?(nextC.anonymous?'Anonyme':nextC.name.split(' ')[0]):'Suivant')+' →';
-        nextBtn.onclick=function(){navigateWithPool(nextId,pool);};
-      }
-    } else { document.getElementById('prevnext-bar').style.display='none'; }
-
+      if(poolPos>0){var prevId=pool[poolPos-1];var prevC=SU_DATA.candidates.find(function(x){return x.id===prevId;});prevBtn.classList.remove('disabled');prevBtn.textContent='← '+(prevC?(prevC.anonymous?'Anonyme':prevC.name.split(' ')[0]):'Précédent');prevBtn.onclick=function(){navigateWithPool(prevId,pool);};}
+      if(poolPos<pool.length-1){var nextId=pool[poolPos+1];var nextC=SU_DATA.candidates.find(function(x){return x.id===nextId;});nextBtn.classList.remove('disabled');nextBtn.textContent=(nextC?(nextC.anonymous?'Anonyme':nextC.name.split(' ')[0]):'Suivant')+' →';nextBtn.onclick=function(){navigateWithPool(nextId,pool);};}
+    } else {document.getElementById('prevnext-bar').style.display='none';}
     var audioMoments=SU_DATA.getAudioMoments(c.id);
     var serial='#'+String(parseInt(c.id.replace('c',''))).padStart(4,'0')+'/200';
-    var validity=(function(){ var d=new Date(c.date); d.setMonth(d.getMonth()+18); return d.toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); })();
-    var candidateQuotes={
-      c001:"Fait emerger les enjeux avant de presenter une solution.",
-      c002:"La cyber expliquee comme du business, pas comme une menace.",
-      c003:"Pose les vraies questions RH avant de proposer un demo.",
-      c004:"Vend une histoire avant de vendre une plateforme marketing.",
-      c005:"Parle finance avec la rigueur d'un analyste et la chaleur d'un partenaire.",
-      c006:"Quantifie le ROI energetique avant meme de pitcher la solution.",
-      c007:"Connait le terrain ERP par coeur et le fait sentir.",
-      c008:"Sait ecouter avant de pitcher, rare en telecom.",
-      c009:"Credibilite terrain et ton calme face aux objections securite.",
-      c010:"Pose les bonnes questions assurance avant de penser produit.",
-    };
+    var validity=(function(){var d=new Date(c.date);d.setMonth(d.getMonth()+18);return d.toLocaleDateString('fr-FR',{month:'short',year:'numeric'});})();
+    var candidateQuotes={c001:"Fait emerger les enjeux avant de presenter une solution.",c002:"La cyber expliquee comme du business, pas comme une menace.",c003:"Pose les vraies questions RH avant de proposer un demo.",c004:"Vend une histoire avant de vendre une plateforme marketing.",c005:"Parle finance avec la rigueur d'un analyste et la chaleur d'un partenaire.",c006:"Quantifie le ROI energetique avant meme de pitcher la solution.",c007:"Connait le terrain ERP par coeur et le fait sentir.",c008:"Sait ecouter avant de pitcher, rare en telecom.",c009:"Credibilite terrain et ton calme face aux objections securite.",c010:"Pose les bonnes questions assurance avant de penser produit."};
     var finalQuote=candidateQuotes[c.id]||'Profil certifie SalesUncut.';
-
     document.getElementById('profil-card').innerHTML=renderCard(c);
-
-    var tagsHtml=[
-      '<span class="profil-tag gold-tag">★ '+levelLabel+' · '+c.score+'/100</span>',
-      '<span class="profil-tag benchmark-tag">↑ TOP '+percentile+'% du pool</span>',
-      '<span class="profil-tag role-tag">'+c.role_type+' · '+roleLabel+'</span>',
-      '<span class="profil-tag">'+fam.name+'</span>',
-      '<span class="profil-tag">'+c.experience_years+' ans · '+c.experience_level+'</span>',
-      '<span class="profil-tag">'+c.remote+'</span>',
-    ].join('');
+    var tagsHtml=['<span class="profil-tag gold-tag">★ '+levelLabel+' · '+c.score+'/100</span>','<span class="profil-tag benchmark-tag">↑ TOP '+percentile+'% du pool</span>','<span class="profil-tag role-tag">'+c.role_type+' · '+roleLabel+'</span>','<span class="profil-tag">'+fam.name+'</span>','<span class="profil-tag">'+c.experience_years+' ans · '+c.experience_level+'</span>','<span class="profil-tag">'+c.remote+'</span>'].join('');
     var bmHtml=avgScore&&avgScore!==c.score?'<div class="benchmark-row"><div class="bm-label">Score vs moyenne <strong>'+c.role_type+'</strong> du pool</div><div class="bm-track"><div class="bm-fill" style="width:'+c.score+'%"></div><div class="bm-avg-marker" style="left:'+avgScore+'%"></div><div class="bm-avg-label" style="left:'+avgScore+'%">⌀ '+avgScore+'</div></div><div class="bm-values"><span>Moy. '+c.role_type+' : '+avgScore+'/100</span><span class="bm-self-val">'+c.score+'/100</span></div></div>':'';
     var availLabel=c.availability==='Immédiat'?'IMMED.':c.availability.toUpperCase();
-    document.getElementById('profil-info').innerHTML=
-      '<div class="profil-eyebrow">Profil '+c.location+' · Certifié SalesUncut<span class="view-badge">👁 '+viewCount+' vues cette semaine</span></div>'
-      +'<div class="profil-name">'+displayName.replace(' ','<br>')+'</div>'
-      +'<div class="profil-quote">« '+finalQuote+' »</div>'
-      +'<div class="profil-tags">'+tagsHtml+'</div>'
-      +bmHtml
-      +'<div class="profil-meta">'
-      +'<div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">'+c.location+'</div></div>'
-      +'<div class="profil-meta-cell"><div class="profil-meta-label">OTE Total visé</div><div class="profil-meta-value">'+c.ote.total+'€</div></div>'
-      +'<div class="profil-meta-cell"><div class="profil-meta-label">Dispo</div><div class="profil-meta-value">'+availLabel+'</div></div>'
-      +'<div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu\'a</div><div class="profil-meta-value">'+validity+'</div></div>'
-      +'</div>';
-
+    document.getElementById('profil-info').innerHTML='<div class="profil-eyebrow">Profil '+c.location+' · Certifié SalesUncut<span class="view-badge">👁 '+viewCount+' vues cette semaine</span></div><div class="profil-name">'+displayName.replace(' ','<br>')+'</div><div class="profil-quote">« '+finalQuote+' »</div><div class="profil-tags">'+tagsHtml+'</div>'+bmHtml+'<div class="profil-meta"><div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">'+c.location+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">OTE Total visé</div><div class="profil-meta-value">'+c.ote.total+'€</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Dispo</div><div class="profil-meta-value">'+availLabel+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu\'a</div><div class="profil-meta-value">'+validity+'</div></div></div>';
     document.getElementById('action-title').textContent=c.availability==='Immédiat'?'Ce profil est dispo immédiatement':'Disponible dans '+c.availability;
     document.getElementById('action-sub').innerHTML='★ Vérifié · '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})+' · Certifiat valide 18 mois · '+serial;
-    document.getElementById('action-btns').innerHTML=[
-      '<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button>',
-      '<a href="#" class="action-btn primary">★ Contacter ce sales</a>',
-      c.linkedin?'<a href="'+c.linkedin+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'',
-      c.cv?'<a href="'+c.cv+'" download class="action-btn secondary">↓ CV</a>':'<span class="action-btn secondary" style="opacity:.4;cursor:not-allowed">CV non fourni</span>',
-      '<a href="#" onclick="window.print();return false;" class="action-btn secondary">↓ Rapport PDF</a>',
-    ].filter(Boolean).join('');
-
-    function copyProfilLink(){
-      var url=window.location.href;var btn=document.getElementById('copy-btn');var orig=btn.innerHTML;
-      var done=function(){btn.innerHTML='✓ Copié !';btn.classList.add('copied');setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('copied');},2200);};
-      if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(function(){var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();});
-      else{var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();}
-    }
-
-    // ===== RADAR CLIQUABLE =====
+    document.getElementById('action-btns').innerHTML=['<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button>','<a href="#" class="action-btn primary">★ Contacter ce sales</a>',c.linkedin?'<a href="'+c.linkedin+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'',c.cv?'<a href="'+c.cv+'" download class="action-btn secondary">↓ CV</a>':'<span class="action-btn secondary" style="opacity:.4;cursor:not-allowed">CV non fourni</span>','<a href="#" onclick="window.print();return false;" class="action-btn secondary">↓ Rapport PDF</a>'].filter(Boolean).join('');
+    function copyProfilLink(){var url=window.location.href;var btn=document.getElementById('copy-btn');var orig=btn.innerHTML;var done=function(){btn.innerHTML='✓ Copié !';btn.classList.add('copied');setTimeout(function(){btn.innerHTML=orig;btn.classList.remove('copied');},2200);};if(navigator.clipboard)navigator.clipboard.writeText(url).then(done).catch(function(){var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();});else{var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);done();}}
+    // Radar
     var svgEl=document.getElementById('radar-svg');
     var cx=255,cy=215,maxR=130,lOff=38;
     var ang=function(i){return -Math.PI/2+i*2*Math.PI/dims.length;};
-    var pt=function(r,i){return{x:cx+r*Math.cos(ang(i)),y:cy+r*Math.sin(ang(i))};}
+    var pt=function(r,i){return{x:cx+r*Math.cos(ang(i)),y:cy+r*Math.sin(ang(i))};};
     var ptStr=function(r){return dims.map(function(_,i){var p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ');};
-    var gh='';
-    [0.25,0.5,0.75,1].forEach(function(r){gh+='<polygon points="'+ptStr(maxR*r)+'" fill="'+(r===1?'rgba(201,168,106,.08)':'none')+'" stroke="rgba(201,168,106,'+(r===1?'.4':'.15')+'" stroke-width="1"/>';});
+    var gh='';[0.25,0.5,0.75,1].forEach(function(r){gh+='<polygon points="'+ptStr(maxR*r)+'" fill="'+(r===1?'rgba(201,168,106,.08)':'none')+'" stroke="rgba(201,168,106,'+(r===1?'.4':'.15')+'" stroke-width="1"/>';});
     dims.forEach(function(_,i){var p=pt(maxR,i);gh+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x.toFixed(1)+'" y2="'+p.y.toFixed(1)+'" stroke="rgba(201,168,106,.15)" stroke-width="1"/>';});
     gh+='<polygon points="'+dims.map(function(d,i){var r=maxR*((c.stats[d.key]||0)/d.max);var p=pt(r,i);return p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ')+'" fill="rgba(163,133,79,.25)" stroke="#a3854f" stroke-width="2"/>';
-    dims.forEach(function(d,i){
-      var val=c.stats[d.key]||0,r=maxR*(val/d.max),dp=pt(r,i),lp=pt(maxR+lOff,i);
-      gh+='<circle cx="'+dp.x.toFixed(1)+'" cy="'+dp.y.toFixed(1)+'" r="4" fill="#a3854f"/>';
-      var ax=ang(i);var anchor='middle';
-      if(Math.cos(ax)>0.3)anchor='start';else if(Math.cos(ax)<-0.3)anchor='end';
-      var href='dimension.html?dim='+d.key+'&id='+c.id;
-      var words=d.label.toUpperCase().split(' ');
-      if(words.length>2){
-        var l1=words.slice(0,2).join(' '),l2=words.slice(2).join(' ');
-        gh+='<a href="'+href+'" style="cursor:pointer"><text text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5"><tspan x="'+lp.x.toFixed(1)+'" y="'+(lp.y-10).toFixed(1)+'">'+l1+'</tspan><tspan x="'+lp.x.toFixed(1)+'" dy="13">'+l2+'</tspan></text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+18).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';
-      } else {
-        gh+='<a href="'+href+'" style="cursor:pointer"><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y-5).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5">'+d.label.toUpperCase()+'</text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+11).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';
-      }
-    });
+    dims.forEach(function(d,i){var val=c.stats[d.key]||0,r=maxR*(val/d.max),dp=pt(r,i),lp=pt(maxR+lOff,i);gh+='<circle cx="'+dp.x.toFixed(1)+'" cy="'+dp.y.toFixed(1)+'" r="4" fill="#a3854f"/>';var ax=ang(i);var anchor='middle';if(Math.cos(ax)>0.3)anchor='start';else if(Math.cos(ax)<-0.3)anchor='end';var href='dimension.html?dim='+d.key+'&id='+c.id;var words=d.label.toUpperCase().split(' ');if(words.length>2){var l1=words.slice(0,2).join(' '),l2=words.slice(2).join(' ');gh+='<a href="'+href+'" style="cursor:pointer"><text text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5"><tspan x="'+lp.x.toFixed(1)+'" y="'+(lp.y-10).toFixed(1)+'">'+l1+'</tspan><tspan x="'+lp.x.toFixed(1)+'" dy="13">'+l2+'</tspan></text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+18).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';}else{gh+='<a href="'+href+'" style="cursor:pointer"><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y-5).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',Impact,sans-serif" font-weight="700" font-size="11" fill="#1a2222" letter-spacing="0.5">'+d.label.toUpperCase()+'</text><text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+11).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="10" fill="#a3854f">'+val+'/'+d.max+'</text></a>';}});
     svgEl.innerHTML=gh;
     document.getElementById('radar-sub').textContent='Scénario '+fam.name+' — Clique un axe pour explorer';
-
-    // ===== WEB SPEECH API =====
-    var synthVoice=null;
-    function initSynthVoice(){
-      if(!window.speechSynthesis)return;
-      var vv=speechSynthesis.getVoices();
-      synthVoice=vv.find(function(v){return v.lang==='fr-FR'&&v.localService;})
-        ||vv.find(function(v){return v.lang==='fr-FR';})
-        ||vv.find(function(v){return v.lang.startsWith('fr');})
-        ||null;
-    }
-    if(window.speechSynthesis){initSynthVoice();speechSynthesis.onvoiceschanged=initSynthVoice;}
-
-    function buildSpeechText(lines){
-      if(!lines||!lines.length)return null;
-      return lines.map(function(l){return l.text;}).join('... ');
-    }
-
-    // ===== MINI PLAYER + TTS =====
-    var mpInterval=null,mpTime=0,mpPaused=false,mpDur=30;
+    // ===== PLAYER HTML5 (ElevenLabs MP3) =====
+    var currentAudio=null;
     var mpEl=document.getElementById('mini-player');
     var mpName=document.getElementById('mp-name');
-    var mpDim=document.getElementById('mp-dim');
+    var mpDimEl=document.getElementById('mp-dim');
     var mpFill=document.getElementById('mp-fill');
     var mpTimeEl=document.getElementById('mp-time');
     var mpBtn=document.getElementById('mp-playpause');
-
-    function startMiniPlayer(label,ts,dur,dimKey){
-      if(window.speechSynthesis)speechSynthesis.cancel();
-      clearInterval(mpInterval);
-      mpTime=0;mpPaused=false;
-
-      var lines=dimKey?SU_DATA.getTranscriptLines(c.id,dimKey):[];
-      var text=buildSpeechText(lines);
-      var wordCount=text?text.split(' ').length:0;
-      mpDur=wordCount>5?Math.round(wordCount/2.2):(parseInt(dur)||30);
-
+    function fmtTime(s){var m=Math.floor(s/60);return m+':'+String(Math.floor(s)%60).padStart(2,'0');}
+    function setupMiniPlayer(label,ts,audio){
       mpName.textContent=displayName;
-      mpDim.textContent=label+' · '+ts;
+      mpDimEl.textContent=label+' · '+ts;
       mpFill.style.width='0%';
       mpTimeEl.textContent='0:00';
       mpBtn.textContent='⏸';
       mpEl.classList.add('visible');
-
-      mpInterval=setInterval(function(){
-        if(mpPaused)return;
-        mpTime++;
-        if(mpTime>=mpDur){clearInterval(mpInterval);mpBtn.textContent='▶';return;}
-        mpFill.style.width=(mpTime/mpDur*100).toFixed(1)+'%';
-        mpTimeEl.textContent='0:'+String(mpTime).padStart(2,'0');
-      },1000);
-
-      if(text&&window.speechSynthesis){
-        var utt=new SpeechSynthesisUtterance(text);
-        utt.lang='fr-FR';
-        utt.rate=0.92;
-        utt.pitch=1.0;
-        if(synthVoice)utt.voice=synthVoice;
-        utt.onend=function(){clearInterval(mpInterval);mpFill.style.width='100%';mpBtn.textContent='▶';};
-        utt.onerror=function(){clearInterval(mpInterval);mpBtn.textContent='▶';};
-        speechSynthesis.speak(utt);
-      }
+      audio.ontimeupdate=function(){if(!audio.duration)return;mpFill.style.width=(audio.currentTime/audio.duration*100).toFixed(1)+'%';mpTimeEl.textContent=fmtTime(audio.currentTime);};
+      audio.onended=function(){mpBtn.textContent='▶';currentAudio=null;};
     }
-
     mpBtn.addEventListener('click',function(){
-      if(!mpPaused){
-        mpPaused=true;mpBtn.textContent='▶';
-        if(window.speechSynthesis&&speechSynthesis.speaking)speechSynthesis.pause();
-      } else {
-        mpPaused=false;mpBtn.textContent='⏸';
-        if(window.speechSynthesis&&speechSynthesis.paused)speechSynthesis.resume();
-      }
+      if(!currentAudio)return;
+      if(currentAudio.paused){currentAudio.play();mpBtn.textContent='⏸';}
+      else{currentAudio.pause();mpBtn.textContent='▶';}
     });
     document.getElementById('mp-close').addEventListener('click',function(){
-      clearInterval(mpInterval);
-      if(window.speechSynthesis)speechSynthesis.cancel();
+      if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}
       mpEl.classList.remove('visible');
     });
-
-    // ===== AUDIO CARDS (data-dimkey pour relier chaque bouton a sa dimension) =====
+    // Audio cards
     function makeWave(n,played){var h=[3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];return h.slice(0,n).map(function(v,i){return'<div class="'+(i<played?'waveform-bar played':'waveform-bar')+'" style="height:'+(v*2)+'px"></div>';}).join('');}
     var audioHtml=audioMoments.map(function(m,idx){
       var dim=dims.find(function(d){return d.key===m.key;});var val=c.stats[m.key]||0;var played=Math.round(24*idx/audioMoments.length);
       var label=dim?dim.label:m.key;
-      return '<div class="audio-card '+(m.featured?'featured':'')+' " data-dim="'+label+'" data-dimkey="'+m.key+'" data-ts="'+m.ts+'" data-dur="'+parseInt(m.dur)+'">'
+      var url='/audio/'+c.id+'_'+m.key+'.mp3';
+      return'<div class="audio-card '+(m.featured?'featured':'')+'">'
         +'<div class="audio-header"><div><div class="audio-dim-name">'+label+'</div><div class="audio-moment">'+m.moment+'</div></div><div class="audio-score">'+val+'/'+(dim?dim.max:'?')+'</div></div>'
-        +'<div class="audio-player"><button class="audio-play-btn">&#9654;</button><div class="waveform">'+makeWave(24,played)+'</div><div class="audio-meta">'+m.ts+' · '+m.dur+'</div></div>'
+        +'<div class="audio-player"><button class="audio-play-btn" data-url="'+url+'" data-dim="'+label+'" data-ts="'+m.ts+'">&#9654;</button><div class="waveform">'+makeWave(24,played)+'</div><div class="audio-meta">'+m.ts+' · '+m.dur+'</div></div>'
         +'</div>';
     }).join('');
     document.getElementById('audio-list').innerHTML=audioHtml+'<div class="full-call-box"><div class="full-call-title">Écouter l\'appel complet ?</div><p class="full-call-desc">Téléchargement audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p><a href="marketplace.html" class="full-call-btn">Accéder au pool complet →</a></div>';
-
     document.querySelectorAll('.audio-play-btn').forEach(function(btn){
       btn.addEventListener('click',function(){
-        var card=this.closest('.audio-card');
-        startMiniPlayer(card.dataset.dim,card.dataset.ts,card.dataset.dur,card.dataset.dimkey);
-        this.textContent='⏸';
-        var self=this;
-        // Reset le bouton de la card quand le speech se termine
-        var origText='▶';
-        setTimeout(function(){self.textContent=origText;},Math.max(parseInt(card.dataset.dur)||30,5)*1000);
+        if(btn.disabled)return;
+        var url=btn.dataset.url;var label=btn.dataset.dim;var ts=btn.dataset.ts;
+        if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;document.querySelectorAll('.audio-play-btn').forEach(function(b){if(!b.disabled)b.innerHTML='&#9654;';});}
+        var audio=new Audio(url);
+        audio.addEventListener('error',function(){
+          btn.disabled=true;btn.innerHTML='<span style="font-size:7px;letter-spacing:.04em">BIENTÔT</span>';
+          btn.title='Disponible prochainement';
+        },{once:true});
+        audio.addEventListener('playing',function(){
+          currentAudio=audio;btn.innerHTML='&#9208;';
+          setupMiniPlayer(label,ts,audio);
+        },{once:true});
+        audio.play().catch(function(){});
       });
     });
     document.getElementById('audio-sub').textContent='6 moments calibrés · '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long'})+' 2026';
-
-    // ===== TRANSCRIPT =====
+    // Transcript
     var lines=SU_DATA.getTranscriptLines(c.id,'all');
-    document.getElementById('transcript-content').innerHTML=lines.length
-      ?lines.map(function(l){return'<div class="transcript-line"><div class="tr-ts">'+l.ts+'</div><div class="tr-who '+(l.who==='L'?'candidate':'')+'">'+(l.who==='L'?'↗':'↙')+'</div><div class="tr-text">'+l.text+'</div></div>';}).join('')+'<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>'
-      :'<div class="tr-lock">Transcript disponible sur abonnement recruteur</div>';
-
-    // ===== EXPERIENCE =====
-    document.getElementById('exp-content').innerHTML=
-      '<div class="exp-mini-grid">'
-      +'<div class="exp-mini-cell"><div class="exp-mini-label">Rôle</div><div class="exp-mini-value">'+c.role_type+'</div><div class="exp-mini-sub">'+roleLabel+'</div></div>'
-      +'<div class="exp-mini-cell"><div class="exp-mini-label">Expérience</div><div class="exp-mini-value">'+c.experience_years+' ans</div><div class="exp-mini-sub">'+c.experience_level+'</div></div>'
-      +'<div class="exp-mini-cell"><div class="exp-mini-label">Taille de deal</div><div class="exp-mini-value">'+c.deal_size+'</div></div>'
-      +'<div class="exp-mini-cell"><div class="exp-mini-label">Cycle de vente</div><div class="exp-mini-value">'+c.sales_cycle+'</div></div>'
-      +'</div>'
-      +'<div class="quota-box"><div><div class="quota-num">'+c.quota_attainment+'%</div><div class="quota-label">Atteinte quota</div></div><div class="quota-text">Performance declarée sur les 3 derniers semestres.</div></div>'
-      +'<div class="hf-bar"><div class="hf-bar-labels"><span>Chasse (Hunting)</span><span>Élevage (Farming)</span></div><div class="hf-bar-track"><div class="hf-hunt" style="width:'+c.hunting_pct+'%"></div><div class="hf-farm" style="width:'+(100-c.hunting_pct)+'%"></div></div><div class="hf-bar-values"><span class="hunt-val">'+c.hunting_pct+'%</span><span class="farm-val">'+(100-c.hunting_pct)+'%</span></div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">'+c.prospection_channels.map(function(ch){return'<span class="profil-tag">'+ch+'</span>';}).join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">'+c.sectors_mastered.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div>';
-
-    // ===== RECHERCHE =====
+    document.getElementById('transcript-content').innerHTML=lines.length?lines.map(function(l){return'<div class="transcript-line"><div class="tr-ts">'+l.ts+'</div><div class="tr-who '+(l.who==='L'?'candidate':'')+'">'+(l.who==='L'?'↗':'↙')+'</div><div class="tr-text">'+l.text+'</div></div>';}).join('')+'<div class="tr-lock">— Transcript complet disponible sur abonnement recruteur —</div>':'<div class="tr-lock">Transcript disponible sur abonnement recruteur</div>';
+    // Experience
+    document.getElementById('exp-content').innerHTML='<div class="exp-mini-grid"><div class="exp-mini-cell"><div class="exp-mini-label">Rôle</div><div class="exp-mini-value">'+c.role_type+'</div><div class="exp-mini-sub">'+roleLabel+'</div></div><div class="exp-mini-cell"><div class="exp-mini-label">Expérience</div><div class="exp-mini-value">'+c.experience_years+' ans</div><div class="exp-mini-sub">'+c.experience_level+'</div></div><div class="exp-mini-cell"><div class="exp-mini-label">Taille de deal</div><div class="exp-mini-value">'+c.deal_size+'</div></div><div class="exp-mini-cell"><div class="exp-mini-label">Cycle de vente</div><div class="exp-mini-value">'+c.sales_cycle+'</div></div></div><div class="quota-box"><div><div class="quota-num">'+c.quota_attainment+'%</div><div class="quota-label">Atteinte quota</div></div><div class="quota-text">Performance declarée sur les 3 derniers semestres.</div></div><div class="hf-bar"><div class="hf-bar-labels"><span>Chasse (Hunting)</span><span>Élevage (Farming)</span></div><div class="hf-bar-track"><div class="hf-hunt" style="width:'+c.hunting_pct+'%"></div><div class="hf-farm" style="width:'+(100-c.hunting_pct)+'%"></div></div><div class="hf-bar-values"><span class="hunt-val">'+c.hunting_pct+'%</span><span class="farm-val">'+(100-c.hunting_pct)+'%</span></div></div><div class="tag-group"><div class="tag-group-label">Canaux de prospection</div><div class="profil-tags">'+c.prospection_channels.map(function(ch){return'<span class="profil-tag">'+ch+'</span>';}).join('')+'</div></div><div class="tag-group"><div class="tag-group-label">Secteurs maîtrisés</div><div class="profil-tags">'+c.sectors_mastered.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div>';
+    // Recherche
     var cl=(matchPct/100*251.3).toFixed(1);
-    document.getElementById('search-content').innerHTML=
-      '<div class="match-box"><div class="match-visual"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6" stroke-dasharray="'+cl+' 251.3" stroke-linecap="round"/></svg><div class="match-num">'+matchPct+'%</div></div><div class="match-text"><div class="match-title">Match recruteur</div><div class="match-desc">Ce profil correspond a '+matchPct+'% des recherches actives sur <strong>'+c.role_type+' · '+fam.name+'</strong>.</div></div></div>'
-      +'<div class="ote-grid"><div class="ote-cell"><div class="ote-label">Fixe</div><div class="ote-value">'+c.ote.fixed+'€</div></div><div class="ote-cell"><div class="ote-label">Variable</div><div class="ote-value">'+c.ote.variable+'€</div></div><div class="ote-cell total"><div class="ote-label">OTE Total</div><div class="ote-value">'+c.ote.total+'€</div></div></div>'
-      +'<div class="status-grid"><div class="status-cell"><div class="exp-mini-label">Statut actuel</div><div class="exp-mini-value">'+c.status+'</div></div><div class="status-cell"><div class="exp-mini-label">Préavis</div><div class="exp-mini-value">'+c.notice+'</div></div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Type entreprise visée</div><div class="profil-tags">'+c.company_size_target.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Mobilité</div><div class="profil-tags">'+c.mobility.map(function(m){return'<span class="profil-tag">'+m+'</span>';}).join('')+'</div></div>'
-      +'<div class="tag-group"><div class="tag-group-label">Langues</div><div class="profil-tags">'+c.languages.map(function(l){return'<span class="profil-tag">'+l.name+'<span class="lang-level">'+l.level+'</span></span>';}).join('')+'</div></div>';
-
-    // ===== SIMILAIRES =====
+    document.getElementById('search-content').innerHTML='<div class="match-box"><div class="match-visual"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="#ebe0c0" stroke-width="6"/><circle cx="50" cy="50" r="40" fill="none" stroke="#a3854f" stroke-width="6" stroke-dasharray="'+cl+' 251.3" stroke-linecap="round"/></svg><div class="match-num">'+matchPct+'%</div></div><div class="match-text"><div class="match-title">Match recruteur</div><div class="match-desc">Ce profil correspond a '+matchPct+'% des recherches actives sur <strong>'+c.role_type+' · '+fam.name+'</strong>.</div></div></div><div class="ote-grid"><div class="ote-cell"><div class="ote-label">Fixe</div><div class="ote-value">'+c.ote.fixed+'€</div></div><div class="ote-cell"><div class="ote-label">Variable</div><div class="ote-value">'+c.ote.variable+'€</div></div><div class="ote-cell total"><div class="ote-label">OTE Total</div><div class="ote-value">'+c.ote.total+'€</div></div></div><div class="status-grid"><div class="status-cell"><div class="exp-mini-label">Statut actuel</div><div class="exp-mini-value">'+c.status+'</div></div><div class="status-cell"><div class="exp-mini-label">Préavis</div><div class="exp-mini-value">'+c.notice+'</div></div></div><div class="tag-group"><div class="tag-group-label">Type entreprise visée</div><div class="profil-tags">'+c.company_size_target.map(function(s){return'<span class="profil-tag">'+s+'</span>';}).join('')+'</div></div><div class="tag-group"><div class="tag-group-label">Mobilité</div><div class="profil-tags">'+c.mobility.map(function(m){return'<span class="profil-tag">'+m+'</span>';}).join('')+'</div></div><div class="tag-group"><div class="tag-group-label">Langues</div><div class="profil-tags">'+c.languages.map(function(l){return'<span class="profil-tag">'+l.name+'<span class="lang-level">'+l.level+'</span></span>';}).join('')+'</div></div>';
+    // Similaires
     var similar=SU_DATA.candidates.filter(function(x){return x.id!==c.id&&(x.family===c.family||x.role_type===c.role_type);}).sort(function(a,b){return Math.abs(a.score-c.score)-Math.abs(b.score-c.score);}).slice(0,3);
     document.getElementById('similar-cards').innerHTML=similar.length?similar.map(function(s){return renderCard(s);}).join(''):'<p style="color:var(--teal-3);font-family:var(--font-mono);font-size:12px">Aucun profil similaire.</p>';
-
-    // ===== FORCES =====
+    // Forces
     document.getElementById('strengths-list').innerHTML=(c.strengths||[]).map(function(s,i){return'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+s+'</div></div>';}).join('');
     document.getElementById('weaknesses-list').innerHTML=(c.weaknesses||[]).map(function(w,i){return'<div class="force-item"><div class="force-num">'+String(i+1).padStart(2,'0')+'</div><div class="force-text">'+w+'</div></div>';}).join('');
-
     document.title='SalesUncut — Profil '+displayName;
   </script>
 </body>
