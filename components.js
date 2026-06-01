@@ -52,7 +52,7 @@ function showVSCheckboxes(container) {
       + (idx === 0 ? 'background:'+CA+';color:#1a2222;border:2px solid '+CA+';'
        : idx === 1 ? 'background:'+CB+';color:#fff;border:2px solid '+CB+';'
        : 'background:rgba(26,34,34,.55);color:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.25);');
-    cb.innerHTML = idx >= 0 ? '\u2713' : '+';
+    cb.innerHTML = idx >= 0 ? '✓' : '+';
     cb.title = 'Sélectionner pour comparer';
     target.appendChild(cb);
     cb.addEventListener('click', e => {
@@ -70,10 +70,10 @@ function updateVSCheckboxes() {
     const idx = SU_VS.selected.indexOf(id);
     if (idx === 0) {
       Object.assign(cb.style, { background: CA, color: '#1a2222', borderColor: CA });
-      cb.innerHTML = '\u2713';
+      cb.innerHTML = '✓';
     } else if (idx === 1) {
       Object.assign(cb.style, { background: CB, color: '#fff', borderColor: CB });
-      cb.innerHTML = '\u2713';
+      cb.innerHTML = '✓';
     } else {
       Object.assign(cb.style, { background: 'rgba(26,34,34,.55)', color: 'rgba(255,255,255,.65)', borderColor: 'rgba(255,255,255,.25)' });
       cb.innerHTML = '+';
@@ -81,7 +81,7 @@ function updateVSCheckboxes() {
   });
 }
 
-/* ============ VS MODAL ============ */
+/* ============ VS MODAL — dark redesign ============ */
 function openVSModal() {
   const cands = SU_VS.getSelected();
   if (cands.length < 2) return;
@@ -96,77 +96,39 @@ function openVSModal() {
   const famB = SU_DATA.getFamilyById(b.family);
   const lvA = (a.level || SU_DATA.getLevel(a.score)).toUpperCase();
   const lvB = (b.level || SU_DATA.getLevel(b.score)).toUpperCase();
-
-  // ===== RADAR SVG superposé =====
-  const cx=265,cy=215,maxR=130,lOff=50;
-  const ang = i => -Math.PI/2 + i*2*Math.PI/dims.length;
-  const pt = (r,i) => ({ x: cx+r*Math.cos(ang(i)), y: cy+r*Math.sin(ang(i)) });
-  const ptStr = r => dims.map((_,i)=>{ const p=pt(r,i); return p.x.toFixed(1)+','+p.y.toFixed(1); }).join(' ');
-  let rsvg = '';
-  [.25,.5,.75,1].forEach(r => { rsvg += '<polygon points="'+ptStr(maxR*r)+'" fill="'+(r===1?'rgba(201,168,106,.05)':'none')+'" stroke="rgba(201,168,106,.2)" stroke-width="1"/>'; });
-  dims.forEach((_,i) => { const p=pt(maxR,i); rsvg += '<line x1="'+cx+'" y1="'+cy+'" x2="'+p.x.toFixed(1)+'" y2="'+p.y.toFixed(1)+'" stroke="rgba(201,168,106,.2)" stroke-width="1"/>'; });
-  rsvg += '<polygon points="'+dims.map((d,i)=>{ const r=maxR*((b.stats[d.key]||0)/d.max); const p=pt(r,i); return p.x.toFixed(1)+','+p.y.toFixed(1); }).join(' ')+'" fill="rgba(74,143,163,.18)" stroke="'+CB+'" stroke-width="2.5" stroke-linejoin="round"/>';
-  rsvg += '<polygon points="'+dims.map((d,i)=>{ const r=maxR*((a.stats[d.key]||0)/d.max); const p=pt(r,i); return p.x.toFixed(1)+','+p.y.toFixed(1); }).join(' ')+'" fill="rgba(201,168,106,.2)" stroke="'+CA+'" stroke-width="2.5" stroke-linejoin="round"/>';
-  dims.forEach((d,i) => {
-    const va=a.stats[d.key]||0, vb=b.stats[d.key]||0;
-    const dpa=pt(maxR*(va/d.max),i), dpb=pt(maxR*(vb/d.max),i), lp=pt(maxR+lOff,i);
-    rsvg += '<circle cx="'+dpa.x.toFixed(1)+'" cy="'+dpa.y.toFixed(1)+'" r="4" fill="'+CA+'"/>';
-    rsvg += '<circle cx="'+dpb.x.toFixed(1)+'" cy="'+dpb.y.toFixed(1)+'" r="4" fill="'+CB+'"/>';
-    const axr=ang(i); let anchor='middle';
-    if(Math.cos(axr)>0.3) anchor='start'; else if(Math.cos(axr)<-0.3) anchor='end';
-    const words=d.label.toUpperCase().split(' ');
-    if(words.length>2){
-      const l1=words.slice(0,2).join(' '), l2=words.slice(2).join(' ');
-      rsvg += '<text text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',sans-serif" font-weight="700" font-size="10" fill="#1a2222"><tspan x="'+lp.x.toFixed(1)+'" y="'+(lp.y-6).toFixed(1)+'">'+l1+'</tspan><tspan x="'+lp.x.toFixed(1)+'" dy="12">'+l2+'</tspan></text>';
-      rsvg += '<text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+20).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="9"><tspan fill="'+CA+'">'+va+'</tspan><tspan fill="#aaa"> \u00b7 </tspan><tspan fill="'+CB+'">'+vb+'</tspan></text>';
-    } else {
-      rsvg += '<text x="'+lp.x.toFixed(1)+'" y="'+(lp.y-4).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'Big Shoulders Display\',sans-serif" font-weight="700" font-size="10" fill="#1a2222">'+d.label.toUpperCase()+'</text>';
-      rsvg += '<text x="'+lp.x.toFixed(1)+'" y="'+(lp.y+12).toFixed(1)+'" text-anchor="'+anchor+'" font-family="\'JetBrains Mono\',monospace" font-size="9"><tspan fill="'+CA+'">'+va+'</tspan><tspan fill="#aaa"> \u00b7 </tspan><tspan fill="'+CB+'">'+vb+'</tspan></text>';
-    }
-  });
-  const radarSVG = '<svg viewBox="0 0 550 440" style="width:100%;max-width:500px;display:block;margin:0 auto;overflow:visible">'+rsvg+'</svg>';
-
-  // ===== TABLEAU : bouton audio dans la colonne du candidat =====
+  const diff = a.score - b.score;
   const dimsA = dims.filter(d => (a.stats[d.key]||0) > (b.stats[d.key]||0));
   const dimsB = dims.filter(d => (b.stats[d.key]||0) > (a.stats[d.key]||0));
 
-  const tableRows = dims.map(d => {
-    const va=a.stats[d.key]||0, vb=b.stats[d.key]||0;
-    const pa=Math.round(va/d.max*100), pb=Math.round(vb/d.max*100);
-    const winner = va>vb?'a':vb>va?'b':'';
-    const rowBg = winner==='a'?'rgba(201,168,106,.07)':winner==='b'?'rgba(74,143,163,.07)':'';
-    const rowBorder = winner==='a'?'border-left:3px solid '+CA:winner==='b'?'border-left:3px solid '+CB:'border-left:3px solid transparent';
-    // Bouton audio dans la colonne de son candidat
-    const playA = '<button class="vs-audio-btn" data-cid="'+a.id+'" data-dim="'+d.key+'" data-color="'+CA+'" style="flex-shrink:0;width:24px;height:24px;border-radius:50%;border:none;background:rgba(201,168,106,.18);cursor:pointer;font-size:9px;color:#7a5c2a;transition:all .2s;display:flex;align-items:center;justify-content:center" title="\u00c9couter '+shortA+'">\u25b6</button>';
-    const playB = '<button class="vs-audio-btn" data-cid="'+b.id+'" data-dim="'+d.key+'" data-color="'+CB+'" style="flex-shrink:0;width:24px;height:24px;border-radius:50%;border:none;background:rgba(74,143,163,.18);cursor:pointer;font-size:9px;color:#2d6b7f;transition:all .2s;display:flex;align-items:center;justify-content:center" title="\u00c9couter '+shortB+'">\u25b6</button>';
-    const cellA = '<td style="padding:10px 12px"><div style="display:flex;align-items:center;gap:7px">'
-      +'<div style="flex:1;height:5px;background:var(--cream-3);border-radius:3px;overflow:hidden;min-width:40px"><div style="width:'+pa+'%;height:100%;background:'+CA+';border-radius:3px"></div></div>'
-      +'<span style="font-family:var(--font-mono);font-size:10px;color:'+CA+';font-weight:700;white-space:nowrap">'+va+'/'+d.max+'</span>'
-      +(winner==='a'?'<span style="font-size:8px;color:'+CA+'">\u25b2</span>':'')
-      +playA+'</div></td>';
-    const cellB = '<td style="padding:10px 12px"><div style="display:flex;align-items:center;gap:7px">'
-      +'<div style="flex:1;height:5px;background:var(--cream-3);border-radius:3px;overflow:hidden;min-width:40px"><div style="width:'+pb+'%;height:100%;background:'+CB+';border-radius:3px"></div></div>'
-      +'<span style="font-family:var(--font-mono);font-size:10px;color:'+CB+';font-weight:700;white-space:nowrap">'+vb+'/'+d.max+'</span>'
-      +(winner==='b'?'<span style="font-size:8px;color:'+CB+'">\u25b2</span>':'')
-      +playB+'</div></td>';
-    return '<tr style="background:'+rowBg+';'+rowBorder+'">'
-      +'<td style="padding:10px 16px;font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-2);white-space:nowrap">'+d.label+'</td>'
-      +cellA+cellB+'</tr>';
-  }).join('');
+  // Avatars
+  const avatarA = a.photo
+    ? '<img src="'+a.photo+'" style="width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid '+CA+'55;">'
+    : '<div style="width:68px;height:68px;border-radius:50%;background:#2a1f0a;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:'+CA+';border:2px solid '+CA+'40;font-family:var(--font-display)">'+nameA.slice(0,2).toUpperCase()+'</div>';
+  const avatarB = b.photo
+    ? '<img src="'+b.photo+'" style="width:68px;height:68px;border-radius:50%;object-fit:cover;object-position:center top;border:2px solid '+CB+'55;">'
+    : '<div style="width:68px;height:68px;border-radius:50%;background:#0a1525;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:'+CB+';border:2px solid '+CB+'40;font-family:var(--font-display)">'+nameB.slice(0,2).toUpperCase()+'</div>';
 
-  // ===== VERDICT =====
-  const diff = a.score - b.score;
+  // Insight auto
+  const topDiffDim = dims.slice().sort((x,y) => Math.abs((b.stats[y.key]||0)-(a.stats[y.key]||0)) - Math.abs((b.stats[x.key]||0)-(a.stats[x.key]||0)))[0];
+  const topDiff = topDiffDim ? Math.abs((a.stats[topDiffDim.key]||0)-(b.stats[topDiffDim.key]||0)) : 0;
+  const topWinner = topDiffDim && (a.stats[topDiffDim.key]||0) >= (b.stats[topDiffDim.key]||0) ? shortA : shortB;
+  const topColor = topWinner === shortA ? CA : CB;
+  const closeCount = dims.filter(d => Math.abs((a.stats[d.key]||0)-(b.stats[d.key]||0)) <= 1).length;
+  const insightTxt = '<span style="color:'+topColor+';font-weight:700">'+topWinner+'</span> domine sur <span style="color:'+topColor+'">'+topDiffDim.label+' (+'+topDiff+' pts)</span>.'
+    + (closeCount > 0 ? ' <span style="color:#666">'+closeCount+' dimension'+(closeCount>1?'s':'')+' serrée'+(closeCount>1?'s':'')+' (≤1 pt d\'écart).</span>' : '');
+
+  // Verdict text
   let summaryText = '';
   if (Math.abs(diff) > 10) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB, wl=(diff>0?dimsA:dimsB).length;
-    summaryText = '<span style="color:'+wc+';font-weight:900">'+wn+'</span> m\u00e8ne de '+Math.abs(diff)+' points. Avantage sur '+wl+'/6 dimensions.';
+    summaryText = '<span style="color:'+wc+';font-weight:900">'+wn+'</span> mène de '+Math.abs(diff)+' points. Avantage sur '+wl+'/6 dimensions.';
   } else if (Math.abs(diff) > 3) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB;
-    summaryText = '<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts). Le contexte du poste doit trancher.';
+    summaryText = '<span style="color:'+wc+'">'+wn+'</span> légèrement devant (+'+Math.abs(diff)+' pts). Le contexte du poste doit trancher.';
   } else if (diff !== 0) {
-    summaryText = 'Profils tr\u00e8s proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d\'\u00e9cart). Chaque dimension compte pour d\u00e9partager.';
+    summaryText = 'Profils très proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d\'écart). Chaque dimension compte pour départager.';
   } else {
-    summaryText = 'Scores \u00e0 \u00e9galit\u00e9 parfaite. D\u00e9partager sur le terrain et la culture d\'\u00e9quipe.';
+    summaryText = 'Scores à égalité parfaite. Départager sur le terrain et la culture d\'équipe.';
   }
 
   function buildContextCard(c, color, dimsWon) {
@@ -174,61 +136,52 @@ function openVSModal() {
     const short = (c.anonymous ? 'Anonyme' : c.name).split(' ')[0];
     const famC = SU_DATA.getFamilyById(c.family);
     const items = [];
-    if (hunt >= 75) items.push('\u00c9quipe <strong>pure outbound</strong> (chasse '+hunt+'%)');
-    else if (hunt >= 50) items.push('\u00c9quipe <strong>mixte</strong> chasse\/fid\u00e9lisation ('+hunt+'/'+(100-hunt)+'%)');
-    else items.push('Profil <strong>farming</strong> \/AM ('+hunt+'% chasse)');
+    if (hunt >= 75) items.push('Équipe <strong>pure outbound</strong> (chasse '+hunt+'%)');
+    else if (hunt >= 50) items.push('Équipe <strong>mixte</strong> chasse/fidélisation ('+hunt+'/'+(100-hunt)+'%)');
+    else items.push('Profil <strong>farming</strong>/AM ('+hunt+'% chasse)');
     if (c.deal_size) items.push('Deals de <strong>'+c.deal_size+'</strong>');
     if (c.sales_cycle) items.push('Cycles <strong>'+c.sales_cycle+'</strong>');
-    if (c.experience_years) items.push(c.experience_years+' ans \u00b7 <strong>'+(c.experience_level||'')+'</strong>');
+    if (c.experience_years) items.push(c.experience_years+' ans · <strong>'+(c.experience_level||'')+'</strong>');
     items.push('Expertise <strong>'+famC.name+'</strong>');
-    const domStr = dimsWon.length > 0 ? dimsWon.map(d=>d.label).join(' \u00b7 ') : 'Aucune sup\u00e9riorit\u00e9 nette';
-    return '<div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:16px">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:'+color+';margin-bottom:10px">Recruter '+short+' si\u2026</div>'
-      +items.map(t=>'<div style="font-size:12px;color:rgba(255,248,231,.8);padding:4px 0;border-bottom:1px solid rgba(255,248,231,.05);line-height:1.45">\u2192 '+t+'</div>').join('')
-      +'<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)">'
-        +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.3);margin-bottom:4px">Dimensions fortes</div>'
+    const domStr = dimsWon.length > 0 ? dimsWon.map(d=>d.label).join(' · ') : 'Aucune supériorité nette';
+    return '<div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:14px">'
+      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:'+color+';margin-bottom:10px">Recruter '+short+' si…</div>'
+      +items.map(t=>'<div style="font-size:12px;color:rgba(255,248,231,.7);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);line-height:1.45">→ '+t+'</div>').join('')
+      +'<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05)">'
+        +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:4px">Dimensions fortes</div>'
         +'<div style="font-family:var(--font-mono);font-size:9px;color:'+color+'">'+domStr+'</div>'
       +'</div>'
-      +'</div>';
+    +'</div>';
   }
 
   let finalReco = '';
   if (Math.abs(diff) > 5) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB, on2=diff>0?shortB:shortA, oc=diff>0?CB:CA;
-    finalReco = '<span style="color:'+wc+'">'+wn+'</span> est le choix naturel pour un poste g\u00e9n\u00e9raliste. Envisager <span style="color:'+oc+'">'+on2+'</span> uniquement si le profil sectoriel prime sur la performance orale.';
+    finalReco = '<span style="color:'+wc+'">'+wn+'</span> est le choix naturel pour un poste généraliste. Envisager <span style="color:'+oc+'">'+on2+'</span> uniquement si le profil sectoriel prime sur la performance orale.';
   } else if (diff !== 0) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB;
-    finalReco = 'Avantage marginal pour <span style="color:'+wc+'">'+wn+'</span>. Compl\u00e9tez l\'analyse avec un entretien structur\u00e9 ou un deuxi\u00e8me test SalesUncut sur un autre sc\u00e9nario.';
+    finalReco = 'Avantage marginal pour <span style="color:'+wc+'">'+wn+'</span>. Complétez l\'analyse avec un entretien structuré ou un deuxième test SalesUncut sur un autre scénario.';
   } else {
-    finalReco = 'Profils \u00e9quivalents sur les crit\u00e8res SalesUncut. La d\u00e9cision appartient au manager sur la base du feeling terrain et de la culture d\'\u00e9quipe.';
+    finalReco = 'Profils équivalents sur les critères SalesUncut. La décision appartient au manager sur la base du feeling terrain et de la culture d\'équipe.';
   }
 
-  const verdictHTML =
-    '<div style="background:var(--ink);color:var(--cream);padding:28px 32px;border-radius:0 0 12px 12px">'
-    +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold)">Verdict IA</div>'
-      +'<div style="flex:1;height:1px;background:rgba(255,248,231,.1)"></div>'
-    +'</div>'
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:clamp(17px,2.2vw,24px);text-transform:uppercase;letter-spacing:-.01em;color:var(--cream);margin-bottom:20px;line-height:1.2">'+summaryText+'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">'
-      +buildContextCard(a, CA, dimsA)
-      +buildContextCard(b, CB, dimsB)
-    +'</div>'
-    +'<div style="background:rgba(255,248,231,.05);border:1px solid rgba(255,248,231,.1);border-radius:6px;padding:14px;margin-bottom:18px">'
-      +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,248,231,.35);margin-bottom:6px">Recommandation recruteur</div>'
-      +'<div style="font-size:13px;color:rgba(255,248,231,.8);line-height:1.55">'+finalReco+'</div>'
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-      +'<a href="profil.html?id='+a.id+'" style="display:block;text-align:center;background:'+CA+';color:#1a2222;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border-radius:6px;text-decoration:none">Profil de '+shortA+' \u2192</a>'
-      +'<a href="profil.html?id='+b.id+'" style="display:block;text-align:center;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border-radius:6px;text-decoration:none">Profil de '+shortB+' \u2192</a>'
-    +'</div>'
+  // Gauge columns HTML
+  const gaugeColsHTML = dims.map((d, i) => {
+    const va=a.stats[d.key]||0, vb=b.stats[d.key]||0;
+    const pctA=Math.round(va/d.max*100), pctB=Math.round(vb/d.max*100);
+    const d2=va-vb;
+    const deltaStyle = d2>0 ? 'background:rgba(201,168,106,.18);color:'+CA : d2<0 ? 'background:rgba(74,143,163,.18);color:'+CB : 'background:rgba(255,255,255,.06);color:#555';
+    const deltaTxt = d2>0 ? '+'+d2 : d2<0 ? String(d2) : '=';
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:5px">'
+      +'<div style="font-size:8px;color:#444;font-family:var(--font-mono);text-align:center;line-height:1.3;min-height:24px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.07em;text-transform:uppercase">'+d.label+'</div>'
+      +'<div style="display:flex;gap:4px;align-items:flex-end;height:90px">'
+        +'<div style="width:17px;background:#1a1a1e;border-radius:3px;height:90px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';border-radius:3px;height:0;transition:height .8s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div></div>'
+        +'<div style="width:17px;background:#1a1a1e;border-radius:3px;height:90px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';border-radius:3px;height:0;transition:height .8s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div></div>'
+      +'</div>'
+      +'<div style="font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;font-family:var(--font-mono);'+deltaStyle+'">'+deltaTxt+'</div>'
+      +'<div style="font-size:8px;font-family:var(--font-mono);display:flex;gap:2px"><span style="color:'+CA+'88">'+va+'</span><span style="color:#2a2a2a">/</span><span style="color:'+CB+'88">'+vb+'</span></div>'
     +'</div>';
-
-  // Photos
-  const photoA = a.photo ? '<img src="'+a.photo+'" style="width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center top;border:2.5px solid '+CA+';">'
-    : '<div style="width:60px;height:60px;border-radius:50%;background:var(--cream-2);display:flex;align-items:center;justify-content:center;font-size:22px;border:2.5px solid '+CA+'">'+famA.icon+'</div>';
-  const photoB = b.photo ? '<img src="'+b.photo+'" style="width:60px;height:60px;border-radius:50%;object-fit:cover;object-position:center top;border:2.5px solid '+CB+';">'
-    : '<div style="width:60px;height:60px;border-radius:50%;background:var(--cream-2);display:flex;align-items:center;justify-content:center;font-size:22px;border:2.5px solid '+CB+'">'+famB.icon+'</div>';
+  }).join('');
 
   const existing = document.getElementById('su-vs-modal');
   if (existing) existing.remove();
@@ -237,54 +190,136 @@ function openVSModal() {
   modal.style.cssText = 'position:fixed;inset:0;z-index:600;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px;box-sizing:border-box';
 
   modal.innerHTML =
-    '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(26,34,34,.82);backdrop-filter:blur(8px);z-index:-1"></div>'
-    +'<div style="background:var(--cream);border-radius:12px;width:100%;max-width:860px;box-shadow:0 32px 80px rgba(26,34,34,.5);position:relative;margin:auto">'
-    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--cream-3);background:var(--cream-2);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1">\u2715</button>'
-    // Header
-    +'<div style="padding:24px 28px 20px;border-bottom:1px solid var(--cream-3)">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px">Comparaison de profils</div>'
-      +'<div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px">'
-        +'<div style="display:flex;align-items:center;gap:14px">'+photoA+'<div>'
-          +'<div style="font-family:var(--font-display);font-weight:900;font-size:19px;text-transform:uppercase;color:var(--ink)">'+nameA+'</div>'
-          +'<div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:'+CA+';font-weight:700;margin-top:2px">'+lvA+' \u00b7 '+a.score+'/100</div>'
-          +'<div style="font-family:var(--font-mono);font-size:9px;color:var(--teal-3);margin-top:3px">'+famA.name+' \u00b7 '+a.location+'</div>'
-        +'</div></div>'
-        +'<div style="font-family:var(--font-display);font-weight:900;font-size:22px;color:var(--ink);background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:50%;width:52px;height:52px;display:flex;align-items:center;justify-content:center;flex-shrink:0">VS</div>'
-        +'<div style="display:flex;align-items:center;gap:14px;flex-direction:row-reverse">'+photoB+'<div style="text-align:right">'
-          +'<div style="font-family:var(--font-display);font-weight:900;font-size:19px;text-transform:uppercase;color:var(--ink)">'+nameB+'</div>'
-          +'<div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:'+CB+';font-weight:700;margin-top:2px">'+lvB+' \u00b7 '+b.score+'/100</div>'
-          +'<div style="font-family:var(--font-mono);font-size:9px;color:var(--teal-3);margin-top:3px">'+famB.name+' \u00b7 '+b.location+'</div>'
-        +'</div></div>'
+    '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);z-index:-1"></div>'
+    +'<div style="background:#0f0f11;border-radius:14px;width:100%;max-width:820px;box-shadow:0 40px 100px rgba(0,0,0,.75);position:relative;margin:auto;overflow:hidden">'
+
+    // Close button
+    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1px solid #1e1e1e;background:#181818;color:#555;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;transition:all .2s">✕</button>'
+
+    // Top bar — two candidates + VS
+    +'<div style="display:flex;align-items:stretch;min-height:128px">'
+      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 14px;gap:7px;background:#16141a">'
+        +avatarA
+        +'<div style="font-size:26px;font-weight:900;color:'+CA+';line-height:1;font-family:var(--font-display)">'+a.score+'<span style="font-size:11px;color:#444;font-weight:400;margin-left:2px">/100</span></div>'
+        +'<div style="font-family:var(--font-display);font-weight:900;font-size:13px;color:#e0e0e0;text-transform:uppercase;text-align:center;letter-spacing:-.01em">'+nameA+'</div>'
+        +'<div style="font-family:var(--font-mono);font-size:8px;color:#444;text-align:center">'+famA.name+' · '+a.location+'</div>'
+        +'<span style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(201,168,106,.15);color:'+CA+';font-family:var(--font-mono);letter-spacing:.1em">'+lvA+'</span>'
+      +'</div>'
+      +'<div style="width:42px;display:flex;align-items:center;justify-content:center;background:#0f0f11;flex-shrink:0;border-left:1px solid #1a1a1a;border-right:1px solid #1a1a1a">'
+        +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:#2a2a2a;letter-spacing:.12em">VS</div>'
+      +'</div>'
+      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 14px;gap:7px;background:#111319">'
+        +avatarB
+        +'<div style="font-size:26px;font-weight:900;color:'+CB+';line-height:1;font-family:var(--font-display)">'+b.score+'<span style="font-size:11px;color:#444;font-weight:400;margin-left:2px">/100</span></div>'
+        +'<div style="font-family:var(--font-display);font-weight:900;font-size:13px;color:#e0e0e0;text-transform:uppercase;text-align:center;letter-spacing:-.01em">'+nameB+'</div>'
+        +'<div style="font-family:var(--font-mono);font-size:8px;color:#444;text-align:center">'+famB.name+' · '+b.location+'</div>'
+        +'<span style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(74,143,163,.15);color:'+CB+';font-family:var(--font-mono);letter-spacing:.1em">'+lvB+'</span>'
       +'</div>'
     +'</div>'
+
+    // Legend
+    +'<div style="display:flex;justify-content:center;gap:20px;padding:10px 0;background:#0f0f11">'
+      +'<span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:#555"><span style="width:7px;height:7px;border-radius:50%;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
+      +'<span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:#555"><span style="width:7px;height:7px;border-radius:50%;background:'+CB+';display:inline-block;border:2px dashed '+CB+'55"></span>'+shortB+'</span>'
+    +'</div>'
+
     // Radar
-    +'<div style="padding:24px 28px;border-bottom:1px solid var(--cream-3);background:var(--cream-2)">'
-      +'<div style="display:flex;align-items:center;gap:16px;margin-bottom:12px">'
-        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-3)">Radar superposé</div>'
-        +'<span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:'+CA+'"><span style="width:10px;height:10px;border-radius:50%;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
-        +'<span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:'+CB+'"><span style="width:10px;height:10px;border-radius:50%;background:'+CB+';display:inline-block"></span>'+shortB+'</span>'
+    +'<div style="padding:12px 20px 6px;background:#0f0f11">'
+      +'<div style="font-size:8px;font-weight:700;color:#333;letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:10px;font-family:var(--font-mono)">Radar superposé</div>'
+      +'<div style="display:flex;justify-content:center"><canvas id="vs-modal-radar" width="280" height="220" style="display:block"></canvas></div>'
+    +'</div>'
+
+    // Insight band
+    +'<div style="margin:4px 18px 10px;background:#16141a;border-radius:8px;padding:11px 15px;border-left:2px solid '+CA+'">'
+      +'<div style="font-size:12px;color:#777;line-height:1.6;font-family:var(--font-sans)">'+insightTxt+'</div>'
+    +'</div>'
+
+    // Vertical gauges
+    +'<div style="padding:0 18px 18px;background:#0f0f11">'
+      +'<div style="font-size:8px;font-weight:700;color:#333;letter-spacing:.18em;text-transform:uppercase;text-align:center;margin-bottom:10px;font-family:var(--font-mono)">Scores par dimension</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end">'+gaugeColsHTML+'</div>'
+    +'</div>'
+
+    // Verdict section
+    +'<div style="background:#0c0c0e;border-top:1px solid #1a1a1e;padding:22px 22px">'
+      +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:'+CA+';margin-bottom:10px">Verdict IA</div>'
+      +'<div style="font-family:var(--font-display);font-weight:900;font-size:clamp(15px,2vw,21px);text-transform:uppercase;color:#e0e0e0;margin-bottom:16px;line-height:1.25">'+summaryText+'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
+        +buildContextCard(a, CA, dimsA)
+        +buildContextCard(b, CB, dimsB)
       +'</div>'
-      +radarSVG
+      +'<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:13px;margin-bottom:14px">'
+        +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:6px">Recommandation recruteur</div>'
+        +'<div style="font-size:13px;color:rgba(255,248,231,.7);line-height:1.55">'+finalReco+'</div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
+        +'<a href="profil.html?id='+a.id+'" style="display:block;text-align:center;background:'+CA+';color:#1a1a0e;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border-radius:6px;text-decoration:none">Profil de '+shortA+' →</a>'
+        +'<a href="profil.html?id='+b.id+'" style="display:block;text-align:center;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:11px;border-radius:6px;text-decoration:none">Profil de '+shortB+' →</a>'
+      +'</div>'
     +'</div>'
-    // Table
-    +'<div style="padding:20px 28px">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal-3);margin-bottom:12px">Scores par dimension</div>'
-      +'<table style="width:100%;border-collapse:collapse">'
-        +'<thead><tr style="border-bottom:1.5px solid var(--cream-3)">'
-          +'<th style="text-align:left;padding:8px 16px;font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-3);font-weight:400">Dimension</th>'
-          +'<th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:'+CA+';font-weight:700">\u25a0 '+shortA+'</th>'
-          +'<th style="text-align:left;padding:8px 12px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:'+CB+';font-weight:700">\u25a0 '+shortB+'</th>'
-        +'</tr></thead>'
-        +'<tbody>'+tableRows+'</tbody>'
-      +'</table>'
-    +'</div>'
-    // Verdict (dark)
-    +verdictHTML
     +'</div>';
 
   document.body.appendChild(modal);
 
-  // Audio
+  // Animate gauge bars after mount
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      modal.querySelectorAll('.vs-gauge-fill').forEach(el => {
+        el.style.height = el.dataset.h + '%';
+      });
+    }, 80);
+  });
+
+  // Chart.js radar
+  function initRadar() {
+    const canvas = document.getElementById('vs-modal-radar');
+    if (!canvas || !window.Chart) return;
+    new Chart(canvas, {
+      type: 'radar',
+      data: {
+        labels: dims.map(d => d.label),
+        datasets: [
+          {
+            label: shortA,
+            data: dims.map(d => Math.round((a.stats[d.key]||0) / d.max * 100)),
+            borderColor: CA, backgroundColor: 'rgba(201,168,106,0.10)',
+            borderWidth: 2, pointBackgroundColor: CA, pointRadius: 4, borderDash: []
+          },
+          {
+            label: shortB,
+            data: dims.map(d => Math.round((b.stats[d.key]||0) / d.max * 100)),
+            borderColor: CB, backgroundColor: 'rgba(74,143,163,0.08)',
+            borderWidth: 2, pointBackgroundColor: CB, pointRadius: 4, borderDash: [4, 3]
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        animation: { duration: 900, easing: 'easeInOutQuart' },
+        plugins: { legend: { display: false } },
+        scales: {
+          r: {
+            min: 0, max: 100,
+            ticks: { stepSize: 25, font: { size: 9 }, color: '#333', backdropColor: 'transparent' },
+            grid: { color: '#1e1e22' },
+            angleLines: { color: '#1e1e22' },
+            pointLabels: { font: { size: 10 }, color: '#555' }
+          }
+        }
+      }
+    });
+  }
+
+  if (window.Chart) {
+    initRadar();
+  } else {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+    s.onload = initRadar;
+    document.head.appendChild(s);
+  }
+
+  // Audio (conservé tel quel)
   let vsAudio = null;
   modal.querySelectorAll('.vs-audio-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -292,12 +327,12 @@ function openVSModal() {
       const cid=btn.dataset.cid, dim=btn.dataset.dim, color=btn.dataset.color;
       if (vsAudio) {
         vsAudio.pause(); vsAudio.currentTime=0; vsAudio=null;
-        modal.querySelectorAll('.vs-audio-btn').forEach(b=>{ b.innerHTML='\u25b6'; b.style.background=b.dataset.color===CA?'rgba(201,168,106,.18)':'rgba(74,143,163,.18)'; });
+        modal.querySelectorAll('.vs-audio-btn').forEach(b=>{ b.innerHTML='▶'; b.style.background=b.dataset.color===CA?'rgba(201,168,106,.18)':'rgba(74,143,163,.18)'; });
       }
       const audio = new Audio('/audio/'+cid+'_'+dim+'.mp3');
-      audio.addEventListener('error', ()=>{ btn.innerHTML='\u2014'; btn.disabled=true; btn.style.opacity='.35'; }, {once:true});
-      audio.addEventListener('playing', ()=>{ vsAudio=audio; btn.innerHTML='\u23f8'; btn.style.background=color; btn.style.color=color===CA?'#1a2222':'#fff'; }, {once:true});
-      audio.onended = ()=>{ btn.innerHTML='\u25b6'; btn.style.background=cid===a.id?'rgba(201,168,106,.18)':'rgba(74,143,163,.18)'; btn.style.color=cid===a.id?'#7a5c2a':'#2d6b7f'; vsAudio=null; };
+      audio.addEventListener('error', ()=>{ btn.innerHTML='—'; btn.disabled=true; btn.style.opacity='.35'; }, {once:true});
+      audio.addEventListener('playing', ()=>{ vsAudio=audio; btn.innerHTML='⏸'; btn.style.background=color; btn.style.color=color===CA?'#1a2222':'#fff'; }, {once:true});
+      audio.onended = ()=>{ btn.innerHTML='▶'; btn.style.background=cid===a.id?'rgba(201,168,106,.18)':'rgba(74,143,163,.18)'; btn.style.color=cid===a.id?'#7a5c2a':'#2d6b7f'; vsAudio=null; };
       audio.play().catch(()=>{});
     });
   });
@@ -336,7 +371,7 @@ function renderCard(c, opts) {
   const dims  = SU_DATA.dimensions;
   const isImm = c.availability === 'Immédiat';
   const name  = c.anonymous ? 'Anonyme' : c.name;
-  const rolePrefix = c.role_type ? '<span class="tcard-role">' + c.role_type + '</span> \u00b7 ' : '';
+  const rolePrefix = c.role_type ? '<span class="tcard-role">' + c.role_type + '</span> · ' : '';
   const inSL  = SU_SHORTLIST.has(c.id);
   const stats = dims.map(d => {
     const v=c.stats[d.key]||0; const p=Math.round(v/d.max*100);
@@ -346,11 +381,11 @@ function renderCard(c, opts) {
     ? '<img class="tcard-photo" src="' + c.photo + '" alt="' + name + '" loading="lazy">'
     : '<span class="silhouette">' + fam.icon + '</span>';
   const slBtn = '<button class="tcard-sl-btn' + (inSL ? ' active' : '') + '" data-id="' + c.id + '">'
-    + (inSL ? '\u2713 SHORTLIST' : '+ SHORTLIST') + '</button>';
+    + (inSL ? '✓ SHORTLIST' : '+ SHORTLIST') + '</button>';
   return '<div class="tcard ' + level + (compact?' sm':'') + '" data-candidate-id="' + c.id + '">'
     + '<div class="holo"></div><div class="tcard-inner">'
     + '<div class="tcard-header"><div><div class="tcard-name">' + name + '</div>'
-    + '<div class="tcard-handle">' + (isImm ? '<span class="dispo-dot"></span>' : '') + 'DISPO \u00b7 ' + c.availability + '</div></div>'
+    + '<div class="tcard-handle">' + (isImm ? '<span class="dispo-dot"></span>' : '') + 'DISPO · ' + c.availability + '</div></div>'
     + '<div class="tcard-score">' + c.score + '<small>/100</small></div></div>'
     + '<div class="tcard-portrait"><div class="tcard-family-badge">' + c.location + '</div>'
     + photo + '<div class="tcard-rarity-stamp">' + level.toUpperCase() + '</div>' + slBtn + '</div>'
@@ -405,7 +440,7 @@ function renderFooter() {
     + '<div><h4>Produit</h4><a href="candidat.html">Passer le test</a><a href="marketplace.html">Marketplace</a><a href="profil.html?id=c001">Exemple de profil</a></div>'
     + '<div><h4>Société</h4><a href="#">À propos</a><a href="#">Manifeste</a><a href="#">Contact</a></div>'
     + '<div><h4>Légal</h4><a href="#">CGV</a><a href="#">RGPD</a><a href="#">Mentions légales</a></div>'
-    + '</div><div class="footer-bottom"><span>\u00a9 2026 SalesUncut \u00b7 Tous droits réservés</span><span>v0.1 \u00b7 Nice, FR</span></div></div></footer>';
+    + '</div><div class="footer-bottom"><span>© 2026 SalesUncut · Tous droits réservés</span><span>v0.1 · Nice, FR</span></div></div></footer>';
 }
 
 /* ============ INIT ============ */
@@ -476,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isNow = SU_SHORTLIST.has(id);
       document.querySelectorAll('.tcard-sl-btn[data-id="' + id + '"]').forEach(b => {
         b.classList.toggle('active', isNow);
-        b.textContent = isNow ? '\u2713 SHORTLIST' : '+ SHORTLIST';
+        b.textContent = isNow ? '✓ SHORTLIST' : '+ SHORTLIST';
       });
       const slCount = document.getElementById('sl-count');
       if (slCount) slCount.textContent = SU_SHORTLIST.count() || '';
@@ -501,7 +536,7 @@ function updateCompareBar() {
   const thumbs = cands.map(c => { const n=(c.anonymous?'Anonyme':c.name).split(' ')[0]; const img=c.photo?'<img src="'+c.photo+'" alt="">'+'':'<span>'+n[0]+'</span>'; return '<div class="cbar-thumb">'+img+'<div class="cbar-tname">'+n+'</div></div>'; }).join('');
   bar.innerHTML = '<div class="cbar-left"><span class="cbar-count">'+count+'</span><span class="cbar-lbl"> en comparaison</span></div>'
     +'<div class="cbar-thumbs">'+thumbs+'</div>'
-    +(count>=2?'<button class="cbar-btn" onclick="openCompareModal()">Comparer \u2736</button>':'<span class="cbar-hint">Ajoute '+(2-count)+' profil de plus</span>')
+    +(count>=2?'<button class="cbar-btn" onclick="openCompareModal()">Comparer ✶</button>':'<span class="cbar-hint">Ajoute '+(2-count)+' profil de plus</span>')
     +'<button class="cbar-clear" onclick="SU_COMPARE.clear()">✕</button>';
 }
 
@@ -515,7 +550,7 @@ function openCompareModal() {
     const fam=SU_DATA.getFamilyById(c.family); const name=c.anonymous?'Anonyme':c.name; const level=c.level||SU_DATA.getLevel(c.score);
     const photo=c.photo?'<img src="'+c.photo+'" style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid var(--gold)">':'<div style="width:80px;height:80px;border-radius:50%;background:var(--cream-3);display:flex;align-items:center;justify-content:center;font-size:32px">'+fam.icon+'</div>';
     const bars=dims.map(d=>{ const v=c.stats[d.key]||0; const p=Math.round(v/d.max*100); return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3)">'+d.label+'</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--gold-deep);font-weight:700">'+v+'/'+d.max+'</span></div><div style="height:4px;background:var(--cream-3);border-radius:2px;overflow:hidden"><div style="width:'+p+'%;height:100%;background:var(--gold-deep);border-radius:2px"></div></div></div>'; }).join('');
-    return '<div class="cmp-col"><div style="text-align:center;margin-bottom:20px">'+photo+'<div style="font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;margin-top:10px">'+name+'</div><div style="display:inline-block;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;padding:4px 10px;border-radius:4px;margin-top:4px">'+level.toUpperCase()+' \u00b7 '+c.score+'/100</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--teal-3);margin-top:8px">'+fam.name+' \u00b7 '+c.location+'</div></div><div style="margin-bottom:16px">'+bars+'</div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px">Points forts</div>'+(c.strengths||[]).map(s=>'<div style="font-size:13px;color:var(--teal-2);padding:5px 0;border-bottom:1px dashed var(--cream-3)">→ '+s+'</div>').join('')+'<div style="margin-top:16px"><a href="profil.html?id='+c.id+'" style="display:block;text-align:center;background:var(--gold-deep);color:var(--cream);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px;border-radius:4px;text-decoration:none">Voir le profil complet \u2192</a></div></div>';
+    return '<div class="cmp-col"><div style="text-align:center;margin-bottom:20px">'+photo+'<div style="font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;margin-top:10px">'+name+'</div><div style="display:inline-block;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;padding:4px 10px;border-radius:4px;margin-top:4px">'+level.toUpperCase()+' · '+c.score+'/100</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--teal-3);margin-top:8px">'+fam.name+' · '+c.location+'</div></div><div style="margin-bottom:16px">'+bars+'</div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px">Points forts</div>'+(c.strengths||[]).map(s=>'<div style="font-size:13px;color:var(--teal-2);padding:5px 0;border-bottom:1px dashed var(--cream-3)">→ '+s+'</div>').join('')+'<div style="margin-top:16px"><a href="profil.html?id='+c.id+'" style="display:block;text-align:center;background:var(--gold-deep);color:var(--cream);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px;border-radius:4px;text-decoration:none">Voir le profil complet →</a></div></div>';
   };
   modal.innerHTML='<div class="cmp-overlay" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">'+'</div><div class="cmp-inner"><div class="cmp-header"><div style="font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase">Comparaison</div><button class="cmp-close" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">✕</button></div><div class="cmp-cols">'+cands.map(col).join('')+'</div></div>';
   modal.style.display='flex';
