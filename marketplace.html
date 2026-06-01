@@ -23,18 +23,6 @@
     .mkt-tab.active { background: var(--ink); color: var(--cream); }
     .mkt-tab .tab-badge { background: var(--rust); color: var(--cream); border-radius: 10px; font-size: 9px; padding: 2px 6px; min-width: 18px; text-align: center; }
     .mkt-tab.active .tab-badge { background: var(--gold); color: var(--ink); }
-    /* Search */
-    .mkt-search-row { margin-bottom: 16px; }
-    .mkt-search-wrap { position: relative; }
-    .mkt-search-input { width: 100%; padding: 12px 16px 12px 42px; border: 1.5px solid var(--cream-3); border-radius: 6px; font-family: var(--font-sans); font-size: 14px; color: var(--ink); background: var(--cream); outline: none; transition: border-color .2s; }
-    .mkt-search-input:focus { border-color: var(--gold-deep); }
-    .mkt-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--teal-3); font-size: 16px; pointer-events: none; }
-    /* Stats bar */
-    .mkt-stats-bar { display: flex; gap: 20px; flex-wrap: wrap; padding: 14px 18px; background: var(--cream-2); border: 1.5px solid var(--cream-3); border-radius: 6px; margin-bottom: 20px; }
-    .mkt-stat { display: flex; align-items: center; gap: 8px; }
-    .mkt-stat-num { font-family: var(--font-display); font-weight: 900; font-size: 22px; color: var(--gold-deep); line-height: 1; }
-    .mkt-stat-lbl { font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); max-width: 80px; }
-    .mkt-stat-sep { width: 1px; height: 28px; background: var(--cream-3); }
     /* Filters */
     .mkt-filters-bar { background: var(--cream-2); border: 1.5px solid var(--cream-3); border-radius: 8px; padding: 18px 22px; margin-bottom: 20px; }
     .mkt-filters-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 16px; flex-wrap: wrap; }
@@ -134,17 +122,6 @@
         <button class="mkt-tab" id="tab-sl" onclick="switchTab('shortlist')">♥ Ma shortlist <span class="tab-badge" id="sl-count">0</span></button>
       </div>
 
-      <!-- RECHERCHE -->
-      <div class="mkt-search-row">
-        <div class="mkt-search-wrap">
-          <span class="mkt-search-icon">🔍</span>
-          <input type="text" id="search-input" class="mkt-search-input" placeholder="Rechercher par nom, secteur, ville, canal...">
-        </div>
-      </div>
-
-      <!-- STATS BAR -->
-      <div class="mkt-stats-bar" id="stats-bar"></div>
-
       <!-- FILTRES -->
       <div class="mkt-filters-bar" id="filters-panel">
         <div class="mkt-filters-header">
@@ -200,7 +177,6 @@
     const dispoOrder={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
     const dispoSlider=document.getElementById('f-dispo');
     dispoSlider.addEventListener('input',()=>{ document.getElementById('dispo-val').textContent='— '+dispoLabels[parseInt(dispoSlider.value)]; applyFilters(); });
-    document.getElementById('search-input').addEventListener('input', applyFilters);
 
     let currentView='cards', currentTab='pool';
     document.getElementById('btn-cards').addEventListener('click',()=>setView('cards'));
@@ -212,7 +188,6 @@
       document.getElementById('tab-pool').classList.toggle('active',tab==='pool');
       document.getElementById('tab-sl').classList.toggle('active',tab==='shortlist');
       document.getElementById('filters-panel').style.display=tab==='pool'?'':'none';
-      document.getElementById('stats-bar').style.display=tab==='pool'?'':'none';
       applyFilters();
     }
     function updateSlCount(){ const n=SU_SHORTLIST.count(); const el=document.getElementById('sl-count'); if(el)el.textContent=n||''; }
@@ -237,7 +212,6 @@
     const grid=document.getElementById('pool-grid'), list=document.getElementById('pool-list'), empty=document.getElementById('empty'), slEmpty=document.getElementById('sl-empty'), countEl=document.getElementById('count');
 
     function applyFilters() {
-      const q=document.getElementById('search-input').value.toLowerCase();
       let src = currentTab==='shortlist' ? SU_SHORTLIST.getCandidates() : SU_DATA.candidates;
       if(currentTab==='pool'){
         const fam=document.getElementById('f-family').value, role=document.getElementById('f-role').value, lvl=document.getElementById('f-level').value, oteMax=document.getElementById('f-ote').value, dispoV=parseInt(dispoSlider.value);
@@ -250,7 +224,6 @@
           return true;
         });
       }
-      if(q){ src=src.filter(c=>{ const n=(c.anonymous?'anonyme':c.name).toLowerCase(); const fam=SU_DATA.getFamilyById(c.family).name.toLowerCase(); const sec=(c.sectors_mastered||[]).join(' ').toLowerCase(); const ch=(c.prospection_channels||[]).join(' ').toLowerCase(); return n.includes(q)||fam.includes(q)||(c.location||'').toLowerCase().includes(q)||sec.includes(q)||ch.includes(q)||(c.role_type||'').toLowerCase().includes(q); }); }
       const sort=document.getElementById('sort').value;
       if(sort==='score') src.sort((a,b)=>b.score-a.score);
       else if(sort==='recent') src.sort((a,b)=>new Date(b.date)-new Date(a.date));
@@ -258,9 +231,6 @@
 
       currentPoolIds = src.map(c=>c.id);
       countEl.textContent=src.length;
-
-      // Stats
-      if(currentTab==='pool'&&src.length){ const avg=Math.round(src.reduce((s,c)=>s+c.score,0)/src.length); const imm=src.filter(c=>c.availability==='Immédiat').length; const gold=src.filter(c=>(c.level||SU_DATA.getLevel(c.score))==='gold').length; document.getElementById('stats-bar').innerHTML='<div class="mkt-stat"><div class="mkt-stat-num">'+src.length+'</div><div class="mkt-stat-lbl">profils</div></div><div class="mkt-stat-sep"></div><div class="mkt-stat"><div class="mkt-stat-num">'+avg+'</div><div class="mkt-stat-lbl">score moyen</div></div><div class="mkt-stat-sep"></div><div class="mkt-stat"><div class="mkt-stat-num">'+imm+'</div><div class="mkt-stat-lbl">immédiats</div></div><div class="mkt-stat-sep"></div><div class="mkt-stat"><div class="mkt-stat-num">'+gold+'</div><div class="mkt-stat-lbl">GOLD</div></div>'; }
 
       if(currentTab==='shortlist'&&src.length===0){
         grid.style.display='none'; list.style.display='none'; empty.style.display='none'; slEmpty.style.display='block'; return;
