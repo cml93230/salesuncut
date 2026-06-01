@@ -38,7 +38,7 @@ const SU_VS = {
 
 /* ============ VS : checkboxes sur les cards shortlist ============ */
 function showVSCheckboxes(container) {
-  const CA = '#c9a86a', CB = '#4a8fa3';
+  const CA = '#c9a86a', CB = '#1a2222';
   container.querySelectorAll('.tcard[data-candidate-id]').forEach(card => {
     if (card.querySelector('.vs-cb')) return;
     const id = card.dataset.candidateId;
@@ -50,7 +50,7 @@ function showVSCheckboxes(container) {
     const idx = SU_VS.selected.indexOf(id);
     cb.style.cssText = 'position:absolute;top:8px;right:8px;z-index:20;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;line-height:1;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.35);user-select:none;'
       + (idx === 0 ? 'background:'+CA+';color:#1a2222;border:2px solid '+CA+';'
-       : idx === 1 ? 'background:'+CB+';color:#fff;border:2px solid '+CB+';'
+       : idx === 1 ? 'background:'+CB+';color:#fff8e7;border:2px solid '+CB+';'
        : 'background:rgba(26,34,34,.55);color:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.25);');
     cb.innerHTML = idx >= 0 ? '✓' : '+';
     cb.title = 'Sélectionner pour comparer';
@@ -64,7 +64,7 @@ function showVSCheckboxes(container) {
 }
 
 function updateVSCheckboxes() {
-  const CA = '#c9a86a', CB = '#4a8fa3';
+  const CA = '#c9a86a', CB = '#1a2222';
   document.querySelectorAll('.vs-cb[data-id]').forEach(cb => {
     const id = cb.dataset.id;
     const idx = SU_VS.selected.indexOf(id);
@@ -72,7 +72,7 @@ function updateVSCheckboxes() {
       Object.assign(cb.style, { background: CA, color: '#1a2222', borderColor: CA });
       cb.innerHTML = '✓';
     } else if (idx === 1) {
-      Object.assign(cb.style, { background: CB, color: '#fff', borderColor: CB });
+      Object.assign(cb.style, { background: CB, color: '#fff8e7', borderColor: CB });
       cb.innerHTML = '✓';
     } else {
       Object.assign(cb.style, { background: 'rgba(26,34,34,.55)', color: 'rgba(255,255,255,.65)', borderColor: 'rgba(255,255,255,.25)' });
@@ -88,9 +88,9 @@ function openVSModal() {
   const a = cands[0], b = cands[1];
   const dims = SU_DATA.dimensions;
   const CA = '#b8922a';
-  const CB = '#2d6b7f';
+  const CB = '#1a2222';
   const CA_LIGHT = '#fdf3e0';
-  const CB_LIGHT = '#e8f4f8';
+  const CB_LIGHT = '#f2ede4';
   const nameA = a.anonymous ? 'Anonyme' : a.name;
   const nameB = b.anonymous ? 'Anonyme' : b.name;
   const shortA = nameA.split(' ')[0];
@@ -107,7 +107,7 @@ function openVSModal() {
     ? '<img src="'+a.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CA+';box-shadow:0 4px 16px '+CA+'44;">'
     : '<div style="width:80px;height:80px;border-radius:50%;background:'+CA_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:'+CA+';border:3px solid '+CA+';font-family:var(--font-display)">'+nameA.slice(0,2).toUpperCase()+'</div>';
   const avatarB = b.photo
-    ? '<img src="'+b.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CB+';box-shadow:0 4px 16px '+CB+'44;">'
+    ? '<img src="'+b.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CB+';box-shadow:0 4px 16px rgba(26,34,34,.2);">'
     : '<div style="width:80px;height:80px;border-radius:50%;background:'+CB_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:'+CB+';border:3px solid '+CB+';font-family:var(--font-display)">'+nameB.slice(0,2).toUpperCase()+'</div>';
 
   const topDiffDim = dims.slice().sort((x,y) => Math.abs((b.stats[y.key]||0)-(a.stats[y.key]||0)) - Math.abs((b.stats[x.key]||0)-(a.stats[x.key]||0)))[0];
@@ -179,14 +179,14 @@ function openVSModal() {
       +'<div style="font-size:7.5px;color:#999;font-family:var(--font-mono);text-align:center;line-height:1.25;min-height:22px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.08em;text-transform:uppercase;padding:0 2px">'+d.label+'</div>'
       +'<div style="display:flex;gap:4px;align-items:flex-end;height:100px">'
         +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CA+','+CA+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60)+'ms"></div></div>'
-        +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CB+','+CB+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60+30)+'ms"></div></div>'
+        +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CB+',#444);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60+30)+'ms"></div></div>'
       +'</div>'
       +'<div style="display:flex;gap:4px;justify-content:center">'
         +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span>'
         +'<span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span>'
         +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span>'
       +'</div>'
-      +'<div style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-mono);background:'+deltaBg+';color:#fff;min-width:24px;text-align:center">'+deltaTxt+'</div>'
+      +'<div style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-mono);background:'+deltaBg+';color:#fff8e7;min-width:24px;text-align:center">'+deltaTxt+'</div>'
     +'</div>';
   }).join('');
 
@@ -219,10 +219,10 @@ function openVSModal() {
         +avatarB
         +'<div style="text-align:center">'
           +'<div style="font-family:var(--font-display);font-weight:900;font-size:15px;color:#1a2222;text-transform:uppercase;letter-spacing:-.01em;line-height:1.2">'+nameB+'</div>'
-          +'<div style="font-family:var(--font-mono);font-size:9px;color:#999;margin-top:3px">'+famB.name+' · '+b.location+'</div>'
+          +'<div style="font-family:var(--font-mono);font-size:9px;color:#888;margin-top:3px">'+famB.name+' · '+b.location+'</div>'
         +'</div>'
-        +'<div style="font-family:var(--font-display);font-weight:900;font-size:42px;color:'+CB+';line-height:1;letter-spacing:-.03em">'+b.score+'<span style="font-size:14px;color:'+CB+'88;font-weight:500;letter-spacing:0">/100</span></div>'
-        +'<div style="background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;padding:4px 12px;border-radius:20px">'+lvB+'</div>'
+        +'<div style="font-family:var(--font-display);font-weight:900;font-size:42px;color:'+CB+';line-height:1;letter-spacing:-.03em">'+b.score+'<span style="font-size:14px;color:#88827a;font-weight:500;letter-spacing:0">/100</span></div>'
+        +'<div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;padding:4px 12px;border-radius:20px">'+lvB+'</div>'
       +'</div>'
     +'</div>'
 
@@ -263,7 +263,7 @@ function openVSModal() {
       +'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
         +'<a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortA+'</span><span style="opacity:.7">→</span></a>'
-        +'<a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortB+'</span><span style="opacity:.7">→</span></a>'
+        +'<a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortB+'</span><span style="opacity:.7">→</span></a>'
       +'</div>'
     +'</div>'
 
@@ -333,7 +333,7 @@ function openVSModal() {
           {
             label: shortB,
             data: dims.map(d => Math.round((b.stats[d.key]||0) / d.max * 100)),
-            borderColor: CB, backgroundColor: CB+'14',
+            borderColor: CB, backgroundColor: 'rgba(26,34,34,0.06)',
             borderWidth: 2.5, pointBackgroundColor: CB, pointRadius: 4,
             pointBorderColor: '#faf6ee', pointBorderWidth: 1.5,
             borderDash: []
@@ -385,7 +385,7 @@ function openVSModal() {
       }
       const audio = new Audio('/audio/'+cid+'_'+dim+'.mp3');
       audio.addEventListener('error', ()=>{ btn.innerHTML='—'; btn.disabled=true; btn.style.opacity='.35'; }, {once:true});
-      audio.addEventListener('playing', ()=>{ vsAudio=audio; btn.innerHTML='⏸'; btn.style.background=color; btn.style.color='#fff'; }, {once:true});
+      audio.addEventListener('playing', ()=>{ vsAudio=audio; btn.innerHTML='⏸'; btn.style.background=color; btn.style.color='#fff8e7'; }, {once:true});
       audio.onended = ()=>{ btn.innerHTML='▶'; btn.style.background=cid===a.id?CA_LIGHT:CB_LIGHT; btn.style.color=cid===a.id?CA:CB; vsAudio=null; };
       audio.play().catch(()=>{});
     });
