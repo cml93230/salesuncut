@@ -247,7 +247,7 @@ function openVSModal() {
     +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:28px">'
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'
         +'<div style="width:3px;height:18px;background:'+CA+';border-radius:2px;flex-shrink:0"></div>'
-        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:'+CA+';font-weight:700">Verdict IA</div>'
+        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:'+CA+';font-weight:700">Verdict</div>'
       +'</div>'
       +'<div style="font-family:var(--font-display);font-weight:900;font-size:clamp(14px,1.8vw,19px);text-transform:uppercase;color:#1a2222;margin-bottom:22px;line-height:1.35">'+summaryText+'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">'
@@ -266,6 +266,42 @@ function openVSModal() {
         +'<a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortB+'</span><span style="opacity:.7">→</span></a>'
       +'</div>'
     +'</div>'
+
+    // ══ ANALYSE PAR DIMENSION ══
+    +(()=>{
+      const daA=SU_DATA.dimAnalysis&&SU_DATA.dimAnalysis[a.id];
+      const daB=SU_DATA.dimAnalysis&&SU_DATA.dimAnalysis[b.id];
+      if(!daA||!daB)return'';
+      return '<div style="background:#fff;border-top:1.5px solid #e8dfc8">'
+        +'<div style="padding:20px 28px 0;display:flex;align-items:center;gap:10px">'
+          +'<div style="width:3px;height:18px;background:#c8bea0;border-radius:2px;flex-shrink:0"></div>'
+          +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#b0a080;font-weight:700">Analyse par dimension</div>'
+        +'</div>'
+        +dims.map(d=>{
+          const tA=daA[d.key]||'',tB=daB[d.key]||'';
+          if(!tA&&!tB)return'';
+          const scA=a.stats[d.key]||0,scB=b.stats[d.key]||0;
+          return'<div>'
+            +'<div style="background:#faf6ee;padding:7px 28px;margin-top:14px;border-top:1px solid #eee8da;display:flex;align-items:center;gap:10px">'
+              +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#1a2222">'+d.label+'</span>'
+              +'<span style="font-family:var(--font-mono);font-size:8px;color:#c8bea0;background:#ede8df;padding:1px 6px;border-radius:10px">'+scA+'/'+d.max+' · '+scB+'/'+d.max+'</span>'
+            +'</div>'
+            +'<div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #f4efe6">'
+              +'<div style="padding:12px 18px 14px 28px;border-right:1.5px solid #f4efe6">'
+                +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+';letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">'+shortA+'</div>'
+                +'<div style="font-size:12px;color:#444;line-height:1.65">'+tA+'</div>'
+              +'</div>'
+              +'<div style="padding:12px 28px 14px 18px">'
+                +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+';letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">'+shortB+'</div>'
+                +'<div style="font-size:12px;color:#444;line-height:1.65">'+tB+'</div>'
+              +'</div>'
+            +'</div>'
+          +'</div>';
+        }).join('')
+        +'<div style="height:20px"></div>'
+      +'</div>';
+    })()
+
     +'</div>';
 
   document.body.appendChild(modal);
