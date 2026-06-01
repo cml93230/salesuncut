@@ -36,48 +36,17 @@ const SU_VS = {
   }
 };
 
-/* ============ VS : checkboxes sur les cards shortlist ============ */
-function showVSCheckboxes(container) {
-  const CA = '#c9a86a', CB = '#1a2222';
+/* ============ VS : bouton Comparer visible sur chaque carte shortlist ============ */
+function refreshVSBtns(container) {
   container.querySelectorAll('.tcard[data-candidate-id]').forEach(card => {
-    if (card.querySelector('.vs-cb')) return;
     const id = card.dataset.candidateId;
-    const portrait = card.querySelector('.tcard-portrait');
-    const target = portrait || card;
-    const cb = document.createElement('div');
-    cb.className = 'vs-cb';
-    cb.dataset.id = id;
-    const idx = SU_VS.selected.indexOf(id);
-    cb.style.cssText = 'position:absolute;top:8px;right:8px;z-index:20;width:24px;height:24px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;line-height:1;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.35);user-select:none;'
-      + (idx === 0 ? 'background:'+CA+';color:#1a2222;border:2px solid '+CA+';'
-       : idx === 1 ? 'background:'+CB+';color:#fff8e7;border:2px solid '+CB+';'
-       : 'background:rgba(26,34,34,.55);color:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.25);');
-    cb.innerHTML = idx >= 0 ? '✓' : '+';
-    cb.title = 'Sélectionner pour comparer';
-    target.appendChild(cb);
-    cb.addEventListener('click', e => {
-      e.stopPropagation();
-      if (!SU_VS.has(id) && SU_VS.count() >= SU_VS.MAX) return;
-      SU_VS.toggle(id);
-    });
-  });
-}
-
-function updateVSCheckboxes() {
-  const CA = '#c9a86a', CB = '#1a2222';
-  document.querySelectorAll('.vs-cb[data-id]').forEach(cb => {
-    const id = cb.dataset.id;
-    const idx = SU_VS.selected.indexOf(id);
-    if (idx === 0) {
-      Object.assign(cb.style, { background: CA, color: '#1a2222', borderColor: CA });
-      cb.innerHTML = '✓';
-    } else if (idx === 1) {
-      Object.assign(cb.style, { background: CB, color: '#fff8e7', borderColor: CB });
-      cb.innerHTML = '✓';
-    } else {
-      Object.assign(cb.style, { background: 'rgba(26,34,34,.55)', color: 'rgba(255,255,255,.65)', borderColor: 'rgba(255,255,255,.25)' });
-      cb.innerHTML = '+';
-    }
+    let btn = card.querySelector('.vs-compare-btn');
+    if (!btn) return; // bouton injecté par renderCard en mode shortlist
+    const isSelected = SU_VS.has(id);
+    const isMaxed = SU_VS.count() >= SU_VS.MAX;
+    btn.classList.toggle('selected', isSelected);
+    btn.disabled = !isSelected && isMaxed;
+    btn.textContent = isSelected ? '✓ Sélectionné' : 'Comparer';
   });
 }
 
@@ -420,6 +389,7 @@ function getPoolFromSession() {
 function renderCard(c, opts) {
   opts = opts || {};
   const compact = opts.compact || false;
+  const showCompareBtn = opts.showCompareBtn || false;
   const fam   = SU_DATA.getFamilyById(c.family);
   const level = c.level || SU_DATA.getLevel(c.score);
   const dims  = SU_DATA.dimensions;
@@ -436,6 +406,11 @@ function renderCard(c, opts) {
     : '<span class="silhouette">' + fam.icon + '</span>';
   const slBtn = '<button class="tcard-sl-btn' + (inSL ? ' active' : '') + '" data-id="' + c.id + '">'
     + (inSL ? '✓ SHORTLIST' : '+ SHORTLIST') + '</button>';
+  // Bouton Comparer — visible uniquement en mode shortlist, positionné en bas de carte
+  const isVS = SU_VS.has(c.id);
+  const compareBtn = showCompareBtn
+    ? '<button class="vs-compare-btn' + (isVS ? ' selected' : '') + '" data-id="' + c.id + '">' + (isVS ? '✓ Sélectionné' : 'Comparer') + '</button>'
+    : '';
   return '<div class="tcard ' + level + (compact?' sm':'') + '" data-candidate-id="' + c.id + '">'
     + '<div class="holo"></div><div class="tcard-inner">'
     + '<div class="tcard-header"><div><div class="tcard-name">' + name + '</div>'
@@ -444,7 +419,9 @@ function renderCard(c, opts) {
     + '<div class="tcard-portrait"><div class="tcard-family-badge">' + c.location + '</div>'
     + photo + '<div class="tcard-rarity-stamp">' + level.toUpperCase() + '</div>' + slBtn + '</div>'
     + '<div class="tcard-stats">' + stats + '</div>'
-    + '<div class="tcard-footer"><span>' + rolePrefix + fam.name + '</span></div>'
+    + '<div class="tcard-footer"><span>' + rolePrefix + fam.name + '</span>'
+    + compareBtn
+    + '</div>'
     + '</div></div>';
 }
 
@@ -470,7 +447,7 @@ function setupMobileMenu() {
   drawer.innerHTML = '<div class="nav-drawer-inner" role="dialog">'
     + '<button class="nav-drawer-close" aria-label="Fermer le menu">×</button>'
     + '<a class="nav-drawer-logo" href="index.html"><span class="dot"></span>SalesUncut</a>'
-    + '<nav class="nav-drawer-links"><a href="index.html">Accueil</a><a href="candidat.html">Pour candidats</a><a href="marketplace.html">Pour recruteurs</a><a href="profil.html?id=c001">Voir un profil</a></nav>'
+    + '<nav class="nav-drawer-links"><a href="index.html">Accueil</a><a href="candidat.html">Candidats</a><a href="marketplace.html">Recruteurs</a><a href="profil.html?id=c001">Voir un profil</a></nav>'
     + '<div class="nav-drawer-cta"><a href="candidat.html" class="btn gold">▶ Passer le test</a></div>'
     + '</div>';
   document.body.appendChild(drawer);
@@ -518,9 +495,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     .tcard-sl-btn:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
     .tcard-sl-btn.active { background: var(--rust); color: var(--cream); border-color: var(--rust); }
+    /* Bouton Comparer shortlist */
+    .vs-compare-btn {
+      font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      padding: 8px 0; border-radius: 4px;
+      border: 1.5px solid var(--cream-3);
+      background: var(--cream-2); color: var(--teal-2);
+      cursor: pointer; transition: all .2s;
+      width: 100%; margin-top: 6px; line-height: 1;
+    }
+    .vs-compare-btn:hover:not(:disabled) { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+    .vs-compare-btn.selected { background: var(--gold-deep); color: var(--cream); border-color: var(--gold-deep); }
+    .vs-compare-btn:disabled { opacity: .35; cursor: not-allowed; }
     .dispo-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; margin-right: 4px; vertical-align: middle; animation: pulse-dot 1.6s ease-in-out infinite; }
     @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
-    .vs-cb { position: absolute; top: 8px; right: 8px; z-index: 20; }
     .vs-bar-strip { background: var(--ink); border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
     .vs-btn-compare { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 9px 18px; border-radius: 4px; border: none; cursor: pointer; transition: all .2s; white-space: nowrap; }
     .vs-btn-compare:disabled { background: rgba(255,255,255,.1); color: rgba(255,255,255,.3); cursor: not-allowed; }
@@ -555,8 +544,21 @@ document.addEventListener('DOMContentLoaded', () => {
   setActiveNav();
   setupMobileMenu();
   renderFooter();
-  document.addEventListener('vsChanged', updateVSCheckboxes);
+  document.addEventListener('vsChanged', () => {
+    // Rafraîchir les boutons Comparer dans les cartes shortlist
+    const grid = document.getElementById('pool-grid');
+    if (grid) refreshVSBtns(grid);
+  });
   document.addEventListener('click', e => {
+    // Bouton Comparer sur carte shortlist
+    const vsBtn = e.target.closest('.vs-compare-btn');
+    if (vsBtn) {
+      e.stopPropagation();
+      const id = vsBtn.dataset.id;
+      if (!SU_VS.has(id) && SU_VS.count() >= SU_VS.MAX) return;
+      SU_VS.toggle(id);
+      return;
+    }
     const slBtn = e.target.closest('.tcard-sl-btn');
     if (slBtn) {
       e.stopPropagation();
@@ -572,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const card = e.target.closest('.tcard');
-    if (card && card.dataset.candidateId && !e.target.closest('.vs-cb')) {
+    if (card && card.dataset.candidateId && !e.target.closest('.vs-compare-btn')) {
       const allCards = [...document.querySelectorAll('.tcard[data-candidate-id]')];
       navigateWithPool(card.dataset.candidateId, allCards.map(c => c.dataset.candidateId));
     }
@@ -587,7 +589,7 @@ function updateCompareBar() {
   if (count === 0) { bar.style.display = 'none'; return; }
   bar.style.display = 'flex';
   const cands = SU_COMPARE.getCandidates();
-  const thumbs = cands.map(c => { const n=(c.anonymous?'Anonyme':c.name).split(' ')[0]; const img=c.photo?'<img src="'+c.photo+'" alt="">'+'':'<span>'+n[0]+'</span>'; return '<div class="cbar-thumb">'+img+'<div class="cbar-tname">'+n+'</div></div>'; }).join('');
+  const thumbs = cands.map(c => { const n=(c.anonymous?'Anonyme':c.name).split(' ')[0]; const img=c.photo?'<img src="'+c.photo+'" alt="">':'<span>'+n[0]+'</span>'; return '<div class="cbar-thumb">'+img+'<div class="cbar-tname">'+n+'</div></div>'; }).join('');
   bar.innerHTML = '<div class="cbar-left"><span class="cbar-count">'+count+'</span><span class="cbar-lbl"> en comparaison</span></div>'
     +'<div class="cbar-thumbs">'+thumbs+'</div>'
     +(count>=2?'<button class="cbar-btn" onclick="openCompareModal()">Comparer ✶</button>':'<span class="cbar-hint">Ajoute '+(2-count)+' profil de plus</span>')
@@ -606,6 +608,6 @@ function openCompareModal() {
     const bars=dims.map(d=>{ const v=c.stats[d.key]||0; const p=Math.round(v/d.max*100); return '<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3)">'+d.label+'</span><span style="font-family:var(--font-mono);font-size:9px;color:var(--gold-deep);font-weight:700">'+v+'/'+d.max+'</span></div><div style="height:4px;background:var(--cream-3);border-radius:2px;overflow:hidden"><div style="width:'+p+'%;height:100%;background:var(--gold-deep);border-radius:2px"></div></div></div>'; }).join('');
     return '<div class="cmp-col"><div style="text-align:center;margin-bottom:20px">'+photo+'<div style="font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;margin-top:10px">'+name+'</div><div style="display:inline-block;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;padding:4px 10px;border-radius:4px;margin-top:4px">'+level.toUpperCase()+' · '+c.score+'/100</div><div style="font-family:var(--font-mono);font-size:10px;color:var(--teal-3);margin-top:8px">'+fam.name+' · '+c.location+'</div></div><div style="margin-bottom:16px">'+bars+'</div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px">Points forts</div>'+(c.strengths||[]).map(s=>'<div style="font-size:13px;color:var(--teal-2);padding:5px 0;border-bottom:1px dashed var(--cream-3)">→ '+s+'</div>').join('')+'<div style="margin-top:16px"><a href="profil.html?id='+c.id+'" style="display:block;text-align:center;background:var(--gold-deep);color:var(--cream);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:10px;border-radius:4px;text-decoration:none">Voir le profil complet →</a></div></div>';
   };
-  modal.innerHTML='<div class="cmp-overlay" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">'+'</div><div class="cmp-inner"><div class="cmp-header"><div style="font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase">Comparaison</div><button class="cmp-close" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">✕</button></div><div class="cmp-cols">'+cands.map(col).join('')+'</div></div>';
+  modal.innerHTML='<div class="cmp-overlay" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'"></div><div class="cmp-inner"><div class="cmp-header"><div style="font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase">Comparaison</div><button class="cmp-close" onclick="document.getElementById(\'su-cmp-modal\').style.display=\'none\'">✕</button></div><div class="cmp-cols">'+cands.map(col).join('')+'</div></div>';
   modal.style.display='flex';
 }

@@ -97,8 +97,8 @@
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
-      <a href="candidat.html">Pour candidats</a>
-      <a href="marketplace.html" class="active">Pour recruteurs</a>
+      <a href="candidat.html">Candidats</a>
+      <a href="marketplace.html" class="active">Recruteurs</a>
       <a href="profil.html?id=c001">Voir un profil</a>
     </div>
     <a href="#cta-recruteur" class="btn sm gold">Accès pool</a>
@@ -128,7 +128,7 @@
       <div class="vs-bar-strip" id="vs-bar">
         <div class="vs-bar-label" id="vs-bar-label">Sélectionne 2 profils pour comparer</div>
         <div class="vs-bar-actions">
-          <button class="vs-btn-compare" id="vs-btn" disabled onclick="openVSModal()">Comparer ✶</button>
+          <button class="vs-btn-compare" id="vs-btn" disabled onclick="openVSModal()">Lancer la comparaison ✶</button>
           <button class="vs-btn-clear" onclick="SU_VS.clear()">Effacer</button>
         </div>
       </div>
@@ -199,13 +199,11 @@
       document.getElementById('tab-pool').classList.toggle('active',tab==='pool');
       document.getElementById('tab-sl').classList.toggle('active',tab==='shortlist');
       document.getElementById('filters-panel').style.display=tab==='pool'?'':'none';
-      // VS bar : visible shortlist uniquement, clear si on quitte
       if(tab!=='shortlist'){SU_VS.clear();document.getElementById('vs-bar').classList.remove('visible');}
       else{document.getElementById('vs-bar').classList.add('visible');}
       applyFilters();
     }
 
-    // ===== VS BARRE : mise à jour =====
     function updateVSBar(){
       const count=SU_VS.count();
       const bar=document.getElementById('vs-bar');
@@ -244,7 +242,7 @@
         +'<div><div class="lr-score '+lvl+'">'+c.score+'</div><div class="lr-bar"><div class="lr-bar-fill" style="width:'+c.score+'%"></div></div></div>'
         +'<div class="lr-family">'+fam.name+'</div>'
         +'<div class="lr-ville">'+c.location+'</div>'
-        +'<div class="lr-dispo'+(imm?' urgent':'')+'">'+( imm?'<span class="dispo-dot"></span>':'')+c.availability+'</div>'
+        +'<div class="lr-dispo'+(imm?' urgent':'')+'">'+(imm?'<span class="dispo-dot"></span>':'')+c.availability+'</div>'
         +'<div class="lr-action"><a href="profil.html?id='+c.id+'">Voir →</a></div>'
         +'</div>';
     }
@@ -281,9 +279,8 @@
 
       if(currentView==='cards'){
         grid.style.display='grid';list.style.display='none';
-        grid.innerHTML=src.map(c=>renderCard(c)).join('');
-        // Ajouter les checkboxes VS en mode shortlist
-        if(currentTab==='shortlist') requestAnimationFrame(()=>showVSCheckboxes(grid));
+        grid.innerHTML=src.map(c=>renderCard(c, {showCompareBtn: currentTab==='shortlist'})).join('');
+        if(currentTab==='shortlist') requestAnimationFrame(()=>refreshVSBtns(grid));
       } else {
         grid.style.display='none';list.style.display='flex';
         const hdr=list.querySelector('.list-header');list.innerHTML='';list.appendChild(hdr);
