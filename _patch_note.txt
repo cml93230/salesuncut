@@ -1,0 +1,3 @@
+  <script src="data.js"></script>
+  <script src="data-dim-sw.js"></script>
+  <script src="components.js"></script>
