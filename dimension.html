@@ -19,8 +19,8 @@
     .dim-candidate-link{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,248,231,.5);text-decoration:none;transition:color .2s;}
     .dim-candidate-link:hover{color:var(--gold);}
     .dim-score-card{background:rgba(255,248,231,.06);border:1.5px solid rgba(255,248,231,.12);border-radius:12px;padding:28px;text-align:center;}
-    .dim-score-big{font-family:var(--font-display);font-weight:900;font-size:80px;line-height:.9;color:var(--gold);letter-spacing:-.04em;}
-    .dim-score-max{font-size:24px;color:rgba(255,248,231,.3);font-weight:400;}
+    .dim-score-big{font-family:var(--font-display);font-weight:900;font-size:80px;line-height:1;color:var(--gold);letter-spacing:-.04em;white-space:nowrap;}
+    .dim-score-max{font-size:24px;color:rgba(255,248,231,.3);font-weight:400;letter-spacing:0;}
     .dim-score-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,248,231,.4);margin:8px 0 16px;}
     .dim-score-bar-wrap{background:rgba(255,248,231,.1);border-radius:4px;height:8px;overflow:hidden;margin-bottom:12px;}
     .dim-score-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:4px;}
@@ -83,6 +83,11 @@
     .dim-weak{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px dashed var(--cream-3);font-size:14px;color:var(--teal-2);line-height:1.4;}
     .dim-weak:last-child{border-bottom:none;}
     .dim-weak-arrow{color:var(--rust);font-weight:700;flex-shrink:0;margin-top:1px;}
+    /* SW panel : deux colonnes forces/axes */
+    .sw-two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .sw-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;}
+    .sw-col-title.strengths{color:var(--gold-deep);}
+    .sw-col-title.weaknesses{color:var(--rust);}
     .dim-corr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
     .dim-corr-card{background:var(--cream);border:1.5px solid var(--cream-3);border-radius:8px;padding:24px 20px;text-decoration:none;color:var(--ink);transition:all .25s;display:block;}
     .dim-corr-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(201,168,106,.12);}
@@ -106,14 +111,14 @@
     .mp-controls{display:flex;gap:4px;flex-shrink:0;}
     .mp-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;background:rgba(255,248,231,.1);color:var(--cream);font-size:11px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
     .mp-btn:hover{background:rgba(255,248,231,.2);}
-    @media(max-width:900px){.dim-hero-grid{grid-template-columns:1fr;gap:32px;}.dim-score-card{max-width:280px;}.dim-stats-row{grid-template-columns:1fr;gap:14px;}.dim-candidate-grid{grid-template-columns:1fr;}.dim-corr-grid{grid-template-columns:1fr 1fr;gap:12px;}.dim-section{padding:48px 0;}.dim-stat-num{font-size:36px;}}
+    @media(max-width:900px){.dim-hero-grid{grid-template-columns:1fr;gap:32px;}.dim-score-card{max-width:280px;}.dim-stats-row{grid-template-columns:1fr;gap:14px;}.dim-candidate-grid{grid-template-columns:1fr;}.dim-corr-grid{grid-template-columns:1fr 1fr;gap:12px;}.dim-section{padding:48px 0;}.dim-stat-num{font-size:36px;}.sw-two-col{grid-template-columns:1fr;}}
     @media(max-width:560px){.dim-corr-grid{grid-template-columns:1fr;}.dim-score-big{font-size:64px;}.mini-player-sticky{bottom:12px;right:12px;left:12px;min-width:0;max-width:none;}}
   </style>
 </head>
 <body class="page-enter">
   <nav class="nav" id="main-nav">
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
-    <div class="nav-links"><a href="index.html">Accueil</a><a href="candidat.html">Pour candidats</a><a href="marketplace.html">Pour recruteurs</a><a href="marketplace.html">Pool</a></div>
+    <div class="nav-links"><a href="index.html">Accueil</a><a href="candidat.html">Candidats</a><a href="marketplace.html">Recruteurs</a><a href="marketplace.html">Pool</a></div>
     <a href="marketplace.html" class="btn sm gold">← Pool</a>
   </nav>
   <div class="dim-hero"><div class="container">
@@ -203,7 +208,6 @@
       var wH=[3,5,8,12,7,10,14,9,6,11,15,8,4,13,7,11,9,6,14,10,5,12,8,15,7,4,10,13,6,9];
       var waveBars=wH.slice(0,28).map(function(v,i){return'<div class="dim-waveform-bar'+(i<10?' active':'')+' " style="height:'+(v*2)+'px"></div>';}).join('');
       document.getElementById('dim-audio-card').innerHTML='<div class="dim-audio-header"><div class="dim-audio-label">'+dim.label+'</div><div class="dim-audio-score">'+score+'/'+dim.max+'</div></div><div class="dim-audio-player"><button class="dim-play-btn" id="dim-play-btn">&#9654;</button><div class="dim-waveform">'+waveBars+'</div><div class="dim-audio-ts">'+moment.ts+' · '+moment.dur+'</div></div>';
-      // ===== PLAYER HTML5 =====
       var currentAudio=null;
       var mpEl=document.getElementById('mini-player');
       var mpName=document.getElementById('mp-name');
@@ -218,49 +222,36 @@
         if(playBtn.disabled)return;
         if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}
         var audio=new Audio(audioUrl);
-        audio.addEventListener('error',function(){
-          playBtn.disabled=true;
-          playBtn.innerHTML='<span style="font-size:8px;letter-spacing:.04em">BIENTÔT</span>';
-          playBtn.title='Disponible prochainement';
-        },{once:true});
-        audio.addEventListener('playing',function(){
-          currentAudio=audio;
-          playBtn.innerHTML='&#9208;';
-          mpName.textContent=name;
-          mpDimEl.textContent=dim.label+' · '+moment.ts;
-          mpFill.style.width='0%';
-          mpTimeEl.textContent='0:00';
-          mpBtn.innerHTML='&#9208;';
-          mpEl.style.display='flex';
-          audio.ontimeupdate=function(){if(!audio.duration)return;mpFill.style.width=(audio.currentTime/audio.duration*100).toFixed(1)+'%';mpTimeEl.textContent=fmtTime(audio.currentTime);};
-          audio.onended=function(){mpBtn.innerHTML='&#9654;';playBtn.innerHTML='&#9654;';currentAudio=null;};
-        },{once:true});
+        audio.addEventListener('error',function(){playBtn.disabled=true;playBtn.innerHTML='<span style="font-size:8px;letter-spacing:.04em">BIENTÔT</span>';playBtn.title='Disponible prochainement';},{once:true});
+        audio.addEventListener('playing',function(){currentAudio=audio;playBtn.innerHTML='&#9208;';mpName.textContent=name;mpDimEl.textContent=dim.label+' · '+moment.ts;mpFill.style.width='0%';mpTimeEl.textContent='0:00';mpBtn.innerHTML='&#9208;';mpEl.style.display='flex';audio.ontimeupdate=function(){if(!audio.duration)return;mpFill.style.width=(audio.currentTime/audio.duration*100).toFixed(1)+'%';mpTimeEl.textContent=fmtTime(audio.currentTime);};audio.onended=function(){mpBtn.innerHTML='&#9654;';playBtn.innerHTML='&#9654;';currentAudio=null;};},{once:true});
         audio.play().catch(function(){});
       });
-      mpBtn.addEventListener('click',function(){
-        if(!currentAudio)return;
-        if(currentAudio.paused){currentAudio.play();mpBtn.innerHTML='&#9208;';}
-        else{currentAudio.pause();mpBtn.innerHTML='&#9654;';}
-      });
-      document.getElementById('mp-close').addEventListener('click',function(){
-        if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}
-        mpEl.style.display='none';
-        playBtn.innerHTML='&#9654;';
-      });
-      // Transcript
+      mpBtn.addEventListener('click',function(){if(!currentAudio)return;if(currentAudio.paused){currentAudio.play();mpBtn.innerHTML='&#9208;';}else{currentAudio.pause();mpBtn.innerHTML='&#9654;';}});
+      document.getElementById('mp-close').addEventListener('click',function(){if(currentAudio){currentAudio.pause();currentAudio.currentTime=0;currentAudio=null;}mpEl.style.display='none';playBtn.innerHTML='&#9654;';});
       var lines=SU_DATA.getTranscriptLines(cid,dimKey);
       if(!lines||!lines.length)lines=SU_DATA.getTranscriptLines(cid,'decouverte');
-      document.getElementById('dim-transcript').innerHTML=lines&&lines.length?lines.map(function(l){return'<div class="dim-tr-grid"><div class="dim-tr-ts">'+l.ts+'</div><div class="dim-tr-who '+(l.who==='L'?'cand':'')+'">'+(l.who==='L'?'↗':'↙')+'</div><div class="dim-tr-text">'+l.text+'</div></div>';}).join(''):'<div class="dim-tr-empty">Transcript complet disponible sur abonnement recruteur</div>';
+      document.getElementById('dim-transcript').innerHTML=lines&&lines.length?lines.map(function(l){return'<div class="dim-tr-grid"><div class="dim-tr-ts">'+l.ts+'</div><div class="dim-tr-who '+(l.who==='L'?'cand':'')+'">'+( l.who==='L'?'\u2197':'\u2199')+'</div><div class="dim-tr-text">'+l.text+'</div></div>';}).join(''):'<div class="dim-tr-empty">Transcript complet disponible sur abonnement recruteur</div>';
       document.getElementById('score-sub').textContent=dim.label+' · Session '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long'})+' 2026';
       document.getElementById('score-row').innerHTML='<div class="dim-score-big2">'+score+'</div><div class="dim-score-max2">/'+dim.max+'</div>';
       document.getElementById('score-fill').style.width=pct+'%';
       document.getElementById('dim-signals').innerHTML=dc.signals.map(function(s){return'<div class="dim-signal"><span class="dim-signal-tick">✓</span>'+s+'</div>';}).join('');
-      var dimWord=dim.label.toLowerCase().split(' ')[0];
-      var dimStrengths=(c.strengths||[]).filter(function(s){var sl=s.toLowerCase();return sl.includes(dimWord)||sl.includes(dimKey);});
-      var dimWeaknesses=(c.weaknesses||[]).filter(function(w){var wl=w.toLowerCase();return wl.includes(dimWord)||wl.includes(dimKey);});
-      var shownStrengths=dimStrengths.length?dimStrengths:(c.strengths||[]).slice(0,2);
-      var shownWeaknesses=dimWeaknesses.length?dimWeaknesses:(c.weaknesses||[]).slice(0,2);
-      document.getElementById('sw-panel').innerHTML='<div class="dim-panel-title">Points forts &amp; axes</div><div class="dim-panel-sub">Observé lors de la simulation</div>'+shownStrengths.map(function(s){return'<div class="dim-signal"><span class="dim-signal-tick">✓</span>'+s+'</div>';}).join('')+(shownWeaknesses.length?'<div class="dim-signals-title" style="margin-top:16px">Axes de progression</div>'+shownWeaknesses.map(function(w){return'<div class="dim-weak"><span class="dim-weak-arrow">▼</span>'+w+'</div>';}).join(''):'');
+      // Forces & axes spécifiques à cette dimension
+      var dsw=SU_DATA.dimStrengthsWeaknesses&&SU_DATA.dimStrengthsWeaknesses[cid]&&SU_DATA.dimStrengthsWeaknesses[cid][dimKey];
+      var shownStrengths=dsw?dsw.s:(c.strengths||[]).slice(0,2);
+      var shownWeaknesses=dsw?dsw.w:(c.weaknesses||[]).slice(0,2);
+      document.getElementById('sw-panel').innerHTML=
+        '<div class="dim-panel-title">Points forts &amp; axes</div>'
+        +'<div class="dim-panel-sub">Observé lors de la simulation · '+dim.label+'</div>'
+        +'<div class="sw-two-col">'
+          +'<div>'
+            +'<div class="sw-col-title strengths">Points forts</div>'
+            +shownStrengths.map(function(s){return'<div class="dim-signal"><span class="dim-signal-tick">✓</span>'+s+'</div>';}).join('')
+          +'</div>'
+          +'<div>'
+            +'<div class="sw-col-title weaknesses">Axes de progression</div>'
+            +shownWeaknesses.map(function(w){return'<div class="dim-weak"><span class="dim-weak-arrow">▼</span>'+w+'</div>';}).join('')
+          +'</div>'
+        +'</div>';
       document.getElementById('dim-corr').innerHTML=dc.correlations.map(function(key){var d2=SU_DATA.dimensions.find(function(d){return d.key===key;});var dc2=SU_DATA.dimensionContent[key];if(!d2||!dc2)return'';var s2=(c.stats&&c.stats[key])||0;var p2=Math.round(s2/d2.max*100);return'<a href="dimension.html?dim='+key+'&id='+cid+'" class="dim-corr-card"><div class="dim-corr-num">'+dc2.icon+'</div><div class="dim-corr-label">'+d2.label+'</div><div class="dim-corr-score">Score : <strong>'+s2+'/'+d2.max+'</strong> · '+p2+'%</div></a>';}).filter(Boolean).join('');
       document.getElementById('cta-back').href='profil.html?id='+cid;
       document.title='SalesUncut — '+dc.headline+' · '+name;
