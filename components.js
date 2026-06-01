@@ -81,14 +81,14 @@ function updateVSCheckboxes() {
   });
 }
 
-/* ============ VS MODAL — light redesign ============ */
+/* ============ VS MODAL — premium redesign ============ */
 function openVSModal() {
   const cands = SU_VS.getSelected();
   if (cands.length < 2) return;
   const a = cands[0], b = cands[1];
   const dims = SU_DATA.dimensions;
-  const CA = '#b8922a';   // gold foncé lisible sur cream
-  const CB = '#2d6b7f';   // teal foncé lisible sur cream
+  const CA = '#b8922a';
+  const CB = '#2d6b7f';
   const CA_LIGHT = '#fdf3e0';
   const CB_LIGHT = '#e8f4f8';
   const nameA = a.anonymous ? 'Anonyme' : a.name;
@@ -103,28 +103,25 @@ function openVSModal() {
   const dimsA = dims.filter(d => (a.stats[d.key]||0) > (b.stats[d.key]||0));
   const dimsB = dims.filter(d => (b.stats[d.key]||0) > (a.stats[d.key]||0));
 
-  // Avatars
   const avatarA = a.photo
-    ? '<img src="'+a.photo+'" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CA+';">'
-    : '<div style="width:72px;height:72px;border-radius:50%;background:'+CA_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:'+CA+';border:3px solid '+CA+';font-family:var(--font-display)">'+nameA.slice(0,2).toUpperCase()+'</div>';
+    ? '<img src="'+a.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CA+';box-shadow:0 4px 16px '+CA+'44;">'
+    : '<div style="width:80px;height:80px;border-radius:50%;background:'+CA_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:'+CA+';border:3px solid '+CA+';font-family:var(--font-display)">'+nameA.slice(0,2).toUpperCase()+'</div>';
   const avatarB = b.photo
-    ? '<img src="'+b.photo+'" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CB+';">'
-    : '<div style="width:72px;height:72px;border-radius:50%;background:'+CB_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:'+CB+';border:3px solid '+CB+';font-family:var(--font-display)">'+nameB.slice(0,2).toUpperCase()+'</div>';
+    ? '<img src="'+b.photo+'" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+CB+';box-shadow:0 4px 16px '+CB+'44;">'
+    : '<div style="width:80px;height:80px;border-radius:50%;background:'+CB_LIGHT+';display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:'+CB+';border:3px solid '+CB+';font-family:var(--font-display)">'+nameB.slice(0,2).toUpperCase()+'</div>';
 
-  // Insight auto
   const topDiffDim = dims.slice().sort((x,y) => Math.abs((b.stats[y.key]||0)-(a.stats[y.key]||0)) - Math.abs((b.stats[x.key]||0)-(a.stats[x.key]||0)))[0];
   const topDiff = topDiffDim ? Math.abs((a.stats[topDiffDim.key]||0)-(b.stats[topDiffDim.key]||0)) : 0;
   const topWinner = topDiffDim && (a.stats[topDiffDim.key]||0) >= (b.stats[topDiffDim.key]||0) ? shortA : shortB;
   const topColor = topWinner === shortA ? CA : CB;
   const closeCount = dims.filter(d => Math.abs((a.stats[d.key]||0)-(b.stats[d.key]||0)) <= 1).length;
   const insightTxt = '<span style="color:'+topColor+';font-weight:700">'+topWinner+'</span> domine sur <span style="color:'+topColor+';font-weight:600">'+topDiffDim.label+' (+'+topDiff+' pts)</span>.'
-    + (closeCount > 0 ? ' <span style="color:#888">'+closeCount+' dimension'+(closeCount>1?'s':'')+' serrée'+(closeCount>1?'s':'')+' (≤1 pt d\'écart).</span>' : '');
+    + (closeCount > 0 ? ' <span style="color:#999;font-style:italic">'+closeCount+' dimension'+(closeCount>1?'s':'')+' serrée'+(closeCount>1?'s':'')+' (≤ 1 pt).</span>' : '');
 
-  // Verdict text
   let summaryText = '';
   if (Math.abs(diff) > 10) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB, wl=(diff>0?dimsA:dimsB).length;
-    summaryText = '<span style="color:'+wc+';font-weight:900">'+wn+'</span> mène de '+Math.abs(diff)+' points. Avantage sur '+wl+'/6 dimensions.';
+    summaryText = '<span style="color:'+wc+';font-weight:900">'+wn+'</span> mène de '+Math.abs(diff)+' points — avantage sur '+wl+'/6 dimensions.';
   } else if (Math.abs(diff) > 3) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB;
     summaryText = '<span style="color:'+wc+'">'+wn+'</span> légèrement devant (+'+Math.abs(diff)+' pts). Le contexte du poste doit trancher.';
@@ -139,20 +136,25 @@ function openVSModal() {
     const short = (c.anonymous ? 'Anonyme' : c.name).split(' ')[0];
     const famC = SU_DATA.getFamilyById(c.family);
     const items = [];
-    if (hunt >= 75) items.push('Équipe <strong>pure outbound</strong> (chasse '+hunt+'%)');
-    else if (hunt >= 50) items.push('Équipe <strong>mixte</strong> chasse/fidélisation ('+hunt+'/'+(100-hunt)+'%)');
-    else items.push('Profil <strong>farming</strong>/AM ('+hunt+'% chasse)');
-    if (c.deal_size) items.push('Deals de <strong>'+c.deal_size+'</strong>');
-    if (c.sales_cycle) items.push('Cycles <strong>'+c.sales_cycle+'</strong>');
-    if (c.experience_years) items.push(c.experience_years+' ans · <strong>'+(c.experience_level||'')+'</strong>');
+    if (hunt >= 75) items.push('Pure outbound — chasse <strong>'+hunt+'%</strong>');
+    else if (hunt >= 50) items.push('Profil mixte — chasse <strong>'+hunt+'%</strong> / fidél. '+(100-hunt)+'%');
+    else items.push('Profil <strong>farming</strong>/AM — '+hunt+'% chasse');
+    if (c.deal_size) items.push('Tickets moyens <strong>'+c.deal_size+'</strong>');
+    if (c.sales_cycle) items.push('Cycle <strong>'+c.sales_cycle+'</strong>');
+    if (c.experience_years) items.push('<strong>'+c.experience_years+' ans</strong> d\'expérience');
     items.push('Expertise <strong>'+famC.name+'</strong>');
     const domStr = dimsWon.length > 0 ? dimsWon.map(d=>d.label).join(' · ') : 'Aucune supériorité nette';
-    return '<div style="background:'+colorLight+';border:1.5px solid '+color+'33;border-radius:10px;padding:16px">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:'+color+';margin-bottom:10px;font-weight:700">Recruter '+short+' si…</div>'
-      +items.map(t=>'<div style="font-size:12px;color:#2a2a2a;padding:5px 0;border-bottom:1px solid '+color+'22;line-height:1.45">→ '+t+'</div>').join('')
-      +'<div style="margin-top:10px;padding-top:8px;border-top:1.5px solid '+color+'22">'
-        +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:'+color+'99;margin-bottom:4px">Dimensions fortes</div>'
-        +'<div style="font-family:var(--font-mono);font-size:10px;color:'+color+';font-weight:700">'+domStr+'</div>'
+    return '<div style="background:'+colorLight+';border:1.5px solid '+color+'28;border-radius:12px;overflow:hidden">'
+      +'<div style="background:'+color+';padding:10px 14px;display:flex;align-items:center;justify-content:space-between">'
+        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.9);font-weight:700">Recruter '+short+' si…</div>'
+        +(dimsWon.length > 0 ? '<div style="font-family:var(--font-mono);font-size:8px;color:rgba(255,255,255,.65);letter-spacing:.06em">'+dimsWon.length+' dim. fortes</div>' : '')
+      +'</div>'
+      +'<div style="padding:12px 14px">'
+        +items.map(t=>'<div style="font-size:12px;color:#333;padding:5px 0;border-bottom:1px solid '+color+'15;line-height:1.5;display:flex;align-items:flex-start;gap:6px"><span style="color:'+color+';margin-top:1px;flex-shrink:0">›</span><span>'+t+'</span></div>').join('')
+        +'<div style="margin-top:10px;padding-top:8px">'
+          +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:'+color+';opacity:.6;margin-bottom:4px">Dimensions fortes</div>'
+          +'<div style="font-family:var(--font-mono);font-size:9px;color:'+color+';font-weight:700;line-height:1.4">'+domStr+'</div>'
+        +'</div>'
       +'</div>'
     +'</div>';
   }
@@ -160,33 +162,34 @@ function openVSModal() {
   let finalReco = '';
   if (Math.abs(diff) > 5) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB, on2=diff>0?shortB:shortA, oc=diff>0?CB:CA;
-    finalReco = '<span style="color:'+wc+';font-weight:700">'+wn+'</span> est le choix naturel pour un poste généraliste. Envisager <span style="color:'+oc+'">'+on2+'</span> uniquement si le profil sectoriel prime sur la performance orale.';
+    finalReco = '<span style="color:'+wc+';font-weight:700">'+wn+'</span> est le choix naturel pour un poste généraliste. Envisager <span style="color:'+oc+'">'+on2+'</span> si le profil sectoriel prime sur la performance orale.';
   } else if (diff !== 0) {
     const wn=diff>0?shortA:shortB, wc=diff>0?CA:CB;
-    finalReco = 'Avantage marginal pour <span style="color:'+wc+';font-weight:700">'+wn+'</span>. Complétez l\'analyse avec un entretien structuré ou un deuxième test SalesUncut sur un autre scénario.';
+    finalReco = 'Avantage marginal pour <span style="color:'+wc+';font-weight:700">'+wn+'</span>. Complétez avec un entretien structuré ou un second test SalesUncut sur un autre scénario.';
   } else {
     finalReco = 'Profils équivalents sur les critères SalesUncut. La décision appartient au manager sur la base du feeling terrain et de la culture d\'équipe.';
   }
 
-  // Gauge columns HTML
   const gaugeColsHTML = dims.map((d, i) => {
     const va=a.stats[d.key]||0, vb=b.stats[d.key]||0;
     const pctA=Math.round(va/d.max*100), pctB=Math.round(vb/d.max*100);
     const d2=va-vb;
-    const deltaStyle = d2>0
-      ? 'background:'+CA_LIGHT+';color:'+CA+';border:1px solid '+CA+'44'
-      : d2<0
-        ? 'background:'+CB_LIGHT+';color:'+CB+';border:1px solid '+CB+'44'
-        : 'background:#f0f0f0;color:#888;border:1px solid #ddd';
+    const winner = d2 > 0 ? 'A' : d2 < 0 ? 'B' : null;
+    const deltaBg = winner==='A' ? CA : winner==='B' ? CB : '#d8d2c8';
     const deltaTxt = d2>0 ? '+'+d2 : d2<0 ? String(d2) : '=';
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:5px">'
-      +'<div style="font-size:8px;color:#888;font-family:var(--font-mono);text-align:center;line-height:1.3;min-height:24px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.07em;text-transform:uppercase">'+d.label+'</div>'
-      +'<div style="display:flex;gap:5px;align-items:flex-end;height:90px">'
-        +'<div style="width:18px;background:#e8e4dc;border-radius:3px;height:90px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';border-radius:3px;height:0;transition:height .8s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div></div>'
-        +'<div style="width:18px;background:#e8e4dc;border-radius:3px;height:90px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';border-radius:3px;height:0;transition:height .8s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div></div>'
+    return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px">'
+      +'<div style="font-size:7.5px;color:#999;font-family:var(--font-mono);text-align:center;line-height:1.25;min-height:22px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.08em;text-transform:uppercase;padding:0 2px">'+d.label+'</div>'
+      +'<div style="display:flex;gap:4px;align-items:flex-end;height:100px">'
+        +'<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
+          +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+'">'+va+'</div>'
+          +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctA+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CA+','+CA+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60)+'ms"></div></div>'
+        +'</div>'
+        +'<div style="display:flex;flex-direction:column;align-items:center;gap:3px">'
+          +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CB+'">'+vb+'</div>'
+          +'<div style="width:20px;background:#ede8df;border-radius:4px 4px 2px 2px;height:100px;position:relative;overflow:hidden"><div class="vs-gauge-fill" data-h="'+pctB+'" style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,'+CB+','+CB+'bb);border-radius:3px 3px 0 0;height:0;transition:height .9s cubic-bezier(.4,0,.2,1) '+(i*60+30)+'ms"></div></div>'
+        +'</div>'
       +'</div>'
-      +'<div style="font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;font-family:var(--font-mono);'+deltaStyle+'">'+deltaTxt+'</div>'
-      +'<div style="font-size:8px;font-family:var(--font-mono);color:#999;display:flex;gap:2px"><span style="color:'+CA+'">'+va+'</span><span style="color:#ccc">/</span><span style="color:'+CB+'">'+vb+'</span></div>'
+      +'<div style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--font-mono);background:'+deltaBg+';color:#fff;min-width:24px;text-align:center">'+deltaTxt+'</div>'
     +'</div>';
   }).join('');
 
@@ -194,84 +197,84 @@ function openVSModal() {
   if (existing) existing.remove();
   const modal = document.createElement('div');
   modal.id = 'su-vs-modal';
-  modal.style.cssText = 'position:fixed;inset:0;z-index:600;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px;box-sizing:border-box';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:600;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:24px 16px 40px;box-sizing:border-box';
 
   modal.innerHTML =
-    '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(10,10,15,.80);backdrop-filter:blur(12px);z-index:-1"></div>'
-    +'<div style="background:#fff8e7;border-radius:16px;width:100%;max-width:820px;box-shadow:0 40px 100px rgba(0,0,0,.45);position:relative;margin:auto;overflow:hidden;border:1.5px solid #e8dfc8">'
+    '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(8,8,12,.82);backdrop-filter:blur(14px);z-index:-1"></div>'
+    +'<div style="background:#faf6ee;border-radius:20px;width:100%;max-width:840px;box-shadow:0 48px 120px rgba(0,0,0,.40),0 0 0 1px rgba(0,0,0,.06);position:relative;margin:auto;overflow:hidden">'
 
-    // Bouton fermer
-    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;border:1.5px solid #d8d0bc;background:#fff;color:#888;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;transition:all .2s">✕</button>'
+    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:50%;border:1.5px solid #ddd6c4;background:#fff;color:#999;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1;transition:all .2s;font-family:monospace">✕</button>'
 
-    // Header — deux candidats + VS
-    +'<div style="display:flex;align-items:stretch;border-bottom:1.5px solid #e8dfc8">'
-      // Candidat A
-      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 18px;gap:8px;background:'+CA_LIGHT+';border-right:1.5px solid '+CA+'33">'
+    +'<div style="display:grid;grid-template-columns:1fr 56px 1fr">'
+      +'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px 20px;gap:10px;background:'+CA_LIGHT+'">'
         +avatarA
-        +'<div style="font-size:32px;font-weight:900;color:'+CA+';line-height:1;font-family:var(--font-display)">'+a.score+'<span style="font-size:12px;color:#b0a080;font-weight:400;margin-left:2px">/100</span></div>'
-        +'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;color:#1a2222;text-transform:uppercase;text-align:center;letter-spacing:-.01em">'+nameA+'</div>'
-        +'<div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+famA.name+' · '+a.location+'</div>'
-        +'<span style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:10px;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);letter-spacing:.12em">'+lvA+'</span>'
+        +'<div style="text-align:center">'
+          +'<div style="font-family:var(--font-display);font-weight:900;font-size:15px;color:#1a2222;text-transform:uppercase;letter-spacing:-.01em;line-height:1.2">'+nameA+'</div>'
+          +'<div style="font-family:var(--font-mono);font-size:9px;color:#999;margin-top:3px">'+famA.name+' · '+a.location+'</div>'
+        +'</div>'
+        +'<div style="font-family:var(--font-display);font-weight:900;font-size:42px;color:'+CA+';line-height:1;letter-spacing:-.03em">'+a.score+'<span style="font-size:14px;color:'+CA+'88;font-weight:500;letter-spacing:0">/100</span></div>'
+        +'<div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;padding:4px 12px;border-radius:20px">'+lvA+'</div>'
       +'</div>'
-      // VS séparateur
-      +'<div style="width:48px;display:flex;align-items:center;justify-content:center;background:#fff8e7;flex-shrink:0;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8">'
-        +'<div style="font-family:var(--font-mono);font-size:10px;font-weight:900;color:#c8bea0;letter-spacing:.15em">VS</div>'
+      +'<div style="display:flex;align-items:center;justify-content:center;background:#faf6ee;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8">'
+        +'<div style="font-family:var(--font-mono);font-size:11px;font-weight:900;color:#ccc4b0;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg)">VS</div>'
       +'</div>'
-      // Candidat B
-      +'<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 18px;gap:8px;background:'+CB_LIGHT+';border-left:1.5px solid '+CB+'33">'
+      +'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px 20px;gap:10px;background:'+CB_LIGHT+'">'
         +avatarB
-        +'<div style="font-size:32px;font-weight:900;color:'+CB+';line-height:1;font-family:var(--font-display)">'+b.score+'<span style="font-size:12px;color:#7aabb8;font-weight:400;margin-left:2px">/100</span></div>'
-        +'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;color:#1a2222;text-transform:uppercase;text-align:center;letter-spacing:-.01em">'+nameB+'</div>'
-        +'<div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+famB.name+' · '+b.location+'</div>'
-        +'<span style="font-size:9px;font-weight:700;padding:3px 9px;border-radius:10px;background:'+CB+';color:#fff;font-family:var(--font-mono);letter-spacing:.12em">'+lvB+'</span>'
+        +'<div style="text-align:center">'
+          +'<div style="font-family:var(--font-display);font-weight:900;font-size:15px;color:#1a2222;text-transform:uppercase;letter-spacing:-.01em;line-height:1.2">'+nameB+'</div>'
+          +'<div style="font-family:var(--font-mono);font-size:9px;color:#999;margin-top:3px">'+famB.name+' · '+b.location+'</div>'
+        +'</div>'
+        +'<div style="font-family:var(--font-display);font-weight:900;font-size:42px;color:'+CB+';line-height:1;letter-spacing:-.03em">'+b.score+'<span style="font-size:14px;color:'+CB+'88;font-weight:500;letter-spacing:0">/100</span></div>'
+        +'<div style="background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;padding:4px 12px;border-radius:20px">'+lvB+'</div>'
       +'</div>'
     +'</div>'
 
-    // Légende
-    +'<div style="display:flex;justify-content:center;gap:24px;padding:12px 0;background:#fff8e7;border-bottom:1px solid #e8dfc8">'
-      +'<span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:#555"><span style="width:8px;height:8px;border-radius:50%;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
-      +'<span style="display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:#555"><span style="width:8px;height:8px;border-radius:50%;background:'+CB+';display:inline-block"></span>'+shortB+'</span>'
+    +'<div style="display:flex;justify-content:center;align-items:center;gap:28px;padding:10px 0;background:#faf6ee;border-top:1px solid #e8dfc8;border-bottom:1px solid #e8dfc8">'
+      +'<span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10px;color:#666;letter-spacing:.06em"><span style="width:10px;height:3px;border-radius:2px;background:'+CA+';display:inline-block"></span>'+shortA+'</span>'
+      +'<span style="width:1px;height:14px;background:#ddd;display:inline-block"></span>'
+      +'<span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10px;color:#666;letter-spacing:.06em"><span style="width:10px;height:3px;border-radius:2px;background:'+CB+';display:inline-block"></span>'+shortB+'</span>'
     +'</div>'
 
-    // Radar
-    +'<div style="padding:18px 24px 10px;background:#fff8e7">'
-      +'<div style="font-size:9px;font-weight:700;color:#b0a080;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px;font-family:var(--font-mono)">Radar superposé</div>'
-      +'<div style="display:flex;justify-content:center"><canvas id="vs-modal-radar" width="300" height="230" style="display:block"></canvas></div>'
+    +'<div style="padding:20px 28px 8px;background:#faf6ee">'
+      +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-bottom:14px">Radar superposé</div>'
+      +'<div style="display:flex;justify-content:center"><canvas id="vs-modal-radar" width="320" height="240" style="display:block"></canvas></div>'
     +'</div>'
 
-    // Insight band
-    +'<div style="margin:4px 20px 14px;background:#f5efdf;border-radius:8px;padding:12px 16px;border-left:3px solid '+topColor+'">'
-      +'<div style="font-size:13px;color:#444;line-height:1.6;font-family:var(--font-sans)">'+insightTxt+'</div>'
+    +'<div style="margin:8px 24px 16px;background:#fff;border-radius:10px;padding:14px 18px;border-left:3px solid '+topColor+';box-shadow:0 1px 8px rgba(0,0,0,.06)">'
+      +'<div style="font-size:13px;color:#3a3a3a;line-height:1.65">'+insightTxt+'</div>'
     +'</div>'
 
-    // Barres verticales
-    +'<div style="padding:0 20px 20px;background:#fff8e7">'
-      +'<div style="font-size:9px;font-weight:700;color:#b0a080;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px;font-family:var(--font-mono)">Scores par dimension</div>'
-      +'<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gaugeColsHTML+'</div>'
+    +'<div style="padding:0 24px 24px;background:#faf6ee">'
+      +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-bottom:16px">Scores par dimension</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:end">'+gaugeColsHTML+'</div>'
     +'</div>'
 
-    // Verdict
-    +'<div style="background:#f5efdf;border-top:1.5px solid #e8dfc8;padding:24px">'
-      +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#b8922a;margin-bottom:10px;font-weight:700">Verdict IA</div>'
-      +'<div style="font-family:var(--font-display);font-weight:900;font-size:clamp(15px,2vw,20px);text-transform:uppercase;color:#1a2222;margin-bottom:18px;line-height:1.3">'+summaryText+'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">'
+    +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:28px">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">'
+        +'<div style="width:3px;height:18px;background:'+CA+';border-radius:2px;flex-shrink:0"></div>'
+        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:'+CA+';font-weight:700">Verdict IA</div>'
+      +'</div>'
+      +'<div style="font-family:var(--font-display);font-weight:900;font-size:clamp(14px,1.8vw,19px);text-transform:uppercase;color:#1a2222;margin-bottom:22px;line-height:1.35">'+summaryText+'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">'
         +buildContextCard(a, CA, CA_LIGHT, dimsA)
         +buildContextCard(b, CB, CB_LIGHT, dimsB)
       +'</div>'
-      +'<div style="background:#fff8e7;border:1.5px solid #e8dfc8;border-radius:8px;padding:14px;margin-bottom:16px">'
-        +'<div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#b0a080;margin-bottom:6px;font-weight:700">Recommandation recruteur</div>'
-        +'<div style="font-size:13px;color:#333;line-height:1.6">'+finalReco+'</div>'
+      +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:10px;padding:16px;margin-bottom:20px">'
+        +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
+          +'<div style="width:2px;height:14px;background:#c8bea0;border-radius:2px;flex-shrink:0"></div>'
+          +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#b0a080;font-weight:700">Recommandation recruteur</div>'
+        +'</div>'
+        +'<div style="font-size:13px;color:#444;line-height:1.65">'+finalReco+'</div>'
       +'</div>'
       +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-        +'<a href="profil.html?id='+a.id+'" style="display:block;text-align:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil de '+shortA+' →</a>'
-        +'<a href="profil.html?id='+b.id+'" style="display:block;text-align:center;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil de '+shortB+' →</a>'
+        +'<a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortA+'</span><span style="opacity:.7">→</span></a>'
+        +'<a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;gap:8px;background:'+CB+';color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:13px 16px;border-radius:10px;text-decoration:none"><span>Profil de '+shortB+'</span><span style="opacity:.7">→</span></a>'
       +'</div>'
     +'</div>'
     +'</div>';
 
   document.body.appendChild(modal);
 
-  // Animate gauge bars
   requestAnimationFrame(() => {
     setTimeout(() => {
       modal.querySelectorAll('.vs-gauge-fill').forEach(el => {
@@ -280,7 +283,6 @@ function openVSModal() {
     }, 80);
   });
 
-  // Chart.js radar
   function initRadar() {
     const canvas = document.getElementById('vs-modal-radar');
     if (!canvas || !window.Chart) return;
@@ -292,28 +294,38 @@ function openVSModal() {
           {
             label: shortA,
             data: dims.map(d => Math.round((a.stats[d.key]||0) / d.max * 100)),
-            borderColor: CA, backgroundColor: CA+'22',
-            borderWidth: 2.5, pointBackgroundColor: CA, pointRadius: 4, borderDash: []
+            borderColor: CA, backgroundColor: CA+'1a',
+            borderWidth: 2.5, pointBackgroundColor: CA, pointRadius: 4,
+            pointBorderColor: '#faf6ee', pointBorderWidth: 1.5,
+            borderDash: []
           },
           {
             label: shortB,
             data: dims.map(d => Math.round((b.stats[d.key]||0) / d.max * 100)),
-            borderColor: CB, backgroundColor: CB+'18',
-            borderWidth: 2.5, pointBackgroundColor: CB, pointRadius: 4, borderDash: [5, 3]
+            borderColor: CB, backgroundColor: CB+'14',
+            borderWidth: 2.5, pointBackgroundColor: CB, pointRadius: 4,
+            pointBorderColor: '#faf6ee', pointBorderWidth: 1.5,
+            borderDash: []
           }
         ]
       },
       options: {
         responsive: false,
-        animation: { duration: 900, easing: 'easeInOutQuart' },
+        animation: { duration: 1000, easing: 'easeInOutQuart' },
         plugins: { legend: { display: false } },
         scales: {
           r: {
             min: 0, max: 100,
-            ticks: { stepSize: 25, font: { size: 9 }, color: '#b0a080', backdropColor: 'transparent' },
-            grid: { color: '#e0d8c4' },
-            angleLines: { color: '#e0d8c4' },
-            pointLabels: { font: { size: 10, weight: '600' }, color: '#555' }
+            ticks: {
+              stepSize: 25,
+              font: { size: 8 },
+              color: '#c8bea0',
+              backdropColor: 'transparent',
+              callback: function(value) { return value === 100 ? '' : value; }
+            },
+            grid: { color: '#ddd8cc' },
+            angleLines: { color: '#ddd8cc' },
+            pointLabels: { font: { size: 10.5, weight: '600' }, color: '#555' }
           }
         }
       }
@@ -329,7 +341,6 @@ function openVSModal() {
     document.head.appendChild(s);
   }
 
-  // Audio
   let vsAudio = null;
   modal.querySelectorAll('.vs-audio-btn').forEach(btn => {
     btn.addEventListener('click', e => {
