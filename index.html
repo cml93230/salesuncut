@@ -125,12 +125,33 @@
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
-      <a href="candidat.html">Candidats</a>
-      <a href="marketplace.html">Recruteurs</a>
-      <a href="profil.html?id=c001">Voir un profil</a>
+      <a href="recruiter.html">Espace recruteur</a>
+      <a href="mon-profil.html">Mon profil</a>
     </div>
-    <a href="candidat.html" class="btn sm gold">Passer le test</a>
+    <a href="auth.html" class="btn sm gold">Passer le test →</a>
+
+    <!-- Burger mobile -->
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- Drawer mobile -->
+  <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
+    <div class="nav-drawer-inner">
+      <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fermer">×</button>
+      <a href="index.html" class="nav-drawer-logo"><span class="dot"></span>SalesUncut</a>
+      <nav class="nav-drawer-links">
+        <a href="index.html">Accueil</a>
+        <a href="recruiter.html">Espace recruteur</a>
+        <a href="mon-profil.html">Mon profil</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="auth.html" class="btn gold">Passer le test →</a>
+      </div>
+    </div>
+    <div style="flex:1" id="navDrawerBackdrop"></div>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -151,13 +172,13 @@
           <div class="hero-cta">
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté sales ↓</p>
-              <a href="candidat.html" class="btn-hero-sales">▶ Passer le test (29 min)</a>
+              <a href="auth.html" class="btn-hero-sales">▶ Passer le test (29 min)</a>
             </div>
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté recruteur ↓</p>
-              <a href="marketplace.html" class="btn-hero-recruteur">
-                <span class="main-label">Accès recruteurs</span>
-                <span class="sub-label">Sans inscription</span>
+              <a href="recruiter.html" class="btn-hero-recruteur">
+                <span class="main-label">Espace recruteurs</span>
+                <span class="sub-label">Créer un compte</span>
               </a>
             </div>
           </div>
@@ -198,7 +219,7 @@
           <span class="eyebrow">Drop de la semaine</span>
           <h1 style="font-size:56px;margin-top:12px;">Nouveaux arrivants dans le pool.</h1>
         </div>
-        <a href="marketplace.html" class="btn outline sm">Tout voir →</a>
+        <a href="recruiter.html" class="btn outline sm">Tout voir →</a>
       </div>
       <div class="cards-row" id="featuredCards"></div>
     </div>
@@ -224,7 +245,7 @@
             <li>Anonymat complet possible : tu valides avant de te révéler</li>
             <li>Badge LinkedIn certifié SalesUncut : prouve tes scores directement sur ton profil</li>
           </ul>
-          <a href="candidat.html" class="btn gold">Passer ma simulation →</a>
+          <a href="auth.html" class="btn gold">Passer ma simulation →</a>
         </div>
         <div class="col col-recruteur">
           <span class="eyebrow">Pour les recruteurs</span>
@@ -236,7 +257,7 @@
             <li>Extraits audio horodatés : tu entends la voix, les réactions, la posture</li>
             <li><strong>Essai gratuit : 1 profil complet sans CB</strong></li>
           </ul>
-          <a href="marketplace.html" class="btn">Voir le pool →</a>
+          <a href="recruiter.html" class="btn">Voir le pool →</a>
         </div>
       </div>
     </div>
@@ -274,7 +295,7 @@
       <div class="faq">
         <details>
           <summary>C'est quoi le prix ?</summary>
-          <p>5€ pour passer la simulation. Un profil qui reste actif 18 mois dans le pool recruteurs.</p>
+          <p>Bronze 39€ · Silver 59€ · Gold 89€. Un profil actif 18 mois dans le pool recruteurs.</p>
         </details>
         <details>
           <summary>Ça sert à quoi si j'ai déjà un bon CV ?</summary>
@@ -286,7 +307,7 @@
         </details>
         <details>
           <summary>Je peux retenter ?</summary>
-          <p>Oui, après 30 jours. Tu peux aussi passer une autre famille sectorielle pour montrer que ton profil tient sur plusieurs terrains.</p>
+          <p>Oui, après 90 jours à -30%. Tu peux aussi passer une autre famille sectorielle pour montrer que ton profil tient sur plusieurs terrains.</p>
         </details>
         <details>
           <summary>Et si mon score est mauvais ?</summary>
@@ -294,7 +315,7 @@
         </details>
         <details>
           <summary>Je suis recruteur. Comment j'accède au pool ?</summary>
-          <p>1 profil complet gratuit sans CB. Filtre par score, secteur, disponibilité. Tu cliques sur un extrait audio, tu sais en 30 secondes. Abonnement si tu veux accès complet.</p>
+          <p>Créez un compte recruteur gratuitement. 1 profil complet sans CB. Filtrez par score, secteur, disponibilité. Abonnement si vous voulez l'accès complet.</p>
         </details>
       </div>
     </div>
@@ -311,7 +332,7 @@
       <p style="font-size:18px;opacity:.7;max-width:480px;margin:0 auto 36px;">
         Tu décroches, tu vends, reçois ta carte. Laisse les recruteurs venir.
       </p>
-      <a href="candidat.html" class="btn gold">▶ Montrer ce que je vaux</a>
+      <a href="auth.html" class="btn gold">▶ Montrer ce que je vaux</a>
     </div>
   </section>
 
@@ -348,6 +369,25 @@
           <div class="lb-score">${c.score}</div>
         </div>`;
     }).join('');
+
+    // Burger / Drawer
+    const burger = document.getElementById('navBurger');
+    const drawer = document.getElementById('navDrawer');
+    const drawerClose = document.getElementById('navDrawerClose');
+    const backdrop = document.getElementById('navDrawerBackdrop');
+    function openDrawer() {
+      drawer.classList.add('open');
+      document.body.classList.add('nav-locked');
+      burger.setAttribute('aria-expanded','true');
+    }
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      document.body.classList.remove('nav-locked');
+      burger.setAttribute('aria-expanded','false');
+    }
+    burger.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
   </script>
 
 </body>
