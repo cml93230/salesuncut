@@ -43,15 +43,11 @@
     .btn-logout:hover{border-color:var(--rust);color:var(--rust);}
     .tab-panel{display:none;padding:40px;}
     .tab-panel.active{display:block;}
-
-    /* --- POOL STATUS BANNER --- */
     .pool-banner{display:flex;align-items:center;gap:16px;padding:16px 20px;border-radius:8px;margin-bottom:28px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;}
     .pool-banner.locked{background:rgba(26,34,34,.05);border:1.5px dashed var(--cream-3);color:var(--teal-3);}
     .pool-banner.live{background:rgba(76,175,80,.08);border:1.5px solid #4caf50;color:#2e7d32;}
     .pool-banner .pool-icon{font-size:20px;flex-shrink:0;}
     .pool-banner .pool-text strong{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
-
-    /* --- PROFIL CARD PREVIEW --- */
     .profil-preview-wrap{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;margin-bottom:36px;}
     .profil-card-preview{background:var(--cream-2);border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-card);}
     .pcp-portrait{width:100%;aspect-ratio:1;background:var(--cream-3);position:relative;overflow:hidden;}
@@ -78,8 +74,6 @@
     .dim-mini-lock{font-size:9px;opacity:.35;width:20px;text-align:right;}
     .pcp-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--cream-3);padding-top:10px;margin-top:10px;}
     .pcp-role{font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.06em;text-transform:uppercase;}
-
-    /* --- PROFIL INFO PANEL --- */
     .profil-info-panel{display:flex;flex-direction:column;gap:16px;}
     .info-block{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:8px;padding:20px 24px;}
     .info-block-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:14px;}
@@ -88,8 +82,6 @@
     .info-lbl{font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.1em;text-transform:uppercase;}
     .info-val{font-size:14px;color:var(--ink);font-weight:500;}
     .info-val.empty{color:var(--cream-3);font-style:italic;font-size:12px;}
-
-    /* --- SCORES SECTION --- */
     .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1.5px solid var(--ink);}
     .section-head h3{font-family:var(--font-display);font-size:22px;font-weight:900;text-transform:uppercase;letter-spacing:-.01em;}
     .section-head .eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);}
@@ -104,14 +96,10 @@
     .score-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold-deep),var(--gold));border-radius:3px;}
     .score-card-justif{font-size:12px;color:var(--teal-2);line-height:1.45;}
     .score-card-pending-msg{font-family:var(--font-mono);font-size:10px;color:var(--teal-3);letter-spacing:.06em;line-height:1.4;}
-
-    /* --- PROFIL LINK BOX --- */
     .profil-link-box{background:var(--ink);color:var(--cream);border-radius:8px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px;}
     .profil-link-url{font-family:var(--font-mono);font-size:13px;color:var(--gold);letter-spacing:.04em;word-break:break-all;}
     .btn-copy-link{flex-shrink:0;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:9px 16px;border:1.5px solid rgba(255,248,231,.3);border-radius:4px;background:none;color:var(--cream);cursor:pointer;transition:all .2s;}
     .btn-copy-link:hover{border-color:var(--gold);color:var(--gold);}
-
-    /* --- POINTS FORTS --- */
     .strengths-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px;}
     .strength-box{border-radius:8px;padding:20px;}
     .strength-box.plus{background:var(--cream-2);border:1.5px solid var(--gold);}
@@ -123,8 +111,6 @@
     .strength-box.plus .strength-item{border-color:var(--cream-3);color:var(--ink);}
     .strength-box.minus .strength-item{border-color:rgba(255,248,231,.1);color:rgba(255,248,231,.85);}
     .strength-item:last-child{border-bottom:none;}
-
-    /* --- CONTACTS --- */
     .contacts-list{display:flex;flex-direction:column;gap:12px;}
     .contact-card{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;}
     .contact-card.new-card{border-color:var(--gold);background:rgba(201,168,106,.06);}
@@ -140,8 +126,6 @@
     .btn-ca{padding:7px 14px;border-radius:4px;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;border:1.5px solid;}
     .btn-ca.accept{background:var(--gold-deep);color:var(--cream);border-color:var(--gold-deep);}
     .btn-ca.decline{background:none;color:var(--teal-3);border-color:var(--cream-3);}
-
-    /* --- EDIT FORM --- */
     .edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;}
     .edit-card{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:8px;padding:24px;}
     .edit-card-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:16px;}
@@ -153,10 +137,8 @@
     .edit-select:disabled{opacity:.5;cursor:not-allowed;background:var(--cream-3);}
     .edit-range{width:100%;accent-color:var(--gold-deep);margin-top:4px;}
     .range-labels{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.08em;text-transform:uppercase;margin-top:4px;}
-
-    /* --- PHOTO UPLOAD --- */
     .photo-upload-wrap{display:flex;align-items:center;gap:16px;}
-    .photo-preview{width:72px;height:72px;border-radius:50%;background:var(--cream-3);border:2px solid var(--cream-3);overflow:hidden;flex-shrink:0;transition:border-color .2s;}
+    .photo-preview{width:72px;height:72px;border-radius:50%;background:var(--cream-3);border:2px solid var(--cream-3);overflow:hidden;flex-shrink:0;}
     .photo-preview img{width:100%;height:100%;object-fit:cover;display:block;}
     .photo-preview .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;opacity:.3;}
     .photo-upload-right{display:flex;flex-direction:column;gap:8px;}
@@ -164,14 +146,10 @@
     .btn-photo-pick:hover{background:var(--gold-deep);}
     .photo-hint{font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.06em;}
     .photo-uploading{font-family:var(--font-mono);font-size:10px;color:var(--gold-deep);letter-spacing:.06em;display:none;}
-
-    /* --- SAVE BUTTON --- */
     .btn-save{padding:13px 28px;background:var(--gold-deep);color:var(--cream);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:background .2s;}
     .btn-save:hover{background:var(--ink);}
     .btn-save:disabled{opacity:.5;cursor:not-allowed;}
     .disabled-note{font-family:var(--font-mono);font-size:10px;color:var(--rust);letter-spacing:.06em;margin-top:4px;}
-
-    /* --- MISC --- */
     .empty-state{text-align:center;padding:60px 40px;font-family:var(--font-mono);font-size:12px;color:var(--teal-3);letter-spacing:.08em;text-transform:uppercase;}
     .empty-state .big{font-size:48px;margin-bottom:12px;opacity:.25;display:block;}
     .loading-state{display:flex;align-items:center;justify-content:center;padding:60px;gap:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3);}
@@ -181,14 +159,7 @@
     .toast.show{transform:translateY(0);opacity:1;}
     .toast.success{border-left-color:#4caf50;}
     .toast.error{border-left-color:var(--rust);}
-    @media(max-width:960px){
-      .profil-preview-wrap{grid-template-columns:1fr;}
-      .profil-card-preview{max-width:280px;}
-      .candidate-bar{padding:0 20px;}
-      .tab-panel{padding:24px 20px;}
-      .edit-grid,.scores-grid,.strengths-grid,.info-rows{grid-template-columns:1fr;}
-      .bar-tabs{display:none;}
-    }
+    @media(max-width:960px){.profil-preview-wrap{grid-template-columns:1fr;}.profil-card-preview{max-width:280px;}.candidate-bar{padding:0 20px;}.tab-panel{padding:24px 20px;}.edit-grid,.scores-grid,.strengths-grid,.info-rows{grid-template-columns:1fr;}.bar-tabs{display:none;}}
   </style>
 </head>
 <body class="page-enter">
@@ -216,9 +187,9 @@
     <div class="candidate-bar-left">
       <a href="index.html" class="candidate-bar-logo"><span class="dot"></span>SalesUncut</a>
       <div class="bar-tabs">
-        <div class="bar-tab active" onclick="switchTab('profil',this)">Mon profil</div>
-        <div class="bar-tab" onclick="switchTab('contacts',this)">Demandes de contact <span id="newContactsCount" style="margin-left:6px;background:var(--rust);color:var(--cream);padding:2px 7px;border-radius:10px;font-size:9px;display:none;"></span></div>
-        <div class="bar-tab" onclick="switchTab('edit',this)">Modifier mon profil</div>
+        <div class="bar-tab active" id="tabBtnProfil" onclick="switchTab('profil',this)">Mon profil</div>
+        <div class="bar-tab" id="tabBtnContacts" onclick="switchTab('contacts',this)">Demandes de contact <span id="newContactsCount" style="margin-left:6px;background:var(--rust);color:var(--cream);padding:2px 7px;border-radius:10px;font-size:9px;display:none;"></span></div>
+        <div class="bar-tab" id="tabBtnEdit" onclick="switchTab('edit',this)">Modifier mon profil</div>
       </div>
     </div>
     <div class="candidate-bar-right">
@@ -226,417 +197,261 @@
       <button class="btn-logout" onclick="handleLogout()">D&eacute;connexion</button>
     </div>
   </div>
-
-  <div class="tab-panel active" id="panelProfil">
-    <div id="profilContent"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div>
-  </div>
-
+  <div class="tab-panel active" id="panelProfil"><div id="profilContent"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div></div>
   <div class="tab-panel" id="panelContacts">
     <div class="section-head" style="margin-bottom:24px"><h3>Demandes de contact</h3><span class="eyebrow">Recruteurs int&eacute;ress&eacute;s par ton profil</span></div>
     <div id="contactsList"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div>
   </div>
-
   <div class="tab-panel" id="panelEdit">
     <div class="section-head" style="margin-bottom:24px"><h3>Mon profil</h3><span class="eyebrow">Donn&eacute;es d&eacute;claratives &mdash; scores verrouill&eacute;s</span></div>
     <div id="editContent"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPA_URL = 'https://svtyzkypmzmtcqunzfyy.supabase.co';
-const SUPA_KEY = 'sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB';
-const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
 let currentUser = null, candidateData = null;
 
-// ─── AUTH ───────────────────────────────────────────────────────────────────
-
 async function handleLogin() {
-  var btn = document.getElementById('loginBtn');
-  var err = document.getElementById('loginError');
-  btn.disabled = true; btn.textContent = 'Connexion\u2026'; err.classList.remove('visible');
-  var res = await sb.auth.signInWithPassword({
-    email: document.getElementById('loginEmail').value,
-    password: document.getElementById('loginPassword').value
-  });
-  if (res.error) { err.textContent = 'Email ou mot de passe incorrect.'; err.classList.add('visible'); btn.disabled = false; btn.textContent = 'Se connecter \u2192'; }
+  var btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
+  btn.disabled=true;btn.textContent='Connexion\u2026';err.classList.remove('visible');
+  var r=await sb.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value});
+  if(r.error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter \u2192';}
 }
+async function handleLogout(){await sb.auth.signOut();showAuth();}
+function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
+function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
 
-async function handleLogout() { await sb.auth.signOut(); showAuth(); }
-function showAuth() { document.getElementById('authOverlay').classList.remove('hidden'); document.getElementById('dashboard').classList.remove('visible'); }
-function showDashboard() { document.getElementById('authOverlay').classList.add('hidden'); document.getElementById('dashboard').classList.add('visible'); }
-
-sb.auth.onAuthStateChange(function(event, session) {
-  if (session) {
-    currentUser = session.user;
-    showDashboard();
-    setTimeout(function() { loadAll(); }, 0);
-  } else {
-    currentUser = null;
-    showAuth();
-  }
+sb.auth.onAuthStateChange(function(event,session){
+  if(session){currentUser=session.user;showDashboard();setTimeout(function(){loadAll();},0);}
+  else{currentUser=null;showAuth();}
 });
 
-async function loadAll() {
-  await loadCandidateData();
-  await loadContacts();
+async function loadAll(){await loadCandidateData();await loadContacts();}
+
+async function loadCandidateData(){
+  var r=await sb.from('candidates').select('*').eq('user_id',currentUser.id).maybeSingle();
+  candidateData=r.data||null;
+  var name=candidateData?(((candidateData.prenom||'')+' '+(candidateData.nom||'')).trim()||candidateData.email):currentUser.email;
+  document.getElementById('candidateNameDisplay').textContent=name;
+  renderProfil();renderEdit();
 }
 
-async function loadCandidateData() {
-  var res = await sb.from('candidates').select('*').eq('user_id', currentUser.id).maybeSingle();
-  candidateData = res.data || null;
-  var name = candidateData ? (((candidateData.prenom || '') + ' ' + (candidateData.nom || '')).trim() || candidateData.email) : currentUser.email;
-  document.getElementById('candidateNameDisplay').textContent = name;
-  renderProfil();
-  renderEdit();
-}
-
-// ─── ONGLET PROFIL ───────────────────────────────────────────────────────────
-
-function renderProfil() {
-  var c = candidateData || {};
-  var scored = !!(c.score_global);
-  var niveau = c.niveau_certifie || 'NC';
-  var score = c.score_global || 0;
-  var prenom = c.prenom || '';
-  var nom = c.nom || '';
-  var fullName = (prenom + ' ' + nom).trim() || 'Mon profil';
-  var photoUrl = c.photo_url || null;
-  var famille = c.famille || null;
-
-  var dims = [
-    { lbl: 'Accroche',     val: c.score_accroche,     max: 16, justif: c.justif_accroche },
-    { lbl: 'D\u00e9couverte',   val: c.score_decouverte,   max: 16, justif: c.justif_decouverte },
-    { lbl: 'Cr\u00e9er besoin', val: c.score_creer_besoin, max: 20, justif: c.justif_creer_besoin },
-    { lbl: 'Objections',   val: c.score_objections,   max: 16, justif: c.justif_objections },
-    { lbl: 'Valeur',       val: c.score_valeur,       max: 16, justif: c.justif_valeur },
-    { lbl: 'Closing',      val: c.score_closing,      max: 16, justif: c.justif_closing }
+/* ── PROFIL ─────────────────────────────────────────────────── */
+function renderProfil(){
+  var c=candidateData||{},scored=!!(c.score_global);
+  var niveau=c.niveau_certifie||'NC',score=c.score_global||0;
+  var fullName=((c.prenom||'')+' '+(c.nom||'')).trim()||'Mon profil';
+  var dims=[
+    {lbl:'Accroche',val:c.score_accroche,max:16,j:c.justif_accroche},
+    {lbl:'D\u00e9couverte',val:c.score_decouverte,max:16,j:c.justif_decouverte},
+    {lbl:'Cr\u00e9er besoin',val:c.score_creer_besoin,max:20,j:c.justif_creer_besoin},
+    {lbl:'Objections',val:c.score_objections,max:16,j:c.justif_objections},
+    {lbl:'Valeur',val:c.score_valeur,max:16,j:c.justif_valeur},
+    {lbl:'Closing',val:c.score_closing,max:16,j:c.justif_closing}
   ];
-
-  var html = '';
-
-  // ── Banner statut pool
-  if (scored) {
-    html += '<div class="pool-banner live"><span class="pool-icon">\u2705</span><div class="pool-text"><strong>Profil visible dans le pool recruteurs</strong>Tu apparais dans les r\u00e9sultats de recherche des recruteurs.</div></div>';
-  } else {
-    html += '<div class="pool-banner locked"><span class="pool-icon">\uD83D\uDD12</span><div class="pool-text"><strong>Non visible dans le pool recruteurs</strong>Passe la simulation audio pour d\u00e9bloquer ton acc\u00e8s au pool et obtenir tes scores.</div></div>';
+  var h=scored
+    ?'<div class="pool-banner live"><span class="pool-icon">\u2705</span><div class="pool-text"><strong>Profil visible dans le pool recruteurs</strong>Tu apparais dans les r\u00e9sultats de recherche des recruteurs.</div></div>'
+    :'<div class="pool-banner locked"><span class="pool-icon">\uD83D\uDD12</span><div class="pool-text"><strong>Non visible dans le pool recruteurs</strong>Passe la simulation audio pour d\u00e9bloquer ton acc\u00e8s au pool et obtenir tes scores.</div></div>';
+  // Card preview
+  h+='<div class="profil-preview-wrap"><div class="profil-card-preview"><div class="pcp-portrait">';
+  h+=c.photo_url?'<img src="'+c.photo_url+'" alt="'+fullName+'"/>':'<div class="pcp-ph">\uD83D\uDC64</div>';
+  if(c.famille)h+='<span class="pcp-family">'+c.famille+'</span>';
+  h+='<span class="pcp-level '+niveau+'">'+niveau+'</span></div>';
+  h+='<div class="pcp-body"><div class="pcp-name">'+fullName+'</div>';
+  h+='<div class="pcp-meta">'+(c.role_type||'R\u00f4le')+(c.location?' \u00b7 '+c.location:'')+'</div>';
+  if(scored){
+    h+='<div class="pcp-score">'+score+'<small>/100</small></div><div class="pcp-dims">';
+    dims.filter(function(d){return d.val!=null;}).forEach(function(d){h+='<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"><i style="width:'+Math.round(d.val/d.max*100)+'%"></i></div><span class="dim-mini-val">'+d.val+'</span></div>';});
+    h+='</div>';
+  }else{
+    h+='<div class="pcp-score-pending">Score \u00e0 venir apr\u00e8s la simulation</div><div class="pcp-dims">';
+    dims.forEach(function(d){h+='<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"></div><span class="dim-mini-lock">\uD83D\uDD12</span></div>';});
+    h+='</div>';
   }
-
-  // ── Preview card + info panel
-  html += '<div class="profil-preview-wrap">';
-
-  // Card gauche
-  html += '<div class="profil-card-preview">';
-  html += '<div class="pcp-portrait">';
-  html += photoUrl ? '<img src="' + photoUrl + '" alt="' + fullName + '"/>' : '<div class="pcp-ph">\uD83D\uDC64</div>';
-  if (famille) html += '<span class="pcp-family">' + famille + '</span>';
-  html += '<span class="pcp-level ' + niveau + '">' + niveau + '</span>';
-  html += '</div>';
-  html += '<div class="pcp-body">';
-  html += '<div class="pcp-name">' + (fullName || 'Pr\u00e9nom Nom') + '</div>';
-  html += '<div class="pcp-meta">' + (c.role_type || 'R\u00f4le') + (c.location ? ' \u00b7 ' + c.location : '') + '</div>';
-
-  if (scored) {
-    html += '<div class="pcp-score">' + score + '<small>/100</small></div>';
-    html += '<div class="pcp-dims">';
-    dims.filter(function(d) { return d.val != null; }).forEach(function(d) {
-      html += '<div class="dim-mini"><span class="dim-mini-lbl">' + d.lbl + '</span><div class="dim-mini-bar"><i style="width:' + Math.round(d.val / d.max * 100) + '%"></i></div><span class="dim-mini-val">' + d.val + '</span></div>';
-    });
-    html += '</div>';
-  } else {
-    html += '<div class="pcp-score-pending">Score \u00e0 venir apr\u00e8s la simulation</div>';
-    html += '<div class="pcp-dims">';
-    dims.forEach(function(d) {
-      html += '<div class="dim-mini"><span class="dim-mini-lbl">' + d.lbl + '</span><div class="dim-mini-bar"></div><span class="dim-mini-lock">\uD83D\uDD12</span></div>';
-    });
-    html += '</div>';
+  h+='<div class="pcp-footer"><span class="pcp-role">'+(c.availability||'')+'</span></div></div></div>';
+  // Info panel
+  h+='<div class="profil-info-panel">';
+  h+='<div class="info-block"><div class="info-block-title">Identit\u00e9 &amp; Contact</div><div class="info-rows">';
+  h+=ir('Pr\u00e9nom',c.prenom);h+=ir('Nom',c.nom);h+=ir('Localisation',c.location);h+=ir('Email',currentUser.email);
+  if(c.linkedin_url)h+='<div class="info-row"><span class="info-lbl">LinkedIn</span><a href="'+c.linkedin_url+'" target="_blank" style="font-size:13px;color:var(--gold-deep)">Voir le profil \u2192</a></div>';
+  h+='</div></div>';
+  h+='<div class="info-block"><div class="info-block-title">Exp\u00e9rience commerciale</div><div class="info-rows">';
+  h+=ir('R\u00f4le',c.role_type);
+  h+=ir('Exp\u00e9rience',c.experience_years!=null?c.experience_years+' an'+(c.experience_years>1?'s':''):null);
+  h+=ir('Taille deal',c.deal_size);h+=ir('Cycle de vente',c.sales_cycle);
+  h+=ir('Atteinte quota',c.quota_attainment!=null?c.quota_attainment+'%':null);
+  h+=ir('Hunting / Farming',c.hunting_pct!=null?c.hunting_pct+'% hunting \u00b7 '+(100-c.hunting_pct)+'% farming':null);
+  h+='</div></div>';
+  if(c.ote_fixed||c.ote_variable||c.availability||c.remote){
+    h+='<div class="info-block"><div class="info-block-title">Pr\u00e9f\u00e9rences</div><div class="info-rows">';
+    h+=ir('Fixe souhait\u00e9',c.ote_fixed?c.ote_fixed.toLocaleString('fr-FR')+'\u00a0\u20ac':null);
+    h+=ir('Variable souhait\u00e9',c.ote_variable?c.ote_variable.toLocaleString('fr-FR')+'\u00a0\u20ac':null);
+    h+=ir('Disponibilit\u00e9',c.availability);h+=ir('Remote',c.remote);
+    h+='</div></div>';
   }
-
-  html += '<div class="pcp-footer"><span class="pcp-role">' + (c.availability || '') + '</span></div>';
-  html += '</div></div>'; // pcp-body + profil-card-preview
-
-  // Panel info droite
-  html += '<div class="profil-info-panel">';
-
-  // Bloc identit\u00e9
-  html += '<div class="info-block"><div class="info-block-title">Identit\u00e9 &amp; Contact</div><div class="info-rows">';
-  html += infoRow('Pr\u00e9nom', prenom);
-  html += infoRow('Nom', nom);
-  html += infoRow('Localisation', c.location);
-  html += infoRow('Email', currentUser.email);
-  if (c.linkedin_url) { html += '<div class="info-row"><span class="info-lbl">LinkedIn</span><a href="' + c.linkedin_url + '" target="_blank" style="font-size:13px;color:var(--gold-deep)">Voir le profil \u2192</a></div>'; }
-  html += '</div></div>';
-
-  // Bloc exp\u00e9rience
-  html += '<div class="info-block"><div class="info-block-title">Exp\u00e9rience commerciale</div><div class="info-rows">';
-  html += infoRow('R\u00f4le', c.role_type);
-  html += infoRow('Exp\u00e9rience', c.experience_years != null ? c.experience_years + ' an' + (c.experience_years > 1 ? 's' : '') : null);
-  html += infoRow('Taille deal', c.deal_size);
-  html += infoRow('Cycle de vente', c.sales_cycle);
-  html += infoRow('Atteinte quota', c.quota_attainment != null ? c.quota_attainment + '%' : null);
-  html += infoRow('Hunting / Farming', (c.hunting_pct != null) ? c.hunting_pct + '% hunting \u00b7 ' + (100 - c.hunting_pct) + '% farming' : null);
-  html += '</div></div>';
-
-  // Bloc package
-  if (c.ote_fixed || c.ote_variable || c.availability || c.remote) {
-    html += '<div class="info-block"><div class="info-block-title">Pr\u00e9f\u00e9rences</div><div class="info-rows">';
-    html += infoRow('Fixe souhait\u00e9', c.ote_fixed ? c.ote_fixed.toLocaleString('fr-FR') + '\u00a0\u20ac' : null);
-    html += infoRow('Variable souhait\u00e9', c.ote_variable ? c.ote_variable.toLocaleString('fr-FR') + '\u00a0\u20ac' : null);
-    html += infoRow('Disponibilit\u00e9', c.availability);
-    html += infoRow('Remote', c.remote);
-    html += '</div></div>';
-  }
-
-  html += '</div>'; // profil-info-panel
-  html += '</div>'; // profil-preview-wrap
-
-  // ── 6 dimensions
-  html += '<div class="section-head"><h3>6 dimensions &eacute;valu\u00e9es</h3><span class="eyebrow">' + (scored ? 'Bar\u00e8me /100' : 'Simulation requise') + '</span></div>';
-  html += '<div class="scores-grid">';
-  dims.forEach(function(d) {
-    if (scored && d.val != null) {
-      html += '<div class="score-card"><div class="score-card-dim">' + d.lbl + '</div>';
-      html += '<div class="score-card-val">' + d.val + '<small>/' + d.max + '</small></div>';
-      html += '<div class="score-bar-bg"><div class="score-bar-fill" style="width:' + Math.round(d.val / d.max * 100) + '%"></div></div>';
-      if (d.justif) html += '<div class="score-card-justif">' + d.justif + '</div>';
-      html += '</div>';
-    } else {
-      html += '<div class="score-card locked"><div class="score-card-dim">' + d.lbl + '</div>';
-      html += '<div class="score-card-val pending">\u2014\u00a0/\u00a0' + d.max + '</div>';
-      html += '<div class="score-bar-bg"></div>';
-      html += '<div class="score-card-pending-msg">Score disponible apr\u00e8s la simulation audio.</div>';
-      html += '</div>';
-    }
+  h+='</div></div>';// close info-panel + preview-wrap
+  // 6 dimensions
+  h+='<div class="section-head"><h3>6 dimensions &eacute;valu\u00e9es</h3><span class="eyebrow">'+(scored?'Bar\u00e8me /100':'Simulation requise')+'</span></div><div class="scores-grid">';
+  dims.forEach(function(d){
+    if(scored&&d.val!=null){h+='<div class="score-card"><div class="score-card-dim">'+d.lbl+'</div><div class="score-card-val">'+d.val+'<small>/'+d.max+'</small></div><div class="score-bar-bg"><div class="score-bar-fill" style="width:'+Math.round(d.val/d.max*100)+'%"></div></div>'+(d.j?'<div class="score-card-justif">'+d.j+'</div>':'')+'</div>';}
+    else{h+='<div class="score-card locked"><div class="score-card-dim">'+d.lbl+'</div><div class="score-card-val pending">\u2014\u00a0/\u00a0'+d.max+'</div><div class="score-bar-bg"></div><div class="score-card-pending-msg">Score disponible apr\u00e8s la simulation audio.</div></div>';}
   });
-  html += '</div>';
-
-  // ── Points forts si scores
-  if (scored && c.points_forts && c.points_forts.length) {
-    html += '<div class="strengths-grid">';
-    html += '<div class="strength-box plus"><div class="strength-title">\u25b2 Points forts</div>';
-    c.points_forts.forEach(function(p) { html += '<div class="strength-item"><span style="color:var(--gold-deep)">\u2191</span>' + p + '</div>'; });
-    html += '</div>';
-    html += '<div class="strength-box minus"><div class="strength-title">\u25bc Axes de progression</div>';
-    (c.axes_developpement || []).forEach(function(a) { html += '<div class="strength-item"><span style="color:var(--gold)">\u2192</span>' + a + '</div>'; });
-    html += '</div></div>';
+  h+='</div>';
+  if(scored&&c.points_forts&&c.points_forts.length){
+    h+='<div class="strengths-grid"><div class="strength-box plus"><div class="strength-title">\u25b2 Points forts</div>';
+    c.points_forts.forEach(function(p){h+='<div class="strength-item"><span style="color:var(--gold-deep)">\u2191</span>'+p+'</div>';});
+    h+='</div><div class="strength-box minus"><div class="strength-title">\u25bc Axes de progression</div>';
+    (c.axes_developpement||[]).forEach(function(a){h+='<div class="strength-item"><span style="color:var(--gold)">\u2192</span>'+a+'</div>';});
+    h+='</div></div>';
   }
-
-  // ── Lien profil public si certifi\u00e9
-  if (scored && c.simulation_id) {
-    var profileUrl = window.location.origin + '/profil.html?id=' + c.simulation_id;
-    html += '<div class="profil-link-box"><div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.4);margin-bottom:4px">Ton lien profil public</div><div class="profil-link-url">' + profileUrl + '</div></div><button class="btn-copy-link" onclick="copyLink(\'' + profileUrl + '\')">Copier</button></div>';
-  }
-
-  document.getElementById('profilContent').innerHTML = html;
+  if(scored&&c.simulation_id){var pu=window.location.origin+'/profil.html?id='+c.simulation_id;h+='<div class="profil-link-box"><div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.4);margin-bottom:4px">Ton lien profil public</div><div class="profil-link-url">'+pu+'</div></div><button class="btn-copy-link" onclick="copyLink(\''+pu+'\')">Copier</button></div>';}
+  document.getElementById('profilContent').innerHTML=h;
 }
+function ir(lbl,val){return '<div class="info-row"><span class="info-lbl">'+lbl+'</span><span class="info-val'+(val?'':' empty')+'">'+(val||'Non renseign\u00e9')+'</span></div>';}
 
-function infoRow(lbl, val) {
-  return '<div class="info-row"><span class="info-lbl">' + lbl + '</span><span class="info-val' + (!val ? ' empty' : '') + '">' + (val || 'Non renseign\u00e9') + '</span></div>';
-}
-
-// ─── ONGLET EDIT ─────────────────────────────────────────────────────────────
-
-function renderEdit() {
-  var c = candidateData || {};
-  var scored = !!(c.score_global);
-  var roles = ['SDR', 'BDR', 'AE', 'AM', 'KAM', 'BD'];
-  var avails = ['Imm\u00e9diat', '1 mois', '2 mois', '3 mois', '\u00c0 l\u2019\u00e9coute'];
-  var remotes = ['Full remote', 'Hybride', 'Pr\u00e9sentiel'];
-  var hunting = c.hunting_pct || 50;
-
-  var html = '<div class="edit-grid">';
-
-  // Photo + Identit\u00e9
-  html += '<div class="edit-card"><div class="edit-card-title">Photo &amp; Identit\u00e9</div><div class="edit-form">';
-  html += '<div>';
-  html += '<label class="edit-label">Photo de profil</label>';
-  html += '<div class="photo-upload-wrap">';
-  html += '<div class="photo-preview" id="photoPreview">' + (c.photo_url ? '<img id="photoImg" src="' + c.photo_url + '" alt="photo"/>' : '<div class="ph">\uD83D\uDC64</div>') + '</div>';
-  html += '<div class="photo-upload-right">';
-  html += '<button type="button" class="btn-photo-pick" onclick="document.getElementById(\'photoInput\').click()">Choisir une photo</button>';
-  html += '<input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handlePhotoChange(event)"/>';
-  html += '<span class="photo-hint">JPG, PNG, WEBP &mdash; max 5 Mo</span>';
-  html += '<span class="photo-uploading" id="photoUploading">Upload en cours\u2026</span>';
-  html += '</div></div></div>';
-  html += '<div><label class="edit-label">Pr\u00e9nom</label><input class="edit-input" id="editPrenom" value="' + (c.prenom || '') + '"/></div>';
-  html += '<div><label class="edit-label">Nom</label><input class="edit-input" id="editNom" value="' + (c.nom || '') + '"/></div>';
-  html += '<div><label class="edit-label">Localisation</label><input class="edit-input" id="editLocation" value="' + (c.location || '') + '" placeholder="Paris, Lyon\u2026"/></div>';
-  html += '<div><label class="edit-label">LinkedIn URL</label><input class="edit-input" id="editLinkedin" value="' + (c.linkedin_url || '') + '" placeholder="https://linkedin.com/in/\u2026"/></div>';
-  // Pool visibility : disabled si pas de score
-  html += '<div><label class="edit-label">Visibilit\u00e9 pool recruteurs</label>';
-  if (scored) {
-    html += '<select class="edit-select" id="editPublic"><option value="true" ' + (c.is_public !== false ? 'selected' : '') + '>Visible dans le pool</option><option value="false" ' + (c.is_public === false ? 'selected' : '') + '>Masqu\u00e9</option></select>';
-  } else {
-    html += '<select class="edit-select" id="editPublic" disabled><option>Simulation requise pour activer</option></select>';
-    html += '<div class="disabled-note">Passe la simulation pour appara\u00eetre dans le pool.</div>';
-  }
-  html += '</div>';
-  html += '</div></div>';
-
-  // Exp\u00e9rience
-  html += '<div class="edit-card"><div class="edit-card-title">Exp\u00e9rience</div><div class="edit-form">';
-  html += '<div><label class="edit-label">R\u00f4le</label><select class="edit-select" id="editRole">' + roles.map(function(r) { return '<option ' + (c.role_type === r ? 'selected' : '') + '>' + r + '</option>'; }).join('') + '</select></div>';
-  html += '<div><label class="edit-label">Ann\u00e9es d\u2019exp.</label><input type="number" class="edit-input" id="editExp" value="' + (c.experience_years || 0) + '" min="0" max="30"/></div>';
-  html += '<div><label class="edit-label">Taille deal</label><input class="edit-input" id="editDeal" value="' + (c.deal_size || '') + '" placeholder="10-50k\u20ac"/></div>';
-  html += '<div><label class="edit-label">Cycle de vente</label><input class="edit-input" id="editCycle" value="' + (c.sales_cycle || '') + '" placeholder="3-6 mois"/></div>';
-  html += '<div><label class="edit-label">Atteinte quota (%)</label><input type="number" class="edit-input" id="editQuota" value="' + (c.quota_attainment || 0) + '" min="0" max="300"/></div>';
-  html += '</div></div>';
-
+/* ── EDIT ────────────────────────────────────────────────────── */
+function renderEdit(){
+  var c=candidateData||{},scored=!!(c.score_global);
+  var roles=['SDR','BDR','AE','AM','KAM','BD'];
+  var avails=['Imm\u00e9diat','1 mois','2 mois','3 mois','\u00c0 l\u2019\u00e9coute'];
+  var remotes=['Full remote','Hybride','Pr\u00e9sentiel'];
+  var hunting=c.hunting_pct||50;
+  var h='<div class="edit-grid">';
+  // Photo + identite
+  h+='<div class="edit-card"><div class="edit-card-title">Photo &amp; Identit\u00e9</div><div class="edit-form">';
+  h+='<div><label class="edit-label">Photo de profil</label><div class="photo-upload-wrap">';
+  h+='<div class="photo-preview" id="photoPreview">'+(c.photo_url?'<img src="'+c.photo_url+'" alt="photo"/>':'<div class="ph">\uD83D\uDC64</div>')+'</div>';
+  h+='<div class="photo-upload-right"><button type="button" class="btn-photo-pick" onclick="document.getElementById(\'photoInput\').click()">Choisir une photo</button>';
+  h+='<input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="handlePhotoChange(event)"/>';
+  h+='<span class="photo-hint">JPG, PNG, WEBP &mdash; max 5 Mo</span><span class="photo-uploading" id="photoUploading">Upload en cours\u2026</span></div></div></div>';
+  h+='<div><label class="edit-label">Pr\u00e9nom</label><input class="edit-input" id="editPrenom" value="'+(c.prenom||'')+'"/></div>';
+  h+='<div><label class="edit-label">Nom</label><input class="edit-input" id="editNom" value="'+(c.nom||'')+'"/></div>';
+  h+='<div><label class="edit-label">Localisation</label><input class="edit-input" id="editLocation" value="'+(c.location||'')+'" placeholder="Paris, Lyon\u2026"/></div>';
+  h+='<div><label class="edit-label">LinkedIn URL</label><input class="edit-input" id="editLinkedin" value="'+(c.linkedin_url||'')+'" placeholder="https://linkedin.com/in/\u2026"/></div>';
+  h+='<div><label class="edit-label">Visibilit\u00e9 pool recruteurs</label>';
+  if(scored){h+='<select class="edit-select" id="editPublic"><option value="true" '+(c.is_public!==false?'selected':'')+'>Visible dans le pool</option><option value="false" '+(c.is_public===false?'selected':'')+'>Masqu\u00e9</option></select>';}
+  else{h+='<select class="edit-select" id="editPublic" disabled><option>Simulation requise pour activer</option></select><div class="disabled-note">Passe la simulation pour appara\u00eetre dans le pool.</div>';}
+  h+='</div></div></div>';
+  // Exp
+  h+='<div class="edit-card"><div class="edit-card-title">Exp\u00e9rience</div><div class="edit-form">';
+  h+='<div><label class="edit-label">R\u00f4le</label><select class="edit-select" id="editRole">'+roles.map(function(r){return '<option '+(c.role_type===r?'selected':'')+'>'+r+'</option>';}).join('')+'</select></div>';
+  h+='<div><label class="edit-label">Ann\u00e9es d\u2019exp.</label><input type="number" class="edit-input" id="editExp" value="'+(c.experience_years||0)+'" min="0" max="30"/></div>';
+  h+='<div><label class="edit-label">Taille deal</label><input class="edit-input" id="editDeal" value="'+(c.deal_size||'')+'" placeholder="10-50k\u20ac"/></div>';
+  h+='<div><label class="edit-label">Cycle de vente</label><input class="edit-input" id="editCycle" value="'+(c.sales_cycle||'')+'" placeholder="3-6 mois"/></div>';
+  h+='<div><label class="edit-label">Atteinte quota (%)</label><input type="number" class="edit-input" id="editQuota" value="'+(c.quota_attainment||0)+'" min="0" max="300"/></div>';
+  h+='</div></div>';
   // Package
-  html += '<div class="edit-card"><div class="edit-card-title">Package souhait\u00e9</div><div class="edit-form">';
-  html += '<div><label class="edit-label">Fixe (\u20ac)</label><input type="number" class="edit-input" id="editFixed" value="' + (c.ote_fixed || 0) + '"/></div>';
-  html += '<div><label class="edit-label">Variable (\u20ac)</label><input type="number" class="edit-input" id="editVariable" value="' + (c.ote_variable || 0) + '"/></div>';
-  html += '<div><label class="edit-label">Disponibilit\u00e9</label><select class="edit-select" id="editAvail">' + avails.map(function(a) { return '<option ' + (c.availability === a ? 'selected' : '') + '>' + a + '</option>'; }).join('') + '</select></div>';
-  html += '<div><label class="edit-label">Remote</label><select class="edit-select" id="editRemote">' + remotes.map(function(r) { return '<option ' + (c.remote === r ? 'selected' : '') + '>' + r + '</option>'; }).join('') + '</select></div>';
-  html += '</div></div>';
-
-  // Profil terrain
-  html += '<div class="edit-card"><div class="edit-card-title">Profil terrain</div><div class="edit-form">';
-  html += '<div><label class="edit-label">Hunting <span id="huntingVal">' + hunting + '</span>%</label>';
-  html += '<input type="range" class="edit-range" id="editHunting" value="' + hunting + '" min="0" max="100" oninput="document.getElementById(\'huntingVal\').textContent=this.value;document.getElementById(\'farmingVal\').textContent=100-this.value"/>';
-  html += '<div class="range-labels"><span>Farming</span><span>Hunting</span></div></div>';
-  html += '<div><label class="edit-label">Farming <span id="farmingVal">' + (100 - hunting) + '</span>%</label></div>';
-  html += '</div></div>';
-
-  html += '</div>'; // edit-grid
-  html += '<button class="btn-save" id="saveBtn" onclick="saveProfile()">Sauvegarder \u2192</button>';
-  document.getElementById('editContent').innerHTML = html;
+  h+='<div class="edit-card"><div class="edit-card-title">Package souhait\u00e9</div><div class="edit-form">';
+  h+='<div><label class="edit-label">Fixe (\u20ac)</label><input type="number" class="edit-input" id="editFixed" value="'+(c.ote_fixed||0)+'"/></div>';
+  h+='<div><label class="edit-label">Variable (\u20ac)</label><input type="number" class="edit-input" id="editVariable" value="'+(c.ote_variable||0)+'"/></div>';
+  h+='<div><label class="edit-label">Disponibilit\u00e9</label><select class="edit-select" id="editAvail">'+avails.map(function(a){return '<option '+(c.availability===a?'selected':'')+'>'+a+'</option>';}).join('')+'</select></div>';
+  h+='<div><label class="edit-label">Remote</label><select class="edit-select" id="editRemote">'+remotes.map(function(r){return '<option '+(c.remote===r?'selected':'')+'>'+r+'</option>';}).join('')+'</select></div>';
+  h+='</div></div>';
+  // Terrain
+  h+='<div class="edit-card"><div class="edit-card-title">Profil terrain</div><div class="edit-form">';
+  h+='<div><label class="edit-label">Hunting <span id="huntingVal">'+hunting+'</span>%</label>';
+  h+='<input type="range" class="edit-range" id="editHunting" value="'+hunting+'" min="0" max="100" oninput="document.getElementById(\'huntingVal\').textContent=this.value;document.getElementById(\'farmingVal\').textContent=100-this.value"/>';
+  h+='<div class="range-labels"><span>Farming</span><span>Hunting</span></div></div>';
+  h+='<div><label class="edit-label">Farming <span id="farmingVal">'+(100-hunting)+'</span>%</label></div>';
+  h+='</div></div></div>';
+  h+='<button class="btn-save" id="saveBtn" onclick="saveProfile()">Sauvegarder &amp; voir mon profil \u2192</button>';
+  document.getElementById('editContent').innerHTML=h;
 }
 
-// ─── PHOTO UPLOAD ─────────────────────────────────────────────────────────────
-
-async function handlePhotoChange(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { showToast('Photo trop lourde (max 5 Mo)', 'error'); return; }
-
-  // Preview local imm\u00e9diat
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById('photoPreview').innerHTML = '<img id="photoImg" src="' + e.target.result + '" alt="photo"/>';
-  };
+/* ── PHOTO UPLOAD ────────────────────────────────────────────── */
+async function handlePhotoChange(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  if(file.size>5*1024*1024){showToast('Photo trop lourde (max 5 Mo)','error');return;}
+  var reader=new FileReader();
+  reader.onload=function(e){document.getElementById('photoPreview').innerHTML='<img src="'+e.target.result+'" alt="photo"/>';};
   reader.readAsDataURL(file);
-
-  // Upload Supabase Storage
-  document.getElementById('photoUploading').style.display = 'block';
-  var ext = file.name.split('.').pop().toLowerCase();
-  var path = currentUser.id + '/avatar.' + ext;
-
-  var upRes = await sb.storage.from('candidate-photos').upload(path, file, { upsert: true, contentType: file.type });
-  if (upRes.error) {
-    document.getElementById('photoUploading').style.display = 'none';
-    showToast('Erreur upload : ' + upRes.error.message, 'error');
-    return;
-  }
-
-  var urlRes = sb.storage.from('candidate-photos').getPublicUrl(path);
-  var publicUrl = urlRes.data.publicUrl + '?t=' + Date.now(); // cache bust
-
-  // Sauvegarder dans la table candidates
-  if (candidateData) {
-    await sb.from('candidates').update({ photo_url: publicUrl }).eq('id', candidateData.id);
-    candidateData.photo_url = publicUrl;
-  } else {
-    await sb.from('candidates').insert({ user_id: currentUser.id, email: currentUser.email, photo_url: publicUrl, is_public: false });
-    await loadCandidateData();
-  }
-
-  document.getElementById('photoUploading').style.display = 'none';
-  showToast('Photo mise \u00e0 jour \u2713', 'success');
+  document.getElementById('photoUploading').style.display='block';
+  var ext=file.name.split('.').pop().toLowerCase();
+  var path=currentUser.id+'/avatar.'+ext;
+  var up=await sb.storage.from('candidate-photos').upload(path,file,{upsert:true,contentType:file.type});
+  if(up.error){document.getElementById('photoUploading').style.display='none';showToast('Erreur upload : '+up.error.message,'error');return;}
+  var publicUrl=sb.storage.from('candidate-photos').getPublicUrl(path).data.publicUrl+'?t='+Date.now();
+  if(candidateData){await sb.from('candidates').update({photo_url:publicUrl}).eq('id',candidateData.id);candidateData.photo_url=publicUrl;}
+  else{await sb.from('candidates').insert({user_id:currentUser.id,email:currentUser.email,photo_url:publicUrl,is_public:false});await loadCandidateData();}
+  document.getElementById('photoUploading').style.display='none';
+  showToast('Photo mise \u00e0 jour \u2713','success');
 }
 
-// ─── SAVE PROFILE ────────────────────────────────────────────────────────────
-
-async function saveProfile() {
-  var btn = document.getElementById('saveBtn');
-  btn.disabled = true; btn.textContent = 'Sauvegarde\u2026';
-  var hunting = parseInt(document.getElementById('editHunting').value);
-  var fixed = parseInt(document.getElementById('editFixed').value) || 0;
-  var variable = parseInt(document.getElementById('editVariable').value) || 0;
-  var scored = !!(candidateData && candidateData.score_global);
-  var publicSel = document.getElementById('editPublic');
-  var isPublic = scored ? publicSel.value === 'true' : false;
-
-  var updates = {
-    prenom: document.getElementById('editPrenom').value,
-    nom: document.getElementById('editNom').value,
-    location: document.getElementById('editLocation').value,
-    linkedin_url: document.getElementById('editLinkedin').value,
-    is_public: isPublic,
-    role_type: document.getElementById('editRole').value,
-    experience_years: parseInt(document.getElementById('editExp').value) || 0,
-    deal_size: document.getElementById('editDeal').value,
-    sales_cycle: document.getElementById('editCycle').value,
-    quota_attainment: parseInt(document.getElementById('editQuota').value) || 0,
-    ote_fixed: fixed, ote_variable: variable, ote_total: fixed + variable,
-    availability: document.getElementById('editAvail').value,
-    remote: document.getElementById('editRemote').value,
-    hunting_pct: hunting, farming_pct: 100 - hunting,
-    updated_at: new Date().toISOString()
+/* ── SAVE ────────────────────────────────────────────────────── */
+async function saveProfile(){
+  var btn=document.getElementById('saveBtn');
+  btn.disabled=true;btn.textContent='Sauvegarde\u2026';
+  var hunting=parseInt(document.getElementById('editHunting').value);
+  var fixed=parseInt(document.getElementById('editFixed').value)||0;
+  var variable=parseInt(document.getElementById('editVariable').value)||0;
+  var scored=!!(candidateData&&candidateData.score_global);
+  var isPublic=scored?document.getElementById('editPublic').value==='true':false;
+  var updates={
+    prenom:document.getElementById('editPrenom').value,
+    nom:document.getElementById('editNom').value,
+    location:document.getElementById('editLocation').value,
+    linkedin_url:document.getElementById('editLinkedin').value,
+    is_public:isPublic,
+    role_type:document.getElementById('editRole').value,
+    experience_years:parseInt(document.getElementById('editExp').value)||0,
+    deal_size:document.getElementById('editDeal').value,
+    sales_cycle:document.getElementById('editCycle').value,
+    quota_attainment:parseInt(document.getElementById('editQuota').value)||0,
+    ote_fixed:fixed,ote_variable:variable,ote_total:fixed+variable,
+    availability:document.getElementById('editAvail').value,
+    remote:document.getElementById('editRemote').value,
+    hunting_pct:hunting,farming_pct:100-hunting,
+    updated_at:new Date().toISOString()
   };
-
-  if (candidateData) {
-    await sb.from('candidates').update(updates).eq('id', candidateData.id);
-  } else {
-    await sb.from('candidates').insert(Object.assign({}, updates, { user_id: currentUser.id, email: currentUser.email, is_public: false }));
-  }
-
-  showToast('Profil mis \u00e0 jour \u2713', 'success');
-  btn.disabled = false; btn.textContent = 'Sauvegarder \u2192';
+  if(candidateData){await sb.from('candidates').update(updates).eq('id',candidateData.id);}
+  else{await sb.from('candidates').insert(Object.assign({},updates,{user_id:currentUser.id,email:currentUser.email,is_public:false}));}
+  // Recharger + basculer sur "Mon profil" pour voir les changements immediatement
   await loadCandidateData();
+  switchTab('profil',document.getElementById('tabBtnProfil'));
+  showToast('Profil mis \u00e0 jour \u2713','success');
+  btn.disabled=false;
 }
 
-// ─── CONTACTS ─────────────────────────────────────────────────────────────────
-
-async function loadContacts() {
-  if (!candidateData) { document.getElementById('contactsList').innerHTML = '<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande pour l\u2019instant.</div>'; return; }
-  var res = await sb.from('contact_requests').select('*,recruiter:recruiter_id(company_name,prenom,nom,email)').eq('candidate_id', candidateData.id).order('created_at', { ascending: false });
-  var contacts = res.data || [];
-  var newCount = contacts.filter(function(r) { return r.status === 'pending'; }).length;
-  var badge = document.getElementById('newContactsCount');
-  badge.textContent = newCount; badge.style.display = newCount > 0 ? 'inline' : 'none';
-  if (!contacts.length) { document.getElementById('contactsList').innerHTML = '<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande de contact pour l\u2019instant.</div>'; return; }
-  var html = '<div class="contacts-list">';
-  contacts.forEach(function(c) {
-    html += '<div class="contact-card ' + (c.status === 'pending' ? 'new-card' : '') + '">';
-    html += '<div class="contact-avatar">\uD83C\uDFE2</div>';
-    html += '<div class="contact-info"><div class="contact-company">' + (c.recruiter && c.recruiter.company_name ? c.recruiter.company_name : 'Recruteur') + '</div>';
-    if (c.message) html += '<div class="contact-msg">' + c.message + '</div>';
-    html += '<div class="contact-date">' + new Date(c.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) + '</div></div>';
-    html += '<span class="contact-status ' + c.status + '">' + (c.status === 'pending' ? 'Nouveau' : c.status === 'accepted' ? 'Accept\u00e9' : '\u2014') + '</span>';
-    if (c.status === 'pending') html += '<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\'' + c.id + '\',\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\'' + c.id + '\',\'declined\')">Refuser</button></div>';
-    html += '</div>';
+/* ── CONTACTS ────────────────────────────────────────────────── */
+async function loadContacts(){
+  if(!candidateData){document.getElementById('contactsList').innerHTML='<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande pour l\u2019instant.</div>';return;}
+  var r=await sb.from('contact_requests').select('*,recruiter:recruiter_id(company_name,prenom,nom,email)').eq('candidate_id',candidateData.id).order('created_at',{ascending:false});
+  var contacts=r.data||[];
+  var nc=contacts.filter(function(x){return x.status==='pending';}).length;
+  var badge=document.getElementById('newContactsCount');badge.textContent=nc;badge.style.display=nc>0?'inline':'none';
+  if(!contacts.length){document.getElementById('contactsList').innerHTML='<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande de contact pour l\u2019instant.</div>';return;}
+  var h='<div class="contacts-list">';
+  contacts.forEach(function(c){
+    h+='<div class="contact-card '+(c.status==='pending'?'new-card':'')+'"><div class="contact-avatar">\uD83C\uDFE2</div>';
+    h+='<div class="contact-info"><div class="contact-company">'+(c.recruiter&&c.recruiter.company_name?c.recruiter.company_name:'Recruteur')+'</div>';
+    if(c.message)h+='<div class="contact-msg">'+c.message+'</div>';
+    h+='<div class="contact-date">'+new Date(c.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})+'</div></div>';
+    h+='<span class="contact-status '+c.status+'">'+(c.status==='pending'?'Nouveau':c.status==='accepted'?'Accept\u00e9':'\u2014')+'</span>';
+    if(c.status==='pending')h+='<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\''+c.id+'\',\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\''+c.id+'\',\'declined\')">Refuser</button></div>';
+    h+='</div>';
   });
-  html += '</div>';
-  document.getElementById('contactsList').innerHTML = html;
-  contacts.filter(function(c) { return c.status === 'pending'; }).forEach(async function(c) { await sb.from('contact_requests').update({ status: 'seen' }).eq('id', c.id); });
+  document.getElementById('contactsList').innerHTML=h+'</div>';
+  contacts.filter(function(c){return c.status==='pending';}).forEach(async function(c){await sb.from('contact_requests').update({status:'seen'}).eq('id',c.id);});
 }
-
-async function respondContact(id, status) {
-  await sb.from('contact_requests').update({ status: status }).eq('id', id);
-  showToast(status === 'accepted' ? 'Demande accept\u00e9e \u2713' : 'Demande refus\u00e9e', 'success');
+async function respondContact(id,status){
+  await sb.from('contact_requests').update({status:status}).eq('id',id);
+  showToast(status==='accepted'?'Demande accept\u00e9e \u2713':'Demande refus\u00e9e','success');
   await loadContacts();
 }
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-
-function copyLink(url) {
-  navigator.clipboard.writeText(url).then(function() { showToast('Lien copi\u00e9 \u2713', 'success'); }).catch(function() {
-    var el = document.createElement('textarea'); el.value = url; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); showToast('Lien copi\u00e9 \u2713', 'success');
-  });
-}
-function switchTab(tab, el) {
-  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.bar-tab').forEach(function(t) { t.classList.remove('active'); });
-  document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+/* ── UTILS ───────────────────────────────────────────────────── */
+function copyLink(url){navigator.clipboard.writeText(url).then(function(){showToast('Lien copi\u00e9 \u2713','success');}).catch(function(){var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast('Lien copi\u00e9 \u2713','success');});}
+function switchTab(tab,el){
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.bar-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('panel'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   el.classList.add('active');
 }
-function showToast(msg, type) {
-  var t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast ' + (type || '') + ' show';
-  setTimeout(function() { t.classList.remove('show'); }, 3000);
-}
+function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';setTimeout(function(){t.classList.remove('show');},3000);}
 </script>
 </body>
 </html>
