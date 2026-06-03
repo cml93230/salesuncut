@@ -139,15 +139,15 @@
       <div id="formLogin">
         <form class="auth-form" onsubmit="handleLogin(event)">
           <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
-          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required/></div>
+          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="loginPassword" class="form-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required/></div>
           <div class="auth-error" id="loginError"></div>
-          <button type="submit" class="auth-submit" id="loginBtn">Se connecter →</button>
+          <button type="submit" class="auth-submit" id="loginBtn">Se connecter &rarr;</button>
         </form>
         <div class="auth-switch">Pas encore de compte ? <a onclick="switchAuthTab('signup')">Créer un compte</a></div>
       </div>
       <div id="formSignup" style="display:none">
         <form class="auth-form" onsubmit="handleSignup(event)">
-          <div class="form-group"><label class="form-label">Nom de l'entreprise</label><input type="text" id="signupCompany" class="form-input" placeholder="Acme Corp" required/></div>
+          <div class="form-group"><label class="form-label">Nom de l’entreprise</label><input type="text" id="signupCompany" class="form-input" placeholder="Acme Corp" required/></div>
           <div class="form-row">
             <div class="form-group"><label class="form-label">Prénom</label><input type="text" id="signupPrenom" class="form-input" placeholder="Marie" required/></div>
             <div class="form-group"><label class="form-label">Nom</label><input type="text" id="signupNom" class="form-input" placeholder="Dupont" required/></div>
@@ -155,7 +155,7 @@
           <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
           <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="signupPassword" class="form-input" placeholder="8 caractères minimum" required minlength="8"/></div>
           <div class="auth-error" id="signupError"></div>
-          <button type="submit" class="auth-submit" id="signupBtn">Créer mon compte →</button>
+          <button type="submit" class="auth-submit" id="signupBtn">Créer mon compte &rarr;</button>
         </form>
         <div class="auth-switch">Déjà un compte ? <a onclick="switchAuthTab('login')">Se connecter</a></div>
       </div>
@@ -204,12 +204,12 @@
       <span class="pool-count"><span id="candidateCountDisplay">0</span> profils</span>
     </div>
     <div id="poolGrid" class="pool-grid-dash">
-      <div class="loading-state"><div class="spinner"></div> Chargement du pool…</div>
+      <div class="loading-state"><div class="spinner"></div> Chargement du pool&hellip;</div>
     </div>
   </div>
 
   <div class="tab-panel" id="panelShortlist">
-    <div id="shortlistContent"><div class="loading-state"><div class="spinner"></div> Chargement…</div></div>
+    <div id="shortlistContent"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div>
   </div>
 
   <div class="tab-panel" id="panelAccount">
@@ -224,7 +224,7 @@
         <div class="account-card-title">Abonnement</div>
         <div class="account-info-row"><span class="account-info-lbl">Plan actuel</span><span class="account-info-val"><span class="plan-badge free" id="accPlan">Free</span></span></div>
         <div class="account-info-row" style="margin-top:12px"><span class="account-info-lbl">Accès pool</span><span class="account-info-val" id="accAccess">1 profil complet</span></div>
-        <a href="mailto:contact@salesuncut.com?subject=Upgrade recruteur" class="btn gold sm" style="margin-top:16px;display:inline-flex;">Upgrader mon plan →</a>
+        <a href="mailto:contact@salesuncut.com?subject=Upgrade recruteur" class="btn gold sm" style="margin-top:16px;display:inline-flex;">Upgrader mon plan &rarr;</a>
       </div>
     </div>
   </div>
@@ -250,19 +250,19 @@ function switchAuthTab(t){
 async function handleLogin(e){
   e.preventDefault();
   const btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
-  btn.disabled=true;btn.textContent='Connexion…';err.classList.remove('visible');
+  btn.disabled=true;btn.textContent='Connexion\u2026';err.classList.remove('visible');
   const{error}=await sb.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value});
-  if(error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter →';}
+  if(error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter \u2192';}
 }
 
 async function handleSignup(e){
   e.preventDefault();
   const btn=document.getElementById('signupBtn'),err=document.getElementById('signupError');
-  btn.disabled=true;btn.textContent='Création…';err.classList.remove('visible');
+  btn.disabled=true;btn.textContent='Cr\u00e9ation\u2026';err.classList.remove('visible');
   const email=document.getElementById('signupEmail').value,password=document.getElementById('signupPassword').value;
   const company=document.getElementById('signupCompany').value,prenom=document.getElementById('signupPrenom').value,nom=document.getElementById('signupNom').value;
   const{data,error}=await sb.auth.signUp({email,password});
-  if(error){err.textContent=error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Créer mon compte →';return;}
+  if(error){err.textContent=error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Cr\u00e9er mon compte \u2192';return;}
   if(data.user)await sb.from('recruiters').insert({user_id:data.user.id,email,company_name:company,prenom,nom,plan:'free'});
 }
 
@@ -271,9 +271,17 @@ async function handleLogout(){await sb.auth.signOut();showAuth();}
 function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
 function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
 
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session){showDashboard();await loadRecruiterProfile(session.user);await loadCandidates();await loadShortlist();}
-  else showAuth();
+// FIX DEADLOCK SUPABASE JS V2 :
+// Les requêtes DB depuis onAuthStateChange bloquent car Supabase
+// tient un verrou interne sur l'auth pendant le callback.
+// setTimeout(0) sort du callback avant de faire des appels DB.
+sb.auth.onAuthStateChange(function(event, session){
+  if(session){
+    showDashboard();
+    setTimeout(function(){ loadRecruiterProfile(session.user).then(function(){ loadCandidates(); loadShortlist(); }); }, 0);
+  } else {
+    showAuth();
+  }
 });
 
 async function loadRecruiterProfile(user){
@@ -282,56 +290,56 @@ async function loadRecruiterProfile(user){
   if(data){
     document.getElementById('recruiterNameDisplay').textContent=data.company_name;
     document.getElementById('accCompany').textContent=data.company_name;
-    document.getElementById('accContact').textContent=`${data.prenom||''} ${data.nom||''}`.trim()||'—';
+    document.getElementById('accContact').textContent=(data.prenom||'')+' '+(data.nom||'').trim()||'\u2014';
     document.getElementById('accEmail').textContent=data.email;
-    const pb=document.getElementById('accPlan');pb.textContent=data.plan.toUpperCase();pb.className=`plan-badge ${data.plan}`;
+    const pb=document.getElementById('accPlan');pb.textContent=data.plan.toUpperCase();pb.className='plan-badge '+data.plan;
   }
 }
 
 async function loadCandidates(){
-  const demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(c=>({
+  const demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(function(c){return{
     simulation_id:c.id,prenom:c.anonymous?'Anonyme':c.name.split(' ')[0],nom:c.anonymous?'':(c.name.split(' ').slice(1).join(' ')||''),
     photo_url:c.photo||null,niveau_certifie:c.level==='gold'?'GOLD':c.level==='silver'?'SILVER':'BRONZE',
     score_global:c.score,famille:SU_DATA.getFamilyById(c.family).name,role_type:c.role||'AE',
     score_accroche:c.bars?c.bars[0]:null,score_decouverte:c.bars?c.bars[1]:null,
     score_objections:c.bars?c.bars[3]:null,score_closing:c.bars?c.bars[5]:null,is_demo:true
-  })):[];
+  };}):[];
   const{data:real}=await sb.from('candidates').select('*').eq('is_public',true).order('score_global',{ascending:false});
-  allCandidates=[...demo,...(real||[]).map(c=>({...c,is_demo:false}))];
+  allCandidates=[].concat(demo,(real||[]).map(function(c){return Object.assign({},c,{is_demo:false});}));
   renderPool(allCandidates);
 }
 
 async function loadShortlist(){
   if(!currentRecruiter)return;
   const{data}=await sb.from('shortlists').select('candidate_id').eq('recruiter_id',currentRecruiter.id);
-  shortlistedIds=new Set((data||[]).map(s=>s.candidate_id));
+  shortlistedIds=new Set((data||[]).map(function(s){return s.candidate_id;}));
   updateShortlistCount();renderShortlist();
 }
 
 function applyFilters(){
   const niv=document.getElementById('filterNiveau').value,fam=document.getElementById('filterFamille').value,sc=parseInt(document.getElementById('filterScore').value)||0;
-  renderPool(allCandidates.filter(c=>(!niv||c.niveau_certifie===niv)&&(!fam||c.famille===fam)&&(!sc||c.score_global>=sc)));
+  renderPool(allCandidates.filter(function(c){return(!niv||c.niveau_certifie===niv)&&(!fam||c.famille===fam)&&(!sc||c.score_global>=sc);}));
 }
 
 function renderPool(candidates){
   const grid=document.getElementById('poolGrid');
   document.getElementById('candidateCountDisplay').textContent=candidates.length;
-  if(!candidates.length){grid.innerHTML='<div class="empty-state"><div class="big">🔍</div>Aucun profil ne correspond à ces filtres.</div>';return;}
-  grid.innerHTML=candidates.map(c=>{
+  if(!candidates.length){grid.innerHTML='<div class="empty-state"><div class="big">\uD83D\uDD0D</div>Aucun profil ne correspond \u00e0 ces filtres.</div>';return;}
+  grid.innerHTML=candidates.map(function(c){
     const lc=(c.niveau_certifie||'BRONZE').toLowerCase(),isSaved=shortlistedIds.has(c.simulation_id);
-    const name=(c.prenom&&c.prenom!=='Anonyme')?`${c.prenom} ${c.nom||''}`.trim():'Anonyme';
-    const dims=[{lbl:'Accroche',val:c.score_accroche,max:15},{lbl:'Découverte',val:c.score_decouverte,max:25},{lbl:'Objections',val:c.score_objections,max:15},{lbl:'Closing',val:c.score_closing,max:15}].filter(d=>d.val!=null);
-    return`<div class="dash-card ${lc}" onclick="location.href='profil.html?id=${c.simulation_id}'">
-      <button class="dash-card-shortlist ${isSaved?'saved':''}" onclick="event.stopPropagation();toggleShortlist('${c.simulation_id}',this)">${isSaved?'♥':'♡'}</button>
-      <div class="dash-card-portrait">${c.photo_url?`<img src="${c.photo_url}" alt="${name}" loading="lazy"/>`:'<div class="no-photo">👤</div>'}
-        <span class="family-tag">${c.famille||'—'}</span><span class="level-stamp ${c.niveau_certifie}">${c.niveau_certifie}</span></div>
-      <div class="dash-card-body">
-        <div class="dash-card-name">${name}</div>
-        <div class="dash-card-meta">${c.role_type||'AE'} · ${c.is_demo?'Profil démo':'Certifié'}</div>
-        <div class="dash-card-score">${c.score_global}<small>/100</small></div>
-        ${dims.length?`<div class="dash-card-dims">${dims.map(d=>`<div class="dim-mini"><span class="dim-mini-lbl">${d.lbl}</span><div class="dim-mini-bar"><i style="width:${Math.round(d.val/d.max*100)}%"></i></div><span class="dim-mini-val">${d.val}</span></div>`).join('')}</div>`:''}
-        <div class="dash-card-footer"><span class="dash-card-role">${c.famille||'—'}</span><a class="btn-see-profile" href="profil.html?id=${c.simulation_id}" onclick="event.stopPropagation()">Voir →</a></div>
-      </div></div>`;
+    const name=(c.prenom&&c.prenom!=='Anonyme')?(c.prenom+' '+(c.nom||'')).trim():'Anonyme';
+    const dims=[{lbl:'Accroche',val:c.score_accroche,max:16},{lbl:'D\u00e9couverte',val:c.score_decouverte,max:16},{lbl:'Objections',val:c.score_objections,max:16},{lbl:'Closing',val:c.score_closing,max:16}].filter(function(d){return d.val!=null;});
+    return '<div class="dash-card '+lc+'" onclick="location.href=\'profil.html?id='+c.simulation_id+'\'">' +
+      '<button class="dash-card-shortlist '+(isSaved?'saved':'')+' " onclick="event.stopPropagation();toggleShortlist(\''+c.simulation_id+'\',this)">'+(isSaved?'\u2665':'\u2661')+'</button>' +
+      '<div class="dash-card-portrait">'+(c.photo_url?'<img src="'+c.photo_url+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>') +
+      '<span class="family-tag">'+(c.famille||'\u2014')+'</span><span class="level-stamp '+c.niveau_certifie+'">'+c.niveau_certifie+'</span></div>' +
+      '<div class="dash-card-body">' +
+      '<div class="dash-card-name">'+name+'</div>' +
+      '<div class="dash-card-meta">'+(c.role_type||'AE')+' \u00b7 '+(c.is_demo?'Profil d\u00e9mo':'Certifi\u00e9')+'</div>' +
+      '<div class="dash-card-score">'+c.score_global+'<small>/100</small></div>' +
+      (dims.length?'<div class="dash-card-dims">'+dims.map(function(d){return '<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"><i style="width:'+Math.round(d.val/d.max*100)+'%"></i></div><span class="dim-mini-val">'+d.val+'</span></div>';}).join('')+'</div>':'') +
+      '<div class="dash-card-footer"><span class="dash-card-role">'+(c.famille||'\u2014')+'</span><a class="btn-see-profile" href="profil.html?id='+c.simulation_id+'" onclick="event.stopPropagation()">Voir \u2192</a></div>' +
+      '</div></div>';
   }).join('');
 }
 
@@ -340,43 +348,43 @@ async function toggleShortlist(sid,btn){
   const isSaved=shortlistedIds.has(sid);
   if(isSaved){
     await sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',sid);
-    shortlistedIds.delete(sid);btn.textContent='♡';btn.classList.remove('saved');showToast('Retiré de la shortlist');
+    shortlistedIds.delete(sid);btn.textContent='\u2661';btn.classList.remove('saved');showToast('Retir\u00e9 de la shortlist');
   }else{
     await sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:sid});
-    shortlistedIds.add(sid);btn.textContent='♥';btn.classList.add('saved');showToast('Ajouté à la shortlist ♥','success');
+    shortlistedIds.add(sid);btn.textContent='\u2665';btn.classList.add('saved');showToast('Ajout\u00e9 \u00e0 la shortlist \u2665','success');
   }
   updateShortlistCount();renderShortlist();
 }
 
-function updateShortlistCount(){const el=document.getElementById('shortlistCount');el.textContent=shortlistedIds.size>0?shortlistedIds.size:'';}
+function updateShortlistCount(){var el=document.getElementById('shortlistCount');el.textContent=shortlistedIds.size>0?shortlistedIds.size:'';}
 
 function renderShortlist(){
   const container=document.getElementById('shortlistContent');
-  const saved=allCandidates.filter(c=>shortlistedIds.has(c.simulation_id));
-  if(!saved.length){container.innerHTML=`<div class="shortlist-empty"><div class="icon">♡</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur ♡</div>`;return;}
-  container.innerHTML=`<div class="shortlist-grid">${saved.map(c=>{
-    const name=(c.prenom&&c.prenom!=='Anonyme')?`${c.prenom} ${c.nom||''}`.trim():'Anonyme';
-    return`<div class="shortlist-row">
-      <div class="shortlist-avatar">${c.photo_url?`<img src="${c.photo_url}" alt="${name}"/>`:''}  </div>
-      <div class="shortlist-info"><div class="shortlist-name">${name}</div><div class="shortlist-meta">${c.niveau_certifie} · ${c.famille||'—'}</div></div>
-      <div class="shortlist-score">${c.score_global}</div>
-      <div class="shortlist-actions">
-        <a href="profil.html?id=${c.simulation_id}" class="btn-shortlist-action view">Voir</a>
-        <button class="btn-shortlist-action remove" onclick="toggleShortlist('${c.simulation_id}',this)">✕</button>
-      </div></div>`;
-  }).join('')}</div>`;
+  const saved=allCandidates.filter(function(c){return shortlistedIds.has(c.simulation_id);});
+  if(!saved.length){container.innerHTML='<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur \u2661</div>';return;}
+  container.innerHTML='<div class="shortlist-grid">'+saved.map(function(c){
+    const name=(c.prenom&&c.prenom!=='Anonyme')?(c.prenom+' '+(c.nom||'')).trim():'Anonyme';
+    return '<div class="shortlist-row">' +
+      '<div class="shortlist-avatar">'+(c.photo_url?'<img src="'+c.photo_url+'" alt="'+name+'"/>':'')+'</div>' +
+      '<div class="shortlist-info"><div class="shortlist-name">'+name+'</div><div class="shortlist-meta">'+c.niveau_certifie+' \u00b7 '+(c.famille||'\u2014')+'</div></div>' +
+      '<div class="shortlist-score">'+c.score_global+'</div>' +
+      '<div class="shortlist-actions">' +
+      '<a href="profil.html?id='+c.simulation_id+'" class="btn-shortlist-action view">Voir</a>' +
+      '<button class="btn-shortlist-action remove" onclick="toggleShortlist(\''+c.simulation_id+'\',this)">\u2715</button>' +
+      '</div></div>';
+  }).join('')+'</div>';
 }
 
 function switchTab(tab,el){
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.recruiter-bar-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(`panel${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.recruiter-bar-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('panel'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('active');
   el.classList.add('active');
 }
 
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;
-  setTimeout(()=>t.classList.remove('show'),3000);
+function showToast(msg,type){
+  var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';
+  setTimeout(function(){t.classList.remove('show');},3000);
 }
 </script>
 </body>

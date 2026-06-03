@@ -185,9 +185,19 @@ async function handleLogout(){await sb.auth.signOut();showAuth();}
 function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
 function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
 
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(session){currentUser=session.user;showDashboard();await loadAll();}
-  else{currentUser=null;showAuth();}
+// FIX DEADLOCK SUPABASE JS V2 :
+// Les requêtes DB depuis onAuthStateChange bloquent car Supabase
+// tient un verrou interne sur l'auth pendant le callback.
+// setTimeout(0) sort du callback avant de faire des appels DB.
+sb.auth.onAuthStateChange(function(event, session){
+  if(session){
+    currentUser=session.user;
+    showDashboard();
+    setTimeout(function(){ loadAll(); }, 0);
+  } else {
+    currentUser=null;
+    showAuth();
+  }
 });
 
 async function loadAll(){
@@ -230,7 +240,7 @@ function renderProfil(){
   html+='</div></div>';
   html+='<div class="profil-score-big"><div class="profil-score-num">'+score+'<span style="font-size:20px;color:var(--teal-3)">/100</span></div><div class="profil-score-lbl">Score global</div></div></div>';
   html+='<div class="profil-link-box"><div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.4);margin-bottom:4px">Ton profil public</div><div class="profil-link-url">'+profileUrl+'</div></div>';
-  html+='<button class="btn-copy-link" onclick="copyLink(\''+profileUrl+'\')">Copier</button></div>';
+  html+='<button class="btn-copy-link" onclick="copyLink(\'' +profileUrl+ '\')">Copier</button></div>';
   if(dims.length){
     html+='<div class="section-head"><h3>Tes scores par dimension</h3><span class="eyebrow">Bar\u00e8me /100</span></div><div class="scores-grid">';
     dims.forEach(function(d){
@@ -263,13 +273,13 @@ async function loadContacts(){
   if(!contacts.length){document.getElementById('contactsList').innerHTML='<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande de contact pour l\u2019instant.</div>';return;}
   var html='<div class="contacts-list">';
   contacts.forEach(function(c){
-    html+='<div class="contact-card '+(c.status==='pending'?'new-card':'')+'">';
+    html+='<div class="contact-card '+(c.status==='pending'?'new-card':'')+'">'
     html+='<div class="contact-avatar">\uD83C\uDFE2</div>';
     html+='<div class="contact-info"><div class="contact-company">'+(c.recruiter&&c.recruiter.company_name?c.recruiter.company_name:'Recruteur')+'</div>';
     if(c.message){html+='<div class="contact-msg">'+c.message+'</div>';}
     html+='<div class="contact-date">'+new Date(c.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})+'</div></div>';
     html+='<span class="contact-status '+c.status+'">'+(c.status==='pending'?'Nouveau':c.status==='accepted'?'Accept\u00e9':'\u2014')+'</span>';
-    if(c.status==='pending'){html+='<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\''+c.id+'\',\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\''+c.id+'\',\'declined\')">Refuser</button></div>';}
+    if(c.status==='pending'){html+='<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\'' +c.id+ '\',\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\'' +c.id+ '\',\'declined\')">Refuser</button></div>';}
     html+='</div>';
   });
   html+='</div>';
