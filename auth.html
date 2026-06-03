@@ -116,100 +116,113 @@
   </main>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
-    const REDIRECT = { candidat:'/mon-profil.html', recruteur:'/recruiter.html' };
-    let currentRole='candidat', currentMode='inscription';
+    const sb = window.supabase.createClient(
+      'https://svtyzkypmzmtcqunzfyy.supabase.co',
+      'sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB'
+    );
 
-    sb.auth.onAuthStateChange((event, session) => {
-      if (session) window.location.replace(REDIRECT[session.user.user_metadata?.role||'candidat']);
-    });
+    const REDIRECT = { candidat: '/mon-profil.html', recruteur: '/recruiter.html' };
+    let currentRole = 'candidat', currentMode = 'inscription';
 
-    function setRole(role){
-      currentRole=role;
-      document.getElementById('tab-candidat').classList.toggle('active',role==='candidat');
-      document.getElementById('tab-recruteur').classList.toggle('active',role==='recruteur');
+    // Redirection auto si déjà connecté (session active en localStorage)
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        window.location.replace(REDIRECT[session.user.user_metadata?.role || 'candidat']);
+      }
+    })();
+
+    function setRole(role) {
+      currentRole = role;
+      document.getElementById('tab-candidat').classList.toggle('active', role === 'candidat');
+      document.getElementById('tab-recruteur').classList.toggle('active', role === 'recruteur');
       updateLabels();
     }
-    function setMode(mode){
-      currentMode=mode;
-      document.getElementById('mode-inscription').classList.toggle('active',mode==='inscription');
-      document.getElementById('mode-connexion').classList.toggle('active',mode==='connexion');
-      document.getElementById('field-confirm').style.display=mode==='inscription'?'':'none';
-      document.getElementById('input-password').autocomplete=mode==='inscription'?'new-password':'current-password';
-      clearMessage();clearErrors();updateLabels();
+    function setMode(mode) {
+      currentMode = mode;
+      document.getElementById('mode-inscription').classList.toggle('active', mode === 'inscription');
+      document.getElementById('mode-connexion').classList.toggle('active', mode === 'connexion');
+      document.getElementById('field-confirm').style.display = mode === 'inscription' ? '' : 'none';
+      document.getElementById('input-password').autocomplete = mode === 'inscription' ? 'new-password' : 'current-password';
+      clearMessage(); clearErrors(); updateLabels();
     }
-    function updateLabels(){
-      const lbl=currentRole==='candidat'?'Candidat':'Recruteur';
-      const desc=currentRole==='candidat'?'accès à votre espace de certification':'accès au pool de candidats';
-      if(currentMode==='inscription'){
-        document.getElementById('form-title').textContent='Créer un compte';
-        document.getElementById('form-subtitle').textContent=`${lbl} — ${desc}`;
-        document.getElementById('submit-label').textContent='Créer mon compte';
-        document.getElementById('auth-alt').innerHTML=`Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>`;
+    function updateLabels() {
+      const lbl = currentRole === 'candidat' ? 'Candidat' : 'Recruteur';
+      const desc = currentRole === 'candidat' ? 'accès à votre espace de certification' : 'accès au pool de candidats';
+      if (currentMode === 'inscription') {
+        document.getElementById('form-title').textContent = 'Créer un compte';
+        document.getElementById('form-subtitle').textContent = `${lbl} — ${desc}`;
+        document.getElementById('submit-label').textContent = 'Créer mon compte';
+        document.getElementById('auth-alt').innerHTML = `Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>`;
       } else {
-        document.getElementById('form-title').textContent='Se connecter';
-        document.getElementById('form-subtitle').textContent=`${lbl} — ${desc}`;
-        document.getElementById('submit-label').textContent='Accéder à mon espace';
-        document.getElementById('auth-alt').innerHTML=`Pas encore de compte ? <button onclick="setMode('inscription')">Créer un compte</button>`;
+        document.getElementById('form-title').textContent = 'Se connecter';
+        document.getElementById('form-subtitle').textContent = `${lbl} — ${desc}`;
+        document.getElementById('submit-label').textContent = 'Accéder à mon espace';
+        document.getElementById('auth-alt').innerHTML = `Pas encore de compte ? <button onclick="setMode('inscription')">Créer un compte</button>`;
       }
     }
-    function validate(){
-      let ok=true;clearErrors();
-      const email=document.getElementById('input-email').value.trim();
-      const pwd=document.getElementById('input-password').value;
-      const cfm=document.getElementById('input-confirm').value;
-      if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setFieldError('field-email','err-email');ok=false;}
-      if(!pwd||pwd.length<8){setFieldError('field-password','err-password');ok=false;}
-      if(currentMode==='inscription'&&pwd!==cfm){setFieldError('field-confirm','err-confirm');ok=false;}
+    function validate() {
+      let ok = true; clearErrors();
+      const email = document.getElementById('input-email').value.trim();
+      const pwd = document.getElementById('input-password').value;
+      const cfm = document.getElementById('input-confirm').value;
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setFieldError('field-email', 'err-email'); ok = false; }
+      if (!pwd || pwd.length < 8) { setFieldError('field-password', 'err-password'); ok = false; }
+      if (currentMode === 'inscription' && pwd !== cfm) { setFieldError('field-confirm', 'err-confirm'); ok = false; }
       return ok;
     }
-    function setFieldError(fId,eId){document.getElementById(fId).classList.add('has-error');document.getElementById(eId).style.display='block';}
-    function clearErrors(){['field-email','field-password','field-confirm'].forEach(id=>document.getElementById(id).classList.remove('has-error'));['err-email','err-password','err-confirm'].forEach(id=>document.getElementById(id).style.display='none');}
-    function showMessage(t,type){const el=document.getElementById('auth-message');el.textContent=t;el.className='auth-message '+type;}
-    function clearMessage(){const el=document.getElementById('auth-message');el.className='auth-message';el.textContent='';}
-    function setLoading(on){const btn=document.getElementById('submit-btn');btn.disabled=on;btn.classList.toggle('loading',on);}
+    function setFieldError(fId, eId) { document.getElementById(fId).classList.add('has-error'); document.getElementById(eId).style.display = 'block'; }
+    function clearErrors() { ['field-email', 'field-password', 'field-confirm'].forEach(id => document.getElementById(id).classList.remove('has-error')); ['err-email', 'err-password', 'err-confirm'].forEach(id => document.getElementById(id).style.display = 'none'); }
+    function showMessage(t, type) { const el = document.getElementById('auth-message'); el.textContent = t; el.className = 'auth-message ' + type; }
+    function clearMessage() { const el = document.getElementById('auth-message'); el.className = 'auth-message'; el.textContent = ''; }
+    function setLoading(on) { const btn = document.getElementById('submit-btn'); btn.disabled = on; btn.classList.toggle('loading', on); }
 
-    async function handleSubmit(e){
+    async function handleSubmit(e) {
       e.preventDefault();
-      if(!validate())return;
-      setLoading(true);clearMessage();
-      const email=document.getElementById('input-email').value.trim();
-      const password=document.getElementById('input-password').value;
-      try{
-        if(currentMode==='inscription'){
-          const{data,error}=await sb.auth.signUp({email,password,options:{data:{role:currentRole},emailRedirectTo:'https://salesuncut.com/auth.html'}});
-          if(error)throw error;
-          // FIX : insérer user_id (= auth uid), pas id (= PK auto)
-          if(data.user){
-            if(currentRole==='recruteur'){
-              await sb.from('recruiters').insert({user_id:data.user.id,email:data.user.email,plan:'free'});
+      if (!validate()) return;
+      setLoading(true); clearMessage();
+      const email = document.getElementById('input-email').value.trim();
+      const password = document.getElementById('input-password').value;
+      try {
+        if (currentMode === 'inscription') {
+          const { data, error } = await sb.auth.signUp({
+            email, password,
+            options: { data: { role: currentRole }, emailRedirectTo: 'https://salesuncut.com/auth.html' }
+          });
+          if (error) throw error;
+          if (data.user) {
+            if (currentRole === 'recruteur') {
+              await sb.from('recruiters').insert({ user_id: data.user.id, email: data.user.email, plan: 'free' });
             } else {
-              await sb.from('candidates').insert({user_id:data.user.id,email:data.user.email,is_public:false});
+              await sb.from('candidates').insert({ user_id: data.user.id, email: data.user.email, is_public: false });
             }
           }
-          if(!data.session){
-            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse, puis connectez-vous.','success');
+          if (!data.session) {
+            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse, puis connectez-vous.', 'success');
           } else {
             window.location.replace(REDIRECT[currentRole]);
           }
         } else {
-          const{data,error}=await sb.auth.signInWithPassword({email,password});
-          if(error)throw error;
-          window.location.replace(REDIRECT[data.user.user_metadata?.role||'candidat']);
+          // Connexion — gestion directe, pas de listener global
+          const { data, error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          const role = data.user.user_metadata?.role || 'candidat';
+          window.location.replace(REDIRECT[role]);
         }
-      } catch(err){
-        showMessage(mapError(err.message),'error');
-      } finally{
+      } catch (err) {
+        showMessage(mapError(err.message), 'error');
+      } finally {
         setLoading(false);
       }
     }
-    function mapError(msg){
-      if(!msg)return 'Une erreur est survenue.';
-      if(msg.includes('Invalid login'))return 'Email ou mot de passe incorrect.';
-      if(msg.includes('already registered'))return 'Cette adresse email est déjà utilisée.';
-      if(msg.includes('Email not confirmed'))return 'Confirmez votre email avant de vous connecter.';
-      if(msg.includes('Password'))return 'Mot de passe trop faible (8 caractères minimum).';
-      if(msg.includes('rate limit'))return 'Trop de tentatives, réessayez dans quelques minutes.';
+
+    function mapError(msg) {
+      if (!msg) return 'Une erreur est survenue.';
+      if (msg.includes('Invalid login') || msg.includes('invalid_credentials')) return 'Email ou mot de passe incorrect.';
+      if (msg.includes('already registered')) return 'Cette adresse email est déjà utilisée.';
+      if (msg.includes('Email not confirmed') || msg.includes('email_not_confirmed')) return 'Confirmez votre email avant de vous connecter.';
+      if (msg.includes('Password')) return 'Mot de passe trop faible (8 caractères minimum).';
+      if (msg.includes('rate limit')) return 'Trop de tentatives, réessayez dans quelques minutes.';
       return msg;
     }
   </script>
