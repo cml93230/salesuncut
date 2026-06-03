@@ -255,7 +255,6 @@ function renderProfil(){
   var h=scored
     ?'<div class="pool-banner live"><span class="pool-icon">\u2705</span><div class="pool-text"><strong>Profil visible dans le pool recruteurs</strong>Tu apparais dans les r\u00e9sultats de recherche des recruteurs.</div></div>'
     :'<div class="pool-banner locked"><span class="pool-icon">\uD83D\uDD12</span><div class="pool-text"><strong>Non visible dans le pool recruteurs</strong>Passe la simulation audio pour d\u00e9bloquer ton acc\u00e8s au pool et obtenir tes scores.</div></div>';
-  // Card preview
   h+='<div class="profil-preview-wrap"><div class="profil-card-preview"><div class="pcp-portrait">';
   h+=c.photo_url?'<img src="'+c.photo_url+'" alt="'+fullName+'"/>':'<div class="pcp-ph">\uD83D\uDC64</div>';
   if(c.famille)h+='<span class="pcp-family">'+c.famille+'</span>';
@@ -272,7 +271,6 @@ function renderProfil(){
     h+='</div>';
   }
   h+='<div class="pcp-footer"><span class="pcp-role">'+(c.availability||'')+'</span></div></div></div>';
-  // Info panel
   h+='<div class="profil-info-panel">';
   h+='<div class="info-block"><div class="info-block-title">Identit\u00e9 &amp; Contact</div><div class="info-rows">';
   h+=ir('Pr\u00e9nom',c.prenom);h+=ir('Nom',c.nom);h+=ir('Localisation',c.location);h+=ir('Email',currentUser.email);
@@ -292,8 +290,7 @@ function renderProfil(){
     h+=ir('Disponibilit\u00e9',c.availability);h+=ir('Remote',c.remote);
     h+='</div></div>';
   }
-  h+='</div></div>';// close info-panel + preview-wrap
-  // 6 dimensions
+  h+='</div></div>';
   h+='<div class="section-head"><h3>6 dimensions &eacute;valu\u00e9es</h3><span class="eyebrow">'+(scored?'Bar\u00e8me /100':'Simulation requise')+'</span></div><div class="scores-grid">';
   dims.forEach(function(d){
     if(scored&&d.val!=null){h+='<div class="score-card"><div class="score-card-dim">'+d.lbl+'</div><div class="score-card-val">'+d.val+'<small>/'+d.max+'</small></div><div class="score-bar-bg"><div class="score-bar-fill" style="width:'+Math.round(d.val/d.max*100)+'%"></div></div>'+(d.j?'<div class="score-card-justif">'+d.j+'</div>':'')+'</div>';}
@@ -320,7 +317,6 @@ function renderEdit(){
   var remotes=['Full remote','Hybride','Pr\u00e9sentiel'];
   var hunting=c.hunting_pct||50;
   var h='<div class="edit-grid">';
-  // Photo + identite
   h+='<div class="edit-card"><div class="edit-card-title">Photo &amp; Identit\u00e9</div><div class="edit-form">';
   h+='<div><label class="edit-label">Photo de profil</label><div class="photo-upload-wrap">';
   h+='<div class="photo-preview" id="photoPreview">'+(c.photo_url?'<img src="'+c.photo_url+'" alt="photo"/>':'<div class="ph">\uD83D\uDC64</div>')+'</div>';
@@ -335,7 +331,6 @@ function renderEdit(){
   if(scored){h+='<select class="edit-select" id="editPublic"><option value="true" '+(c.is_public!==false?'selected':'')+'>Visible dans le pool</option><option value="false" '+(c.is_public===false?'selected':'')+'>Masqu\u00e9</option></select>';}
   else{h+='<select class="edit-select" id="editPublic" disabled><option>Simulation requise pour activer</option></select><div class="disabled-note">Passe la simulation pour appara\u00eetre dans le pool.</div>';}
   h+='</div></div></div>';
-  // Exp
   h+='<div class="edit-card"><div class="edit-card-title">Exp\u00e9rience</div><div class="edit-form">';
   h+='<div><label class="edit-label">R\u00f4le</label><select class="edit-select" id="editRole">'+roles.map(function(r){return '<option '+(c.role_type===r?'selected':'')+'>'+r+'</option>';}).join('')+'</select></div>';
   h+='<div><label class="edit-label">Ann\u00e9es d\u2019exp.</label><input type="number" class="edit-input" id="editExp" value="'+(c.experience_years||0)+'" min="0" max="30"/></div>';
@@ -343,14 +338,12 @@ function renderEdit(){
   h+='<div><label class="edit-label">Cycle de vente</label><input class="edit-input" id="editCycle" value="'+(c.sales_cycle||'')+'" placeholder="3-6 mois"/></div>';
   h+='<div><label class="edit-label">Atteinte quota (%)</label><input type="number" class="edit-input" id="editQuota" value="'+(c.quota_attainment||0)+'" min="0" max="300"/></div>';
   h+='</div></div>';
-  // Package
   h+='<div class="edit-card"><div class="edit-card-title">Package souhait\u00e9</div><div class="edit-form">';
   h+='<div><label class="edit-label">Fixe (\u20ac)</label><input type="number" class="edit-input" id="editFixed" value="'+(c.ote_fixed||0)+'"/></div>';
   h+='<div><label class="edit-label">Variable (\u20ac)</label><input type="number" class="edit-input" id="editVariable" value="'+(c.ote_variable||0)+'"/></div>';
   h+='<div><label class="edit-label">Disponibilit\u00e9</label><select class="edit-select" id="editAvail">'+avails.map(function(a){return '<option '+(c.availability===a?'selected':'')+'>'+a+'</option>';}).join('')+'</select></div>';
   h+='<div><label class="edit-label">Remote</label><select class="edit-select" id="editRemote">'+remotes.map(function(r){return '<option '+(c.remote===r?'selected':'')+'>'+r+'</option>';}).join('')+'</select></div>';
   h+='</div></div>';
-  // Terrain
   h+='<div class="edit-card"><div class="edit-card-title">Profil terrain</div><div class="edit-form">';
   h+='<div><label class="edit-label">Hunting <span id="huntingVal">'+hunting+'</span>%</label>';
   h+='<input type="range" class="edit-range" id="editHunting" value="'+hunting+'" min="0" max="100" oninput="document.getElementById(\'huntingVal\').textContent=this.value;document.getElementById(\'farmingVal\').textContent=100-this.value"/>';
@@ -375,45 +368,68 @@ async function handlePhotoChange(event){
   var up=await sb.storage.from('candidate-photos').upload(path,file,{upsert:true,contentType:file.type});
   if(up.error){document.getElementById('photoUploading').style.display='none';showToast('Erreur upload : '+up.error.message,'error');return;}
   var publicUrl=sb.storage.from('candidate-photos').getPublicUrl(path).data.publicUrl+'?t='+Date.now();
-  if(candidateData){await sb.from('candidates').update({photo_url:publicUrl}).eq('id',candidateData.id);candidateData.photo_url=publicUrl;}
-  else{await sb.from('candidates').insert({user_id:currentUser.id,email:currentUser.email,photo_url:publicUrl,is_public:false});await loadCandidateData();}
+  if(candidateData){
+    await sb.from('candidates').update({photo_url:publicUrl}).eq('id',candidateData.id);
+    candidateData.photo_url=publicUrl;
+  }else{
+    await sb.from('candidates').insert({user_id:currentUser.id,email:currentUser.email,photo_url:publicUrl,is_public:false});
+    await loadCandidateData();
+  }
   document.getElementById('photoUploading').style.display='none';
   showToast('Photo mise \u00e0 jour \u2713','success');
 }
 
-/* ── SAVE ────────────────────────────────────────────────────── */
+/* ── SAVE ─────────────────────────────────────────────────────
+   FIX : try/catch explicite — les erreurs Supabase sont retournees
+   dans r.error, pas throws. On check r.error apres chaque appel.
+────────────────────────────────────────────────────────────── */
 async function saveProfile(){
   var btn=document.getElementById('saveBtn');
   btn.disabled=true;btn.textContent='Sauvegarde\u2026';
-  var hunting=parseInt(document.getElementById('editHunting').value);
-  var fixed=parseInt(document.getElementById('editFixed').value)||0;
-  var variable=parseInt(document.getElementById('editVariable').value)||0;
-  var scored=!!(candidateData&&candidateData.score_global);
-  var isPublic=scored?document.getElementById('editPublic').value==='true':false;
-  var updates={
-    prenom:document.getElementById('editPrenom').value,
-    nom:document.getElementById('editNom').value,
-    location:document.getElementById('editLocation').value,
-    linkedin_url:document.getElementById('editLinkedin').value,
-    is_public:isPublic,
-    role_type:document.getElementById('editRole').value,
-    experience_years:parseInt(document.getElementById('editExp').value)||0,
-    deal_size:document.getElementById('editDeal').value,
-    sales_cycle:document.getElementById('editCycle').value,
-    quota_attainment:parseInt(document.getElementById('editQuota').value)||0,
-    ote_fixed:fixed,ote_variable:variable,ote_total:fixed+variable,
-    availability:document.getElementById('editAvail').value,
-    remote:document.getElementById('editRemote').value,
-    hunting_pct:hunting,farming_pct:100-hunting,
-    updated_at:new Date().toISOString()
-  };
-  if(candidateData){await sb.from('candidates').update(updates).eq('id',candidateData.id);}
-  else{await sb.from('candidates').insert(Object.assign({},updates,{user_id:currentUser.id,email:currentUser.email,is_public:false}));}
-  // Recharger + basculer sur "Mon profil" pour voir les changements immediatement
-  await loadCandidateData();
-  switchTab('profil',document.getElementById('tabBtnProfil'));
-  showToast('Profil mis \u00e0 jour \u2713','success');
-  btn.disabled=false;
+  try{
+    var hunting=parseInt(document.getElementById('editHunting').value);
+    var fixed=parseInt(document.getElementById('editFixed').value)||0;
+    var variable=parseInt(document.getElementById('editVariable').value)||0;
+    var scored=!!(candidateData&&candidateData.score_global);
+    var isPublic=scored?document.getElementById('editPublic').value==='true':false;
+    var updates={
+      prenom:document.getElementById('editPrenom').value||null,
+      nom:document.getElementById('editNom').value||null,
+      location:document.getElementById('editLocation').value||null,
+      linkedin_url:document.getElementById('editLinkedin').value||null,
+      is_public:isPublic,
+      role_type:document.getElementById('editRole').value,
+      experience_years:parseInt(document.getElementById('editExp').value)||0,
+      deal_size:document.getElementById('editDeal').value||null,
+      sales_cycle:document.getElementById('editCycle').value||null,
+      quota_attainment:parseInt(document.getElementById('editQuota').value)||0,
+      ote_fixed:fixed,ote_variable:variable,ote_total:fixed+variable,
+      availability:document.getElementById('editAvail').value,
+      remote:document.getElementById('editRemote').value,
+      hunting_pct:hunting,farming_pct:100-hunting,
+      updated_at:new Date().toISOString()
+    };
+    var r;
+    if(candidateData){
+      r=await sb.from('candidates').update(updates).eq('id',candidateData.id);
+    }else{
+      // Premiere sauvegarde : creer la ligne
+      r=await sb.from('candidates').insert(Object.assign({},updates,{
+        user_id:currentUser.id,
+        email:currentUser.email,
+        is_public:false
+      }));
+    }
+    if(r.error){throw new Error(r.error.message+'  (code: '+r.error.code+')');}
+    // Recharger + basculer sur "Mon profil"
+    await loadCandidateData();
+    switchTab('profil',document.getElementById('tabBtnProfil'));
+    showToast('Profil mis \u00e0 jour \u2713','success');
+  }catch(e){
+    showToast('Erreur : '+e.message,'error');
+  }finally{
+    btn.disabled=false;btn.textContent='Sauvegarder &amp; voir mon profil \u2192';
+  }
 }
 
 /* ── CONTACTS ────────────────────────────────────────────────── */
