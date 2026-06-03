@@ -6,3 +6,378 @@
   <title>SalesUncut — Dashboard Recruteur</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .auth-overlay { position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;align-items:center;justify-content:center;padding:24px; }
+    .auth-overlay.hidden { display:none; }
+    .auth-box { width:100%;max-width:460px;background:var(--cream);border:1.5px solid var(--ink);border-radius:8px;overflow:hidden; }
+    .auth-header { background:var(--ink);padding:28px 36px;display:flex;align-items:center;justify-content:space-between; }
+    .auth-logo { font-family:var(--font-display);font-weight:900;font-size:18px;color:var(--cream);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:8px;text-decoration:none; }
+    .auth-logo .dot { width:8px;height:8px;background:var(--gold);border-radius:50%; }
+    .auth-badge { font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:4px 10px;border-radius:20px; }
+    .auth-body { padding:36px; }
+    .auth-tabs { display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;margin-bottom:28px; }
+    .auth-tab { padding:12px;text-align:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:var(--cream-2);color:var(--teal-3);border:none;transition:all .2s; }
+    .auth-tab.active { background:var(--ink);color:var(--cream); }
+    .auth-form { display:flex;flex-direction:column;gap:16px; }
+    .form-group { display:flex;flex-direction:column;gap:6px; }
+    .form-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3); }
+    .form-input { padding:12px 16px;border:1.5px solid var(--cream-3);border-radius:4px;background:var(--cream);font-family:var(--font-sans);font-size:15px;color:var(--ink);transition:border-color .2s;outline:none; }
+    .form-input:focus { border-color:var(--gold-deep); }
+    .form-input::placeholder { color:var(--teal-3); }
+    .form-row { display:grid;grid-template-columns:1fr 1fr;gap:12px; }
+    .auth-submit { margin-top:8px;padding:15px;background:var(--gold-deep);color:var(--cream);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:background .2s; }
+    .auth-submit:hover { background:var(--ink); }
+    .auth-submit:disabled { opacity:.5;cursor:not-allowed; }
+    .auth-error { padding:12px 16px;background:rgba(179,78,42,.1);border:1px solid var(--rust);border-radius:4px;font-size:13px;color:var(--rust);display:none; }
+    .auth-error.visible { display:block; }
+    .auth-switch { text-align:center;margin-top:16px;font-size:13px;color:var(--teal-3); }
+    .auth-switch a { color:var(--gold-deep);cursor:pointer;text-decoration:underline; }
+    .dashboard { display:none; }
+    .dashboard.visible { display:block; }
+    .recruiter-bar { background:var(--ink);color:var(--cream);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:1px solid rgba(255,248,231,.1); }
+    .recruiter-bar-left { display:flex;align-items:center;gap:32px; }
+    .recruiter-bar-logo { font-family:var(--font-display);font-weight:900;font-size:16px;color:var(--cream);text-transform:uppercase;letter-spacing:.05em;text-decoration:none;display:flex;align-items:center;gap:6px; }
+    .recruiter-bar-logo .dot { width:6px;height:6px;background:var(--gold);border-radius:50%; }
+    .recruiter-bar-tabs { display:flex;gap:0; }
+    .recruiter-bar-tab { padding:0 20px;height:52px;display:flex;align-items:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:rgba(255,248,231,.5);border-bottom:2px solid transparent;transition:all .2s; }
+    .recruiter-bar-tab.active { color:var(--cream);border-bottom-color:var(--gold); }
+    .recruiter-bar-tab:hover { color:var(--cream); }
+    .recruiter-bar-right { display:flex;align-items:center;gap:16px; }
+    .recruiter-name { font-family:var(--font-mono);font-size:11px;color:rgba(255,248,231,.6);letter-spacing:.08em; }
+    .btn-logout { font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border:1px solid rgba(255,248,231,.2);border-radius:3px;background:none;color:rgba(255,248,231,.6);cursor:pointer;transition:all .2s; }
+    .btn-logout:hover { border-color:var(--rust);color:var(--rust); }
+    .tab-panel { display:none;padding:40px; }
+    .tab-panel.active { display:block; }
+    .filters-row { display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:32px;padding:20px 24px;background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:6px; }
+    .filter-label { font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-right:4px; }
+    .filter-select { padding:8px 14px;border:1.5px solid var(--cream-3);border-radius:4px;background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;outline:none; }
+    .filter-sep { width:1px;height:24px;background:var(--cream-3); }
+    .pool-count { margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--teal-3); }
+    .pool-count span { color:var(--gold-deep);font-weight:700; }
+    .pool-grid-dash { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px; }
+    .dash-card { background:var(--cream-2);border:1.5px solid var(--ink);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;position:relative;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s;cursor:pointer; }
+    .dash-card:hover { transform:translateY(-4px);box-shadow:var(--shadow-card-lg); }
+    .dash-card.gold { border-color:var(--golden);background:linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%); }
+    .dash-card.silver { border-color:var(--silver); }
+    .dash-card.bronze { border-color:var(--bronze); }
+    .dash-card-shortlist { position:absolute;top:10px;right:10px;z-index:5;width:32px;height:32px;border-radius:50%;background:rgba(255,248,231,.9);border:1.5px solid var(--cream-3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:16px; }
+    .dash-card-shortlist:hover,.dash-card-shortlist.saved { background:var(--gold-deep);border-color:var(--gold-deep); }
+    .dash-card-portrait { width:100%;aspect-ratio:1;background:var(--cream-3);position:relative;overflow:hidden; }
+    .dash-card-portrait img { width:100%;height:100%;object-fit:cover;object-position:center top;display:block; }
+    .dash-card-portrait .no-photo { width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:48px;opacity:.3; }
+    .level-stamp { position:absolute;bottom:8px;right:8px;font-family:var(--font-display);font-weight:900;font-size:10px;letter-spacing:.08em;padding:4px 10px;border-radius:3px;z-index:2; }
+    .level-stamp.GOLD { background:var(--golden);color:var(--ink); }
+    .level-stamp.SILVER { background:var(--silver);color:var(--ink); }
+    .level-stamp.BRONZE { background:var(--bronze);color:var(--cream); }
+    .family-tag { position:absolute;top:8px;left:8px;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 7px;border-radius:3px;z-index:2; }
+    .dash-card-body { padding:14px; }
+    .dash-card-name { font-family:var(--font-display);font-weight:900;font-size:15px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1;margin-bottom:2px; }
+    .dash-card-meta { font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.08em;margin-bottom:10px; }
+    .dash-card-score { font-family:var(--font-display);font-weight:900;font-size:28px;color:var(--ink);line-height:1;margin-bottom:10px; }
+    .dash-card-score small { font-size:12px;color:var(--teal-3);font-weight:400; }
+    .dash-card-dims { display:flex;flex-direction:column;gap:3px; }
+    .dim-mini { display:flex;align-items:center;gap:6px; }
+    .dim-mini-lbl { font-family:var(--font-mono);font-size:8px;color:var(--teal-3);width:52px;flex-shrink:0;text-transform:uppercase;letter-spacing:.06em; }
+    .dim-mini-bar { flex:1;height:2.5px;background:var(--cream-3);border-radius:2px;overflow:hidden; }
+    .dim-mini-bar i { display:block;height:100%;background:var(--gold-deep);border-radius:2px; }
+    .dim-mini-val { font-family:var(--font-mono);font-size:8px;color:var(--ink);width:14px;text-align:right; }
+    .dash-card-footer { display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--cream-3);padding-top:10px;margin-top:10px; }
+    .dash-card-role { font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.06em;text-transform:uppercase; }
+    .btn-see-profile { font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;background:var(--ink);color:var(--cream);border-radius:3px;text-decoration:none;transition:background .2s; }
+    .btn-see-profile:hover { background:var(--gold-deep); }
+    .shortlist-empty { text-align:center;padding:80px 40px;font-family:var(--font-mono);font-size:13px;color:var(--teal-3);letter-spacing:.08em; }
+    .shortlist-empty .icon { font-size:48px;margin-bottom:16px;opacity:.3; }
+    .shortlist-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px; }
+    .shortlist-row { background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px; }
+    .shortlist-avatar { width:48px;height:48px;border-radius:50%;background:var(--cream-3);overflow:hidden;flex-shrink:0; }
+    .shortlist-avatar img { width:100%;height:100%;object-fit:cover; }
+    .shortlist-info { flex:1;min-width:0; }
+    .shortlist-name { font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:2px; }
+    .shortlist-meta { font-family:var(--font-mono);font-size:10px;color:var(--teal-3); }
+    .shortlist-score { font-family:var(--font-display);font-weight:900;font-size:22px;color:var(--gold-deep);flex-shrink:0; }
+    .shortlist-actions { display:flex;gap:8px;flex-shrink:0; }
+    .btn-shortlist-action { padding:6px 12px;border-radius:3px;font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1.5px solid;transition:all .2s;text-decoration:none;display:flex;align-items:center; }
+    .btn-shortlist-action.view { background:var(--ink);color:var(--cream);border-color:var(--ink); }
+    .btn-shortlist-action.view:hover { background:var(--gold-deep);border-color:var(--gold-deep); }
+    .btn-shortlist-action.remove { background:none;color:var(--teal-3);border-color:var(--cream-3); }
+    .btn-shortlist-action.remove:hover { border-color:var(--rust);color:var(--rust); }
+    .account-grid { display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px; }
+    .account-card { background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:8px;padding:28px; }
+    .account-card-title { font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:16px; }
+    .account-info-row { display:flex;flex-direction:column;gap:3px;margin-bottom:16px; }
+    .account-info-lbl { font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.1em;text-transform:uppercase; }
+    .account-info-val { font-size:15px;color:var(--ink);font-weight:500; }
+    .plan-badge { display:inline-flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700; }
+    .plan-badge.free { background:var(--cream-3);color:var(--teal-2); }
+    .plan-badge.starter { background:rgba(201,168,106,.15);color:var(--gold-deep);border:1px solid var(--gold); }
+    .plan-badge.pro { background:var(--ink);color:var(--gold); }
+    .loading-state { display:flex;align-items:center;justify-content:center;padding:80px;gap:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3); }
+    .spinner { width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-3);border-top-color:var(--gold-deep);animation:spin .7s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .empty-state { text-align:center;padding:80px 40px;font-family:var(--font-mono);font-size:12px;color:var(--teal-3);letter-spacing:.08em;text-transform:uppercase; }
+    .empty-state .big { font-size:48px;margin-bottom:12px;opacity:.25; }
+    .toast { position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--cream);padding:14px 20px;border-radius:6px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;border-left:3px solid var(--gold);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none; }
+    .toast.show { transform:translateY(0);opacity:1; }
+    .toast.success { border-left-color:#4caf50; }
+    .toast.error { border-left-color:var(--rust); }
+    @media(max-width:900px) { .recruiter-bar{padding:0 20px;} .tab-panel{padding:24px 20px;} .account-grid{grid-template-columns:1fr;} .recruiter-bar-tabs{display:none;} }
+  </style>
+</head>
+<body class="page-enter">
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-header">
+      <a href="index.html" class="auth-logo"><span class="dot"></span>SalesUncut</a>
+      <span class="auth-badge">Espace Recruteur</span>
+    </div>
+    <div class="auth-body">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Connexion</button>
+        <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Créer un compte</button>
+      </div>
+      <div id="formLogin">
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
+          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required/></div>
+          <div class="auth-error" id="loginError"></div>
+          <button type="submit" class="auth-submit" id="loginBtn">Se connecter →</button>
+        </form>
+        <div class="auth-switch">Pas encore de compte ? <a onclick="switchAuthTab('signup')">Créer un compte</a></div>
+      </div>
+      <div id="formSignup" style="display:none">
+        <form class="auth-form" onsubmit="handleSignup(event)">
+          <div class="form-group"><label class="form-label">Nom de l'entreprise</label><input type="text" id="signupCompany" class="form-input" placeholder="Acme Corp" required/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Prénom</label><input type="text" id="signupPrenom" class="form-input" placeholder="Marie" required/></div>
+            <div class="form-group"><label class="form-label">Nom</label><input type="text" id="signupNom" class="form-input" placeholder="Dupont" required/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
+          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="signupPassword" class="form-input" placeholder="8 caractères minimum" required minlength="8"/></div>
+          <div class="auth-error" id="signupError"></div>
+          <button type="submit" class="auth-submit" id="signupBtn">Créer mon compte →</button>
+        </form>
+        <div class="auth-switch">Déjà un compte ? <a onclick="switchAuthTab('login')">Se connecter</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard" id="dashboard">
+  <div class="recruiter-bar">
+    <div class="recruiter-bar-left">
+      <a href="index.html" class="recruiter-bar-logo"><span class="dot"></span>SalesUncut</a>
+      <div class="recruiter-bar-tabs">
+        <div class="recruiter-bar-tab active" onclick="switchTab('pool',this)">Pool candidats</div>
+        <div class="recruiter-bar-tab" onclick="switchTab('shortlist',this)">Ma shortlist <span id="shortlistCount" style="margin-left:6px;background:var(--gold-deep);color:var(--cream);padding:2px 7px;border-radius:10px;font-size:9px;"></span></div>
+        <div class="recruiter-bar-tab" onclick="switchTab('account',this)">Mon compte</div>
+      </div>
+    </div>
+    <div class="recruiter-bar-right">
+      <span class="recruiter-name" id="recruiterNameDisplay"></span>
+      <button class="btn-logout" onclick="handleLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <div class="tab-panel active" id="panelPool">
+    <div class="filters-row">
+      <span class="filter-label">Filtrer :</span>
+      <select class="filter-select" id="filterNiveau" onchange="applyFilters()">
+        <option value="">Tous les niveaux</option>
+        <option value="GOLD">GOLD</option>
+        <option value="SILVER">SILVER</option>
+        <option value="BRONZE">BRONZE</option>
+      </select>
+      <div class="filter-sep"></div>
+      <select class="filter-select" id="filterFamille" onchange="applyFilters()">
+        <option value="">Toutes les familles</option>
+        <option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option>
+        <option>Ops ERP</option><option>Cyber</option><option>Marketing</option>
+        <option>Énergie</option><option>Télécom</option><option>Assurance</option>
+      </select>
+      <div class="filter-sep"></div>
+      <select class="filter-select" id="filterScore" onchange="applyFilters()">
+        <option value="">Tous les scores</option>
+        <option value="80">≥ 80 (GOLD)</option>
+        <option value="60">≥ 60 (SILVER+)</option>
+      </select>
+      <span class="pool-count"><span id="candidateCountDisplay">0</span> profils</span>
+    </div>
+    <div id="poolGrid" class="pool-grid-dash">
+      <div class="loading-state"><div class="spinner"></div> Chargement du pool…</div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panelShortlist">
+    <div id="shortlistContent"><div class="loading-state"><div class="spinner"></div> Chargement…</div></div>
+  </div>
+
+  <div class="tab-panel" id="panelAccount">
+    <div class="account-grid">
+      <div class="account-card">
+        <div class="account-card-title">Informations</div>
+        <div class="account-info-row"><span class="account-info-lbl">Entreprise</span><span class="account-info-val" id="accCompany">—</span></div>
+        <div class="account-info-row"><span class="account-info-lbl">Contact</span><span class="account-info-val" id="accContact">—</span></div>
+        <div class="account-info-row"><span class="account-info-lbl">Email</span><span class="account-info-val" id="accEmail">—</span></div>
+      </div>
+      <div class="account-card">
+        <div class="account-card-title">Abonnement</div>
+        <div class="account-info-row"><span class="account-info-lbl">Plan actuel</span><span class="account-info-val"><span class="plan-badge free" id="accPlan">Free</span></span></div>
+        <div class="account-info-row" style="margin-top:12px"><span class="account-info-lbl">Accès pool</span><span class="account-info-val" id="accAccess">1 profil complet</span></div>
+        <a href="mailto:contact@salesuncut.com?subject=Upgrade recruteur" class="btn gold sm" style="margin-top:16px;display:inline-flex;">Upgrader mon plan →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+const SUPABASE_URL='https://svtyzkypmzmtcqunzfyy.supabase.co';
+const SUPABASE_KEY='sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB';
+const{createClient}=supabase;
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set();
+
+function switchAuthTab(t){
+  document.getElementById('formLogin').style.display=t==='login'?'block':'none';
+  document.getElementById('formSignup').style.display=t==='signup'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',t==='login');
+  document.getElementById('tabSignup').classList.toggle('active',t==='signup');
+}
+
+async function handleLogin(e){
+  e.preventDefault();
+  const btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
+  btn.disabled=true;btn.textContent='Connexion…';err.classList.remove('visible');
+  const{error}=await sb.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value});
+  if(error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter →';}
+}
+
+async function handleSignup(e){
+  e.preventDefault();
+  const btn=document.getElementById('signupBtn'),err=document.getElementById('signupError');
+  btn.disabled=true;btn.textContent='Création…';err.classList.remove('visible');
+  const email=document.getElementById('signupEmail').value,password=document.getElementById('signupPassword').value;
+  const company=document.getElementById('signupCompany').value,prenom=document.getElementById('signupPrenom').value,nom=document.getElementById('signupNom').value;
+  const{data,error}=await sb.auth.signUp({email,password});
+  if(error){err.textContent=error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Créer mon compte →';return;}
+  if(data.user)await sb.from('recruiters').insert({user_id:data.user.id,email,company_name:company,prenom,nom,plan:'free'});
+}
+
+async function handleLogout(){await sb.auth.signOut();showAuth();}
+
+function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
+function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
+
+sb.auth.onAuthStateChange(async(event,session)=>{
+  if(session){showDashboard();await loadRecruiterProfile(session.user);await loadCandidates();await loadShortlist();}
+  else showAuth();
+});
+
+async function loadRecruiterProfile(user){
+  const{data}=await sb.from('recruiters').select('*').eq('user_id',user.id).single();
+  currentRecruiter=data;
+  if(data){
+    document.getElementById('recruiterNameDisplay').textContent=data.company_name;
+    document.getElementById('accCompany').textContent=data.company_name;
+    document.getElementById('accContact').textContent=`${data.prenom||''} ${data.nom||''}`.trim()||'—';
+    document.getElementById('accEmail').textContent=data.email;
+    const pb=document.getElementById('accPlan');pb.textContent=data.plan.toUpperCase();pb.className=`plan-badge ${data.plan}`;
+  }
+}
+
+async function loadCandidates(){
+  const demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(c=>({
+    simulation_id:c.id,prenom:c.anonymous?'Anonyme':c.name.split(' ')[0],nom:c.anonymous?'':(c.name.split(' ').slice(1).join(' ')||''),
+    photo_url:c.photo||null,niveau_certifie:c.level==='gold'?'GOLD':c.level==='silver'?'SILVER':'BRONZE',
+    score_global:c.score,famille:SU_DATA.getFamilyById(c.family).name,role_type:c.role||'AE',
+    score_accroche:c.bars?c.bars[0]:null,score_decouverte:c.bars?c.bars[1]:null,
+    score_objections:c.bars?c.bars[3]:null,score_closing:c.bars?c.bars[5]:null,is_demo:true
+  })):[];
+  const{data:real}=await sb.from('candidates').select('*').eq('is_public',true).order('score_global',{ascending:false});
+  allCandidates=[...demo,...(real||[]).map(c=>({...c,is_demo:false}))];
+  renderPool(allCandidates);
+}
+
+async function loadShortlist(){
+  if(!currentRecruiter)return;
+  const{data}=await sb.from('shortlists').select('candidate_id').eq('recruiter_id',currentRecruiter.id);
+  shortlistedIds=new Set((data||[]).map(s=>s.candidate_id));
+  updateShortlistCount();renderShortlist();
+}
+
+function applyFilters(){
+  const niv=document.getElementById('filterNiveau').value,fam=document.getElementById('filterFamille').value,sc=parseInt(document.getElementById('filterScore').value)||0;
+  renderPool(allCandidates.filter(c=>(!niv||c.niveau_certifie===niv)&&(!fam||c.famille===fam)&&(!sc||c.score_global>=sc)));
+}
+
+function renderPool(candidates){
+  const grid=document.getElementById('poolGrid');
+  document.getElementById('candidateCountDisplay').textContent=candidates.length;
+  if(!candidates.length){grid.innerHTML='<div class="empty-state"><div class="big">🔍</div>Aucun profil ne correspond à ces filtres.</div>';return;}
+  grid.innerHTML=candidates.map(c=>{
+    const lc=(c.niveau_certifie||'BRONZE').toLowerCase(),isSaved=shortlistedIds.has(c.simulation_id);
+    const name=(c.prenom&&c.prenom!=='Anonyme')?`${c.prenom} ${c.nom||''}`.trim():'Anonyme';
+    const dims=[{lbl:'Accroche',val:c.score_accroche,max:15},{lbl:'Découverte',val:c.score_decouverte,max:25},{lbl:'Objections',val:c.score_objections,max:15},{lbl:'Closing',val:c.score_closing,max:15}].filter(d=>d.val!=null);
+    return`<div class="dash-card ${lc}" onclick="location.href='profil.html?id=${c.simulation_id}'">
+      <button class="dash-card-shortlist ${isSaved?'saved':''}" onclick="event.stopPropagation();toggleShortlist('${c.simulation_id}',this)">${isSaved?'♥':'♡'}</button>
+      <div class="dash-card-portrait">${c.photo_url?`<img src="${c.photo_url}" alt="${name}" loading="lazy"/>`:'<div class="no-photo">👤</div>'}
+        <span class="family-tag">${c.famille||'—'}</span><span class="level-stamp ${c.niveau_certifie}">${c.niveau_certifie}</span></div>
+      <div class="dash-card-body">
+        <div class="dash-card-name">${name}</div>
+        <div class="dash-card-meta">${c.role_type||'AE'} · ${c.is_demo?'Profil démo':'Certifié'}</div>
+        <div class="dash-card-score">${c.score_global}<small>/100</small></div>
+        ${dims.length?`<div class="dash-card-dims">${dims.map(d=>`<div class="dim-mini"><span class="dim-mini-lbl">${d.lbl}</span><div class="dim-mini-bar"><i style="width:${Math.round(d.val/d.max*100)}%"></i></div><span class="dim-mini-val">${d.val}</span></div>`).join('')}</div>`:''}
+        <div class="dash-card-footer"><span class="dash-card-role">${c.famille||'—'}</span><a class="btn-see-profile" href="profil.html?id=${c.simulation_id}" onclick="event.stopPropagation()">Voir →</a></div>
+      </div></div>`;
+  }).join('');
+}
+
+async function toggleShortlist(sid,btn){
+  if(!currentRecruiter){showToast('Connexion requise','error');return;}
+  const isSaved=shortlistedIds.has(sid);
+  if(isSaved){
+    await sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',sid);
+    shortlistedIds.delete(sid);btn.textContent='♡';btn.classList.remove('saved');showToast('Retiré de la shortlist');
+  }else{
+    await sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:sid});
+    shortlistedIds.add(sid);btn.textContent='♥';btn.classList.add('saved');showToast('Ajouté à la shortlist ♥','success');
+  }
+  updateShortlistCount();renderShortlist();
+}
+
+function updateShortlistCount(){const el=document.getElementById('shortlistCount');el.textContent=shortlistedIds.size>0?shortlistedIds.size:'';}
+
+function renderShortlist(){
+  const container=document.getElementById('shortlistContent');
+  const saved=allCandidates.filter(c=>shortlistedIds.has(c.simulation_id));
+  if(!saved.length){container.innerHTML=`<div class="shortlist-empty"><div class="icon">♡</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur ♡</div>`;return;}
+  container.innerHTML=`<div class="shortlist-grid">${saved.map(c=>{
+    const name=(c.prenom&&c.prenom!=='Anonyme')?`${c.prenom} ${c.nom||''}`.trim():'Anonyme';
+    return`<div class="shortlist-row">
+      <div class="shortlist-avatar">${c.photo_url?`<img src="${c.photo_url}" alt="${name}"/>`:''}  </div>
+      <div class="shortlist-info"><div class="shortlist-name">${name}</div><div class="shortlist-meta">${c.niveau_certifie} · ${c.famille||'—'}</div></div>
+      <div class="shortlist-score">${c.score_global}</div>
+      <div class="shortlist-actions">
+        <a href="profil.html?id=${c.simulation_id}" class="btn-shortlist-action view">Voir</a>
+        <button class="btn-shortlist-action remove" onclick="toggleShortlist('${c.simulation_id}',this)">✕</button>
+      </div></div>`;
+  }).join('')}</div>`;
+}
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.recruiter-bar-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(`panel${tab.charAt(0).toUpperCase()+tab.slice(1)}`).classList.add('active');
+  el.classList.add('active');
+}
+
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className=`toast ${type} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
