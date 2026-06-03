@@ -15,8 +15,6 @@
       overflow: hidden; box-shadow: var(--shadow-card-lg);
       animation: fadeUp .45s ease both;
     }
-
-    /* Colonne gauche */
     .auth-brand {
       background: var(--ink); color: var(--cream);
       padding: 52px 44px; display: flex; flex-direction: column;
@@ -60,11 +58,7 @@
       font-family: var(--font-mono); font-size: 10px;
       letter-spacing: .1em; color: rgba(255,248,231,.25); text-transform: uppercase;
     }
-
-    /* Colonne droite */
     .auth-form-col { background: var(--cream); padding: 52px 44px; display: flex; flex-direction: column; }
-
-    /* Onglets rôle */
     .role-tabs {
       display: grid; grid-template-columns: 1fr 1fr;
       border: 1.5px solid var(--ink); border-radius: 6px;
@@ -83,8 +77,6 @@
     .role-tab:first-child { border-right: 1.5px solid var(--ink); }
     .role-tab.active { background: var(--ink); color: var(--cream); }
     .role-tab.active small { color: var(--gold); }
-
-    /* Onglets mode */
     .mode-switch {
       display: flex; margin-bottom: 28px; border-bottom: 1.5px solid var(--cream-3);
     }
@@ -95,15 +87,11 @@
       text-transform: uppercase; color: var(--teal-3); cursor: pointer; transition: all .2s;
     }
     .mode-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
-
-    /* Titres */
     .auth-title {
       font-family: var(--font-display); font-weight: 900; font-size: 28px;
       text-transform: uppercase; letter-spacing: -.02em; margin-bottom: 6px; color: var(--ink);
     }
     .auth-subtitle { font-family: var(--font-serif); font-style: italic; color: var(--teal-3); font-size: 15px; margin-bottom: 28px; }
-
-    /* Champs */
     .field { margin-bottom: 16px; }
     .field label {
       display: block; font-family: var(--font-mono); font-size: 10px;
@@ -123,28 +111,20 @@
     }
     .field.has-error input { border-color: var(--rust); }
     .field.has-error .field-error { display: block; }
-
-    /* Bouton submit */
     .auth-submit { width: 100%; margin-top: 8px; justify-content: center; font-size: 13px; padding: 16px; }
     .auth-submit:disabled { opacity: .5; cursor: not-allowed; }
-
-    /* Message retour */
     .auth-message {
       display: none; margin-top: 16px; padding: 12px 16px; border-radius: 4px;
       font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
     }
     .auth-message.success { display: block; background: rgba(45,58,58,.08); border: 1px solid var(--teal-3); color: var(--teal); }
     .auth-message.error   { display: block; background: rgba(179,78,42,.08); border: 1px solid var(--rust); color: var(--rust); }
-
-    /* Lien alternatif */
     .auth-alt { margin-top: 20px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; color: var(--teal-3); text-align: center; }
     .auth-alt button {
       background: none; border: none; color: var(--ink);
       font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em;
       text-decoration: underline; cursor: pointer; padding: 0;
     }
-
-    /* Spinner */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
       display: none; width: 14px; height: 14px;
@@ -153,7 +133,6 @@
     }
     .auth-submit.loading .spinner { display: inline-block; }
     .auth-submit.loading .btn-label { display: none; }
-
     @media (max-width: 760px) {
       .auth-shell { grid-template-columns: 1fr; }
       .auth-brand { display: none; }
@@ -168,6 +147,16 @@
 </head>
 <body class="auth-page">
 
+  <!-- Gestion du callback de confirmation email Supabase -->
+  <script>
+    // Supabase redirige ici avec #access_token=... après confirmation email
+    // On attend que le CDN soit chargé, puis on laisse onAuthStateChange gérer la session
+    if (window.location.hash && window.location.hash.includes('access_token')) {
+      // Nettoyer l'URL sans recharger
+      history.replaceState(null, '', window.location.pathname);
+    }
+  </script>
+
   <nav class="nav">
     <a href="/" class="nav-logo"><span class="dot"></span>SalesUncut</a>
     <div class="nav-links">
@@ -178,8 +167,6 @@
 
   <main class="auth-main">
     <div class="auth-shell">
-
-      <!-- Colonne éditoriale -->
       <div class="auth-brand">
         <a href="/" class="auth-brand-logo"><span class="dot"></span>SalesUncut</a>
         <div class="auth-brand-body">
@@ -194,9 +181,7 @@
         <div class="auth-brand-footer">salesuncut.com · certification commerciale</div>
       </div>
 
-      <!-- Colonne formulaire -->
       <div class="auth-form-col">
-
         <div class="role-tabs" role="tablist">
           <button class="role-tab active" id="tab-candidat" role="tab" aria-selected="true" onclick="setRole('candidat')">
             Candidat
@@ -217,46 +202,37 @@
         <div class="auth-subtitle" id="form-subtitle">Candidat — accès à votre espace de certification</div>
 
         <form id="auth-form" onsubmit="handleSubmit(event)" novalidate>
-
           <div class="field" id="field-email">
             <label for="input-email">Adresse email</label>
             <input type="email" id="input-email" autocomplete="email" placeholder="prenom@exemple.fr">
             <span class="field-error" id="err-email">Email invalide.</span>
           </div>
-
           <div class="field" id="field-password">
             <label for="input-password">Mot de passe</label>
             <input type="password" id="input-password" autocomplete="new-password" placeholder="8 caractères minimum">
             <span class="field-error" id="err-password">8 caractères minimum.</span>
           </div>
-
-          <!-- Champ confirmation — visible dès le départ en mode inscription -->
           <div class="field" id="field-confirm">
             <label for="input-confirm">Confirmer le mot de passe</label>
             <input type="password" id="input-confirm" autocomplete="new-password" placeholder="Retapez votre mot de passe">
             <span class="field-error" id="err-confirm">Les mots de passe ne correspondent pas.</span>
           </div>
-
           <div class="auth-message" id="auth-message"></div>
-
           <button type="submit" class="btn gold auth-submit" id="submit-btn">
             <span class="spinner" aria-hidden="true"></span>
             <span class="btn-label" id="submit-label">Créer mon compte</span>
           </button>
-
         </form>
 
         <div class="auth-alt" id="auth-alt">
           Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>
         </div>
-
       </div>
     </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    // ── Fix : renommer le client pour éviter le conflit avec window.supabase du CDN ──
     const sb = window.supabase.createClient(
       'https://svtyzkypmzmtcqunzfyy.supabase.co',
       'sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB'
@@ -266,20 +242,18 @@
     let currentRole = 'candidat';
     let currentMode = 'inscription';
 
-    // Redirection si déjà connecté
-    (async () => {
-      const { data: { session } } = await sb.auth.getSession();
+    // Si déjà connecté (ou retour de confirmation email) → rediriger
+    sb.auth.onAuthStateChange((event, session) => {
       if (session) {
-        window.location.replace(REDIRECT[session.user.user_metadata?.role || 'candidat']);
+        const role = session.user.user_metadata?.role || 'candidat';
+        window.location.replace(REDIRECT[role]);
       }
-    })();
+    });
 
     function setRole(role) {
       currentRole = role;
       document.getElementById('tab-candidat').classList.toggle('active', role === 'candidat');
       document.getElementById('tab-recruteur').classList.toggle('active', role === 'recruteur');
-      document.getElementById('tab-candidat').setAttribute('aria-selected', role === 'candidat');
-      document.getElementById('tab-recruteur').setAttribute('aria-selected', role === 'recruteur');
       updateLabels();
     }
 
@@ -287,12 +261,9 @@
       currentMode = mode;
       document.getElementById('mode-inscription').classList.toggle('active', mode === 'inscription');
       document.getElementById('mode-connexion').classList.toggle('active', mode === 'connexion');
-      // Champ confirmation : visible uniquement en inscription
       document.getElementById('field-confirm').style.display = mode === 'inscription' ? '' : 'none';
       document.getElementById('input-password').autocomplete = mode === 'inscription' ? 'new-password' : 'current-password';
-      clearMessage();
-      clearErrors();
-      updateLabels();
+      clearMessage(); clearErrors(); updateLabels();
     }
 
     function updateLabels() {
@@ -312,65 +283,54 @@
     }
 
     function validate() {
-      let valid = true;
-      clearErrors();
+      let valid = true; clearErrors();
       const email    = document.getElementById('input-email').value.trim();
       const password = document.getElementById('input-password').value;
       const confirm  = document.getElementById('input-confirm').value;
-
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
-        setFieldError('field-email', 'err-email'); valid = false;
-      }
-      if (!password || password.length < 8) {
-        setFieldError('field-password', 'err-password'); valid = false;
-      }
-      if (currentMode === 'inscription' && password !== confirm) {
-        setFieldError('field-confirm', 'err-confirm'); valid = false;
-      }
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setFieldError('field-email','err-email'); valid=false; }
+      if (!password || password.length < 8) { setFieldError('field-password','err-password'); valid=false; }
+      if (currentMode === 'inscription' && password !== confirm) { setFieldError('field-confirm','err-confirm'); valid=false; }
       return valid;
     }
 
-    function setFieldError(fieldId, errId) {
-      document.getElementById(fieldId).classList.add('has-error');
-      document.getElementById(errId).style.display = 'block';
+    function setFieldError(fId, eId) {
+      document.getElementById(fId).classList.add('has-error');
+      document.getElementById(eId).style.display = 'block';
     }
     function clearErrors() {
       ['field-email','field-password','field-confirm'].forEach(id => document.getElementById(id).classList.remove('has-error'));
-      ['err-email','err-password','err-confirm'].forEach(id => document.getElementById(id).style.display = 'none');
+      ['err-email','err-password','err-confirm'].forEach(id => document.getElementById(id).style.display='none');
     }
     function showMessage(text, type) {
       const el = document.getElementById('auth-message');
-      el.textContent = text;
-      el.className = 'auth-message ' + type;
+      el.textContent = text; el.className = 'auth-message ' + type;
     }
     function clearMessage() {
       const el = document.getElementById('auth-message');
-      el.className = 'auth-message';
-      el.textContent = '';
+      el.className = 'auth-message'; el.textContent = '';
     }
     function setLoading(on) {
       const btn = document.getElementById('submit-btn');
-      btn.disabled = on;
-      btn.classList.toggle('loading', on);
+      btn.disabled = on; btn.classList.toggle('loading', on);
     }
 
     async function handleSubmit(e) {
       e.preventDefault();
       if (!validate()) return;
-      setLoading(true);
-      clearMessage();
-
+      setLoading(true); clearMessage();
       const email    = document.getElementById('input-email').value.trim();
       const password = document.getElementById('input-password').value;
-
       try {
         if (currentMode === 'inscription') {
           const { data, error } = await sb.auth.signUp({
             email, password,
-            options: { data: { role: currentRole } }
+            options: {
+              data: { role: currentRole },
+              // Rediriger vers auth.html après clic sur le lien de confirmation
+              emailRedirectTo: 'https://salesuncut.com/auth.html'
+            }
           });
           if (error) throw error;
-
           if (data.user) {
             if (currentRole === 'recruteur') {
               await sb.from('recruiters').upsert({ id: data.user.id, email: data.user.email, plan: 'free', created_at: new Date().toISOString() });
@@ -378,19 +338,16 @@
               await sb.from('candidates').upsert({ id: data.user.id, email: data.user.email, is_public: false, created_at: new Date().toISOString() });
             }
           }
-
           if (!data.session) {
-            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse avant de vous connecter.', 'success');
+            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse, puis revenez vous connecter ici.', 'success');
           } else {
             window.location.replace(REDIRECT[currentRole]);
           }
-
         } else {
           const { data, error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
           window.location.replace(REDIRECT[data.user.user_metadata?.role || 'candidat']);
         }
-
       } catch (err) {
         showMessage(mapError(err.message), 'error');
       } finally {
