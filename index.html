@@ -7,7 +7,6 @@
   <meta name="description" content="SalesUncut certifie les commerciaux par simulation commerciale réelle. Recrutez sur la preuve, pas sur le CV. 6 dimensions scorées, extraits audio, pool filtrable.">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ---- Hero ---- */
     .hero { position: relative; padding: 16px 0 120px; overflow: hidden; }
     .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: flex-start; }
     .hero h1 { font-size: clamp(56px, 7vw, 104px); margin: 24px 0 28px; }
@@ -17,8 +16,6 @@
     .hero p.lede { font-size: 19px; color: var(--teal-2); max-width: 540px; margin-bottom: 36px; line-height: 1.55; }
     .hero-cta { display: flex; gap: 16px; flex-wrap: nowrap; align-items: flex-start; }
     .hero-cta-item { display: flex; flex-direction: column; gap: 8px; }
-
-    /* ---- Hero CTA buttons ---- */
     .btn-hero-sales {
       display: inline-flex; align-items: center; gap: 10px;
       font-family: var(--font-mono); font-size: 13px; font-weight: 700;
@@ -29,7 +26,6 @@
       transition: all .2s; white-space: nowrap;
     }
     .btn-hero-sales:hover { background: var(--ink); border-color: var(--ink); }
-
     .btn-hero-recruteur {
       display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
       font-family: var(--font-mono); font-weight: 700; letter-spacing: .12em;
@@ -42,12 +38,9 @@
     .btn-hero-recruteur .main-label { font-size: 13px; }
     .btn-hero-recruteur .sub-label { font-size: 9px; letter-spacing: .18em; opacity: .55; }
     .btn-hero-recruteur:hover { background: var(--teal); border-color: var(--teal); }
-
     .hero-kpi { display: flex; gap: 40px; flex-wrap: wrap; margin-top: 36px; }
     .hero-kpi .kpi-num { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--gold-deep); line-height: 1; }
     .hero-kpi .kpi-lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-3); margin-top: 4px; }
-
-    /* ---- Hero card stack ---- */
     .hero-stage { position: relative; aspect-ratio: 0.8; perspective: 1400px; overflow: visible; }
     .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
@@ -57,8 +50,6 @@
     .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-190px) translateY(0) rotate(-18deg); }
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
     .hero-stage:hover .tcard:nth-child(3) { transform: translateX(190px) translateY(0) rotate(16deg); }
-
-    /* ---- Two-col candidat / recruteur ---- */
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
     .col { padding: 48px; position: relative; min-height: 460px; }
     .col-candidat { background: var(--ink); color: var(--cream); }
@@ -74,11 +65,7 @@
     .col ul li { padding: 12px 0; border-bottom: 1px solid rgba(255,248,231,.15); display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
     .col-recruteur ul li { border-bottom-color: var(--cream-3); }
     .col ul li::before { content: '→'; font-family: var(--font-display); color: var(--gold); flex-shrink: 0; }
-
-    /* ---- Two-col hints row ---- */
     .two-col-hints { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 16px; }
-
-    /* ---- Leaderboard sub-header ---- */
     .lb-cols {
       display: grid;
       grid-template-columns: 64px 40px 1fr 140px 120px 100px 64px;
@@ -86,23 +73,14 @@
       border-bottom: 1.5px solid var(--ink);
       background: var(--cream-2);
     }
-    .lb-cols span {
-      font-family: var(--font-mono);
-      font-size: 9px;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-      color: var(--teal-3);
-    }
+    .lb-cols span { font-family: var(--font-mono); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; color: var(--teal-3); }
     .lb-cols span.score-col { text-align: right; color: var(--gold-deep); }
-
-    /* ---- FAQ ---- */
     .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
     .faq details { border-bottom: 1px solid var(--ink); padding: 16px 0; }
     .faq summary { cursor: pointer; font-family: var(--font-display); font-size: 20px; text-transform: uppercase; letter-spacing: -.01em; list-style: none; display: flex; justify-content: space-between; align-items: center; }
     .faq summary::after { content: '+'; font-size: 28px; color: var(--gold-deep); }
     .faq details[open] summary::after { content: '−'; }
     .faq p { margin-top: 12px; color: var(--teal-2); font-size: 15px; line-height: 1.55; }
-
     @media (max-width: 1100px) {
       .lb-cols { grid-template-columns: 48px 36px 1fr 120px 0 0 56px; }
       .lb-cols span:nth-child(5), .lb-cols span:nth-child(6) { display: none; }
@@ -125,12 +103,11 @@
     <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
-      <a href="recruiter.html">Espace recruteur</a>
-      <a href="mon-profil.html">Mon profil</a>
+      <a href="candidat.html">Candidats</a>
+      <a href="recruiter.html">Recruteurs</a>
+      <a href="mon-profil.html">Mon espace</a>
     </div>
-    <a href="auth.html" class="btn sm gold">Passer le test →</a>
-
-    <!-- Burger mobile -->
+    <a href="auth.html" class="btn sm gold">Passer le test &rarr;</a>
     <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -139,15 +116,16 @@
   <!-- Drawer mobile -->
   <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
     <div class="nav-drawer-inner">
-      <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fermer">×</button>
+      <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fermer">&times;</button>
       <a href="index.html" class="nav-drawer-logo"><span class="dot"></span>SalesUncut</a>
       <nav class="nav-drawer-links">
         <a href="index.html">Accueil</a>
-        <a href="recruiter.html">Espace recruteur</a>
-        <a href="mon-profil.html">Mon profil</a>
+        <a href="candidat.html">Candidats</a>
+        <a href="recruiter.html">Recruteurs</a>
+        <a href="mon-profil.html">Mon espace</a>
       </nav>
       <div class="nav-drawer-cta">
-        <a href="auth.html" class="btn gold">Passer le test →</a>
+        <a href="auth.html" class="btn gold">Passer le test &rarr;</a>
       </div>
     </div>
     <div style="flex:1" id="navDrawerBackdrop"></div>
@@ -157,7 +135,6 @@
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
-
         <div>
           <span class="eyebrow">Recrutement commercial, par la preuve.</span>
           <h1>
@@ -167,12 +144,12 @@
             PROUVENT.
           </h1>
           <p class="lede">
-            SalesUncut écoute 30 minutes d'un vrai discovery call simulé, le découpe en 6 dimensions mesurables, que les recruteurs peuvent juger en 30 secondes.
+            SalesUncut &eacute;coute 30 minutes d&rsquo;un vrai discovery call simul&eacute;, le d&eacute;coupe en 6 dimensions mesurables, que les recruteurs peuvent juger en 30 secondes.
           </p>
           <div class="hero-cta">
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté sales ↓</p>
-              <a href="auth.html" class="btn-hero-sales">▶ Passer le test (29 min)</a>
+              <a href="candidat.html" class="btn-hero-sales">&blacktriangleright; Passer le test (29 min)</a>
             </div>
             <div class="hero-cta-item">
               <p class="hero-nav-hint">Côté recruteur ↓</p>
@@ -188,11 +165,9 @@
             <div><div class="kpi-num">218</div><div class="kpi-lbl">Commerciaux testés</div></div>
           </div>
         </div>
-
         <div class="hero-stage">
           <div class="hero-card-stack" id="heroStack"></div>
         </div>
-
       </div>
     </div>
   </section>
@@ -200,14 +175,14 @@
   <!-- MARQUEE -->
   <div class="marquee">
     <div class="marquee-track">
-      <span>Écoute &gt; CV</span><span class="gold-text">★</span>
-      <span>30 min de vérité</span><span class="gold-text">★</span>
-      <span>6 dimensions évaluées</span><span class="gold-text">★</span>
-      <span>Filtre par score, pas par instinct</span><span class="gold-text">★</span>
-      <span>Écoute &gt; CV</span><span class="gold-text">★</span>
-      <span>30 min de vérité</span><span class="gold-text">★</span>
-      <span>6 dimensions évaluées</span><span class="gold-text">★</span>
-      <span>Filtre par score, pas par instinct</span><span class="gold-text">★</span>
+      <span>&Eacute;coute &gt; CV</span><span class="gold-text">&starf;</span>
+      <span>30 min de vérité</span><span class="gold-text">&starf;</span>
+      <span>6 dimensions évaluées</span><span class="gold-text">&starf;</span>
+      <span>Filtre par score, pas par instinct</span><span class="gold-text">&starf;</span>
+      <span>&Eacute;coute &gt; CV</span><span class="gold-text">&starf;</span>
+      <span>30 min de vérité</span><span class="gold-text">&starf;</span>
+      <span>6 dimensions évaluées</span><span class="gold-text">&starf;</span>
+      <span>Filtre par score, pas par instinct</span><span class="gold-text">&starf;</span>
     </div>
   </div>
 
@@ -219,7 +194,7 @@
           <span class="eyebrow">Drop de la semaine</span>
           <h1 style="font-size:56px;margin-top:12px;">Nouveaux arrivants dans le pool.</h1>
         </div>
-        <a href="recruiter.html" class="btn outline sm">Tout voir →</a>
+        <a href="recruiter.html" class="btn outline sm">Tout voir &rarr;</a>
       </div>
       <div class="cards-row" id="featuredCards"></div>
     </div>
@@ -237,27 +212,27 @@
       <div class="two-col">
         <div class="col col-candidat">
           <span class="eyebrow" style="color:var(--gold)">Pour les sales</span>
-          <h2><small>Côté candidat</small>Sors du<br>CV-bingo. Place à la preuve.</h2>
-          <p>Tu en as marre d'envoyer 80 candidatures pour trois entretiens ? Prouve ce que tu sais faire et laisse les recruteurs venir à toi.</p>
+          <h2><small>Côté candidat</small>Sors du<br>CV-bingo. Place &agrave; la preuve.</h2>
+          <p>Tu en as marre d&rsquo;envoyer 80 candidatures pour trois entretiens ? Prouve ce que tu sais faire et laisse les recruteurs venir à toi.</p>
           <ul>
-            <li>Ta carte active dans le pool pendant 18 mois : les recruteurs te trouvent, tu n'as rien à faire</li>
-            <li>Tu fixes tes conditions (salaire, remote, taille) — le matching vient à toi</li>
-            <li>Anonymat complet possible : tu valides avant de te révéler</li>
-            <li>Badge LinkedIn certifié SalesUncut : prouve tes scores directement sur ton profil</li>
+            <li>Ta carte active dans le pool pendant 18 mois : les recruteurs te trouvent, tu n&rsquo;as rien à faire</li>
+            <li>Tu fixes tes conditions (salaire, remote, taille) &mdash; le matching vient à toi</li>
+            <li>Anonymat complet possible : tu valides avant de te révéler</li>
+            <li>Badge LinkedIn certifié SalesUncut : prouve tes scores directement sur ton profil</li>
           </ul>
-          <a href="auth.html" class="btn gold">Passer ma simulation →</a>
+          <a href="candidat.html" class="btn gold">En savoir plus &rarr;</a>
         </div>
         <div class="col col-recruteur">
           <span class="eyebrow">Pour les recruteurs</span>
-          <h2><small>Côté recruteur</small>Filtre.<br>Écoute. Recrute.</h2>
-          <p>Plus de pré-quali interminables au téléphone. Tu vois la carte, tu cliques l'extrait closing, tu sais en 30 secondes si le profil mérite un entretien.</p>
+          <h2><small>Côté recruteur</small>Filtre.<br>&Eacute;coute. Recrute.</h2>
+          <p>Plus de pré-quali interminables au téléphone. Tu vois la carte, tu cliques l&rsquo;extrait closing, tu sais en 30 secondes si le profil mérite un entretien.</p>
           <ul>
             <li>30 secondes pour décider si un profil mérite un entretien</li>
             <li>Filtres sur les vraies compétences (closing, discovery, gestion objections)</li>
-            <li>Extraits audio horodatés : tu entends la voix, les réactions, la posture</li>
-            <li><strong>Essai gratuit : 1 profil complet sans CB</strong></li>
+            <li>Extraits audio horodatés : tu entends la voix, les réactions, la posture</li>
+            <li><strong>Essai gratuit : 1 profil complet sans CB</strong></li>
           </ul>
-          <a href="recruiter.html" class="btn">Voir le pool →</a>
+          <a href="recruiter.html" class="btn">Voir le pool &rarr;</a>
         </div>
       </div>
     </div>
@@ -267,11 +242,11 @@
   <section class="section" style="padding-top:0">
     <div class="container">
       <span class="eyebrow">Hall of fame</span>
-      <h1 style="font-size:56px;margin:12px 0 32px;">Top 8 du pool · mai 2026</h1>
+      <h1 style="font-size:56px;margin:12px 0 32px;">Top 8 du pool &middot; mai 2026</h1>
       <div class="leaderboard">
         <div class="lb-header" style="display:flex;justify-content:space-between;align-items:center;">
           <span>Classement général</span>
-          <span class="mono" style="font-size:12px;letter-spacing:.1em;">MIS À JOUR EN TEMPS RÉEL</span>
+          <span class="mono" style="font-size:12px;letter-spacing:.1em;">MIS &Agrave; JOUR EN TEMPS RÉEL</span>
         </div>
         <div class="lb-cols">
           <span>#</span>
@@ -294,28 +269,28 @@
       <h1 style="font-size:48px;margin:12px 0 32px;">Ce que tout le monde demande.</h1>
       <div class="faq">
         <details>
-          <summary>C'est quoi le prix ?</summary>
-          <p>Bronze 39€ · Silver 59€ · Gold 89€. Un profil actif 18 mois dans le pool recruteurs.</p>
+          <summary>C&rsquo;est quoi le prix ?</summary>
+          <p>Bronze 39€ &middot; Silver 59€ &middot; Gold 89€. Un profil actif 18 mois dans le pool recruteurs.</p>
         </details>
         <details>
-          <summary>Ça sert à quoi si j'ai déjà un bon CV ?</summary>
-          <p>Le CV dit ce que tu as fait. L'appel dit comment tu vends. Les recruteurs qui recrutent des sales veulent entendre le deuxième, pas lire le premier.</p>
+          <summary>&Ccedil;a sert à quoi si j&rsquo;ai déjà un bon CV ?</summary>
+          <p>Le CV dit ce que tu as fait. L&rsquo;appel dit comment tu vends. Les recruteurs qui recrutent des sales veulent entendre le deuxième, pas lire le premier.</p>
         </details>
         <details>
-          <summary>Comment vous notez ?</summary>
-          <p>6 dimensions scorées sur 100 — accroche, découverte, objections, valeur, closing, création de valeur.</p>
+          <summary>Comment vous notez ?</summary>
+          <p>6 dimensions scorées sur 100 &mdash; accroche, découverte, objections, valeur, closing, création de valeur.</p>
         </details>
         <details>
-          <summary>Je peux retenter ?</summary>
+          <summary>Je peux retenter ?</summary>
           <p>Oui, après 90 jours à -30%. Tu peux aussi passer une autre famille sectorielle pour montrer que ton profil tient sur plusieurs terrains.</p>
         </details>
         <details>
-          <summary>Et si mon score est mauvais ?</summary>
+          <summary>Et si mon score est mauvais ?</summary>
           <p>Tu reçois ton rapport complet avec les axes de progression. Tu décides toi-même si tu publies ton profil dans le pool.</p>
         </details>
         <details>
-          <summary>Je suis recruteur. Comment j'accède au pool ?</summary>
-          <p>Créez un compte recruteur gratuitement. 1 profil complet sans CB. Filtrez par score, secteur, disponibilité. Abonnement si vous voulez l'accès complet.</p>
+          <summary>Je suis recruteur. Comment j&rsquo;accède au pool ?</summary>
+          <p>Créez un compte recruteur gratuitement. 1 profil complet sans CB. Filtrez par score, secteur, disponibilité. Abonnement si vous voulez l&rsquo;accès complet.</p>
         </details>
       </div>
     </div>
@@ -324,7 +299,7 @@
   <!-- CTA FINAL -->
   <section style="background:var(--ink);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;">
     <div class="container" style="text-align:center;position:relative;">
-      <span class="eyebrow" style="color:var(--gold)">L'heure de vérité</span>
+      <span class="eyebrow" style="color:var(--gold)">L&rsquo;heure de vérité</span>
       <h1 style="font-size:clamp(64px,9vw,140px);margin:24px 0;color:var(--cream);">
         Tu sais vendre.<br>
         <span style="color:var(--gold);font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400;">Prouve-le.</span>
@@ -332,7 +307,7 @@
       <p style="font-size:18px;opacity:.7;max-width:480px;margin:0 auto 36px;">
         Tu décroches, tu vends, reçois ta carte. Laisse les recruteurs venir.
       </p>
-      <a href="auth.html" class="btn gold">▶ Montrer ce que je vaux</a>
+      <a href="candidat.html" class="btn gold">&blacktriangleright; Montrer ce que je vaux</a>
     </div>
   </section>
 
@@ -361,7 +336,7 @@
       return `
         <div class="lb-row ${i === 0 ? 'gold' : ''}">
           <div class="lb-rank ${i === 0 ? 'gold' : ''}">${String(i+1).padStart(2,'0')}</div>
-          <div>${i===0?'👑':i===1?'🥈':i===2?'🥉':'·'}</div>
+          <div>${i===0?'\uD83D\uDC51':i===1?'\uD83E\uDD48':i===2?'\uD83E\uDD49':'\u00b7'}</div>
           <div class="lb-name">${displayName}</div>
           <div><span class="lb-tag">${fam.name}</span></div>
           <div class="mono" style="font-size:12px;color:var(--teal-2);">${c.location}</div>
@@ -370,21 +345,12 @@
         </div>`;
     }).join('');
 
-    // Burger / Drawer
     const burger = document.getElementById('navBurger');
     const drawer = document.getElementById('navDrawer');
     const drawerClose = document.getElementById('navDrawerClose');
     const backdrop = document.getElementById('navDrawerBackdrop');
-    function openDrawer() {
-      drawer.classList.add('open');
-      document.body.classList.add('nav-locked');
-      burger.setAttribute('aria-expanded','true');
-    }
-    function closeDrawer() {
-      drawer.classList.remove('open');
-      document.body.classList.remove('nav-locked');
-      burger.setAttribute('aria-expanded','false');
-    }
+    function openDrawer() { drawer.classList.add('open'); document.body.classList.add('nav-locked'); burger.setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); document.body.classList.remove('nav-locked'); burger.setAttribute('aria-expanded','false'); }
     burger.addEventListener('click', openDrawer);
     drawerClose.addEventListener('click', closeDrawer);
     backdrop.addEventListener('click', closeDrawer);

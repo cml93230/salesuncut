@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SalesUncut — Passe la simulation, prouve ce que tu vaux.</title>
-  <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
+  <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ---- Hero candidat ---- */
     .cand-hero { padding: 60px 0 80px; position: relative; overflow: hidden; }
     .cand-hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
     .cand-hero h1 { font-size: clamp(48px, 6.5vw, 88px); margin: 20px 0 20px; }
@@ -17,59 +16,31 @@
     .cand-hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
     .cand-hero-visual { display: flex; justify-content: center; align-items: center; }
     .cand-hero-visual .tcard { transform: rotate(-3deg); }
-
-    /* ---- Ce que ca change ---- */
     .cand-change-section { background: var(--cream-2); padding: 80px 0; }
     .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
     .change-list { display: flex; flex-direction: column; gap: 0; }
-    .change-item {
-      display: flex; align-items: flex-start; gap: 18px;
-      padding: 20px 0; border-bottom: 1px dashed var(--cream-3);
-    }
+    .change-item { display: flex; align-items: flex-start; gap: 18px; padding: 20px 0; border-bottom: 1px dashed var(--cream-3); }
     .change-item:last-child { border-bottom: none; }
-    .change-arrow {
-      flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
-      background: var(--ink); color: var(--gold);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; margin-top: 2px;
-    }
+    .change-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 14px; margin-top: 2px; }
     .change-text { font-size: 17px; color: var(--ink); line-height: 1.45; }
-    .change-visual {
-      background: var(--ink); border-radius: 10px; padding: 40px 36px;
-      color: var(--cream);
-    }
-    .change-visual-eyebrow {
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em;
-      text-transform: uppercase; color: var(--gold); margin-bottom: 20px;
-    }
-    .change-visual-title {
-      font-family: var(--font-display); font-weight: 900; font-size: 28px;
-      text-transform: uppercase; letter-spacing: -.01em; line-height: .95;
-      color: var(--cream); margin-bottom: 24px;
-    }
+    .change-visual { background: var(--ink); border-radius: 10px; padding: 40px 36px; color: var(--cream); }
+    .change-visual-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .change-visual-title { font-family: var(--font-display); font-weight: 900; font-size: 28px; text-transform: uppercase; letter-spacing: -.01em; line-height: .95; color: var(--cream); margin-bottom: 24px; }
     .change-visual-steps { display: flex; flex-direction: column; gap: 14px; }
     .cvs-item { display: flex; align-items: center; gap: 14px; }
-    .cvs-num {
-      font-family: var(--font-display); font-weight: 900; font-size: 22px;
-      color: var(--gold-deep); width: 32px; flex-shrink: 0; line-height: 1;
-    }
+    .cvs-num { font-family: var(--font-display); font-weight: 900; font-size: 22px; color: var(--gold-deep); width: 32px; flex-shrink: 0; line-height: 1; }
     .cvs-txt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; color: rgba(255,248,231,.8); line-height: 1.4; }
-
-    /* ---- CTA final ---- */
-    .cta-final {
-      padding: 100px 0; text-align: center; position: relative; overflow: hidden;
-      background: var(--cream-2);
-      border-top: 1px solid var(--cream-3);
-    }
-    .cta-final::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent);
-    }
+    .cta-final { padding: 100px 0; text-align: center; position: relative; overflow: hidden; background: var(--cream-2); border-top: 1px solid var(--cream-3); }
+    .cta-final::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent); }
     .cta-final h2 { font-size: clamp(48px, 7vw, 96px); margin: 16px 0 20px; }
     .cta-final h2 .accent { color: var(--gold-deep); font-family: var(--font-serif); font-style: italic; text-transform: none; font-weight: 400; }
     .cta-final p { font-size: 17px; color: var(--teal-2); max-width: 480px; margin: 0 auto 32px; }
-
-    /* ---- Responsive ---- */
+    .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+    .faq details { border-bottom: 1px solid var(--ink); padding: 16px 0; }
+    .faq summary { cursor: pointer; font-family: var(--font-display); font-size: 20px; text-transform: uppercase; letter-spacing: -.01em; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    .faq summary::after { content: '+'; font-size: 28px; color: var(--gold-deep); }
+    .faq details[open] summary::after { content: '−'; }
+    .faq p { margin-top: 12px; color: var(--teal-2); font-size: 15px; line-height: 1.55; }
     @media (max-width: 900px) {
       .cand-hero { padding: 32px 0 56px; }
       .cand-hero-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -80,6 +51,7 @@
       .cand-change-section { padding: 56px 0; }
       .change-grid { grid-template-columns: 1fr; gap: 32px; }
       .cta-final { padding: 56px 0; }
+      .faq { grid-template-columns: 1fr; }
     }
     @media (max-width: 560px) {
       .cand-hero-visual .tcard { transform: rotate(-1deg) scale(.75); }
@@ -93,11 +65,31 @@
     <div class="nav-links">
       <a href="index.html">Accueil</a>
       <a href="candidat.html" class="active">Candidats</a>
-      <a href="marketplace.html">Recruteurs</a>
-      <a href="profil.html?id=c001">Voir un profil</a>
+      <a href="recruiter.html">Recruteurs</a>
+      <a href="mon-profil.html">Mon espace</a>
     </div>
-    <a href="profil.html?id=c001" class="btn sm gold">Voir un exemple</a>
+    <a href="auth.html" class="btn sm gold">Passer le test &rarr;</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
+    <div class="nav-drawer-inner">
+      <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fermer">&times;</button>
+      <a href="index.html" class="nav-drawer-logo"><span class="dot"></span>SalesUncut</a>
+      <nav class="nav-drawer-links">
+        <a href="index.html">Accueil</a>
+        <a href="candidat.html" class="active">Candidats</a>
+        <a href="recruiter.html">Recruteurs</a>
+        <a href="mon-profil.html">Mon espace</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="auth.html" class="btn gold">Passer le test &rarr;</a>
+      </div>
+    </div>
+    <div style="flex:1" id="navDrawerBackdrop"></div>
+  </div>
 
   <!-- HERO -->
   <section class="cand-hero">
@@ -115,8 +107,8 @@
             score, extraits audio, rapport d&eacute;taill&eacute; et profil consultable par les recruteurs.
           </p>
           <div class="cand-hero-cta">
-            <a href="profil.html?id=c001" class="btn gold">Voir un exemple &rarr;</a>
-            <a href="marketplace.html" class="btn outline">Explorer le pool</a>
+            <a href="auth.html" class="btn gold">&blacktriangleright;&nbsp;Passer ma simulation &rarr;</a>
+            <a href="recruiter.html" class="btn outline">Explorer le pool</a>
           </div>
         </div>
         <div class="cand-hero-visual" id="hero-card"></div>
@@ -127,14 +119,14 @@
   <!-- MARQUEE -->
   <div class="marquee">
     <div class="marquee-track">
-      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&#9733;</span>
-      <span>Ton score, pas ton CV</span><span class="gold-text">&#9733;</span>
-      <span>Anonyme si tu veux</span><span class="gold-text">&#9733;</span>
-      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&#9733;</span>
-      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&#9733;</span>
-      <span>Ton score, pas ton CV</span><span class="gold-text">&#9733;</span>
-      <span>Anonyme si tu veux</span><span class="gold-text">&#9733;</span>
-      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&#9733;</span>
+      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&starf;</span>
+      <span>Ton score, pas ton CV</span><span class="gold-text">&starf;</span>
+      <span>Anonyme si tu veux</span><span class="gold-text">&starf;</span>
+      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&starf;</span>
+      <span>30 min de v&eacute;rit&eacute;</span><span class="gold-text">&starf;</span>
+      <span>Ton score, pas ton CV</span><span class="gold-text">&starf;</span>
+      <span>Anonyme si tu veux</span><span class="gold-text">&starf;</span>
+      <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&starf;</span>
     </div>
   </div>
 
@@ -145,47 +137,20 @@
       <h1 style="font-size:clamp(36px,5vw,56px);margin:12px 0 0;">Ce que SalesUncut change<br>dans ta recherche.</h1>
       <div class="change-grid">
         <div class="change-list">
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text">Tu ne d&eacute;pends plus uniquement de ton CV.</div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text">Tu montres ta vraie posture commerciale.</div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text">Tu aides le recruteur &agrave; te qualifier plus vite.</div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text">Tu peux partager une preuve concr&egrave;te dans tes candidatures.</div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text">Tu transformes ton profil en actif visible pendant plusieurs mois.</div>
-          </div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu ne d&eacute;pends plus uniquement de ton CV.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu montres ta vraie posture commerciale.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu aides le recruteur &agrave; te qualifier plus vite.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu peux partager une preuve concr&egrave;te dans tes candidatures.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu transformes ton profil en actif visible pendant plusieurs mois.</div></div>
         </div>
         <div class="change-visual">
           <div class="change-visual-eyebrow">Comment &ccedil;a marche</div>
           <div class="change-visual-title">Du paiement au profil public,<br>30 minutes.</div>
           <div class="change-visual-steps">
-            <div class="cvs-item">
-              <div class="cvs-num">01</div>
-              <div class="cvs-txt">Choisis ta famille sectorielle &mdash; tu vends ce que tu connais.</div>
-            </div>
-            <div class="cvs-item">
-              <div class="cvs-num">02</div>
-              <div class="cvs-txt">Re&ccedil;ois ton brief prospect la veille, d&eacute;croche le lendemain.</div>
-            </div>
-            <div class="cvs-item">
-              <div class="cvs-num">03</div>
-              <div class="cvs-txt">30 min avec un prospect IA &mdash; discovery, objections, closing.</div>
-            </div>
-            <div class="cvs-item">
-              <div class="cvs-num">04</div>
-              <div class="cvs-txt">Rapport PDF + profil audio public dans le pool recruteurs sous 1h.</div>
-            </div>
+            <div class="cvs-item"><div class="cvs-num">01</div><div class="cvs-txt">Choisis ta famille sectorielle &mdash; tu vends ce que tu connais.</div></div>
+            <div class="cvs-item"><div class="cvs-num">02</div><div class="cvs-txt">Re&ccedil;ois ton brief prospect la veille, d&eacute;croche le lendemain.</div></div>
+            <div class="cvs-item"><div class="cvs-num">03</div><div class="cvs-txt">30 min avec un prospect IA &mdash; discovery, objections, closing.</div></div>
+            <div class="cvs-item"><div class="cvs-num">04</div><div class="cvs-txt">Rapport PDF + profil audio public dans le pool recruteurs sous 1h.</div></div>
           </div>
         </div>
       </div>
@@ -232,7 +197,7 @@
       <span class="eyebrow">L&rsquo;heure de v&eacute;rit&eacute;</span>
       <h2>Tu sais vendre.<br><span class="accent">Prouve-le.</span></h2>
       <p>30 minutes, un profil qui reste visible, des recruteurs qui t&rsquo;entendent avant de te rencontrer.</p>
-      <a href="profil.html?id=c001" class="btn gold">Voir un exemple de profil &rarr;</a>
+      <a href="auth.html" class="btn gold">&blacktriangleright;&nbsp;Passer ma simulation &rarr;</a>
     </div>
   </section>
 
@@ -242,6 +207,16 @@
   <script src="components.js"></script>
   <script>
     document.getElementById('hero-card').innerHTML = renderCard(SU_DATA.candidates.find(c => c.id === 'c001'));
+
+    const burger = document.getElementById('navBurger');
+    const drawer = document.getElementById('navDrawer');
+    const drawerClose = document.getElementById('navDrawerClose');
+    const backdrop = document.getElementById('navDrawerBackdrop');
+    function openDrawer() { drawer.classList.add('open'); document.body.classList.add('nav-locked'); burger.setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); document.body.classList.remove('nav-locked'); burger.setAttribute('aria-expanded','false'); }
+    burger.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
   </script>
 </body>
 </html>
