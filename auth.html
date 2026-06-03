@@ -6,165 +6,62 @@
   <title>SalesUncut — Accès</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .auth-page { min-height: 100vh; display: flex; flex-direction: column; }
-    .auth-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
-    .auth-shell {
-      width: 100%; max-width: 960px;
-      display: grid; grid-template-columns: 1fr 1fr;
-      border: 1.5px solid var(--ink); border-radius: 8px;
-      overflow: hidden; box-shadow: var(--shadow-card-lg);
-      animation: fadeUp .45s ease both;
-    }
-    .auth-brand {
-      background: var(--ink); color: var(--cream);
-      padding: 52px 44px; display: flex; flex-direction: column;
-      justify-content: space-between; position: relative; overflow: hidden;
-    }
-    .auth-brand::before {
-      content: ''; position: absolute; top: -60px; right: -60px;
-      width: 260px; height: 260px;
-      border: 1px solid rgba(201,168,106,.12); border-radius: 50%; pointer-events: none;
-    }
-    .auth-brand::after {
-      content: ''; position: absolute; bottom: -80px; left: -40px;
-      width: 220px; height: 220px;
-      border: 1px solid rgba(201,168,106,.08); border-radius: 50%; pointer-events: none;
-    }
-    .auth-brand-logo {
-      font-family: var(--font-display); font-weight: 900; font-size: 18px;
-      letter-spacing: .05em; text-transform: uppercase; color: var(--cream);
-      text-decoration: none; display: flex; align-items: center; gap: 8px;
-    }
-    .auth-brand-logo .dot { width: 8px; height: 8px; background: var(--gold-deep); border-radius: 50%; }
-    .auth-brand-body { position: relative; z-index: 1; }
-    .auth-brand-headline {
-      font-family: var(--font-display); font-weight: 900; font-size: 52px;
-      line-height: .9; text-transform: uppercase; letter-spacing: -.02em;
-      color: var(--cream); margin-bottom: 20px;
-    }
-    .auth-brand-headline em { color: var(--gold); font-style: normal; }
-    .auth-brand-sub {
-      font-family: var(--font-serif); font-style: italic;
-      color: rgba(255,248,231,.6); font-size: 17px; line-height: 1.5; margin-bottom: 32px;
-    }
-    .auth-brand-tags { display: flex; flex-direction: column; gap: 10px; }
-    .auth-brand-tag {
-      display: flex; align-items: center; gap: 10px;
-      font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em;
-      text-transform: uppercase; color: rgba(255,248,231,.5);
-    }
-    .auth-brand-tag::before { content: ''; width: 20px; height: 1px; background: var(--gold-deep); flex-shrink: 0; }
-    .auth-brand-footer {
-      font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: .1em; color: rgba(255,248,231,.25); text-transform: uppercase;
-    }
-    .auth-form-col { background: var(--cream); padding: 52px 44px; display: flex; flex-direction: column; }
-    .role-tabs {
-      display: grid; grid-template-columns: 1fr 1fr;
-      border: 1.5px solid var(--ink); border-radius: 6px;
-      overflow: hidden; margin-bottom: 32px;
-    }
-    .role-tab {
-      padding: 14px 16px; background: var(--cream); border: none; cursor: pointer;
-      font-family: var(--font-display); font-weight: 900; font-size: 15px;
-      text-transform: uppercase; letter-spacing: -.01em; color: var(--teal-3);
-      transition: all .2s; display: flex; flex-direction: column; align-items: center; gap: 3px;
-    }
-    .role-tab small {
-      font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em;
-      font-weight: 400; text-transform: uppercase; color: var(--teal-3);
-    }
-    .role-tab:first-child { border-right: 1.5px solid var(--ink); }
-    .role-tab.active { background: var(--ink); color: var(--cream); }
-    .role-tab.active small { color: var(--gold); }
-    .mode-switch {
-      display: flex; margin-bottom: 28px; border-bottom: 1.5px solid var(--cream-3);
-    }
-    .mode-btn {
-      background: none; border: none; border-bottom: 2px solid transparent;
-      margin-bottom: -1.5px; padding: 10px 20px 12px;
-      font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--teal-3); cursor: pointer; transition: all .2s;
-    }
-    .mode-btn.active { color: var(--ink); border-bottom-color: var(--ink); }
-    .auth-title {
-      font-family: var(--font-display); font-weight: 900; font-size: 28px;
-      text-transform: uppercase; letter-spacing: -.02em; margin-bottom: 6px; color: var(--ink);
-    }
-    .auth-subtitle { font-family: var(--font-serif); font-style: italic; color: var(--teal-3); font-size: 15px; margin-bottom: 28px; }
-    .field { margin-bottom: 16px; }
-    .field label {
-      display: block; font-family: var(--font-mono); font-size: 10px;
-      letter-spacing: .14em; text-transform: uppercase; color: var(--teal-3); margin-bottom: 6px;
-    }
-    .field input {
-      width: 100%; background: var(--cream-2); border: 1.5px solid var(--cream-3);
-      border-radius: 4px; padding: 12px 14px;
-      font-family: var(--font-sans); font-size: 15px; color: var(--ink);
-      outline: none; transition: border-color .2s; -webkit-appearance: none;
-    }
-    .field input:focus { border-color: var(--ink); background: var(--cream); }
-    .field input::placeholder { color: var(--teal-3); opacity: .7; }
-    .field-error {
-      font-family: var(--font-mono); font-size: 10px; color: var(--rust);
-      letter-spacing: .08em; margin-top: 5px; display: none;
-    }
-    .field.has-error input { border-color: var(--rust); }
-    .field.has-error .field-error { display: block; }
-    .auth-submit { width: 100%; margin-top: 8px; justify-content: center; font-size: 13px; padding: 16px; }
-    .auth-submit:disabled { opacity: .5; cursor: not-allowed; }
-    .auth-message {
-      display: none; margin-top: 16px; padding: 12px 16px; border-radius: 4px;
-      font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
-    }
-    .auth-message.success { display: block; background: rgba(45,58,58,.08); border: 1px solid var(--teal-3); color: var(--teal); }
-    .auth-message.error   { display: block; background: rgba(179,78,42,.08); border: 1px solid var(--rust); color: var(--rust); }
-    .auth-alt { margin-top: 20px; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; color: var(--teal-3); text-align: center; }
-    .auth-alt button {
-      background: none; border: none; color: var(--ink);
-      font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em;
-      text-decoration: underline; cursor: pointer; padding: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      display: none; width: 14px; height: 14px;
-      border: 2px solid rgba(255,248,231,.3); border-top-color: var(--cream);
-      border-radius: 50%; animation: spin .7s linear infinite;
-    }
-    .auth-submit.loading .spinner { display: inline-block; }
-    .auth-submit.loading .btn-label { display: none; }
-    @media (max-width: 760px) {
-      .auth-shell { grid-template-columns: 1fr; }
-      .auth-brand { display: none; }
-      .auth-form-col { padding: 36px 28px; }
-      .auth-title { font-size: 22px; }
-    }
-    @media (max-width: 420px) {
-      .auth-form-col { padding: 28px 20px; }
-      .role-tab { font-size: 13px; padding: 12px 10px; }
-    }
+    .auth-page{min-height:100vh;display:flex;flex-direction:column;}
+    .auth-main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
+    .auth-shell{width:100%;max-width:960px;display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-card-lg);animation:fadeUp .45s ease both;}
+    .auth-brand{background:var(--ink);color:var(--cream);padding:52px 44px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+    .auth-brand::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;border:1px solid rgba(201,168,106,.12);border-radius:50%;pointer-events:none;}
+    .auth-brand::after{content:'';position:absolute;bottom:-80px;left:-40px;width:220px;height:220px;border:1px solid rgba(201,168,106,.08);border-radius:50%;pointer-events:none;}
+    .auth-brand-logo{font-family:var(--font-display);font-weight:900;font-size:18px;letter-spacing:.05em;text-transform:uppercase;color:var(--cream);text-decoration:none;display:flex;align-items:center;gap:8px;}
+    .auth-brand-logo .dot{width:8px;height:8px;background:var(--gold-deep);border-radius:50%;}
+    .auth-brand-body{position:relative;z-index:1;}
+    .auth-brand-headline{font-family:var(--font-display);font-weight:900;font-size:52px;line-height:.9;text-transform:uppercase;letter-spacing:-.02em;color:var(--cream);margin-bottom:20px;}
+    .auth-brand-headline em{color:var(--gold);font-style:normal;}
+    .auth-brand-sub{font-family:var(--font-serif);font-style:italic;color:rgba(255,248,231,.6);font-size:17px;line-height:1.5;margin-bottom:32px;}
+    .auth-brand-tags{display:flex;flex-direction:column;gap:10px;}
+    .auth-brand-tag{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,248,231,.5);}
+    .auth-brand-tag::before{content:'';width:20px;height:1px;background:var(--gold-deep);flex-shrink:0;}
+    .auth-brand-footer{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:rgba(255,248,231,.25);text-transform:uppercase;}
+    .auth-form-col{background:var(--cream);padding:52px 44px;display:flex;flex-direction:column;}
+    .role-tabs{display:grid;grid-template-columns:1fr 1fr;border:1.5px solid var(--ink);border-radius:6px;overflow:hidden;margin-bottom:32px;}
+    .role-tab{padding:14px 16px;background:var(--cream);border:none;cursor:pointer;font-family:var(--font-display);font-weight:900;font-size:15px;text-transform:uppercase;letter-spacing:-.01em;color:var(--teal-3);transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+    .role-tab small{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;font-weight:400;text-transform:uppercase;color:var(--teal-3);}
+    .role-tab:first-child{border-right:1.5px solid var(--ink);}
+    .role-tab.active{background:var(--ink);color:var(--cream);}
+    .role-tab.active small{color:var(--gold);}
+    .mode-switch{display:flex;margin-bottom:28px;border-bottom:1.5px solid var(--cream-3);}
+    .mode-btn{background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1.5px;padding:10px 20px 12px;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);cursor:pointer;transition:all .2s;}
+    .mode-btn.active{color:var(--ink);border-bottom-color:var(--ink);}
+    .auth-title{font-family:var(--font-display);font-weight:900;font-size:28px;text-transform:uppercase;letter-spacing:-.02em;margin-bottom:6px;color:var(--ink);}
+    .auth-subtitle{font-family:var(--font-serif);font-style:italic;color:var(--teal-3);font-size:15px;margin-bottom:28px;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px;}
+    .field input{width:100%;background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:4px;padding:12px 14px;font-family:var(--font-sans);font-size:15px;color:var(--ink);outline:none;transition:border-color .2s;-webkit-appearance:none;}
+    .field input:focus{border-color:var(--ink);background:var(--cream);}
+    .field input::placeholder{color:var(--teal-3);opacity:.7;}
+    .field-error{font-family:var(--font-mono);font-size:10px;color:var(--rust);letter-spacing:.08em;margin-top:5px;display:none;}
+    .field.has-error input{border-color:var(--rust);}
+    .field.has-error .field-error{display:block;}
+    .auth-submit{width:100%;margin-top:8px;justify-content:center;font-size:13px;padding:16px;}
+    .auth-submit:disabled{opacity:.5;cursor:not-allowed;}
+    .auth-message{display:none;margin-top:16px;padding:12px 16px;border-radius:4px;font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;}
+    .auth-message.success{display:block;background:rgba(45,58,58,.08);border:1px solid var(--teal-3);color:var(--teal);}
+    .auth-message.error{display:block;background:rgba(179,78,42,.08);border:1px solid var(--rust);color:var(--rust);}
+    .auth-alt{margin-top:20px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;color:var(--teal-3);text-align:center;}
+    .auth-alt button{background:none;border:none;color:var(--ink);font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-decoration:underline;cursor:pointer;padding:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .spinner{display:none;width:14px;height:14px;border:2px solid rgba(255,248,231,.3);border-top-color:var(--cream);border-radius:50%;animation:spin .7s linear infinite;}
+    .auth-submit.loading .spinner{display:inline-block;}
+    .auth-submit.loading .btn-label{display:none;}
+    @media(max-width:760px){.auth-shell{grid-template-columns:1fr;}.auth-brand{display:none;}.auth-form-col{padding:36px 28px;}.auth-title{font-size:22px;}}
+    @media(max-width:420px){.auth-form-col{padding:28px 20px;}.role-tab{font-size:13px;padding:12px 10px;}}
   </style>
 </head>
 <body class="auth-page">
-
-  <!-- Gestion du callback de confirmation email Supabase -->
-  <script>
-    // Supabase redirige ici avec #access_token=... après confirmation email
-    // On attend que le CDN soit chargé, puis on laisse onAuthStateChange gérer la session
-    if (window.location.hash && window.location.hash.includes('access_token')) {
-      // Nettoyer l'URL sans recharger
-      history.replaceState(null, '', window.location.pathname);
-    }
-  </script>
-
   <nav class="nav">
     <a href="/" class="nav-logo"><span class="dot"></span>SalesUncut</a>
-    <div class="nav-links">
-      <a href="/">Accueil</a>
-      <a href="/recruiter.html">Recruteurs</a>
-    </div>
+    <div class="nav-links"><a href="/">Accueil</a><a href="/recruiter.html">Recruteurs</a></div>
   </nav>
-
   <main class="auth-main">
     <div class="auth-shell">
       <div class="auth-brand">
@@ -180,27 +77,17 @@
         </div>
         <div class="auth-brand-footer">salesuncut.com · certification commerciale</div>
       </div>
-
       <div class="auth-form-col">
         <div class="role-tabs" role="tablist">
-          <button class="role-tab active" id="tab-candidat" role="tab" aria-selected="true" onclick="setRole('candidat')">
-            Candidat
-            <small>Passer la certification</small>
-          </button>
-          <button class="role-tab" id="tab-recruteur" role="tab" aria-selected="false" onclick="setRole('recruteur')">
-            Recruteur
-            <small>Accéder au pool</small>
-          </button>
+          <button class="role-tab active" id="tab-candidat" role="tab" aria-selected="true" onclick="setRole('candidat')">Candidat<small>Passer la certification</small></button>
+          <button class="role-tab" id="tab-recruteur" role="tab" aria-selected="false" onclick="setRole('recruteur')">Recruteur<small>Accéder au pool</small></button>
         </div>
-
         <div class="mode-switch">
           <button class="mode-btn active" id="mode-inscription" onclick="setMode('inscription')">Créer un compte</button>
           <button class="mode-btn" id="mode-connexion" onclick="setMode('connexion')">Se connecter</button>
         </div>
-
         <div class="auth-title" id="form-title">Créer un compte</div>
         <div class="auth-subtitle" id="form-subtitle">Candidat — accès à votre espace de certification</div>
-
         <form id="auth-form" onsubmit="handleSubmit(event)" novalidate>
           <div class="field" id="field-email">
             <label for="input-email">Adresse email</label>
@@ -223,146 +110,106 @@
             <span class="btn-label" id="submit-label">Créer mon compte</span>
           </button>
         </form>
-
-        <div class="auth-alt" id="auth-alt">
-          Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>
-        </div>
+        <div class="auth-alt" id="auth-alt">Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button></div>
       </div>
     </div>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    const sb = window.supabase.createClient(
-      'https://svtyzkypmzmtcqunzfyy.supabase.co',
-      'sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB'
-    );
+    const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
+    const REDIRECT = { candidat:'/mon-profil.html', recruteur:'/recruiter.html' };
+    let currentRole='candidat', currentMode='inscription';
 
-    const REDIRECT = { candidat: '/mon-profil.html', recruteur: '/recruiter.html' };
-    let currentRole = 'candidat';
-    let currentMode = 'inscription';
-
-    // Si déjà connecté (ou retour de confirmation email) → rediriger
     sb.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        const role = session.user.user_metadata?.role || 'candidat';
-        window.location.replace(REDIRECT[role]);
-      }
+      if (session) window.location.replace(REDIRECT[session.user.user_metadata?.role||'candidat']);
     });
 
-    function setRole(role) {
-      currentRole = role;
-      document.getElementById('tab-candidat').classList.toggle('active', role === 'candidat');
-      document.getElementById('tab-recruteur').classList.toggle('active', role === 'recruteur');
+    function setRole(role){
+      currentRole=role;
+      document.getElementById('tab-candidat').classList.toggle('active',role==='candidat');
+      document.getElementById('tab-recruteur').classList.toggle('active',role==='recruteur');
       updateLabels();
     }
-
-    function setMode(mode) {
-      currentMode = mode;
-      document.getElementById('mode-inscription').classList.toggle('active', mode === 'inscription');
-      document.getElementById('mode-connexion').classList.toggle('active', mode === 'connexion');
-      document.getElementById('field-confirm').style.display = mode === 'inscription' ? '' : 'none';
-      document.getElementById('input-password').autocomplete = mode === 'inscription' ? 'new-password' : 'current-password';
-      clearMessage(); clearErrors(); updateLabels();
+    function setMode(mode){
+      currentMode=mode;
+      document.getElementById('mode-inscription').classList.toggle('active',mode==='inscription');
+      document.getElementById('mode-connexion').classList.toggle('active',mode==='connexion');
+      document.getElementById('field-confirm').style.display=mode==='inscription'?'':'none';
+      document.getElementById('input-password').autocomplete=mode==='inscription'?'new-password':'current-password';
+      clearMessage();clearErrors();updateLabels();
     }
-
-    function updateLabels() {
-      const roleLabel = currentRole === 'candidat' ? 'Candidat' : 'Recruteur';
-      const roleDesc  = currentRole === 'candidat' ? 'accès à votre espace de certification' : 'accès au pool de candidats';
-      if (currentMode === 'inscription') {
-        document.getElementById('form-title').textContent    = 'Créer un compte';
-        document.getElementById('form-subtitle').textContent = `${roleLabel} — ${roleDesc}`;
-        document.getElementById('submit-label').textContent  = 'Créer mon compte';
-        document.getElementById('auth-alt').innerHTML        = `Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>`;
+    function updateLabels(){
+      const lbl=currentRole==='candidat'?'Candidat':'Recruteur';
+      const desc=currentRole==='candidat'?'accès à votre espace de certification':'accès au pool de candidats';
+      if(currentMode==='inscription'){
+        document.getElementById('form-title').textContent='Créer un compte';
+        document.getElementById('form-subtitle').textContent=`${lbl} — ${desc}`;
+        document.getElementById('submit-label').textContent='Créer mon compte';
+        document.getElementById('auth-alt').innerHTML=`Déjà un compte ? <button onclick="setMode('connexion')">Se connecter</button>`;
       } else {
-        document.getElementById('form-title').textContent    = 'Se connecter';
-        document.getElementById('form-subtitle').textContent = `${roleLabel} — ${roleDesc}`;
-        document.getElementById('submit-label').textContent  = 'Accéder à mon espace';
-        document.getElementById('auth-alt').innerHTML        = `Pas encore de compte ? <button onclick="setMode('inscription')">Créer un compte</button>`;
+        document.getElementById('form-title').textContent='Se connecter';
+        document.getElementById('form-subtitle').textContent=`${lbl} — ${desc}`;
+        document.getElementById('submit-label').textContent='Accéder à mon espace';
+        document.getElementById('auth-alt').innerHTML=`Pas encore de compte ? <button onclick="setMode('inscription')">Créer un compte</button>`;
       }
     }
+    function validate(){
+      let ok=true;clearErrors();
+      const email=document.getElementById('input-email').value.trim();
+      const pwd=document.getElementById('input-password').value;
+      const cfm=document.getElementById('input-confirm').value;
+      if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){setFieldError('field-email','err-email');ok=false;}
+      if(!pwd||pwd.length<8){setFieldError('field-password','err-password');ok=false;}
+      if(currentMode==='inscription'&&pwd!==cfm){setFieldError('field-confirm','err-confirm');ok=false;}
+      return ok;
+    }
+    function setFieldError(fId,eId){document.getElementById(fId).classList.add('has-error');document.getElementById(eId).style.display='block';}
+    function clearErrors(){['field-email','field-password','field-confirm'].forEach(id=>document.getElementById(id).classList.remove('has-error'));['err-email','err-password','err-confirm'].forEach(id=>document.getElementById(id).style.display='none');}
+    function showMessage(t,type){const el=document.getElementById('auth-message');el.textContent=t;el.className='auth-message '+type;}
+    function clearMessage(){const el=document.getElementById('auth-message');el.className='auth-message';el.textContent='';}
+    function setLoading(on){const btn=document.getElementById('submit-btn');btn.disabled=on;btn.classList.toggle('loading',on);}
 
-    function validate() {
-      let valid = true; clearErrors();
-      const email    = document.getElementById('input-email').value.trim();
-      const password = document.getElementById('input-password').value;
-      const confirm  = document.getElementById('input-confirm').value;
-      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { setFieldError('field-email','err-email'); valid=false; }
-      if (!password || password.length < 8) { setFieldError('field-password','err-password'); valid=false; }
-      if (currentMode === 'inscription' && password !== confirm) { setFieldError('field-confirm','err-confirm'); valid=false; }
-      return valid;
-    }
-
-    function setFieldError(fId, eId) {
-      document.getElementById(fId).classList.add('has-error');
-      document.getElementById(eId).style.display = 'block';
-    }
-    function clearErrors() {
-      ['field-email','field-password','field-confirm'].forEach(id => document.getElementById(id).classList.remove('has-error'));
-      ['err-email','err-password','err-confirm'].forEach(id => document.getElementById(id).style.display='none');
-    }
-    function showMessage(text, type) {
-      const el = document.getElementById('auth-message');
-      el.textContent = text; el.className = 'auth-message ' + type;
-    }
-    function clearMessage() {
-      const el = document.getElementById('auth-message');
-      el.className = 'auth-message'; el.textContent = '';
-    }
-    function setLoading(on) {
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = on; btn.classList.toggle('loading', on);
-    }
-
-    async function handleSubmit(e) {
+    async function handleSubmit(e){
       e.preventDefault();
-      if (!validate()) return;
-      setLoading(true); clearMessage();
-      const email    = document.getElementById('input-email').value.trim();
-      const password = document.getElementById('input-password').value;
-      try {
-        if (currentMode === 'inscription') {
-          const { data, error } = await sb.auth.signUp({
-            email, password,
-            options: {
-              data: { role: currentRole },
-              // Rediriger vers auth.html après clic sur le lien de confirmation
-              emailRedirectTo: 'https://salesuncut.com/auth.html'
-            }
-          });
-          if (error) throw error;
-          if (data.user) {
-            if (currentRole === 'recruteur') {
-              await sb.from('recruiters').upsert({ id: data.user.id, email: data.user.email, plan: 'free', created_at: new Date().toISOString() });
+      if(!validate())return;
+      setLoading(true);clearMessage();
+      const email=document.getElementById('input-email').value.trim();
+      const password=document.getElementById('input-password').value;
+      try{
+        if(currentMode==='inscription'){
+          const{data,error}=await sb.auth.signUp({email,password,options:{data:{role:currentRole},emailRedirectTo:'https://salesuncut.com/auth.html'}});
+          if(error)throw error;
+          // FIX : insérer user_id (= auth uid), pas id (= PK auto)
+          if(data.user){
+            if(currentRole==='recruteur'){
+              await sb.from('recruiters').insert({user_id:data.user.id,email:data.user.email,plan:'free'});
             } else {
-              await sb.from('candidates').upsert({ id: data.user.id, email: data.user.email, is_public: false, created_at: new Date().toISOString() });
+              await sb.from('candidates').insert({user_id:data.user.id,email:data.user.email,is_public:false});
             }
           }
-          if (!data.session) {
-            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse, puis revenez vous connecter ici.', 'success');
+          if(!data.session){
+            showMessage('Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse, puis connectez-vous.','success');
           } else {
             window.location.replace(REDIRECT[currentRole]);
           }
         } else {
-          const { data, error } = await sb.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-          window.location.replace(REDIRECT[data.user.user_metadata?.role || 'candidat']);
+          const{data,error}=await sb.auth.signInWithPassword({email,password});
+          if(error)throw error;
+          window.location.replace(REDIRECT[data.user.user_metadata?.role||'candidat']);
         }
-      } catch (err) {
-        showMessage(mapError(err.message), 'error');
-      } finally {
+      } catch(err){
+        showMessage(mapError(err.message),'error');
+      } finally{
         setLoading(false);
       }
     }
-
-    function mapError(msg) {
-      if (!msg) return 'Une erreur est survenue.';
-      if (msg.includes('Invalid login'))          return 'Email ou mot de passe incorrect.';
-      if (msg.includes('already registered'))     return 'Cette adresse email est déjà utilisée.';
-      if (msg.includes('User already registered'))return 'Cette adresse email est déjà utilisée.';
-      if (msg.includes('Email not confirmed'))    return 'Confirmez votre email avant de vous connecter.';
-      if (msg.includes('Password'))               return 'Mot de passe trop faible (8 caractères minimum).';
-      if (msg.includes('rate limit'))             return 'Trop de tentatives, réessayez dans quelques minutes.';
+    function mapError(msg){
+      if(!msg)return 'Une erreur est survenue.';
+      if(msg.includes('Invalid login'))return 'Email ou mot de passe incorrect.';
+      if(msg.includes('already registered'))return 'Cette adresse email est déjà utilisée.';
+      if(msg.includes('Email not confirmed'))return 'Confirmez votre email avant de vous connecter.';
+      if(msg.includes('Password'))return 'Mot de passe trop faible (8 caractères minimum).';
+      if(msg.includes('rate limit'))return 'Trop de tentatives, réessayez dans quelques minutes.';
       return msg;
     }
   </script>
