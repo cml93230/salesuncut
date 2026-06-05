@@ -77,6 +77,7 @@
     .results-left{display:flex;align-items:center;gap:14px}
     .results-count{font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;letter-spacing:-.01em}
     .results-count .num{color:var(--gold-deep)}
+    .results-count .denom{color:var(--teal-3);font-size:14px;font-weight:400}
     .view-toggle{display:flex;gap:4px}
     .view-btn{width:32px;height:32px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);color:var(--teal-3);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s}
     .view-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
@@ -243,6 +244,7 @@
     </div>
   </div>
 
+  <!-- ── POOL PANEL ── -->
   <div class="tab-panel active" id="panelPool">
     <div class="search-row">
       <span class="search-icon">&#128269;</span>
@@ -277,10 +279,56 @@
     <div id="poolEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
   </div>
 
+  <!-- ── SHORTLIST PANEL ── -->
   <div class="tab-panel" id="panelShortlist">
-    <div id="shortlistContent"><div class="loading-state"><div class="spinner"></div> Chargement&hellip;</div></div>
+
+    <!-- Recherche shortlist -->
+    <div class="search-row">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="slSearch" class="search-input" placeholder="Rechercher dans la shortlist&#8230;">
+    </div>
+
+    <!-- Stats bar shortlist -->
+    <div class="stats-bar" id="slStatsBar"></div>
+
+    <!-- Filtres shortlist -->
+    <div class="filters-panel">
+      <div class="filters-header">
+        <div class="filters-title">Filtres</div>
+        <button class="filters-reset" id="slResetFilters">&#10005; R&eacute;initialiser</button>
+      </div>
+      <div class="filters-groups">
+        <div><div class="fg-lbl">Famille</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
+        <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
+        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="slNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (&lt;60)</option></select></div>
+        <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
+        <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
+      </div>
+    </div>
+
+    <!-- Barre résultats shortlist -->
+    <div class="results-bar">
+      <div class="results-left">
+        <div class="results-count">
+          <span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span>
+        </div>
+      </div>
+      <div class="sort-row"><span>Tri</span>
+        <select class="sort-select" id="slSortBy">
+          <option value="score">Meilleur score</option>
+          <option value="alpha">Alphab&eacute;tique</option>
+          <option value="dispo">Dispo imm&eacute;diate</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Liste shortlist filtr&eacute;e -->
+    <div id="shortlistContent"></div>
+    <div id="slEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
+
   </div>
 
+  <!-- ── ACCOUNT PANEL ── -->
   <div class="tab-panel" id="panelAccount">
     <div class="account-grid">
       <div class="account-card">
@@ -447,6 +495,7 @@ async function loadShortlist(){
   updateShortlistCount();renderShortlist();
 }
 
+/* ══ POOL FILTERS ══ */
 function applyFilters(){
   var q=document.getElementById('searchInput').value.toLowerCase();
   var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fNiv=document.getElementById('fNiveau').value;
@@ -489,10 +538,91 @@ function updateStats(src){
 function SI(n,l){return'<div class="stat-item"><div class="stat-num">'+n+'</div><div class="stat-lbl">'+l+'</div></div>';}
 function SEP(){return'<div class="stat-sep"></div>';}
 
+/* ══ SHORTLIST FILTERS ══ */
+function applyShortlistFilters(){
+  var all=allCandidates.filter(function(c){return shortlistedIds.has(c.id);});
+  var total=all.length;
+
+  /* Shortlist vide → message spécial */
+  if(!total){
+    document.getElementById('shortlistContent').innerHTML=
+      '<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
+    document.getElementById('slEmpty').style.display='none';
+    document.getElementById('slStatsBar').innerHTML='';
+    document.getElementById('slCountDisplay').textContent='0';
+    document.getElementById('slTotalDisplay').textContent='';
+    return;
+  }
+
+  var q=document.getElementById('slSearch').value.toLowerCase();
+  var fFam=document.getElementById('slFamille').value;
+  var fRole=document.getElementById('slRoleF').value;
+  var fNiv=document.getElementById('slNiveau').value;
+  var fOte=parseInt(document.getElementById('slOte').value)||0;
+  var fDispo=parseInt(document.getElementById('slDispo').value);
+  var sortBy=document.getElementById('slSortBy').value;
+
+  var src=all.filter(function(c){
+    if(fFam&&c.famille!==fFam)return false;
+    if(fRole&&c.role_type!==fRole)return false;
+    if(fNiv&&c.level!==fNiv)return false;
+    if(fOte&&c.ote_max>fOte)return false;
+    if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
+    if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+
+  if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
+  else if(sortBy==='alpha')src.sort(function(a,b){return(a.name||'').localeCompare(b.name||'','fr');});
+  else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
+
+  /* Compteur X/Y */
+  document.getElementById('slCountDisplay').textContent=src.length;
+  var denomEl=document.getElementById('slTotalDisplay');
+  denomEl.textContent=(src.length<total?' sur '+total+' shortlist\u00e9s':' shortlist\u00e9'+(total>1?'s':''));
+
+  /* Stats bar */
+  var bar=document.getElementById('slStatsBar');
+  if(src.length){
+    var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
+    var imm=src.filter(function(c){return c.availability==='Imm\u00e9diat';}).length;
+    var gold=src.filter(function(c){return c.level==='GOLD';}).length;
+    bar.innerHTML=SI(src.length,'shortlist\u00e9s')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
+  }else{bar.innerHTML='';}
+
+  var container=document.getElementById('shortlistContent');
+  var emptyEl=document.getElementById('slEmpty');
+
+  if(!src.length){
+    container.innerHTML='';
+    emptyEl.style.display='block';
+    return;
+  }
+  emptyEl.style.display='none';
+
+  container.innerHTML='<div class="sl-list">'+src.map(function(c){
+    var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
+    return'<div class="sl-row'+(isVS?' vs-on':'')+'\">'
+      +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
+      +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
+      +'<div class="sl-meta">'+c.level+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+(c.availability?' \u00b7 '+c.availability:'')+'</div>'
+      +'</div>'
+      +'<div class="sl-score">'+c.score+'</div>'
+      +'<div class="sl-actions">'
+      +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'\u2713 VS':'VS')+'</button>'
+      +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
+      +'<button class="sl-btn remove" onclick="toggleShortlist(\''+c.id+'\',this)">\u2715</button>'
+      +'</div></div>';
+  }).join('')+'</div>';
+}
+
+function renderShortlist(){applyShortlistFilters();}
+
+/* ══ POOL CARDS / LIST ══ */
 function renderCard(c){
   var lc=c.level.toLowerCase(),isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
   var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'D\u00e9couverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
-  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'  
+  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="dash-card-portrait">'
     +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
     +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
@@ -529,6 +659,7 @@ function goToProfile(id){
   location.href='profil.html?id='+id;
 }
 
+/* ══ EVENT LISTENERS — POOL ══ */
 document.getElementById('btnCards').addEventListener('click',function(){currentView='cards';this.classList.add('active');document.getElementById('btnList').classList.remove('active');applyFilters();});
 document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
 document.getElementById('searchInput').addEventListener('input',applyFilters);
@@ -542,6 +673,19 @@ document.getElementById('resetFilters').addEventListener('click',function(){
   applyFilters();
 });
 
+/* ══ EVENT LISTENERS — SHORTLIST ══ */
+document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
+document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
+['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='\u2014 '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
+document.getElementById('slResetFilters').addEventListener('click',function(){
+  ['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
+  document.getElementById('slDispoVal').textContent='\u2014 toutes';document.getElementById('slSearch').value='';
+  applyShortlistFilters();
+});
+
+/* ══ SHORTLIST TOGGLE ══ */
 function toggleShortlist(sid,btn){
   var isSaved=shortlistedIds.has(sid);
   if(isSaved){
@@ -560,27 +704,7 @@ function toggleShortlist(sid,btn){
 
 function updateShortlistCount(){var el=document.getElementById('shortlistCount');el.textContent=shortlistedIds.size>0?shortlistedIds.size:'';}
 
-function renderShortlist(){
-  var container=document.getElementById('shortlistContent');
-  var saved=allCandidates.filter(function(c){return shortlistedIds.has(c.id);});
-  if(!saved.length){
-    container.innerHTML='<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
-    return;
-  }
-  container.innerHTML='<div class="sl-list">'+saved.map(function(c){
-    var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
-    return'<div class="sl-row'+(isVS?' vs-on':'')+'">'  
-      +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
-      +'<div class="sl-info"><div class="sl-name">'+name+'</div><div class="sl-meta">'+c.level+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+'</div></div>'
-      +'<div class="sl-score">'+c.score+'</div>'
-      +'<div class="sl-actions">'
-      +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'\u2713 VS':'VS')+'</button>'
-      +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
-      +'<button class="sl-btn remove" onclick="toggleShortlist(\''+c.id+'\',this)">\u2715</button>'
-      +'</div></div>';
-  }).join('')+'</div>';
-}
-
+/* ══ VS ══ */
 function toggleVS(id,btn){
   var idx=vsSelected.indexOf(id);
   if(idx>=0){vsSelected.splice(idx,1);}else{if(vsSelected.length>=2){showToast('Maximum 2 profils pour la comparaison','error');return;}vsSelected.push(id);}
@@ -597,6 +721,7 @@ function updateVSBar(){
   document.getElementById('btnVsOpen').disabled=vsSelected.length<2;
 }
 
+/* ══ VS MODAL ══ */
 function openVSModal(){
   var cands=vsSelected.map(function(id){return allCandidates.find(function(c){return c.id===id;});}).filter(Boolean);
   if(cands.length<2)return;
@@ -614,7 +739,6 @@ function openVSModal(){
       :'<div style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:24px;border:3px solid '+color+';color:'+color+';">'+(c.name||'?')[0]+'</div>';
   }
 
-  /* Dimension avec le plus grand \u00e9cart pour chaque candidat */
   function topWin(me,opp,dims){
     if(!dims.length)return null;
     return dims.reduce(function(best,d){
@@ -627,12 +751,12 @@ function openVSModal(){
   if(Math.abs(diff)>10){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
     var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA,lName=diff>0?sB:sA;
-    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> domine sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions'+(wTop?' \u2014 \u00e9cart cl\u00e9 en <strong>'+wTop.label+'</strong>':'')+'.'
+    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> domine sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions'+(wTop?' \u2014 \u00e9cart cl\u00e9 en <strong>'+wTop.label+'</strong>':'')+'.';
     reco='<span style="color:'+wc+';font-weight:700">'+wn+'</span> s\u2019impose clairement.'+(lTop?' '+lName+' garde l\u2019avantage en <strong>'+lTop.label+'</strong> \u2014 pertinent si le poste est centr\u00e9 sur cet axe.':'');
   }else if(Math.abs(diff)>3){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
     var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA;
-    summary='<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts)'+(wTop?' \u2014 \u00e9cart principal sur <strong>'+wTop.label+'</strong>':'')+'.'
+    summary='<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts)'+(wTop?' \u2014 \u00e9cart principal sur <strong>'+wTop.label+'</strong>':'')+'.';
     reco='Avantage <strong>'+wn+'</strong>'+(wTop?' en '+wTop.label:'')+'. '+(lTop?'L\u2019autre candidat r\u00e9pond mieux sur <strong>'+lTop.label+'</strong> \u2014 arbitrer selon le c\u0153ur du poste. ':'')+'Compl\u00e9ter par un entretien structur\u00e9.';
   }else{
     var huntDiff=a.hunting_pct-b.hunting_pct;
@@ -640,30 +764,24 @@ function openVSModal(){
     reco='Profils \u00e9quivalents. D\u00e9cision sur l\u2019ad\u00e9quation poste : '+(Math.abs(huntDiff)>15?(huntDiff>0?sA+' plus chasse vs '+sB+' plus farming':sB+' plus chasse vs '+sA+' plus farming'):'profils de terrain comparables')+'. Culture d\u2019\u00e9quipe et feeling terrain seront d\u00e9terminants.';
   }
 
-  /* buildCtxCard v2 — crit\u00e8res contextualis\u00e9s + avantages dimensionnels chiffr\u00e9s */
   function buildCtxCard(c,other,color,colorLight,dwon){
     var n=c.name||'Anonyme',fn=n.split(' ')[0],hunt=c.hunting_pct||50;
     var raw=c._raw||{};
     var items=[];
-    /* 1. Profil hunting */
     if(hunt>=80)items.push('Poste <strong>chasse pure</strong> \u2014 '+hunt+'\u202f% acquisition new biz');
     else if(hunt>=60)items.push('Mix chasse/farming \u2014 <strong>'+hunt+'\u202f% hunting</strong>');
     else items.push('Profil <strong>gestion de compte</strong> \u2014 '+(100-hunt)+'\u202f% farming');
-    /* 2. Deals + cycle */
     var dl='';
     if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';
     if(c.sales_cycle)dl+=(dl?' \u00b7 ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';
     if(dl)items.push(dl);
-    /* 3. Exp\u00e9rience + quota */
     var el='';
     if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirm\u00e9')+' \u2014 <strong>'+c.experience_years+' ans</strong>';
     if(raw.quota_attainment)el+=(el?' \u00b7 ':'')+'quota\u202f<strong>'+raw.quota_attainment+'%</strong>';
     if(el)items.push(el);
-    /* 4. Secteurs */
     if(raw.sectors_mastered&&raw.sectors_mastered.length)
       items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
     else items.push('Secteur <strong>'+c.famille+'</strong>');
-    /* Avantages chiffr\u00e9s vs l\'autre candidat, tri\u00e9s par delta d\u00e9croissant */
     var advHtml='';
     if(dwon.length){
       var topAdv=dwon.slice().sort(function(x,y){return((c.stats[y.key]||0)-(other.stats[y.key]||0))-((c.stats[x.key]||0)-(other.stats[x.key]||0));}).slice(0,3);
@@ -695,132 +813,47 @@ function openVSModal(){
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:5px">'
       +'<div style="font-size:7px;color:#999;font-family:var(--font-mono);text-align:center;min-height:20px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.07em;text-transform:uppercase;padding:0 1px">'+d.label+'</div>'
       +'<div style="display:flex;gap:3px;align-items:flex-end;height:88px">'
-      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden">'
-        +'<div class="vsg" data-pct="'+pA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div>'
+      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div></div>'
+      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div></div>'
       +'</div>'
-      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden">'
-        +'<div class="vsg" data-pct="'+pB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div>'
-      +'</div>'
-      +'</div>'
-      +'<div style="display:flex;gap:3px;justify-content:center">'
-        +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span>'
-        +'<span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span>'
-        +'<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span>'
-      +'</div>'
+      +'<div style="display:flex;gap:3px;justify-content:center"><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span><span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span></div>'
       +'<div style="font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px;font-family:var(--font-mono);background:'+dbg+';color:#fff8e7;min-width:20px;text-align:center">'+dtxt+'</div>'
       +'</div>';
   }).join('');
 
-  var existing=document.getElementById('su-vs-modal');
-  if(existing)existing.remove();
-  var modal=document.createElement('div');
-  modal.id='su-vs-modal';
+  var existing=document.getElementById('su-vs-modal');if(existing)existing.remove();
+  var modal=document.createElement('div');modal.id='su-vs-modal';
   modal.style.cssText='position:fixed;inset:0;z-index:600;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 16px 48px';
-
   modal.innerHTML=
     '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(8,8,12,.82);backdrop-filter:blur(14px);z-index:-1"></div>'
     +'<div style="background:#faf6ee;border-radius:18px;width:100%;max-width:800px;box-shadow:0 48px 120px rgba(0,0,0,.4);position:relative;margin:auto;overflow:hidden">'
     +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#999;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10">\u2715</button>'
     +'<div style="display:grid;grid-template-columns:1fr 44px 1fr">'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'
-    +ava(a,CA)
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div>'
-    +'<div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' \u00b7 '+a.location:'')+'</div>'
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div>'
-    +'<div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+a.level+'</div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'+ava(a,CA)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' \u00b7 '+a.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div><div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+a.level+'</div></div>'
+    +'<div style="display:flex;align-items:center;justify-content:center;background:#faf6ee;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8"><div style="font-family:var(--font-mono);font-size:9px;font-weight:900;color:#ccc4b0;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg)">VS</div></div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'+ava(b,CB)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' \u00b7 '+b.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div><div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+b.level+'</div></div>'
     +'</div>'
-    +'<div style="display:flex;align-items:center;justify-content:center;background:#faf6ee;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8">'
-    +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:900;color:#ccc4b0;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg)">VS</div>'
-    +'</div>'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'
-    +ava(b,CB)
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div>'
-    +'<div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' \u00b7 '+b.location:'')+'</div>'
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div>'
-    +'<div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+b.level+'</div>'
-    +'</div>'
-    +'</div>'
-    +'<div data-radar-anchor style="padding:16px 22px 18px;background:#faf6ee">'
-    +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px">Scores par dimension</div>'
-    +'<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gauges+'</div>'
-    +'<div style="display:flex;justify-content:center;gap:18px;margin-top:10px">'
-    +'<span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CA+';display:inline-block;border-radius:2px"></span>'+sA+'</span>'
-    +'<span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CB+';display:inline-block;border-radius:2px"></span>'+sB+'</span>'
-    +'</div>'
-    +'</div>'
-    +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px">'
-    +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div>'
-    +'<div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
-    +buildCtxCard(a,b,CA,CAL,dimsA)
-    +buildCtxCard(b,a,CB,CBL,dimsB)
-    +'</div>'
-    +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:8px;padding:12px 14px;margin-bottom:16px">'
-    +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#b0a080;font-weight:700;margin-bottom:5px">Recommandation recruteur</div>'
-    +'<div style="font-size:13px;color:#444;line-height:1.65">'+reco+'</div>'
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'
-    +'<a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' \u2192</a>'
-    +'<a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' \u2192</a>'
-    +'</div>'
-    +'</div>'
-    +'</div>';
+    +'<div data-radar-anchor style="padding:16px 22px 18px;background:#faf6ee"><div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px">Scores par dimension</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gauges+'</div><div style="display:flex;justify-content:center;gap:18px;margin-top:10px"><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CA+';display:inline-block;border-radius:2px"></span>'+sA+'</span><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CB+';display:inline-block;border-radius:2px"></span>'+sB+'</span></div></div>'
+    +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div><div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+buildCtxCard(a,b,CA,CAL,dimsA)+buildCtxCard(b,a,CB,CBL,dimsB)+'</div>'
+    +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:8px;padding:12px 14px;margin-bottom:16px"><div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#b0a080;font-weight:700;margin-bottom:5px">Recommandation recruteur</div><div style="font-size:13px;color:#444;line-height:1.65">'+reco+'</div></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' \u2192</a><a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' \u2192</a></div>'
+    +'</div></div>';
 
   document.body.appendChild(modal);
-
-  requestAnimationFrame(function(){
-    setTimeout(function(){
-      modal.querySelectorAll('.vsg').forEach(function(el){el.style.height=el.dataset.pct+'%';});
-    },100);
-  });
+  requestAnimationFrame(function(){setTimeout(function(){modal.querySelectorAll('.vsg').forEach(function(el){el.style.height=el.dataset.pct+'%';});},100);});
 
   function drawRadar(){
     if(typeof Chart==='undefined')return;
-    var canvas=document.createElement('canvas');
-    canvas.width=260;canvas.height=220;canvas.style.display='block';
-    var anchor=modal.querySelector('[data-radar-anchor]');
-    if(!anchor)return;
-    var wrap=document.createElement('div');
-    wrap.style.cssText='padding:14px 22px 0;background:#faf6ee;border-top:1px solid #ede8df';
-    var title=document.createElement('div');
-    title.style.cssText='font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:10px 0 8px';
-    title.textContent='Radar superpos\u00e9';
-    var canvasWrap=document.createElement('div');
-    canvasWrap.style.cssText='display:flex;justify-content:center';
-    canvasWrap.appendChild(canvas);
-    wrap.appendChild(title);wrap.appendChild(canvasWrap);
-    anchor.parentNode.insertBefore(wrap,anchor);
-    new Chart(canvas,{
-      type:'radar',
-      data:{
-        labels:DIMS.map(function(d){return d.label;}),
-        datasets:[
-          {label:sA,data:DIMS.map(function(d){return Math.round((a.stats[d.key]||0)/d.max*100);}),borderColor:CA,backgroundColor:CA+'22',borderWidth:2.5,pointBackgroundColor:CA,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5},
-          {label:sB,data:DIMS.map(function(d){return Math.round((b.stats[d.key]||0)/d.max*100);}),borderColor:CB,backgroundColor:'rgba(26,34,34,.08)',borderWidth:2.5,pointBackgroundColor:CB,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5}
-        ]
-      },
-      options:{
-        responsive:false,
-        animation:{duration:900,easing:'easeInOutQuart'},
-        plugins:{legend:{display:false}},
-        scales:{r:{
-          min:0,max:100,
-          ticks:{stepSize:25,font:{size:7},color:'#c8bea0',backdropColor:'transparent',callback:function(v){return v===50?'50':"\'\"";}},
-          grid:{color:'#ddd8cc'},
-          angleLines:{color:'#ddd8cc'},
-          pointLabels:{font:{size:10,weight:'600'},color:'#555'}
-        }}
-      }
-    });
+    var canvas=document.createElement('canvas');canvas.width=260;canvas.height=220;canvas.style.display='block';
+    var anchor=modal.querySelector('[data-radar-anchor]');if(!anchor)return;
+    var wrap=document.createElement('div');wrap.style.cssText='padding:14px 22px 0;background:#faf6ee;border-top:1px solid #ede8df';
+    var title=document.createElement('div');title.style.cssText='font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:10px 0 8px';title.textContent='Radar superpos\u00e9';
+    var cw=document.createElement('div');cw.style.cssText='display:flex;justify-content:center';cw.appendChild(canvas);
+    wrap.appendChild(title);wrap.appendChild(cw);anchor.parentNode.insertBefore(wrap,anchor);
+    new Chart(canvas,{type:'radar',data:{labels:DIMS.map(function(d){return d.label;}),datasets:[{label:sA,data:DIMS.map(function(d){return Math.round((a.stats[d.key]||0)/d.max*100);}),borderColor:CA,backgroundColor:CA+'22',borderWidth:2.5,pointBackgroundColor:CA,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5},{label:sB,data:DIMS.map(function(d){return Math.round((b.stats[d.key]||0)/d.max*100);}),borderColor:CB,backgroundColor:'rgba(26,34,34,.08)',borderWidth:2.5,pointBackgroundColor:CB,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5}]},options:{responsive:false,animation:{duration:900,easing:'easeInOutQuart'},plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:7},color:'#c8bea0',backdropColor:'transparent',callback:function(v){return v===50?'50':'\'\"';}},grid:{color:'#ddd8cc'},angleLines:{color:'#ddd8cc'},pointLabels:{font:{size:10,weight:'600'},color:'#555'}}}}});
   }
-
-  if(window.Chart){drawRadar();}
-  else{
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
-    s.onload=drawRadar;
-    document.head.appendChild(s);
-  }
+  if(window.Chart){drawRadar();}else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';s.onload=drawRadar;document.head.appendChild(s);}
 }
 
 function switchTab(tab,el){
