@@ -338,11 +338,6 @@ function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}cat
 function normDemo(c){
   var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||'',icon:''};
   var level=c.level?c.level.toUpperCase():lvl(c.score);
-  /*
-   * Lecture stats avec alias :
-   *   data.js utilise 'besoin' pour la dimension 'creer_besoin' de DIMS
-   * Priorité : stats[key] → stats[alias] → bars[idx] → 0
-   */
   var STAT_ALIASES={creer_besoin:'besoin'};
   function gs(key,idx){
     if(c.stats){
@@ -497,7 +492,7 @@ function SEP(){return'<div class="stat-sep"></div>';}
 function renderCard(c){
   var lc=c.level.toLowerCase(),isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
   var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'D\u00e9couverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
-  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'
+  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'  
     +'<div class="dash-card-portrait">'
     +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
     +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
@@ -574,7 +569,7 @@ function renderShortlist(){
   }
   container.innerHTML='<div class="sl-list">'+saved.map(function(c){
     var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
-    return'<div class="sl-row'+(isVS?' vs-on':'')+'">'
+    return'<div class="sl-row'+(isVS?' vs-on':'')+'">'  
       +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
       +'<div class="sl-info"><div class="sl-name">'+name+'</div><div class="sl-meta">'+c.level+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+'</div></div>'
       +'<div class="sl-score">'+c.score+'</div>'
@@ -619,34 +614,77 @@ function openVSModal(){
       :'<div style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:24px;border:3px solid '+color+';color:'+color+';">'+(c.name||'?')[0]+'</div>';
   }
 
+  /* Dimension avec le plus grand \u00e9cart pour chaque candidat */
+  function topWin(me,opp,dims){
+    if(!dims.length)return null;
+    return dims.reduce(function(best,d){
+      return((me.stats[d.key]||0)-(opp.stats[d.key]||0))>((me.stats[best.key]||0)-(opp.stats[best.key]||0))?d:best;
+    });
+  }
+  var topA=topWin(a,b,dimsA),topB=topWin(b,a,dimsB);
+
   var summary='',reco='';
   if(Math.abs(diff)>10){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
-    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> m\u00e8ne de '+Math.abs(diff)+' points &mdash; avantage sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions.';
-    reco='<span style="color:'+wc+';font-weight:700">'+wn+'</span> est le choix naturel pour un poste g\u00e9n\u00e9raliste.';
+    var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA,lName=diff>0?sB:sA;
+    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> domine sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions'+(wTop?' \u2014 \u00e9cart cl\u00e9 en <strong>'+wTop.label+'</strong>':'')+'.'
+    reco='<span style="color:'+wc+';font-weight:700">'+wn+'</span> s\u2019impose clairement.'+(lTop?' '+lName+' garde l\u2019avantage en <strong>'+lTop.label+'</strong> \u2014 pertinent si le poste est centr\u00e9 sur cet axe.':'');
   }else if(Math.abs(diff)>3){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
-    summary='<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts).';
-    reco='Avantage marginal pour <span style="color:'+wc+';font-weight:700">'+wn+'</span>. Compl\u00e9ter par un entretien structur\u00e9.';
+    var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA;
+    summary='<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts)'+(wTop?' \u2014 \u00e9cart principal sur <strong>'+wTop.label+'</strong>':'')+'.'
+    reco='Avantage <strong>'+wn+'</strong>'+(wTop?' en '+wTop.label:'')+'. '+(lTop?'L\u2019autre candidat r\u00e9pond mieux sur <strong>'+lTop.label+'</strong> \u2014 arbitrer selon le c\u0153ur du poste. ':'')+'Compl\u00e9ter par un entretien structur\u00e9.';
   }else{
-    summary='Profils tr\u00e8s proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d\u2019\u00e9cart).';
-    reco='Profils \u00e9quivalents. D\u00e9cision sur culture d\u2019\u00e9quipe et feeling terrain.';
+    var huntDiff=a.hunting_pct-b.hunting_pct;
+    summary='Profils tr\u00e8s proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d\u2019\u00e9cart).'+(topA||topB?' Diff\u00e9renciation : '+(topA?'<strong>'+topA.label+'</strong> pour '+sA:'')+(topA&&topB?' \u00b7 ':'')+  (topB?'<strong>'+topB.label+'</strong> pour '+sB:'')+'.' :'');
+    reco='Profils \u00e9quivalents. D\u00e9cision sur l\u2019ad\u00e9quation poste : '+(Math.abs(huntDiff)>15?(huntDiff>0?sA+' plus chasse vs '+sB+' plus farming':sB+' plus chasse vs '+sA+' plus farming'):'profils de terrain comparables')+'. Culture d\u2019\u00e9quipe et feeling terrain seront d\u00e9terminants.';
   }
 
-  function buildCtxCard(c,color,colorLight,dwon){
+  /* buildCtxCard v2 — crit\u00e8res contextualis\u00e9s + avantages dimensionnels chiffr\u00e9s */
+  function buildCtxCard(c,other,color,colorLight,dwon){
     var n=c.name||'Anonyme',fn=n.split(' ')[0],hunt=c.hunting_pct||50;
+    var raw=c._raw||{};
     var items=[];
-    if(hunt>=60)items.push('Chasse <strong>'+hunt+'%</strong>');else items.push('Farming <strong>'+(100-hunt)+'%</strong>');
-    if(c.deal_size)items.push('Deal size <strong>'+c.deal_size+'</strong>');
-    if(c.experience_years)items.push('<strong>'+c.experience_years+' ans</strong> d\u2019exp\u00e9rience');
-    items.push('Secteur <strong>'+c.famille+'</strong>');
-    var doms=dwon.length?dwon.map(function(d){return d.label;}).join(' \u00b7 '):'Aucune sup\u00e9riorit\u00e9 nette';
-    return '<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden">'
+    /* 1. Profil hunting */
+    if(hunt>=80)items.push('Poste <strong>chasse pure</strong> \u2014 '+hunt+'\u202f% acquisition new biz');
+    else if(hunt>=60)items.push('Mix chasse/farming \u2014 <strong>'+hunt+'\u202f% hunting</strong>');
+    else items.push('Profil <strong>gestion de compte</strong> \u2014 '+(100-hunt)+'\u202f% farming');
+    /* 2. Deals + cycle */
+    var dl='';
+    if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';
+    if(c.sales_cycle)dl+=(dl?' \u00b7 ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';
+    if(dl)items.push(dl);
+    /* 3. Exp\u00e9rience + quota */
+    var el='';
+    if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirm\u00e9')+' \u2014 <strong>'+c.experience_years+' ans</strong>';
+    if(raw.quota_attainment)el+=(el?' \u00b7 ':'')+'quota\u202f<strong>'+raw.quota_attainment+'%</strong>';
+    if(el)items.push(el);
+    /* 4. Secteurs */
+    if(raw.sectors_mastered&&raw.sectors_mastered.length)
+      items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
+    else items.push('Secteur <strong>'+c.famille+'</strong>');
+    /* Avantages chiffr\u00e9s vs l\'autre candidat, tri\u00e9s par delta d\u00e9croissant */
+    var advHtml='';
+    if(dwon.length){
+      var topAdv=dwon.slice().sort(function(x,y){return((c.stats[y.key]||0)-(other.stats[y.key]||0))-((c.stats[x.key]||0)-(other.stats[x.key]||0));}).slice(0,3);
+      advHtml='<div style="margin-top:10px;font-family:var(--font-mono);font-size:8px;letter-spacing:.12em;color:'+color+';text-transform:uppercase;font-weight:700;margin-bottom:4px">Avantage vs '+other.name.split(' ')[0]+'</div>'
+        +topAdv.map(function(d){
+          var my=c.stats[d.key]||0,op=other.stats[d.key]||0,delta=my-op;
+          return'<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid '+color+'14">'
+            +'<span style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#555">'+d.label+'</span>'
+            +'<div style="display:flex;align-items:center;gap:5px">'
+            +'<span style="font-family:var(--font-mono);font-size:8px;color:#aaa">'+my+'/'+d.max+'</span>'
+            +'<span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+color+';background:'+color+'1a;padding:1px 6px;border-radius:10px">+'+delta+'</span>'
+            +'</div></div>';
+        }).join('');
+    }else{
+      advHtml='<div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:#bbb;font-style:italic">Pas de sup\u00e9riorit\u00e9 dimensionnelle</div>';
+    }
+    return'<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden">'
       +'<div style="background:'+color+';padding:8px 14px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)">Recruter '+fn+' si\u2026</div></div>'
       +'<div style="padding:11px 14px">'
       +items.map(function(t){return'<div style="font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid '+color+'14;line-height:1.5;display:flex;gap:5px"><span style="color:'+color+'">&#8250;</span><span>'+t+'</span></div>';}).join('')
-      +'<div style="margin-top:8px;font-family:var(--font-mono);font-size:8px;letter-spacing:.12em;color:'+color+';opacity:.55;text-transform:uppercase">Atouts</div>'
-      +'<div style="font-family:var(--font-mono);font-size:9px;color:'+color+';font-weight:700;margin-top:3px">'+doms+'</div>'
+      +advHtml
       +'</div></div>';
   }
 
@@ -714,8 +752,8 @@ function openVSModal(){
     +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div>'
     +'<div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'
-    +buildCtxCard(a,CA,CAL,dimsA)
-    +buildCtxCard(b,CB,CBL,dimsB)
+    +buildCtxCard(a,b,CA,CAL,dimsA)
+    +buildCtxCard(b,a,CB,CBL,dimsB)
     +'</div>'
     +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:8px;padding:12px 14px;margin-bottom:16px">'
     +'<div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#b0a080;font-weight:700;margin-bottom:5px">Recommandation recruteur</div>'
@@ -767,7 +805,7 @@ function openVSModal(){
         plugins:{legend:{display:false}},
         scales:{r:{
           min:0,max:100,
-          ticks:{stepSize:25,font:{size:7},color:'#c8bea0',backdropColor:'transparent',callback:function(v){return v===50?'50':'';}},
+          ticks:{stepSize:25,font:{size:7},color:'#c8bea0',backdropColor:'transparent',callback:function(v){return v===50?'50':"\'\"";}},
           grid:{color:'#ddd8cc'},
           angleLines:{color:'#ddd8cc'},
           pointLabels:{font:{size:10,weight:'600'},color:'#555'}
