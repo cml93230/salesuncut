@@ -338,9 +338,18 @@ function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}cat
 function normDemo(c){
   var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||'',icon:''};
   var level=c.level?c.level.toUpperCase():lvl(c.score);
-  /* Lecture stats : on essaie stats explicites puis bars[] en fallback */
+  /*
+   * Lecture stats avec alias :
+   *   data.js utilise 'besoin' pour la dimension 'creer_besoin' de DIMS
+   * Priorité : stats[key] → stats[alias] → bars[idx] → 0
+   */
+  var STAT_ALIASES={creer_besoin:'besoin'};
   function gs(key,idx){
-    if(c.stats&&c.stats[key]!=null)return c.stats[key];
+    if(c.stats){
+      if(c.stats[key]!=null)return c.stats[key];
+      var alt=STAT_ALIASES[key];
+      if(alt&&c.stats[alt]!=null)return c.stats[alt];
+    }
     if(c.bars&&c.bars[idx]!=null)return c.bars[idx];
     return 0;
   }
@@ -641,7 +650,6 @@ function openVSModal(){
       +'</div></div>';
   }
 
-  /* Barres verticales : hauteur = % du max de chaque dimension */
   var gauges=DIMS.map(function(d,i){
     var va=a.stats[d.key]||0,vb=b.stats[d.key]||0;
     var pA=Math.round(va/d.max*100),pB=Math.round(vb/d.max*100);
@@ -675,7 +683,6 @@ function openVSModal(){
     '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(8,8,12,.82);backdrop-filter:blur(14px);z-index:-1"></div>'
     +'<div style="background:#faf6ee;border-radius:18px;width:100%;max-width:800px;box-shadow:0 48px 120px rgba(0,0,0,.4);position:relative;margin:auto;overflow:hidden">'
     +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#999;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10">\u2715</button>'
-    /* ── Têtes de colonnes ── */
     +'<div style="display:grid;grid-template-columns:1fr 44px 1fr">'
     +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'
     +ava(a,CA)
@@ -695,7 +702,6 @@ function openVSModal(){
     +'<div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+b.level+'</div>'
     +'</div>'
     +'</div>'
-    /* ── Radar anchor : le radar sera inséré AVANT ce div ── */
     +'<div data-radar-anchor style="padding:16px 22px 18px;background:#faf6ee">'
     +'<div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px">Scores par dimension</div>'
     +'<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gauges+'</div>'
@@ -704,7 +710,6 @@ function openVSModal(){
     +'<span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CB+';display:inline-block;border-radius:2px"></span>'+sB+'</span>'
     +'</div>'
     +'</div>'
-    /* ── Verdict ── */
     +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px">'
     +'<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div>'
     +'<div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
@@ -725,16 +730,12 @@ function openVSModal(){
 
   document.body.appendChild(modal);
 
-  /* Animer les barres APRÈS que le modal est dans le DOM */
   requestAnimationFrame(function(){
     setTimeout(function(){
-      modal.querySelectorAll('.vsg').forEach(function(el){
-        el.style.height=el.dataset.pct+'%';
-      });
+      modal.querySelectorAll('.vsg').forEach(function(el){el.style.height=el.dataset.pct+'%';});
     },100);
   });
 
-  /* Radar Chart.js inséré avant data-radar-anchor */
   function drawRadar(){
     if(typeof Chart==='undefined')return;
     var canvas=document.createElement('canvas');
@@ -775,10 +776,8 @@ function openVSModal(){
     });
   }
 
-  /* Chart.js est chargé sans defer → window.Chart disponible immédiatement */
-  if(window.Chart){
-    drawRadar();
-  }else{
+  if(window.Chart){drawRadar();}
+  else{
     var s=document.createElement('script');
     s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
     s.onload=drawRadar;
