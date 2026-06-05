@@ -101,13 +101,9 @@
     .dash-card.gold{border-color:var(--golden);background:linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%)}
     .dash-card.silver{border-color:var(--silver)}
     .dash-card.bronze{border-color:var(--bronze)}
-    /* VS checkbox — déplacé en bas-gauche du portrait, ne chevauche plus family-tag */
-    .dc-vs{position:absolute;bottom:8px;left:8px;z-index:6;width:24px;height:24px;border-radius:4px;border:1.5px solid rgba(255,248,231,.75);background:rgba(26,34,34,.55);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;color:transparent;transition:all .2s;backdrop-filter:blur(3px)}
-    .dc-vs:hover{border-color:#fff8e7;background:rgba(26,34,34,.8)}
-    .dc-vs.on{background:var(--gold-deep);border-color:var(--gold-deep);color:#fff8e7}
-    /* Shortlist heart top-right */
-    .dc-sl{position:absolute;top:9px;right:9px;z-index:6;width:30px;height:30px;border-radius:50%;background:rgba(255,248,231,.9);border:1.5px solid var(--cream-3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:15px}
-    .dc-sl:hover,.dc-sl.on{background:var(--gold-deep);border-color:var(--gold-deep)}
+    /* Bouton + SHORTLIST — bas-gauche du portrait */
+    .dc-shortlist-portrait{position:absolute;bottom:8px;left:8px;z-index:6;padding:4px 9px;border-radius:11px;border:1.5px solid rgba(255,248,231,.75);background:rgba(26,34,34,.62);font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff8e7;cursor:pointer;transition:all .2s;backdrop-filter:blur(3px);white-space:nowrap;line-height:1}
+    .dc-shortlist-portrait:hover,.dc-shortlist-portrait.on{background:var(--gold-deep);border-color:var(--gold-deep)}
     /* Shortlist bouton footer bas-gauche */
     .btn-sl-footer{font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;background:none;border:1.5px solid var(--cream-3);border-radius:3px;color:var(--teal-2);cursor:pointer;transition:all .2s;white-space:nowrap}
     .btn-sl-footer:hover,.btn-sl-footer.on{background:var(--gold-deep);color:var(--cream);border-color:var(--gold-deep)}
@@ -643,8 +639,6 @@ function SI(n,l){return'<div class="stat-item"><div class="stat-num">'+n+'</div>
 function SEP(){return'<div class="stat-sep"></div>';}
 
 /* ── GRID CARD ── */
-/* FIX 1: dc-vs deplace DANS portrait bas-gauche, ne chevauche plus family-tag */
-/* FIX 2: bouton Shortlist ajoute dans footer bas-gauche */
 function renderCard(c){
   var lc=c.level.toLowerCase();
   var isSL=shortlistedIds.has(c.id);
@@ -656,13 +650,12 @@ function renderCard(c){
     {lbl:'Objections',val:c.stats.objections,max:16},
     {lbl:'Closing',val:c.stats.closing,max:16}
   ].filter(function(d){return d.val>0;});
-  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'  
-    +'<button class="dc-sl'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'\u2665':'\u2661')+'</button>'
+  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="dash-card-portrait">'
     +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
     +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
     +'<span class="level-stamp '+c.level+'">'+c.level+'</span>'
-    +'<button class="dc-vs'+(isVS?' on':'')+'" onclick="event.stopPropagation();toggleVS(\''+c.id+'\',this)" title="Comparer VS">'+(isVS?'\u2713':'')+'</button>'
+    +'<button class="dc-shortlist-portrait'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'\u2713 SHORTLIST':'+ SHORTLIST')+'</button>'
     +'</div>'
     +'<div class="dash-card-body">'
     +'<div class="dash-card-name">'+name+'</div>'
@@ -670,8 +663,7 @@ function renderCard(c){
     +'<div class="dash-card-score">'+c.score+'<small>/100</small></div>'
     +(dims4.length?'<div class="dash-card-dims">'+dims4.map(function(d){return'<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"><i style="width:'+Math.round(d.val/d.max*100)+'%"></i></div><span class="dim-mini-val">'+d.val+'</span></div>';}).join('')+'</div>':'')
     +'<div class="dash-card-footer">'
-    +'<button class="btn-sl-footer'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'\u2665 Shortlist':'\u2661 Shortlist')+'</button>'
-    +'<a class="btn-see-profile" href="profil.html?id='+c.id+'" onclick="event.stopPropagation()">Voir \u2192</a></div>'
+    +'<a class="btn-see-profile" href="profil.html?id='+c.id+'" onclick="event.stopPropagation()">Voir le profil \u2192</a></div>'
     +'</div></div>';
 }
 
@@ -722,13 +714,21 @@ async function toggleShortlist(sid,btn){
   if(isSaved){
     await sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',sid);
     shortlistedIds.delete(sid);
-    if(btn){btn.textContent=btn.classList.contains('btn-sl-footer')?'\u2661 Shortlist':'\u2661';btn.classList.remove('on');}
+    if(btn){
+      if(btn.classList.contains('dc-shortlist-portrait')){btn.textContent='+ SHORTLIST';}
+      else{btn.textContent='\u2661 Shortlist';}
+      btn.classList.remove('on');
+    }
     showToast('Retir\u00e9 de la shortlist');
   }else{
     await sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:sid});
     shortlistedIds.add(sid);
-    if(btn){btn.textContent=btn.classList.contains('btn-sl-footer')?'\u2665 Shortlist':'\u2665';btn.classList.add('on');}
-    showToast('Ajout\u00e9 \u00e0 la shortlist \u2665','success');
+    if(btn){
+      if(btn.classList.contains('dc-shortlist-portrait')){btn.textContent='\u2713 SHORTLIST';}
+      else{btn.textContent='\u2665 Shortlist';}
+      btn.classList.add('on');
+    }
+    showToast('Ajout\u00e9 \u00e0 la shortlist','success');
   }
   updateShortlistCount();renderShortlist();
 }
@@ -739,13 +739,13 @@ function renderShortlist(){
   var container=document.getElementById('shortlistContent');
   var saved=allCandidates.filter(function(c){return shortlistedIds.has(c.id);});
   if(!saved.length){
-    container.innerHTML='<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur \u2661</div>';
+    container.innerHTML='<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
     return;
   }
   container.innerHTML='<div class="sl-list">'+saved.map(function(c){
     var name=c.name||'Anonyme';
     var isVS=vsSelected.indexOf(c.id)>=0;
-    return'<div class="sl-row'+(isVS?' vs-on':'')+'">'  
+    return'<div class="sl-row'+(isVS?' vs-on':'')+'">'
       +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
       +'<div class="sl-info"><div class="sl-name">'+name+'</div><div class="sl-meta">'+c.level+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+'</div></div>'
       +'<div class="sl-score">'+c.score+'</div>'
@@ -767,17 +767,6 @@ function toggleVS(id,btn){
   }
   updateVSBar();
   renderShortlist();
-  document.querySelectorAll('.dc-vs').forEach(function(el){
-    var card=el.closest('.dash-card');
-    if(!card)return;
-    var onclick=card.getAttribute('onclick')||'';
-    var m=onclick.match(/'([^']+)'/);
-    if(!m)return;
-    var cid=m[1];
-    var isOn=vsSelected.indexOf(cid)>=0;
-    el.classList.toggle('on',isOn);
-    el.textContent=isOn?'\u2713':'';
-  });
 }
 
 function clearVS(){vsSelected=[];updateVSBar();renderShortlist();applyFilters();}
