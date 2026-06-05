@@ -98,7 +98,10 @@
     .level-stamp.GOLD{background:var(--golden);color:var(--ink)}
     .level-stamp.SILVER{background:var(--silver);color:var(--ink)}
     .level-stamp.BRONZE{background:var(--bronze);color:var(--cream)}
-    .family-tag{position:absolute;top:8px;left:8px;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 7px;border-radius:3px;z-index:2}
+    /* Badge ville — top-left */
+    .location-tag{position:absolute;top:8px;left:8px;background:rgba(26,34,34,.72);color:#fff8e7;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;padding:3px 7px;border-radius:3px;z-index:2;backdrop-filter:blur(3px);max-width:calc(50% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* Badge secteur — top-right */
+    .family-tag{position:absolute;top:8px;right:8px;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 7px;border-radius:3px;z-index:2;max-width:calc(50% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .dash-card-body{padding:13px}
     .dash-card-name{font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1;margin-bottom:2px}
     .dash-card-meta{font-family:var(--font-mono);font-size:9px;color:var(--teal-3);letter-spacing:.08em;margin-bottom:9px}
@@ -281,17 +284,11 @@
 
   <!-- ── SHORTLIST PANEL ── -->
   <div class="tab-panel" id="panelShortlist">
-
-    <!-- Recherche shortlist -->
     <div class="search-row">
       <span class="search-icon">&#128269;</span>
       <input type="text" id="slSearch" class="search-input" placeholder="Rechercher dans la shortlist&#8230;">
     </div>
-
-    <!-- Stats bar shortlist -->
     <div class="stats-bar" id="slStatsBar"></div>
-
-    <!-- Filtres shortlist -->
     <div class="filters-panel">
       <div class="filters-header">
         <div class="filters-title">Filtres</div>
@@ -305,13 +302,9 @@
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
     </div>
-
-    <!-- Barre résultats shortlist -->
     <div class="results-bar">
       <div class="results-left">
-        <div class="results-count">
-          <span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span>
-        </div>
+        <div class="results-count"><span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span></div>
       </div>
       <div class="sort-row"><span>Tri</span>
         <select class="sort-select" id="slSortBy">
@@ -321,11 +314,8 @@
         </select>
       </div>
     </div>
-
-    <!-- Liste shortlist filtr&eacute;e -->
     <div id="shortlistContent"></div>
     <div id="slEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
-
   </div>
 
   <!-- ── ACCOUNT PANEL ── -->
@@ -542,8 +532,6 @@ function SEP(){return'<div class="stat-sep"></div>';}
 function applyShortlistFilters(){
   var all=allCandidates.filter(function(c){return shortlistedIds.has(c.id);});
   var total=all.length;
-
-  /* Shortlist vide → message spécial */
   if(!total){
     document.getElementById('shortlistContent').innerHTML=
       '<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
@@ -553,7 +541,6 @@ function applyShortlistFilters(){
     document.getElementById('slTotalDisplay').textContent='';
     return;
   }
-
   var q=document.getElementById('slSearch').value.toLowerCase();
   var fFam=document.getElementById('slFamille').value;
   var fRole=document.getElementById('slRoleF').value;
@@ -561,7 +548,6 @@ function applyShortlistFilters(){
   var fOte=parseInt(document.getElementById('slOte').value)||0;
   var fDispo=parseInt(document.getElementById('slDispo').value);
   var sortBy=document.getElementById('slSortBy').value;
-
   var src=all.filter(function(c){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
@@ -571,17 +557,12 @@ function applyShortlistFilters(){
     if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
     return true;
   });
-
   if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
   else if(sortBy==='alpha')src.sort(function(a,b){return(a.name||'').localeCompare(b.name||'','fr');});
   else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
-
-  /* Compteur X/Y */
   document.getElementById('slCountDisplay').textContent=src.length;
   var denomEl=document.getElementById('slTotalDisplay');
   denomEl.textContent=(src.length<total?' sur '+total+' shortlist\u00e9s':' shortlist\u00e9'+(total>1?'s':''));
-
-  /* Stats bar */
   var bar=document.getElementById('slStatsBar');
   if(src.length){
     var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
@@ -589,17 +570,10 @@ function applyShortlistFilters(){
     var gold=src.filter(function(c){return c.level==='GOLD';}).length;
     bar.innerHTML=SI(src.length,'shortlist\u00e9s')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
   }else{bar.innerHTML='';}
-
   var container=document.getElementById('shortlistContent');
   var emptyEl=document.getElementById('slEmpty');
-
-  if(!src.length){
-    container.innerHTML='';
-    emptyEl.style.display='block';
-    return;
-  }
+  if(!src.length){container.innerHTML='';emptyEl.style.display='block';return;}
   emptyEl.style.display='none';
-
   container.innerHTML='<div class="sl-list">'+src.map(function(c){
     var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
     return'<div class="sl-row'+(isVS?' vs-on':'')+'\">'
@@ -625,8 +599,13 @@ function renderCard(c){
   return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="dash-card-portrait">'
     +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
+    /* top-left : ville */
+    +(c.location?'<span class="location-tag">'+c.location+'</span>':'')
+    /* top-right : secteur */
     +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
+    /* bottom-right : niveau */
     +'<span class="level-stamp '+c.level+'">'+c.level+'</span>'
+    /* bottom-left : shortlist */
     +'<button class="dc-shortlist-portrait'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'\u2713 SHORTLIST':'+ SHORTLIST')+'</button>'
     +'</div>'
     +'<div class="dash-card-body">'
@@ -738,15 +717,11 @@ function openVSModal(){
       ?'<img src="'+c.photo+'" style="width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:center top;border:3px solid '+color+'">'
       :'<div style="width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:24px;border:3px solid '+color+';color:'+color+';">'+(c.name||'?')[0]+'</div>';
   }
-
   function topWin(me,opp,dims){
     if(!dims.length)return null;
-    return dims.reduce(function(best,d){
-      return((me.stats[d.key]||0)-(opp.stats[d.key]||0))>((me.stats[best.key]||0)-(opp.stats[best.key]||0))?d:best;
-    });
+    return dims.reduce(function(best,d){return((me.stats[d.key]||0)-(opp.stats[d.key]||0))>((me.stats[best.key]||0)-(opp.stats[best.key]||0))?d:best;});
   }
   var topA=topWin(a,b,dimsA),topB=topWin(b,a,dimsB);
-
   var summary='',reco='';
   if(Math.abs(diff)>10){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
@@ -771,54 +746,24 @@ function openVSModal(){
     if(hunt>=80)items.push('Poste <strong>chasse pure</strong> \u2014 '+hunt+'\u202f% acquisition new biz');
     else if(hunt>=60)items.push('Mix chasse/farming \u2014 <strong>'+hunt+'\u202f% hunting</strong>');
     else items.push('Profil <strong>gestion de compte</strong> \u2014 '+(100-hunt)+'\u202f% farming');
-    var dl='';
-    if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';
-    if(c.sales_cycle)dl+=(dl?' \u00b7 ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';
-    if(dl)items.push(dl);
-    var el='';
-    if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirm\u00e9')+' \u2014 <strong>'+c.experience_years+' ans</strong>';
-    if(raw.quota_attainment)el+=(el?' \u00b7 ':'')+'quota\u202f<strong>'+raw.quota_attainment+'%</strong>';
-    if(el)items.push(el);
-    if(raw.sectors_mastered&&raw.sectors_mastered.length)
-      items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
+    var dl='';if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';if(c.sales_cycle)dl+=(dl?' \u00b7 ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';if(dl)items.push(dl);
+    var el='';if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirm\u00e9')+' \u2014 <strong>'+c.experience_years+' ans</strong>';if(raw.quota_attainment)el+=(el?' \u00b7 ':'')+'quota\u202f<strong>'+raw.quota_attainment+'%</strong>';if(el)items.push(el);
+    if(raw.sectors_mastered&&raw.sectors_mastered.length)items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
     else items.push('Secteur <strong>'+c.famille+'</strong>');
     var advHtml='';
     if(dwon.length){
       var topAdv=dwon.slice().sort(function(x,y){return((c.stats[y.key]||0)-(other.stats[y.key]||0))-((c.stats[x.key]||0)-(other.stats[x.key]||0));}).slice(0,3);
       advHtml='<div style="margin-top:10px;font-family:var(--font-mono);font-size:8px;letter-spacing:.12em;color:'+color+';text-transform:uppercase;font-weight:700;margin-bottom:4px">Avantage vs '+other.name.split(' ')[0]+'</div>'
-        +topAdv.map(function(d){
-          var my=c.stats[d.key]||0,op=other.stats[d.key]||0,delta=my-op;
-          return'<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid '+color+'14">'
-            +'<span style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#555">'+d.label+'</span>'
-            +'<div style="display:flex;align-items:center;gap:5px">'
-            +'<span style="font-family:var(--font-mono);font-size:8px;color:#aaa">'+my+'/'+d.max+'</span>'
-            +'<span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+color+';background:'+color+'1a;padding:1px 6px;border-radius:10px">+'+delta+'</span>'
-            +'</div></div>';
-        }).join('');
-    }else{
-      advHtml='<div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:#bbb;font-style:italic">Pas de sup\u00e9riorit\u00e9 dimensionnelle</div>';
-    }
-    return'<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden">'
-      +'<div style="background:'+color+';padding:8px 14px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)">Recruter '+fn+' si\u2026</div></div>'
-      +'<div style="padding:11px 14px">'
-      +items.map(function(t){return'<div style="font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid '+color+'14;line-height:1.5;display:flex;gap:5px"><span style="color:'+color+'">&#8250;</span><span>'+t+'</span></div>';}).join('')
-      +advHtml
-      +'</div></div>';
+        +topAdv.map(function(d){var my=c.stats[d.key]||0,op=other.stats[d.key]||0,delta=my-op;return'<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid '+color+'14"><span style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#555">'+d.label+'</span><div style="display:flex;align-items:center;gap:5px"><span style="font-family:var(--font-mono);font-size:8px;color:#aaa">'+my+'/'+d.max+'</span><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+color+';background:'+color+'1a;padding:1px 6px;border-radius:10px">+'+delta+'</span></div></div>';}).join('');
+    }else{advHtml='<div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:#bbb;font-style:italic">Pas de sup\u00e9riorit\u00e9 dimensionnelle</div>';}
+    return'<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden"><div style="background:'+color+';padding:8px 14px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)">Recruter '+fn+' si\u2026</div></div><div style="padding:11px 14px">'+items.map(function(t){return'<div style="font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid '+color+'14;line-height:1.5;display:flex;gap:5px"><span style="color:'+color+'">&#8250;</span><span>'+t+'</span></div>';}).join('')+advHtml+'</div></div>';
   }
 
   var gauges=DIMS.map(function(d,i){
     var va=a.stats[d.key]||0,vb=b.stats[d.key]||0;
     var pA=Math.round(va/d.max*100),pB=Math.round(vb/d.max*100);
     var dd=va-vb,dbg=dd>0?CA:dd<0?CB:'#d8d2c8',dtxt=dd>0?'+'+dd:dd<0?String(dd):'=';
-    return '<div style="display:flex;flex-direction:column;align-items:center;gap:5px">'
-      +'<div style="font-size:7px;color:#999;font-family:var(--font-mono);text-align:center;min-height:20px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.07em;text-transform:uppercase;padding:0 1px">'+d.label+'</div>'
-      +'<div style="display:flex;gap:3px;align-items:flex-end;height:88px">'
-      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div></div>'
-      +'<div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div></div>'
-      +'</div>'
-      +'<div style="display:flex;gap:3px;justify-content:center"><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span><span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span></div>'
-      +'<div style="font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px;font-family:var(--font-mono);background:'+dbg+';color:#fff8e7;min-width:20px;text-align:center">'+dtxt+'</div>'
-      +'</div>';
+    return'<div style="display:flex;flex-direction:column;align-items:center;gap:5px"><div style="font-size:7px;color:#999;font-family:var(--font-mono);text-align:center;min-height:20px;display:flex;align-items:flex-end;justify-content:center;letter-spacing:.07em;text-transform:uppercase;padding:0 1px">'+d.label+'</div><div style="display:flex;gap:3px;align-items:flex-end;height:88px"><div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pA+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CA+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55)+'ms"></div></div><div style="width:17px;background:#ede8df;border-radius:3px 3px 2px 2px;height:88px;position:relative;overflow:hidden"><div class="vsg" data-pct="'+pB+'" style="position:absolute;bottom:0;left:0;right:0;background:'+CB+';height:0;transition:height .85s cubic-bezier(.4,0,.2,1) '+(i*55+28)+'ms"></div></div></div><div style="display:flex;gap:3px;justify-content:center"><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CA+'">'+va+'</span><span style="font-family:var(--font-mono);font-size:8px;color:#ccc">/</span><span style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:'+CB+'">'+vb+'</span></div><div style="font-size:9px;font-weight:700;padding:2px 5px;border-radius:20px;font-family:var(--font-mono);background:'+dbg+';color:#fff8e7;min-width:20px;text-align:center">'+dtxt+'</div></div>';
   }).join('');
 
   var existing=document.getElementById('su-vs-modal');if(existing)existing.remove();
@@ -837,8 +782,7 @@ function openVSModal(){
     +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div><div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+buildCtxCard(a,b,CA,CAL,dimsA)+buildCtxCard(b,a,CB,CBL,dimsB)+'</div>'
     +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:8px;padding:12px 14px;margin-bottom:16px"><div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#b0a080;font-weight:700;margin-bottom:5px">Recommandation recruteur</div><div style="font-size:13px;color:#444;line-height:1.65">'+reco+'</div></div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' \u2192</a><a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' \u2192</a></div>'
-    +'</div></div>';
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' \u2192</a><a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' \u2192</a></div></div></div>';
 
   document.body.appendChild(modal);
   requestAnimationFrame(function(){setTimeout(function(){modal.querySelectorAll('.vsg').forEach(function(el){el.style.height=el.dataset.pct+'%';});},100);});
