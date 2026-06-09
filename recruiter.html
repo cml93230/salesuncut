@@ -94,7 +94,7 @@
     .dash-card-portrait{width:100%;aspect-ratio:1;background:var(--cream-3);position:relative;overflow:hidden}
     .dash-card-portrait img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
     .dash-card-portrait .no-photo{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:46px;opacity:.3}
-    /* Niveau badge — top-right (repère visuel immédiat) */
+    /* Niveau badge — top-right */
     .level-stamp{position:absolute;top:8px;right:8px;font-family:var(--font-display);font-weight:900;font-size:10px;letter-spacing:.08em;padding:4px 10px;border-radius:3px;z-index:3}
     .level-stamp.GOLD{background:var(--golden);color:var(--ink)}
     .level-stamp.SILVER{background:var(--silver);color:var(--ink)}
@@ -263,7 +263,7 @@
       <div class="filters-groups">
         <div><div class="fg-lbl">Famille</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="fRole"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
-        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="fNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (&lt;60)</option></select></div>
+        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="fNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (50&ndash;59)</option></select></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
@@ -298,7 +298,7 @@
       <div class="filters-groups">
         <div><div class="fg-lbl">Famille</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
-        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="slNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (&lt;60)</option></select></div>
+        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="slNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (50&ndash;59)</option></select></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
@@ -368,7 +368,9 @@ const LS_KEY='su_shortlist_v1';
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
 
-function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':'BRONZE';}
+/* ── Bar\u00e8me certif : GOLD \u226580 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifi\u00e9) ── */
+function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
+
 function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote;if(typeof ote==='object'&&ote.total){var ns=String(ote.total).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}var ns=String(ote).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}
 function dispoNum(d){return DISPO_ORDER[d]!=null?DISPO_ORDER[d]:99;}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify([...shortlistedIds]));}catch(e){}}
@@ -376,7 +378,9 @@ function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}cat
 
 function normDemo(c){
   var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||'',icon:''};
-  var level=c.level?c.level.toUpperCase():lvl(c.score);
+  var rawLevel=c.level?c.level.toUpperCase():null;
+  /* Si le niveau est dans data.js, on le revalide contre le bar\u00e8me actuel */
+  var level=rawLevel||lvl(c.score);
   var STAT_ALIASES={creer_besoin:'besoin'};
   function gs(key,idx){
     if(c.stats){
@@ -407,7 +411,7 @@ function normDemo(c){
 
 function normSB(c){
   var name=[c.prenom,c.nom].filter(Boolean).join(' ')||'Anonyme';
-  var level=(c.niveau_certifie||'BRONZE').toUpperCase();
+  var level=lvl(c.score_global||0);
   return{
     id:c.simulation_id||c.id,name:name,photo:c.photo_url||null,
     level:level,score:c.score_global||0,famille:c.famille||'',family_id:null,
@@ -575,10 +579,11 @@ function applyShortlistFilters(){
   emptyEl.style.display='none';
   container.innerHTML='<div class="sl-list">'+src.map(function(c){
     var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
+    var levelLbl=c.level||'Non certifi\u00e9';
     return'<div class="sl-row'+(isVS?' vs-on':'')+'\">'
       +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
       +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
-      +'<div class="sl-meta">'+c.level+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+(c.availability?' \u00b7 '+c.availability:'')+'</div>'
+      +'<div class="sl-meta">'+levelLbl+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+(c.availability?' \u00b7 '+c.availability:'')+'</div>'
       +'</div>'
       +'<div class="sl-score">'+c.score+'</div>'
       +'<div class="sl-actions">'
@@ -592,15 +597,17 @@ function applyShortlistFilters(){
 function renderShortlist(){applyShortlistFilters();}
 
 function renderCard(c){
-  var lc=c.level.toLowerCase(),isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
+  /* lc = classe CSS carte ; null-level → pas de classe niveau */
+  var lc=(c.level||'').toLowerCase();
+  var isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
   var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'D\u00e9couverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
-  return'<div class="dash-card '+lc+'" onclick="goToProfile(\''+c.id+'\')">'
+  return'<div class="dash-card'+(lc?' '+lc:'')+'" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="dash-card-portrait">'
     +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
     /* top-left : ville */
     +(c.location?'<span class="location-tag">'+c.location+'</span>':'')
-    /* top-right : niveau GOLD/SILVER/BRONZE */
-    +'<span class="level-stamp '+c.level+'">'+c.level+'</span>'
+    /* top-right : niveau — affiché seulement si certifié */
+    +(c.level?'<span class="level-stamp '+c.level+'">'+c.level+'</span>':'')
     /* bottom-right : secteur */
     +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
     /* bottom-left : shortlist */
@@ -616,13 +623,13 @@ function renderCard(c){
 }
 
 function renderRow(c){
-  var lc=c.level.toLowerCase(),name=c.name||'Anonyme';
+  var lc=(c.level||'').toLowerCase(),name=c.name||'Anonyme';
   var av=c.photo?'<img src="'+c.photo+'" alt="">':'<span>'+(name[0]||'?')+'</span>';
   var isImm=c.availability==='Imm\u00e9diat',oteStr=c.ote_max<999?c.ote_max+'k\u20ac':'\u2014';
   return'<div class="list-row" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="lr-avatar">'+av+'</div>'
     +'<div><div class="lr-name">'+name+'</div>'+(c.role_type?'<span class="lr-role-tag">'+c.role_type+'</span>':'')+'</div>'
-    +'<div><div class="lr-score '+lc+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
+    +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
     +'<div class="lr-text">'+(c.famille||'\u2014')+'</div>'
     +'<div class="lr-text">'+(c.location||'\u2014')+'</div>'
     +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'\u2014')+'</div>'
@@ -767,9 +774,9 @@ function openVSModal(){
     +'<div style="background:#faf6ee;border-radius:18px;width:100%;max-width:800px;box-shadow:0 48px 120px rgba(0,0,0,.4);position:relative;margin:auto;overflow:hidden">'
     +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#999;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10">\u2715</button>'
     +'<div style="display:grid;grid-template-columns:1fr 44px 1fr">'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'+ava(a,CA)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' \u00b7 '+a.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div><div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+a.level+'</div></div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'+ava(a,CA)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' \u00b7 '+a.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div><div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(a.level||'Non certifi\u00e9')+'</div></div>'
     +'<div style="display:flex;align-items:center;justify-content:center;background:#faf6ee;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8"><div style="font-family:var(--font-mono);font-size:9px;font-weight:900;color:#ccc4b0;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg)">VS</div></div>'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'+ava(b,CB)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' \u00b7 '+b.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div><div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+b.level+'</div></div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'+ava(b,CB)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' \u00b7 '+b.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div><div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(b.level||'Non certifi\u00e9')+'</div></div>'
     +'</div>'
     +'<div data-radar-anchor style="padding:16px 22px 18px;background:#faf6ee"><div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px">Scores par dimension</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gauges+'</div><div style="display:flex;justify-content:center;gap:18px;margin-top:10px"><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CA+';display:inline-block;border-radius:2px"></span>'+sA+'</span><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CB+';display:inline-block;border-radius:2px"></span>'+sB+'</span></div></div>'
     +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div><div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
