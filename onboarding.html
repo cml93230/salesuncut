@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SalesUncut — Commencer ma certification</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{background:var(--ink);background-image:none;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .ob-wrap{width:100%;max-width:520px;}
+    /* Logo header */
+    .ob-logo{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:40px;text-decoration:none;}
+    .ob-logo-text{font-family:var(--font-display);font-weight:900;font-size:20px;color:var(--cream);text-transform:uppercase;letter-spacing:.05em;}
+    .ob-logo .dot{width:8px;height:8px;background:var(--gold);border-radius:50%;}
+    /* Progress */
+    .ob-progress{display:flex;align-items:center;gap:0;margin-bottom:36px;}
+    .ob-step-dot{flex:1;height:3px;background:rgba(255,248,231,.15);border-radius:2px;transition:background .3s;}
+    .ob-step-dot.done{background:var(--gold);}
+    .ob-step-dot.active{background:var(--gold-glow);}
+    /* Card */
+    .ob-card{background:var(--cream);border-radius:10px;overflow:hidden;box-shadow:0 32px 80px -16px rgba(0,0,0,.5);}
+    .ob-card-head{background:var(--ink);border-bottom:1px solid rgba(255,248,231,.08);padding:24px 32px;display:flex;align-items:center;justify-content:space-between;}
+    .ob-step-label{font-family:var(--font-mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,248,231,.4);}
+    .ob-step-title{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+    .ob-card-body{padding:36px 32px;}
+    /* Form elements */
+    .ob-form{display:flex;flex-direction:column;gap:18px;}
+    .ob-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);display:block;margin-bottom:6px;}
+    .ob-input{width:100%;padding:13px 16px;border:1.5px solid var(--cream-3);border-radius:4px;background:var(--cream);font-family:var(--font-sans);font-size:15px;color:var(--ink);outline:none;transition:border-color .2s;box-sizing:border-box;}
+    .ob-input:focus{border-color:var(--gold-deep);}
+    .ob-input::placeholder{color:var(--teal-3);}
+    .ob-select{width:100%;padding:13px 16px;border:1.5px solid var(--cream-3);border-radius:4px;background:var(--cream);font-family:var(--font-mono);font-size:12px;color:var(--ink);outline:none;cursor:pointer;box-sizing:border-box;}
+    .ob-select:focus{border-color:var(--gold-deep);}
+    .ob-btn{width:100%;padding:16px;background:var(--gold-deep);color:var(--cream);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:background .2s;margin-top:8px;}
+    .ob-btn:hover{background:var(--ink);}
+    .ob-btn:disabled{opacity:.5;cursor:not-allowed;}
+    .ob-btn-outline{width:100%;padding:16px;background:transparent;color:var(--teal-2);border:1.5px solid var(--cream-3);border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;transition:all .2s;margin-top:4px;}
+    .ob-btn-outline:hover{border-color:var(--ink);color:var(--ink);}
+    .ob-error{padding:12px 16px;background:rgba(179,78,42,.1);border:1px solid var(--rust);border-radius:4px;font-size:13px;color:var(--rust);display:none;}
+    .ob-error.visible{display:block;}
+    .ob-hint{font-family:var(--font-mono);font-size:10px;color:var(--teal-3);letter-spacing:.06em;line-height:1.5;}
+    .ob-switch{text-align:center;font-size:13px;color:var(--teal-3);margin-top:20px;}
+    .ob-switch a{color:var(--gold-deep);cursor:pointer;text-decoration:underline;}
+    /* Scenario info box */
+    .scenario-box{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:6px;padding:14px 16px;margin-top:8px;min-height:56px;}
+    .scenario-box-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:4px;}
+    .scenario-box-desc{font-size:13px;color:var(--teal-2);line-height:1.4;}
+    /* Step 3 — appel en cours */
+    .call-pending{text-align:center;padding:20px 0;}
+    .call-spinner{width:48px;height:48px;border-radius:50%;border:3px solid var(--cream-3);border-top-color:var(--gold-deep);animation:spin .8s linear infinite;margin:0 auto 20px;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .call-title{font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink);}
+    .call-sub{font-size:14px;color:var(--teal-2);line-height:1.5;}
+    .call-link{display:inline-block;margin-top:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none;border-bottom:1px solid var(--gold-deep);padding-bottom:2px;}
+    /* Step indicator numbers */
+    .ob-steps-row{display:flex;justify-content:center;gap:8px;margin-bottom:28px;}
+    .ob-step-num{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:rgba(255,248,231,.3);text-transform:uppercase;}
+    .ob-step-num.active{color:var(--gold);}
+    .ob-step-num.done{color:rgba(255,248,231,.5);}
+  </style>
+</head>
+<body class="page-enter">
+
+<div class="ob-wrap">
+  <a href="index.html" class="ob-logo">
+    <span class="dot"></span>
+    <span class="ob-logo-text">SalesUncut</span>
+  </a>
+
+  <!-- Progress bar -->
+  <div class="ob-progress" id="obProgress">
+    <div class="ob-step-dot active" id="dot1"></div>
+    <div style="width:16px"></div>
+    <div class="ob-step-dot" id="dot2"></div>
+    <div style="width:16px"></div>
+    <div class="ob-step-dot" id="dot3"></div>
+  </div>
+
+  <div class="ob-steps-row">
+    <span class="ob-step-num active" id="lbl1">01 · Compte</span>
+    <span style="color:rgba(255,248,231,.15);font-size:9px;font-family:var(--font-mono)">——</span>
+    <span class="ob-step-num" id="lbl2">02 · Identité</span>
+    <span style="color:rgba(255,248,231,.15);font-size:9px;font-family:var(--font-mono)">——</span>
+    <span class="ob-step-num" id="lbl3">03 · Simulation</span>
+  </div>
+
+  <!-- ══ STEP 1 : INSCRIPTION ══ -->
+  <div class="ob-card" id="step1">
+    <div class="ob-card-head">
+      <span class="ob-step-label">Étape 1 / 3</span>
+      <span class="ob-step-title">Créer mon compte</span>
+    </div>
+    <div class="ob-card-body">
+      <div class="ob-form">
+        <div>
+          <label class="ob-label">Email</label>
+          <input type="email" id="s1Email" class="ob-input" placeholder="vous@email.com" autocomplete="email"/>
+        </div>
+        <div>
+          <label class="ob-label">Mot de passe</label>
+          <input type="password" id="s1Password" class="ob-input" placeholder="8 caractères minimum" autocomplete="new-password"/>
+        </div>
+        <div class="ob-error" id="s1Error"></div>
+        <button class="ob-btn" id="s1Btn" onclick="handleSignup()">Créer mon compte →</button>
+      </div>
+      <div class="ob-switch">Déjà un compte ? <a onclick="goLogin()">Se connecter</a></div>
+      <div style="margin-top:24px;text-align:center">
+        <span class="ob-hint">Gratuit · Aucune carte requise · 2 minutes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2 : IDENTITÉ ══ -->
+  <div class="ob-card" id="step2" style="display:none">
+    <div class="ob-card-head">
+      <span class="ob-step-label">Étape 2 / 3</span>
+      <span class="ob-step-title">Mon identité</span>
+    </div>
+    <div class="ob-card-body">
+      <div class="ob-form">
+        <div>
+          <label class="ob-label">Prénom</label>
+          <input type="text" id="s2Prenom" class="ob-input" placeholder="Thomas" autocomplete="given-name"/>
+        </div>
+        <div>
+          <label class="ob-label">Nom</label>
+          <input type="text" id="s2Nom" class="ob-input" placeholder="Dupont" autocomplete="family-name"/>
+        </div>
+        <div class="ob-error" id="s2Error"></div>
+        <button class="ob-btn" id="s2Btn" onclick="handleIdentite()">Choisir mon scénario →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3 : SCÉNARIO + LANCER ══ -->
+  <div class="ob-card" id="step3" style="display:none">
+    <div class="ob-card-head">
+      <span class="ob-step-label">Étape 3 / 3</span>
+      <span class="ob-step-title">Ma simulation</span>
+    </div>
+    <div class="ob-card-body">
+      <div class="ob-form" id="step3Form">
+        <div>
+          <label class="ob-label">Choisis ton scénario</label>
+          <select class="ob-select" id="s3Famille" onchange="updateScenarioInfo()">
+            <option value="">— Sélectionne un scénario —</option>
+            <option value="F1">F1 · Jacques Morel — Huma RH (RH / PME)</option>
+            <option value="F2">F2 · Franck Delorme — PipelineIQ CRM (Sales / Scale-up)</option>
+            <option value="F3">F3 · Isabelle Marchand — Clearflow Finance (Finance / ETI)</option>
+            <option value="F4">F4 · Bernard Roux — Factorly ERP (Opérations / Industrie)</option>
+            <option value="F5">F5 · Stéphane Moreau — Shieldwork Cyber (DSI / ETI)</option>
+            <option value="F6">F6 · Thierry Basset — VigilHome Pro (Gérant / TPE)</option>
+            <option value="F7">F7 · Sandrine Leclercq — GrowthLab Agency (Marketing / Agence)</option>
+            <option value="F8">F8 · Élise Fontaine — Voltaïq Énergie (Direction / Industrie)</option>
+            <option value="F9">F9 · Michel Aubert — Connecta Pro Télécom (IT / PME)</option>
+            <option value="F10">F10 · Patrick Lemaire — Covertis Assurance (DRH / Grand compte)</option>
+          </select>
+          <div class="scenario-box" id="scenarioInfo">
+            <div class="scenario-box-title">À propos du scénario</div>
+            <div class="scenario-box-desc" id="scenarioDesc" style="color:var(--teal-3);font-style:italic">Sélectionne un scénario pour voir le contexte.</div>
+          </div>
+        </div>
+        <div class="ob-error" id="s3Error"></div>
+        <p class="ob-hint">L'appel dure environ 10 à 15 minutes. Assure-toi d'être dans un endroit calme avec un bon micro.</p>
+        <button class="ob-btn" id="s3Btn" onclick="handleLancer()">Lancer ma simulation →</button>
+      </div>
+      <!-- État : appel en cours de création -->
+      <div class="call-pending" id="callPending" style="display:none">
+        <div class="call-spinner"></div>
+        <div class="call-title">Simulation en préparation…</div>
+        <div class="call-sub">Ton prospect IA est en train d'être configuré.<br>Tu vas recevoir un lien d'appel dans quelques secondes.</div>
+        <a href="mon-profil.html" class="call-link">Accéder à mon espace →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast" style="position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--cream);padding:14px 20px;border-radius:6px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;border-left:3px solid var(--gold);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
+let currentUser = null;
+let currentStep = 1;
+
+// ── VAPI assistant IDs par famille
+const VAPI_IDS = {
+  F1:  '00248f9f-7678-4894-804a-5e818a4152cb',
+  F2:  '10760ca6-977a-42ff-9cbe-b5a463d3ef23',
+  F3:  'b1029ef7-3b59-4371-b3da-e8d382efbba5',
+  F4:  '100db8ef-6084-43c6-a98e-b097f23108f8',
+  F5:  'f0de6104-94f3-45a0-ad03-c8e9f8527562',
+  F6:  '10167dcd-4460-4d32-bbc3-d5e7419a825d',
+  F7:  '510c6b0e-75ee-483f-9062-a19b5b067001',
+  F8:  '4bf8a71f-b1a8-416f-a258-2aaa02add430',
+  F9:  'b63e3ff2-18d4-459d-86b0-1bdc291fd0fa',
+  F10: 'd885e6b2-d605-4a29-b51a-1aa523aef62f'
+};
+
+const SCENARIO_DESC = {
+  F1:  'Tu appelles Jacques Morel, DRH d\'une PME industrielle. Il manque de temps et déteste le pitch générique. Produit : Huma RH.',
+  F2:  'Franck Delorme pilote les ventes d\'un scale-up SaaS. Il veut des références secteur. Produit : PipelineIQ CRM.',
+  F3:  'Isabelle Marchand est DAF d\'une ETI. Elle reporte toujours à plus tard. Produit : Clearflow Finance.',
+  F4:  'Bernard Roux est directeur opérations dans l\'industrie. Il parle terrain, pas tech. Produit : Factorly ERP.',
+  F5:  'Stéphane Moreau est DSI d\'une ETI. Il testait des POC sans fin. Produit : Shieldwork Cyber.',
+  F6:  'Thierry Basset gère une TPE commerce. Il reporte au comptable. Produit : VigilHome Pro.',
+  F7:  'Sandrine Leclercq dirige une agence marketing. Elle s\'emballe puis se ferme. Produit : GrowthLab Agency.',
+  F8:  'Élise Fontaine est directrice d\'un site industriel. Elle tourne en boucle sans décider. Produit : Voltaïq Énergie.',
+  F9:  'Michel Aubert pilote l\'IT d\'une PME. Il doit tout valider avec Sébastien. Produit : Connecta Pro Télécom.',
+  F10: 'Patrick Lemaire est DRH d\'un grand compte. Il dit oui à tout mais ne signe jamais. Produit : Covertis Assurance.'
+};
+
+// ── CHECK SESSION AU CHARGEMENT
+sb.auth.getSession().then(function(r){
+  if(r.data&&r.data.session){
+    currentUser = r.data.session.user;
+    // Si déjà connecté, vérifier si a déjà un profil candidat
+    var urlStep = new URLSearchParams(window.location.search).get('step');
+    if(urlStep==='3'){goStep(3);}else{goStep(2);}
+  }
+});
+
+// ── STEP 1 : INSCRIPTION
+async function handleSignup(){
+  var btn=document.getElementById('s1Btn'),err=document.getElementById('s1Error');
+  var email=document.getElementById('s1Email').value.trim();
+  var password=document.getElementById('s1Password').value;
+  err.classList.remove('visible');
+  if(!email||!password){showErr(err,'Remplis tous les champs.');return;}
+  if(password.length<8){showErr(err,'Mot de passe trop court (8 caractères min).');return;}
+  btn.disabled=true;btn.textContent='Création...';
+  var r=await sb.auth.signUp({email:email,password:password});
+  if(r.error){showErr(err,r.error.message);btn.disabled=false;btn.textContent='Créer mon compte →';return;}
+  currentUser=r.data.user;
+  goStep(2);
+}
+
+function goLogin(){
+  window.location.href='mon-profil.html';
+}
+
+// ── STEP 2 : IDENTITÉ
+async function handleIdentite(){
+  var btn=document.getElementById('s2Btn'),err=document.getElementById('s2Error');
+  var prenom=document.getElementById('s2Prenom').value.trim();
+  var nom=document.getElementById('s2Nom').value.trim();
+  err.classList.remove('visible');
+  if(!prenom||!nom){showErr(err,'Prénom et nom requis.');return;}
+  btn.disabled=true;btn.textContent='Enregistrement...';
+  // Upsert ligne candidates avec user_id + prenom + nom
+  var r=await sb.from('candidates').upsert({
+    user_id:currentUser.id,
+    email:currentUser.email,
+    prenom:prenom,
+    nom:nom,
+    is_public:false,
+    updated_at:new Date().toISOString()
+  },{onConflict:'user_id'});
+  if(r.error){showErr(err,'Erreur : '+r.error.message);btn.disabled=false;btn.textContent='Choisir mon scénario →';return;}
+  goStep(3);
+}
+
+// ── STEP 3 : SCÉNARIO INFO
+function updateScenarioInfo(){
+  var f=document.getElementById('s3Famille').value;
+  var desc=document.getElementById('scenarioDesc');
+  if(f&&SCENARIO_DESC[f]){
+    desc.style.fontStyle='normal';
+    desc.style.color='var(--teal-2)';
+    desc.textContent=SCENARIO_DESC[f];
+  }else{
+    desc.style.fontStyle='italic';
+    desc.style.color='var(--teal-3)';
+    desc.textContent='Sélectionne un scénario pour voir le contexte.';
+  }
+}
+
+// ── STEP 3 : LANCER LA SIMULATION
+async function handleLancer(){
+  var btn=document.getElementById('s3Btn'),err=document.getElementById('s3Error');
+  var famille=document.getElementById('s3Famille').value;
+  err.classList.remove('visible');
+  if(!famille){showErr(err,'Choisis un scénario.');return;}
+  btn.disabled=true;btn.textContent='Lancement...';
+  var assistantId=VAPI_IDS[famille];
+  // Sauvegarder la famille choisie dans Supabase
+  await sb.from('candidates').update({
+    famille:famille,
+    updated_at:new Date().toISOString()
+  }).eq('user_id',currentUser.id);
+  // POST vers Make pour déclencher l'appel Vapi
+  var MAKE_WEBHOOK_LAUNCH = 'MAKE_WEBHOOK_LAUNCH_URL'; // ← à remplacer après création du webhook Make
+  try{
+    var resp=await fetch(MAKE_WEBHOOK_LAUNCH,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        user_id:currentUser.id,
+        email:currentUser.email,
+        famille:famille,
+        assistant_id:assistantId
+      })
+    });
+    if(!resp.ok){throw new Error('HTTP '+resp.status);}
+  }catch(e){
+    showErr(err,'Erreur lors du lancement : '+e.message);
+    btn.disabled=false;btn.textContent='Lancer ma simulation →';
+    return;
+  }
+  // Afficher l'état "en cours"
+  document.getElementById('step3Form').style.display='none';
+  document.getElementById('callPending').style.display='block';
+}
+
+// ── NAVIGATION STEPS
+function goStep(n){
+  currentStep=n;
+  [1,2,3].forEach(function(i){
+    document.getElementById('step'+i).style.display=i===n?'block':'none';
+    var dot=document.getElementById('dot'+i);
+    dot.className='ob-step-dot'+(i<n?' done':i===n?' active':'');
+    var lbl=document.getElementById('lbl'+i);
+    lbl.className='ob-step-num'+(i===n?' active':i<n?' done':'');
+  });
+}
+
+// ── UTILS
+function showErr(el,msg){el.textContent=msg;el.classList.add('visible');}
+function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.style.borderLeftColor=type==='error'?'var(--rust)':type==='success'?'#4caf50':'var(--gold)';t.style.opacity='1';t.style.transform='translateY(0)';setTimeout(function(){t.style.opacity='0';t.style.transform='translateY(80px)';},3000);}
+</script>
+</body>
+</html>
