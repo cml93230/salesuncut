@@ -48,6 +48,13 @@
     .pool-banner.live{background:rgba(76,175,80,.08);border:1.5px solid #4caf50;color:#2e7d32;}
     .pool-banner .pool-icon{font-size:20px;flex-shrink:0;}
     .pool-banner .pool-text strong{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px;}
+    /* CTA simulation */
+    .simu-cta{background:var(--ink);border-radius:8px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+    .simu-cta-text{color:var(--cream);}
+    .simu-cta-title{font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:6px;}
+    .simu-cta-sub{font-family:var(--font-mono);font-size:11px;color:rgba(255,248,231,.5);letter-spacing:.06em;line-height:1.5;}
+    .simu-cta-btn{flex-shrink:0;padding:14px 28px;background:var(--gold-deep);color:var(--cream);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:background .2s;white-space:nowrap;}
+    .simu-cta-btn:hover{background:var(--gold-glow);color:var(--ink);}
     .profil-preview-wrap{display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;margin-bottom:36px;}
     .profil-card-preview{background:var(--cream-2);border:1.5px solid var(--ink);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-card);}
     .pcp-portrait{width:100%;aspect-ratio:1;background:var(--cream-3);position:relative;overflow:hidden;}
@@ -159,7 +166,7 @@
     .toast.show{transform:translateY(0);opacity:1;}
     .toast.success{border-left-color:#4caf50;}
     .toast.error{border-left-color:var(--rust);}
-    @media(max-width:960px){.profil-preview-wrap{grid-template-columns:1fr;}.profil-card-preview{max-width:280px;}.candidate-bar{padding:0 20px;}.tab-panel{padding:24px 20px;}.edit-grid,.scores-grid,.strengths-grid,.info-rows{grid-template-columns:1fr;}.bar-tabs{display:none;}}
+    @media(max-width:960px){.profil-preview-wrap{grid-template-columns:1fr;}.profil-card-preview{max-width:280px;}.candidate-bar{padding:0 20px;}.tab-panel{padding:24px 20px;}.edit-grid,.scores-grid,.strengths-grid,.info-rows{grid-template-columns:1fr;}.bar-tabs{display:none;}.simu-cta{flex-direction:column;align-items:flex-start;gap:16px;}.simu-cta-btn{width:100%;justify-content:center;}}
   </style>
 </head>
 <body class="page-enter">
@@ -177,7 +184,7 @@
         <div class="auth-error" id="loginError"></div>
         <button class="auth-submit" id="loginBtn" onclick="handleLogin()">Se connecter &rarr;</button>
       </div>
-      <div class="auth-switch" style="margin-top:16px">Pas encore de compte ? <a href="/auth.html">Cr&eacute;er un compte</a></div>
+      <div class="auth-switch" style="margin-top:16px">Pas encore de compte ? <a href="/onboarding.html">Cr&eacute;er un compte</a></div>
     </div>
   </div>
 </div>
@@ -239,7 +246,7 @@ async function loadCandidateData(){
   renderProfil();renderEdit();
 }
 
-/* ── PROFIL ─────────────────────────────────────────────────── */
+/* \u2500\u2500 PROFIL */
 function renderProfil(){
   var c=candidateData||{},scored=!!(c.score_global);
   var niveau=c.niveau_certifie||'NC',score=c.score_global||0;
@@ -255,6 +262,16 @@ function renderProfil(){
   var h=scored
     ?'<div class="pool-banner live"><span class="pool-icon">\u2705</span><div class="pool-text"><strong>Profil visible dans le pool recruteurs</strong>Tu apparais dans les r\u00e9sultats de recherche des recruteurs.</div></div>'
     :'<div class="pool-banner locked"><span class="pool-icon">\uD83D\uDD12</span><div class="pool-text"><strong>Non visible dans le pool recruteurs</strong>Passe la simulation audio pour d\u00e9bloquer ton acc\u00e8s au pool et obtenir tes scores.</div></div>';
+  // CTA simulation si pas encore scor\u00e9
+  if(!scored){
+    h+='<div class="simu-cta">'
+      +'<div class="simu-cta-text">'
+      +'<div class="simu-cta-title">Passe ta simulation maintenant</div>'
+      +'<div class="simu-cta-sub">10\u201315 min · Appel avec un prospect IA · Score sur 6 dimensions · Badge LinkedIn</div>'
+      +'</div>'
+      +'<a href="onboarding.html?step=3" class="simu-cta-btn">Lancer ma simulation \u2192</a>'
+      +'</div>';
+  }
   h+='<div class="profil-preview-wrap"><div class="profil-card-preview"><div class="pcp-portrait">';
   h+=c.photo_url?'<img src="'+c.photo_url+'" alt="'+fullName+'"/>':'<div class="pcp-ph">\uD83D\uDC64</div>';
   if(c.famille)h+='<span class="pcp-family">'+c.famille+'</span>';
@@ -291,7 +308,7 @@ function renderProfil(){
     h+='</div></div>';
   }
   h+='</div></div>';
-  h+='<div class="section-head"><h3>6 dimensions &eacute;valu\u00e9es</h3><span class="eyebrow">'+(scored?'Bar\u00e8me /100':'Simulation requise')+'</span></div><div class="scores-grid">';
+  h+='<div class="section-head"><h3>6 dimensions \u00e9valu\u00e9es</h3><span class="eyebrow">'+(scored?'Bar\u00e8me /100':'Simulation requise')+'</span></div><div class="scores-grid">';
   dims.forEach(function(d){
     if(scored&&d.val!=null){h+='<div class="score-card"><div class="score-card-dim">'+d.lbl+'</div><div class="score-card-val">'+d.val+'<small>/'+d.max+'</small></div><div class="score-bar-bg"><div class="score-bar-fill" style="width:'+Math.round(d.val/d.max*100)+'%"></div></div>'+(d.j?'<div class="score-card-justif">'+d.j+'</div>':'')+'</div>';}
     else{h+='<div class="score-card locked"><div class="score-card-dim">'+d.lbl+'</div><div class="score-card-val pending">\u2014\u00a0/\u00a0'+d.max+'</div><div class="score-bar-bg"></div><div class="score-card-pending-msg">Score disponible apr\u00e8s la simulation audio.</div></div>';}
@@ -304,12 +321,12 @@ function renderProfil(){
     (c.axes_developpement||[]).forEach(function(a){h+='<div class="strength-item"><span style="color:var(--gold)">\u2192</span>'+a+'</div>';});
     h+='</div></div>';
   }
-  if(scored&&c.simulation_id){var pu=window.location.origin+'/profil.html?id='+c.simulation_id;h+='<div class="profil-link-box"><div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.4);margin-bottom:4px">Ton lien profil public</div><div class="profil-link-url">'+pu+'</div></div><button class="btn-copy-link" onclick="copyLink(\''+pu+'\')">Copier</button></div>';}
+  if(scored&&c.simulation_id){var pu=window.location.origin+'/profil.html?id='+c.simulation_id;h+='<div class="profil-link-box"><div><div style="font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,248,231,.4);margin-bottom:4px">Ton lien profil public</div><div class="profil-link-url">'+pu+'</div></div><button class="btn-copy-link" onclick="copyLink(\''+pu+'\');">Copier</button></div>';}
   document.getElementById('profilContent').innerHTML=h;
 }
 function ir(lbl,val){return '<div class="info-row"><span class="info-lbl">'+lbl+'</span><span class="info-val'+(val?'':' empty')+'">'+(val||'Non renseign\u00e9')+'</span></div>';}
 
-/* ── EDIT ────────────────────────────────────────────────────── */
+/* \u2500\u2500 EDIT */
 function renderEdit(){
   var c=candidateData||{},scored=!!(c.score_global);
   var roles=['SDR','BDR','AE','AM','KAM','BD'];
@@ -354,7 +371,7 @@ function renderEdit(){
   document.getElementById('editContent').innerHTML=h;
 }
 
-/* ── PHOTO UPLOAD ────────────────────────────────────────────── */
+/* \u2500\u2500 PHOTO UPLOAD */
 async function handlePhotoChange(event){
   var file=event.target.files[0];
   if(!file)return;
@@ -379,10 +396,7 @@ async function handlePhotoChange(event){
   showToast('Photo mise \u00e0 jour \u2713','success');
 }
 
-/* ── SAVE ─────────────────────────────────────────────────────
-   FIX : try/catch explicite — les erreurs Supabase sont retournees
-   dans r.error, pas throws. On check r.error apres chaque appel.
-────────────────────────────────────────────────────────────── */
+/* \u2500\u2500 SAVE */
 async function saveProfile(){
   var btn=document.getElementById('saveBtn');
   btn.disabled=true;btn.textContent='Sauvegarde\u2026';
@@ -413,7 +427,6 @@ async function saveProfile(){
     if(candidateData){
       r=await sb.from('candidates').update(updates).eq('id',candidateData.id);
     }else{
-      // Premiere sauvegarde : creer la ligne
       r=await sb.from('candidates').insert(Object.assign({},updates,{
         user_id:currentUser.id,
         email:currentUser.email,
@@ -421,7 +434,6 @@ async function saveProfile(){
       }));
     }
     if(r.error){throw new Error(r.error.message+'  (code: '+r.error.code+')');}
-    // Recharger + basculer sur "Mon profil"
     await loadCandidateData();
     switchTab('profil',document.getElementById('tabBtnProfil'));
     showToast('Profil mis \u00e0 jour \u2713','success');
@@ -432,7 +444,7 @@ async function saveProfile(){
   }
 }
 
-/* ── CONTACTS ────────────────────────────────────────────────── */
+/* \u2500\u2500 CONTACTS */
 async function loadContacts(){
   if(!candidateData){document.getElementById('contactsList').innerHTML='<div class="empty-state"><span class="big">\uD83D\uDCED</span>Aucune demande pour l\u2019instant.</div>';return;}
   var r=await sb.from('contact_requests').select('*,recruiter:recruiter_id(company_name,prenom,nom,email)').eq('candidate_id',candidateData.id).order('created_at',{ascending:false});
@@ -447,7 +459,7 @@ async function loadContacts(){
     if(c.message)h+='<div class="contact-msg">'+c.message+'</div>';
     h+='<div class="contact-date">'+new Date(c.created_at).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})+'</div></div>';
     h+='<span class="contact-status '+c.status+'">'+(c.status==='pending'?'Nouveau':c.status==='accepted'?'Accept\u00e9':'\u2014')+'</span>';
-    if(c.status==='pending')h+='<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\''+c.id+'\',\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\''+c.id+'\',\'declined\')">Refuser</button></div>';
+    if(c.status==='pending')h+='<div class="contact-actions"><button class="btn-ca accept" onclick="respondContact(\''+c.id+'\'\,\'accepted\')">Accepter</button><button class="btn-ca decline" onclick="respondContact(\''+c.id+'\'\,\'declined\')">Refuser</button></div>';
     h+='</div>';
   });
   document.getElementById('contactsList').innerHTML=h+'</div>';
@@ -459,7 +471,7 @@ async function respondContact(id,status){
   await loadContacts();
 }
 
-/* ── UTILS ───────────────────────────────────────────────────── */
+/* \u2500\u2500 UTILS */
 function copyLink(url){navigator.clipboard.writeText(url).then(function(){showToast('Lien copi\u00e9 \u2713','success');}).catch(function(){var el=document.createElement('textarea');el.value=url;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);showToast('Lien copi\u00e9 \u2713','success');});}
 function switchTab(tab,el){
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
