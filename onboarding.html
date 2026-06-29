@@ -38,12 +38,21 @@
     .scenario-box{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:6px;padding:14px 16px;margin-top:8px;min-height:56px;}
     .scenario-box-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:4px;}
     .scenario-box-desc{font-size:13px;color:var(--teal-2);line-height:1.4;}
+    /* Call pending */
     .call-pending{text-align:center;padding:20px 0;}
     .call-spinner{width:48px;height:48px;border-radius:50%;border:3px solid var(--cream-3);border-top-color:var(--gold-deep);animation:spin .8s linear infinite;margin:0 auto 20px;}
     @keyframes spin{to{transform:rotate(360deg);}}
     .call-title{font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink);}
     .call-sub{font-size:14px;color:var(--teal-2);line-height:1.5;}
-    .call-link{display:inline-block;margin-top:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none;border-bottom:1px solid var(--gold-deep);padding-bottom:2px;}
+    /* Call ready */
+    .call-ready{text-align:center;padding:20px 0;display:none;}
+    .call-ready-icon{font-size:48px;margin-bottom:16px;}
+    .call-ready-title{font-family:var(--font-display);font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:8px;color:var(--ink);}
+    .call-ready-sub{font-size:14px;color:var(--teal-2);line-height:1.5;margin-bottom:24px;}
+    .call-join-btn{display:inline-block;padding:18px 36px;background:var(--gold-deep);color:var(--cream);border:none;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:background .2s;}
+    .call-join-btn:hover{background:var(--ink);color:var(--cream);}
+    .call-profil-link{display:block;margin-top:16px;font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3);text-decoration:none;}
+    .call-profil-link:hover{color:var(--gold-deep);}
     .ob-steps-row{display:flex;justify-content:center;gap:8px;margin-bottom:28px;}
     .ob-step-num{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:rgba(255,248,231,.3);text-transform:uppercase;}
     .ob-step-num.active{color:var(--gold);}
@@ -87,7 +96,7 @@
         <div class="ob-error" id="s1Error"></div>
         <button class="ob-btn" id="s1Btn" onclick="handleSignup()">Créer mon compte →</button>
       </div>
-      <div class="ob-switch">Déjà un compte ? <a onclick="goLogin()">Se connecter</a></div>
+      <div class="ob-switch">Déjà un compte ? <a onclick="goLogin()">Se connecter</a></div>
       <div style="margin-top:24px;text-align:center"><span class="ob-hint">Gratuit · Aucune carte requise · 2 minutes</span></div>
     </div>
   </div>
@@ -115,6 +124,8 @@
       <span class="ob-step-title">Ma simulation</span>
     </div>
     <div class="ob-card-body">
+
+      <!-- Formulaire scénario -->
       <div class="ob-form" id="step3Form">
         <div>
           <label class="ob-label">Choisis ton scénario</label>
@@ -140,12 +151,23 @@
         <p class="ob-hint">L'appel dure environ 10 à 15 minutes. Assure-toi d'être dans un endroit calme avec un bon micro.</p>
         <button class="ob-btn" id="s3Btn" onclick="handleLancer()">Lancer ma simulation →</button>
       </div>
+
+      <!-- État : préparation en cours (spinner) -->
       <div class="call-pending" id="callPending" style="display:none">
         <div class="call-spinner"></div>
-        <div class="call-title">Simulation en préparation…</div>
-        <div class="call-sub">Ton prospect IA est en train d'être configuré.<br>Tu vas recevoir un lien d'appel dans quelques secondes.</div>
-        <a href="mon-profil.html" class="call-link">Accéder à mon espace →</a>
+        <div class="call-title">Préparation…</div>
+        <div class="call-sub">Ton prospect IA est en cours de configuration.<br>Le bouton d'appel apparaît dans quelques secondes.</div>
       </div>
+
+      <!-- État : appel prêt -->
+      <div class="call-ready" id="callReady">
+        <div class="call-ready-icon">📞</div>
+        <div class="call-ready-title">Ton prospect est prêt !</div>
+        <div class="call-ready-sub">Clique pour rejoindre l'appel. Assure-toi d'être dans un endroit calme.</div>
+        <a id="callJoinBtn" href="#" target="_blank" class="call-join-btn">Rejoindre l'appel →</a>
+        <a href="mon-profil.html" class="call-profil-link">Accéder à mon espace →</a>
+      </div>
+
     </div>
   </div>
 
@@ -158,6 +180,7 @@
 const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
 let currentUser = null;
 let currentStep = 1;
+let pollInterval = null;
 
 const MAKE_WEBHOOK_LAUNCH = 'https://hook.eu1.make.com/pg8pm0ehnfm9egd9l0uxi6g5ai1vo6vw';
 
@@ -247,10 +270,13 @@ async function handleLancer(){
   if(!famille){showErr(err,'Choisis un scénario.');return;}
   btn.disabled=true;btn.textContent='Lancement...';
   var assistantId=VAPI_IDS[famille];
+  // Sauvegarder famille + reset web_call_url
   await sb.from('candidates').update({
     famille:famille,
+    web_call_url:null,
     updated_at:new Date().toISOString()
   }).eq('user_id',currentUser.id);
+  // POST vers Make
   try{
     var resp=await fetch(MAKE_WEBHOOK_LAUNCH,{
       method:'POST',
@@ -263,8 +289,38 @@ async function handleLancer(){
     btn.disabled=false;btn.textContent='Lancer ma simulation →';
     return;
   }
+  // Afficher le spinner et démarrer le polling
   document.getElementById('step3Form').style.display='none';
   document.getElementById('callPending').style.display='block';
+  startPolling();
+}
+
+function startPolling(){
+  var attempts=0;
+  var maxAttempts=30; // 30 × 3s = 90s max
+  pollInterval=setInterval(async function(){
+    attempts++;
+    if(attempts>maxAttempts){
+      clearInterval(pollInterval);
+      // Timeout — afficher lien profil de secours
+      document.getElementById('callPending').innerHTML=
+        '<div class="call-title">Prise en charge…</div>'
+        +'<div class="call-sub">La configuration prend plus de temps que prévu.<br>Reviens dans ton espace dans quelques minutes.</div>'
+        +'<a href="mon-profil.html" style="display:inline-block;margin-top:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-deep);text-decoration:none;border-bottom:1px solid var(--gold-deep);padding-bottom:2px;">Accéder à mon espace →</a>';
+      return;
+    }
+    var r=await sb.from('candidates').select('web_call_url').eq('user_id',currentUser.id).maybeSingle();
+    if(r.data&&r.data.web_call_url){
+      clearInterval(pollInterval);
+      showCallReady(r.data.web_call_url);
+    }
+  },3000);
+}
+
+function showCallReady(url){
+  document.getElementById('callPending').style.display='none';
+  document.getElementById('callJoinBtn').href=url;
+  document.getElementById('callReady').style.display='block';
 }
 
 function goStep(n){
