@@ -1,1 +1,747 @@
-PLACEHOLDER
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SalesUncut — Recrutez des commerciaux sur ce qu'ils savent faire.</title>
+  <meta name="description" content="SalesUncut permet aux recruteurs d'évaluer la capacité réelle de vente d'un candidat par mise en situation commerciale, notée sur 6 dimensions.">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    /* ---------- Hero ---------- */
+    .rec-hero { padding: 56px 0 0; overflow: hidden; }
+    .rec-hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; padding-bottom: 56px; }
+    .rec-hero h1 { font-size: clamp(38px,5vw,68px); margin: 20px 0 22px; }
+    .rec-hero p.lede { font-size: 18px; color: var(--teal-2); max-width: 560px; margin-bottom: 30px; line-height: 1.55; }
+    .hero-stage { position: relative; aspect-ratio: 0.85; perspective: 1400px; overflow: visible; }
+    .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
+    .hero-card-stack .tcard:nth-child(1) { transform: translateX(-100px) translateY(18px) rotate(-11deg); z-index: 1; }
+    .hero-card-stack .tcard:nth-child(2) { transform: translateY(0) rotate(2deg); z-index: 3; }
+    .hero-card-stack .tcard:nth-child(3) { transform: translateX(100px) translateY(18px) rotate(9deg); z-index: 2; }
+    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-170px) translateY(0) rotate(-16deg); }
+    .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-10px) rotate(0) scale(1.04); z-index: 4; }
+    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(170px) translateY(0) rotate(14deg); }
+
+    /* ---------- Bands ---------- */
+    .band { padding: 80px 0; }
+    .band.tint { background: var(--cream-2); }
+    .band.dark { background: var(--ink); color: var(--cream); }
+    .band h2 { font-size: clamp(30px,4vw,48px); max-width: 800px; margin: 14px 0 16px; }
+    .band .lede { font-size: 16px; max-width: 600px; line-height: 1.55; }
+    .band.dark .lede { color: rgba(255,248,231,.75); }
+    .band:not(.dark) .lede { color: var(--teal-2); }
+
+    /* ---------- Pattern repris de candidat.html : liste à gauche / panneau sombre à droite ---------- */
+    .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: stretch; margin-top: 40px; }
+    .change-list { display: flex; flex-direction: column; }
+    .change-item { display: flex; align-items: flex-start; gap: 18px; padding: 20px 0; border-bottom: 1px dashed var(--cream-3); }
+    .change-item:last-child { border-bottom: none; }
+    .change-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 14px; margin-top: 2px; }
+    .change-text { font-size: 16px; color: var(--ink); line-height: 1.5; }
+    .change-text .quote { font-family: var(--font-serif); font-style: italic; display: block; }
+    .change-text .question { display: block; margin-top: 4px; font-weight: 600; color: var(--rust); font-size: 14px; }
+    .change-text strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -.01em; }
+    .change-visual { background: var(--ink); border-radius: 10px; padding: 40px 36px; color: var(--cream); display: flex; flex-direction: column; justify-content: center; }
+    .change-visual-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .change-visual-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px,3.4vw,42px); text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; color: var(--cream); margin-bottom: 24px; }
+    .change-visual .prose { font-family: var(--font-mono); font-size: 14.5px; line-height: 1.75; color: rgba(255,248,231,.82); }
+
+    .radar-visual-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+    .radar-visual-name { font-family: var(--font-display); font-weight: 900; font-size: 16px; text-transform: uppercase; color: var(--cream); }
+    .radar-visual-role { font-family: var(--font-mono); font-size: 10px; color: rgba(255,248,231,.55); margin-top: 3px; }
+    .radar-visual-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold); text-align: right; }
+    .radar-visual-score small { font-size: 11px; color: rgba(255,248,231,.5); font-weight: 400; }
+
+    /* ---------- 03 — parcours recruteur, carrousel dynamique sur bande sombre ---------- */
+    .wfc { position: relative; margin-top: 48px; }
+    .wfc-viewport { overflow: hidden; }
+    .wfc-track {
+      display: flex; align-items: flex-start; gap: 28px;
+      overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px calc(50% - 200px);
+      scrollbar-width: none;
+      outline: none;
+    }
+    .wfc-track::-webkit-scrollbar { display: none; }
+    .wfc-track:focus-visible { box-shadow: inset 0 0 0 2px var(--gold); border-radius: 4px; }
+    .wfc-slide {
+      scroll-snap-align: center; flex: 0 0 400px; max-width: 60vw;
+      opacity: .32; transform: scale(.92);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .wfc-slide.is-active { opacity: 1; transform: scale(1); }
+    .wfc-title { font-family: var(--font-sans); font-weight: 600; font-size: 19px; color: var(--cream); margin: 0 0 14px; letter-spacing: -.01em; }
+    .wfc-visual {
+      position: relative; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden;
+      background-color: var(--cream-2);
+      background-image: radial-gradient(rgba(26,34,34,.09) 1px, transparent 1px);
+      background-size: 15px 15px;
+      border: 1px solid rgba(26,34,34,.12);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .wfc-visual::after {
+      content: ''; position: absolute; right: 24px; bottom: 24px; width: 36px; height: 1px;
+      background: var(--gold-deep); transform: rotate(-38deg); opacity: .55;
+    }
+    .wfc-icon { width: 32%; height: auto; color: var(--gold-deep); }
+    .wfc-num { position: absolute; top: 14px; left: 16px; z-index: 1; font-family: var(--font-display); font-weight: 900; font-size: 50px; line-height: 1; color: var(--gold); text-shadow: 2px 2px 0 var(--ink); }
+    .wfc-text { font-family: var(--font-mono); font-size: 13px; line-height: 1.65; color: rgba(255,248,231,.7); max-width: 46ch; margin-top: 16px; }
+    .wfc-arrow {
+      position: absolute; top: 50%; margin-top: 27px; z-index: 3;
+      width: 52px; height: 52px; border-radius: 50%;
+      border: 1px solid rgba(201,168,106,.45); background: rgba(26,34,34,.8); backdrop-filter: blur(6px);
+      color: var(--gold); font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .wfc-arrow:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .wfc-arrow.prev { left: -8px; }
+    .wfc-arrow.next { right: -8px; }
+    .wfc-arrow:disabled { opacity: .3; cursor: default; }
+    .wfc-arrow:disabled:hover { background: rgba(26,34,34,.8); color: var(--gold); }
+    .wfc-controls { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
+    .wfc-ticks { display: flex; gap: 18px; }
+    .wfc-tick { background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-display); font-size: 15px; letter-spacing: .03em; color: rgba(255,248,231,.28); transition: color .25s; }
+    .wfc-tick.is-active { color: var(--gold); }
+    .wfc-progress { flex: 1; min-width: 160px; height: 1px; background: rgba(255,248,231,.14); position: relative; }
+    .wfc-progress-bar { position: absolute; left: 0; top: 0; height: 1px; background: var(--gold); width: 16.66%; transition: width .4s cubic-bezier(.22,.9,.24,1); }
+    .wfc-counter { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; color: rgba(255,248,231,.5); white-space: nowrap; }
+    @media (max-width: 900px) {
+      .wfc-track { padding: 4px calc(50vw - 37vw); gap: 16px; }
+      .wfc-slide { flex-basis: 74vw; max-width: 74vw; }
+      .wfc-arrow { display: none; }
+      .wfc-title { font-size: 17px; }
+    }
+
+    /* ---------- Bénéfices : blocs propres, sans icône ---------- */
+    .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 44px; }
+    .benefit-block { border-top: 3px solid var(--gold-deep); padding-top: 18px; }
+    .benefit-block h3 { font-size: 18px; margin-bottom: 10px; }
+    .benefit-block p { font-size: 14.5px; color: var(--teal-2); line-height: 1.55; }
+
+    /* ---------- Avant / après ---------- */
+    .compare-wrap { position: relative; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid rgba(255,248,231,.2); border-radius: 8px; overflow: hidden; margin-top: 44px; }
+    .compare-col { padding: 40px 36px; }
+    .compare-col.before { background: rgba(255,248,231,.03); }
+    .compare-col.after { background: rgba(201,168,106,.1); border-left: 1.5px solid rgba(255,248,231,.2); }
+    .compare-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 22px; }
+    .compare-col.before .compare-label { color: rgba(255,248,231,.4); }
+    .compare-col.after .compare-label { color: var(--gold); }
+    .compare-flow { font-family: var(--font-mono); font-size: 13.5px; letter-spacing: .02em; line-height: 2; }
+    .compare-col.before .compare-flow { color: rgba(255,248,231,.65); }
+    .compare-col.after .compare-flow { color: rgba(255,248,231,.9); }
+    .compare-flow .extra { color: var(--gold); font-weight: 700; }
+    .compare-quote { font-family: var(--font-serif); font-style: italic; font-size: 20px; margin-top: 26px; }
+    .compare-col.before .compare-quote { color: rgba(255,248,231,.5); }
+    .compare-col.after .compare-quote { color: var(--gold); }
+    .compare-vs-badge { position: absolute; top: 50%; left: 50%; width: 58px; height: 58px; border-radius: 50%; background: var(--gold-deep); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 20px; border: 3px solid var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,.4); transform: translate(-50%,-50%); z-index: 5; }
+
+    .promise-band { position: relative; overflow: hidden; }
+    .promise-band::before { content: ''; position: absolute; top: 50%; left: 50%; width: 900px; height: 900px; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(201,168,106,.2) 0%, transparent 68%); pointer-events: none; }
+    .promise-band .container { position: relative; z-index: 1; }
+
+    /* ---------- Aperçu du pool (vraies cards) ---------- */
+    .pool-preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin: 44px 0 8px; justify-items: center; }
+    .dash-card { width: 100%; max-width: 240px; background: var(--cream); border: 1.5px solid var(--ink); border-radius: 12px; box-shadow: var(--shadow-card); overflow: hidden; position: relative; transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s; }
+    .dash-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-lg); }
+    .dash-card.gold { border-color: var(--golden); background: linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%); }
+    .dash-card.silver { border-color: var(--silver); }
+    .dash-card.bronze { border-color: var(--bronze); }
+    .dash-card-portrait { width: 100%; aspect-ratio: 1; background: var(--cream-3); position: relative; overflow: hidden; }
+    .dash-card-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .dash-card-portrait .no-photo { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 44px; opacity: .3; }
+    .level-stamp { position: absolute; top: 8px; right: 8px; font-family: var(--font-display); font-weight: 900; font-size: 10px; letter-spacing: .08em; padding: 4px 10px; border-radius: 3px; z-index: 3; }
+    .level-stamp.GOLD { background: var(--golden); color: var(--ink); }
+    .level-stamp.SILVER { background: var(--silver); color: var(--ink); }
+    .level-stamp.BRONZE { background: var(--bronze); color: var(--cream); }
+    .location-tag { position: absolute; top: 8px; left: 8px; background: rgba(26,34,34,.72); color: #fff8e7; font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; padding: 3px 7px; border-radius: 3px; z-index: 2; }
+    .family-tag { position: absolute; bottom: 8px; right: 8px; background: var(--ink); color: var(--gold); font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; padding: 3px 7px; border-radius: 3px; z-index: 2; }
+    .dash-card-body { padding: 14px; }
+    .dash-card-name { font-family: var(--font-display); font-weight: 900; font-size: 15px; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.1; margin-bottom: 3px; }
+    .dash-card-meta { font-family: var(--font-mono); font-size: 9.5px; color: var(--teal-3); letter-spacing: .08em; margin-bottom: 10px; }
+    .dash-card-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--ink); line-height: 1; }
+    .dash-card-score small { font-size: 12px; color: var(--teal-3); font-weight: 400; }
+
+    /* ---------- Tableau cas d'usage ---------- */
+    .usecase-table { border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; margin-top: 44px; }
+    .usecase-row { display: grid; grid-template-columns: 230px 1fr; gap: 20px; padding: 22px 28px; border-bottom: 1px solid var(--cream-3); align-items: center; }
+    .usecase-row:last-child { border-bottom: none; }
+    .usecase-row:nth-child(even) { background: var(--cream-2); }
+    .usecase-role { font-family: var(--font-display); font-weight: 900; font-size: 17px; text-transform: uppercase; letter-spacing: -.01em; }
+    .usecase-desc { font-size: 14.5px; color: var(--teal-2); line-height: 1.5; }
+
+    @media (max-width: 900px) {
+      .rec-hero-grid { grid-template-columns: 1fr; }
+      .hero-stage { display: none; }
+      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
+      .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
+      .compare-vs-badge { display: none; }
+      .pool-preview-grid { justify-items: stretch; }
+      .dash-card { max-width: none; }
+      .usecase-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+  </style>
+</head>
+<body class="page-enter">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="nav-logo" href="index.html"><span class="dot"></span>SalesUncut</a>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="candidat.html">Candidats</a>
+      <a href="pour-recruteurs.html" class="active">Recruteurs</a>
+      <a href="mon-profil.html">Mon espace</a>
+    </div>
+    <a href="recruiter.html" class="btn sm gold">Évaluer un candidat &rarr;</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
+    <div class="nav-drawer-inner">
+      <button class="nav-drawer-close" id="navDrawerClose" aria-label="Fermer">&times;</button>
+      <a href="index.html" class="nav-drawer-logo"><span class="dot"></span>SalesUncut</a>
+      <nav class="nav-drawer-links">
+        <a href="index.html">Accueil</a>
+        <a href="candidat.html">Candidats</a>
+        <a href="pour-recruteurs.html" class="active">Recruteurs</a>
+        <a href="mon-profil.html">Mon espace</a>
+      </nav>
+      <div class="nav-drawer-cta">
+        <a href="recruiter.html" class="btn gold">Évaluer un candidat &rarr;</a>
+      </div>
+    </div>
+    <div style="flex:1" id="navDrawerBackdrop"></div>
+  </div>
+
+  <!-- 01 — HERO -->
+  <section class="rec-hero">
+    <div class="container">
+      <div class="rec-hero-grid">
+        <div>
+          <span class="eyebrow">Pour les recruteurs</span>
+          <h1>Un score de vente, pas une impression d'entretien.</h1>
+          <p class="lede">Chaque candidat passe un appel de vente évalué sur 6 dimensions commerciales. Vous recrutez sur une donnée, pas sur un ressenti.</p>
+          <a href="recruiter.html" class="btn gold">Évaluer un candidat &rarr;</a>
+        </div>
+        <div class="hero-stage">
+          <div class="hero-card-stack" id="heroStack"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Mise en situation réelle</span><span class="gold-text">&starf;</span>
+      <span>Comparez vos candidats côte à côte</span><span class="gold-text">&starf;</span>
+      <span>Décidez sur la preuve, pas sur l'impression</span><span class="gold-text">&starf;</span>
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Mise en situation réelle</span><span class="gold-text">&starf;</span>
+      <span>Comparez vos candidats côte à côte</span><span class="gold-text">&starf;</span>
+      <span>Décidez sur la preuve, pas sur l'impression</span><span class="gold-text">&starf;</span>
+    </div>
+  </div>
+
+  <!-- 02 — LE PROBLÈME -->
+  <section class="band tint">
+    <div class="container">
+      <span class="eyebrow">Le problème</span>
+      <h2>Un bon CV ne fait pas un bon vendeur.</h2>
+      <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Pas la capacité à vendre.</p>
+
+      <div class="change-grid">
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>Le CV</strong><span class="quote">« +3 ans d'expérience commerciale »</span><span class="question">Mais sait-il prospecter ?</span></div>
+          </div>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>L'entretien</strong><span class="quote">« Je suis très orienté résultats »</span><span class="question">Mais sait-il convaincre ?</span></div>
+          </div>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>Le discours</strong><span class="quote">« Je maîtrise parfaitement la vente »</span><span class="question">Mais que se passe-t-il quand il faut vraiment vendre ?</span></div>
+          </div>
+        </div>
+        <div class="change-visual">
+          <div class="change-visual-eyebrow">Solution</div>
+          <div class="change-visual-title">La preuve, pas la promesse.</div>
+          <p class="prose" style="margin-bottom:16px">À partir d'un appel simulé, SalesUncut note chaque candidat sur 6 critères de vente.</p>
+          <p class="prose">Une note globale pour trancher en un coup d'œil, un enregistrement pour qui veut creuser.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — VOTRE ESPACE RECRUTEUR -->
+  <section class="band dark">
+    <div class="container">
+      <span class="eyebrow" style="color:var(--gold)">Comment ça marche</span>
+      <h2 style="color:var(--cream)">Votre espace recruteur</h2>
+
+      <div class="wfc" id="wfc">
+        <div class="wfc-viewport">
+          <div class="wfc-track" id="wfcTrack" tabindex="0" role="region" aria-label="Étapes de votre espace recruteur — faites défiler ou utilisez les flèches gauche/droite">
+            <article class="wfc-slide" data-index="0">
+              <h3 class="wfc-title">Accédez au pool candidat</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">01</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="14" cy="16" r="6"/><circle cx="32" cy="16" r="6"/><circle cx="50" cy="16" r="6"/>
+                  <circle cx="14" cy="42" r="6"/><circle cx="32" cy="42" r="6"/><circle cx="50" cy="42" r="6"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Consultez l'ensemble des profils déjà certifiés : score, dimensions, disponibilité.</p>
+            </article>
+            <article class="wfc-slide" data-index="1">
+              <h3 class="wfc-title">Filtrez selon vos critères</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">02</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="10" y1="16" x2="54" y2="16"/><circle cx="38" cy="16" r="4" fill="currentColor" stroke="none"/>
+                  <line x1="10" y1="32" x2="54" y2="32"/><circle cx="22" cy="32" r="4" fill="currentColor" stroke="none"/>
+                  <line x1="10" y1="48" x2="54" y2="48"/><circle cx="44" cy="48" r="4" fill="currentColor" stroke="none"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Famille sectorielle, rôle, niveau, budget, disponibilité — ne gardez que les profils qui comptent pour vous.</p>
+            </article>
+            <article class="wfc-slide" data-index="2">
+              <h3 class="wfc-title">Contactez le candidat</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">03</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 14c0-2.2 1.6-4 4-4h4l3 8-4 3c2 6 6 10 12 12l3-4 8 3v4c0 2.5-2 4-4 4-16 0-30-14-30-30z"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Passez du profil à la prise de contact directement, sans intermédiaire.</p>
+            </article>
+            <article class="wfc-slide" data-index="3">
+              <h3 class="wfc-title">Recevez une alerte</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">04</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M32 10c-8 0-14 6-14 14v8l-4 8h36l-4-8v-8c0-8-6-14-14-14z"/>
+                  <path d="M27 44a5 5 0 0 0 10 0"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Soyez prévenu dès qu'un candidat correspondant à votre recherche rejoint le pool.</p>
+            </article>
+            <article class="wfc-slide" data-index="4">
+              <h3 class="wfc-title">Invitez vos propres candidats</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">05</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M8 32 54 10 40 56 30 38 8 32z"/><path d="M30 38 54 10"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Envoyez le test à un profil que vous avez sourcé ailleurs, et obtenez sa preuve avant de le rencontrer.</p>
+            </article>
+            <article class="wfc-slide" data-index="5">
+              <h3 class="wfc-title">Créez votre scénario sur mesure</h3>
+              <div class="wfc-visual">
+                <span class="wfc-num">06</span>
+                <svg class="wfc-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="14" y="10" width="26" height="34" rx="2"/>
+                  <line x1="20" y1="18" x2="34" y2="18"/><line x1="20" y1="26" x2="34" y2="26"/><line x1="20" y1="34" x2="28" y2="34"/>
+                  <path d="M36 40 54 22l4 4-18 18-6 2 2-6z"/>
+                </svg>
+              </div>
+              <p class="wfc-text">Faites passer une mise en situation calquée sur votre produit et vos objections terrain.</p>
+            </article>
+          </div>
+        </div>
+        <button class="wfc-arrow prev" id="wfcPrev" aria-label="Étape précédente" type="button">&larr;</button>
+        <button class="wfc-arrow next" id="wfcNext" aria-label="Étape suivante" type="button">&rarr;</button>
+      </div>
+
+      <div class="wfc-controls">
+        <div class="wfc-ticks" id="wfcTicks"></div>
+        <div class="wfc-progress"><div class="wfc-progress-bar" id="wfcProgressBar"></div></div>
+        <div class="wfc-counter" id="wfcCounter">01 / 06</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — LES 6 DIMENSIONS -->
+  <section class="band tint">
+    <div class="container">
+      <span class="eyebrow">Le référentiel</span>
+      <h2>Un commercial ne se résume pas à un score.<br>Il se décompose en 6 compétences.</h2>
+
+      <div class="change-grid">
+        <div class="change-list">
+          <div class="change-item"><div class="change-arrow">01</div><div class="change-text"><strong>Accroche</strong><br>Capacité à capter l'attention et installer rapidement un échange.</div></div>
+          <div class="change-item"><div class="change-arrow">02</div><div class="change-text"><strong>Découverte</strong><br>Capacité à poser les bonnes questions et comprendre le prospect.</div></div>
+          <div class="change-item"><div class="change-arrow">03</div><div class="change-text"><strong>Créer le besoin</strong><br>Capacité à faire émerger une problématique et sa valeur.</div></div>
+          <div class="change-item"><div class="change-arrow">04</div><div class="change-text"><strong>Objections</strong><br>Capacité à écouter, répondre et faire avancer la conversation.</div></div>
+          <div class="change-item"><div class="change-arrow">05</div><div class="change-text"><strong>Valeur</strong><br>Capacité à relier l'offre aux enjeux réels du prospect.</div></div>
+          <div class="change-item"><div class="change-arrow">06</div><div class="change-text"><strong>Closing</strong><br>Capacité à obtenir un engagement et faire avancer la vente.</div></div>
+        </div>
+        <div class="change-visual">
+          <div class="radar-visual-head">
+            <div>
+              <div class="radar-visual-name">Lucas Renaud</div>
+              <div class="radar-visual-role">Commercial SaaS</div>
+            </div>
+            <div class="radar-visual-score">78<small>/100</small></div>
+          </div>
+          <canvas id="dimsRadar" width="380" height="320"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — LE BÉNÉFICE RECRUTEUR -->
+  <section class="band">
+    <div class="container">
+      <span class="eyebrow">Pourquoi SalesUncut</span>
+      <h2>Moins de « il a l'air bon ».<br>Plus de « voilà son niveau ».</h2>
+
+      <div class="benefit-row">
+        <div class="benefit-block">
+          <h3>Objectivez vos décisions</h3>
+          <p>Comparez les candidats sur une base commune plutôt que sur la seule impression laissée en entretien.</p>
+        </div>
+        <div class="benefit-block">
+          <h3>Identifiez les vrais vendeurs</h3>
+          <p>Repérez les forces et faiblesses commerciales avant de faire une proposition.</p>
+        </div>
+        <div class="benefit-block">
+          <h3>Gagnez du temps</h3>
+          <p>Concentrez vos entretiens sur les candidats qui ont démontré un véritable potentiel commercial.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — AVANT / APRÈS -->
+  <section class="band dark">
+    <div class="container">
+      <span class="eyebrow" style="color:var(--gold)">Avant / après</span>
+      <h2 style="color:var(--cream)">Ce que ça change concrètement.</h2>
+
+      <div class="compare-wrap">
+        <div class="compare-grid">
+          <div class="compare-col before">
+            <div class="compare-label">Avant SalesUncut</div>
+            <div class="compare-flow">CV &rarr; Entretien &rarr; Feeling &rarr; Décision</div>
+            <p class="compare-quote">« Il a l'air bon. »</p>
+          </div>
+          <div class="compare-col after">
+            <div class="compare-label">Avec SalesUncut</div>
+            <div class="compare-flow">CV &rarr; Entretien &rarr; <span class="extra">Mise en situation</span> &rarr; <span class="extra">Score</span> &rarr; Décision</div>
+            <p class="compare-quote">« Voilà ce qu'il sait faire. »</p>
+          </div>
+        </div>
+        <div class="compare-vs-badge">&rarr;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — APERÇU DU POOL -->
+  <section class="band tint">
+    <div class="container" style="text-align:center">
+      <span class="eyebrow">La preuve</span>
+      <h2 style="margin-left:auto;margin-right:auto">Vous voulez voir ce qu'il sait faire ?</h2>
+      <p class="lede" style="margin:0 auto">Un aperçu du pool de profils déjà certifiés — les mêmes cartes que celles que vous retrouverez dans votre espace recruteur.</p>
+
+      <div class="pool-preview-grid" id="poolPreview"></div>
+
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:36px">
+        <a href="recruiter.html" class="btn gold">Voir le pool complet &rarr;</a>
+        <a href="profil.html?id=c001" class="btn" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Voir une évaluation type &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — POUR QUELS RECRUTEMENTS -->
+  <section class="band">
+    <div class="container">
+      <span class="eyebrow">Cas d'usage</span>
+      <h2>Un outil pour ceux qui recrutent des commerciaux.</h2>
+
+      <div class="usecase-table">
+        <div class="usecase-row"><div class="usecase-role">SDR / BDR</div><div class="usecase-desc">Prospection, qualification, prise de rendez-vous.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Account Executive</div><div class="usecase-desc">Découverte, proposition de valeur, objections, closing.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Business Developer</div><div class="usecase-desc">Prospection et développement commercial.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Sales Manager</div><div class="usecase-desc">Évaluation et comparaison des profils commerciaux.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — LA PROMESSE FINALE -->
+  <section class="promise-band" style="background:var(--ink);color:var(--cream);padding:100px 0;text-align:center">
+    <div class="container">
+      <span class="eyebrow" style="color:var(--gold)">La promesse</span>
+      <h1 style="font-size:clamp(40px,6vw,88px);margin:20px 0 20px;color:var(--cream)">
+        Arrêtez de deviner.<br>
+        <span style="color:var(--gold);font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400;">Commencez à mesurer.</span>
+      </h1>
+      <p style="font-size:16px;opacity:.75;max-width:520px;margin:0 auto 32px;">
+        Le CV vous montre le parcours. L'entretien vous montre le discours. SalesUncut vous montre la vente.
+      </p>
+      <a href="recruiter.html" class="btn gold">Évaluer un candidat &rarr;</a>
+    </div>
+  </section>
+
+  <!-- 10 — FAQ -->
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow">Questions fréquentes</span>
+      <h1 style="font-size:clamp(32px,4.5vw,48px);margin:12px 0 32px;">Ce que les recruteurs nous demandent.</h1>
+      <div class="faq">
+        <details>
+          <summary>Comment se déroule l'évaluation ?</summary>
+          <p>Le candidat reçoit une situation commerciale et réalise un appel de vente face à un prospect simulé. L'appel est ensuite noté sur 6 dimensions commerciales.</p>
+        </details>
+        <details>
+          <summary>Combien de temps dure un appel ?</summary>
+          <p>Environ 30 minutes, le temps d'un vrai cycle de découverte à closing.</p>
+        </details>
+        <details>
+          <summary>Qui évalue le candidat ?</summary>
+          <p>L'appel est analysé automatiquement selon une grille de 6 dimensions commerciales, avec un score justifié pour chacune.</p>
+        </details>
+        <details>
+          <summary>Comment le score est-il calculé ?</summary>
+          <p>Chaque dimension est notée individuellement à partir du déroulé réel de l'appel (accroche, découverte, gestion des objections, etc.), puis agrégée en un score global sur 100.</p>
+        </details>
+        <details>
+          <summary>Puis-je comparer plusieurs candidats ?</summary>
+          <p>Oui. Le pool recruteur permet de comparer deux profils côte à côte, dimension par dimension.</p>
+        </details>
+        <details>
+          <summary>SalesUncut fonctionne-t-il pour tous les types de commerciaux ?</summary>
+          <p>Oui. La plateforme couvre plusieurs familles sectorielles (SaaS, Finance, Cybersécurité, Assurance, etc.) et différents rôles : SDR, Account Executive, Business Developer, Sales Manager.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+
+  <script src="data.js"></script>
+  <script src="components.js"></script>
+  <script>
+    const heroIds = ['c001', 'c003', 'c004'];
+    document.getElementById('heroStack').innerHTML =
+      heroIds.map(id => {
+        const c = SU_DATA.candidates.find(x => x.id === id);
+        return c ? renderCard(c) : '';
+      }).join('');
+
+    /* ---- aperçu du pool : vraies cards, vraies données ---- */
+    function lvlFallback(score){ return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null; }
+    function famName(c){ return (typeof SU_DATA!=='undefined' && SU_DATA.getFamilyById) ? SU_DATA.getFamilyById(c.family).name : (c.family||''); }
+    function renderPoolCard(c){
+      var level = c.level ? c.level.toUpperCase() : lvlFallback(c.score);
+      var lc = (level||'').toLowerCase();
+      var name = c.anonymous ? 'Anonyme' : c.name;
+      var fam = famName(c);
+      return '<a href="profil.html?id='+c.id+'" style="text-decoration:none;color:inherit;display:block;width:100%;max-width:240px">'
+        +'<div class="dash-card'+(lc?' '+lc:'')+'">'
+        +'<div class="dash-card-portrait">'
+        +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy">':'<div class="no-photo">&#128100;</div>')
+        +(c.location?'<span class="location-tag">'+c.location+'</span>':'')
+        +(level?'<span class="level-stamp '+level+'">'+level+'</span>':'')
+        +'<span class="family-tag">'+(fam||'&mdash;')+'</span>'
+        +'</div>'
+        +'<div class="dash-card-body">'
+        +'<div class="dash-card-name">'+name+'</div>'
+        +'<div class="dash-card-meta">'+(c.role_type||'Sales')+'</div>'
+        +'<div class="dash-card-score">'+c.score+'<small>/100</small></div>'
+        +'</div></div></a>';
+    }
+    if (typeof SU_DATA !== 'undefined') {
+      var poolPreview = SU_DATA.candidates.filter(function(c){ return c.photo; }).slice(0, 3);
+      document.getElementById('poolPreview').innerHTML = poolPreview.map(renderPoolCard).join('');
+    }
+
+    /* ---- radar des 6 dimensions, sur fond sombre ---- */
+    if (typeof Chart !== 'undefined') {
+      new Chart(document.getElementById('dimsRadar'), {
+        type: 'radar',
+        data: {
+          labels: ['Accroche','Découverte','Besoin','Objections','Valeur','Closing'],
+          datasets: [{
+            label: 'Score',
+            data: [81, 88, 80, 69, 81, 69],
+            borderColor: '#c9a86a',
+            backgroundColor: 'rgba(201,168,106,.25)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#c9a86a',
+            pointRadius: 4,
+            pointBorderColor: '#1a2222',
+            pointBorderWidth: 1.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          animation: { duration: 900, easing: 'easeInOutQuart' },
+          plugins: { legend: { display: false } },
+          scales: {
+            r: {
+              min: 0, max: 100,
+              ticks: { stepSize: 25, font: { size: 9 }, color: '#c9a86a', backdropColor: 'transparent' },
+              grid: { color: 'rgba(255,248,231,.15)' },
+              angleLines: { color: 'rgba(255,248,231,.15)' },
+              pointLabels: { font: { size: 11, weight: '600' }, color: '#fff8e7' }
+            }
+          }
+        }
+      });
+    }
+
+    const burger = document.getElementById('navBurger');
+    const drawer = document.getElementById('navDrawer');
+    const drawerClose = document.getElementById('navDrawerClose');
+    const backdrop = document.getElementById('navDrawerBackdrop');
+    function openDrawer() { drawer.classList.add('open'); document.body.classList.add('nav-locked'); burger.setAttribute('aria-expanded','true'); }
+    function closeDrawer() { drawer.classList.remove('open'); document.body.classList.remove('nav-locked'); burger.setAttribute('aria-expanded','false'); }
+    burger.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+  </script>
+
+  <!-- ---- Carrousel "Votre espace recruteur" (boucle infinie) ---- -->
+  <script>
+  (function () {
+    var track = document.getElementById('wfcTrack');
+    if (!track) return;
+
+    var realSlides = Array.prototype.slice.call(track.querySelectorAll('.wfc-slide'));
+    var total = realSlides.length;
+    if (!total) return;
+
+    var prevBtn = document.getElementById('wfcPrev');
+    var nextBtn = document.getElementById('wfcNext');
+    var ticksEl = document.getElementById('wfcTicks');
+    var progressBar = document.getElementById('wfcProgressBar');
+    var counterEl = document.getElementById('wfcCounter');
+
+    /* clone du dernier slide en tête et du premier en fin de piste : ça crée l'illusion de
+       boucle infinie — quand on est sur le "vrai" 1er/dernier, l'autre bout est visible en peek */
+    var lastClone = realSlides[total - 1].cloneNode(true);
+    var firstClone = realSlides[0].cloneNode(true);
+    lastClone.setAttribute('aria-hidden', 'true');
+    firstClone.setAttribute('aria-hidden', 'true');
+    track.insertBefore(lastClone, realSlides[0]);
+    track.appendChild(firstClone);
+
+    var trackSlides = Array.prototype.slice.call(track.querySelectorAll('.wfc-slide'));
+    // trackSlides[0] = clone du dernier · trackSlides[1..total] = vrais slides · trackSlides[total+1] = clone du premier
+
+    var ticks = realSlides.map(function (slide, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'wfc-tick';
+      btn.textContent = String(i + 1).padStart(2, '0');
+      btn.setAttribute('aria-label', 'Aller à l’étape ' + (i + 1));
+      btn.addEventListener('click', function () { stopAutoplayOnInteraction(); goTo(i + 1); });
+      ticksEl.appendChild(btn);
+      return btn;
+    });
+
+    var pos = 1; // position dans trackSlides
+    var rafPending = false;
+    var settleTimer = null;
+
+    function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+    function centerOf(el) {
+      var r = el.getBoundingClientRect();
+      return r.left + r.width / 2;
+    }
+
+    function goTo(p, instant) {
+      var trackCenter = centerOf(track);
+      var delta = centerOf(trackSlides[p]) - trackCenter;
+      // 'auto' would still respect the CSS scroll-behavior:smooth — 'instant' is required for a true jump
+      track.scrollTo({ left: track.scrollLeft + delta, behavior: instant ? 'instant' : 'smooth' });
+    }
+
+    function nearestPos() {
+      var trackCenter = centerOf(track);
+      var best = 1, bestDist = Infinity;
+      trackSlides.forEach(function (slide, i) {
+        var dist = Math.abs(centerOf(slide) - trackCenter);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      return best;
+    }
+
+    function render() {
+      trackSlides.forEach(function (slide, i) { slide.classList.toggle('is-active', i === pos); });
+      var realIndex = (pos - 1 + total) % total;
+      ticks.forEach(function (tick, i) { tick.classList.toggle('is-active', i === realIndex); });
+      counterEl.textContent = pad(realIndex) + ' / ' + pad(total - 1);
+      progressBar.style.width = ((realIndex + 1) / total * 100) + '%';
+    }
+
+    function settle() {
+      pos = nearestPos();
+      render();
+      // ré-ancrage silencieux (sans transition) si on a dérivé sur un clone : boucle transparente
+      if (pos === 0) { pos = total; goTo(pos, true); render(); }
+      else if (pos === total + 1) { pos = 1; goTo(pos, true); render(); }
+    }
+
+    track.addEventListener('scroll', function () {
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(function () { pos = nearestPos(); render(); rafPending = false; });
+      }
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 140);
+    }, { passive: true });
+
+    /* ---- autoplay : avance toute seule, s'arrête définitivement dès que l'utilisateur interagit ---- */
+    var AUTOPLAY_DELAY = 4500;
+    var autoplayTimer = null;
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(function () { goTo(pos + 1); }, AUTOPLAY_DELAY);
+    }
+    function stopAutoplay() {
+      if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+    }
+    function stopAutoplayOnInteraction() { stopAutoplay(); }
+
+    prevBtn.addEventListener('click', function () { stopAutoplayOnInteraction(); goTo(pos - 1); });
+    nextBtn.addEventListener('click', function () { stopAutoplayOnInteraction(); goTo(pos + 1); });
+
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); stopAutoplayOnInteraction(); goTo(pos + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); stopAutoplayOnInteraction(); goTo(pos - 1); }
+    });
+    ['pointerdown', 'touchstart', 'wheel'].forEach(function (evt) {
+      track.addEventListener(evt, stopAutoplayOnInteraction, { passive: true });
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { goTo(pos, true); }, 200);
+    });
+
+    requestAnimationFrame(function () {
+      goTo(1, true);
+      render();
+      startAutoplay();
+    });
+  })();
+  </script>
+
+</body>
+</html>
