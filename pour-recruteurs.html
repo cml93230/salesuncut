@@ -53,12 +53,66 @@
     .radar-visual-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold); text-align: right; }
     .radar-visual-score small { font-size: 11px; color: rgba(255,248,231,.5); font-weight: 400; }
 
-    /* ---------- 03 — parcours recruteur, bande sombre pleine largeur ---------- */
-    .workflow-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px 44px; margin-top: 48px; }
-    .workflow-item { border-top: 1px solid rgba(255,248,231,.18); padding-top: 20px; }
-    .workflow-num { font-family: var(--font-display); font-weight: 900; font-size: 30px; color: var(--gold); line-height: 1; margin-bottom: 12px; }
-    .workflow-title { font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--cream); margin-bottom: 7px; }
-    .workflow-desc { font-family: var(--font-mono); font-size: 12.5px; color: rgba(255,248,231,.7); line-height: 1.6; }
+    /* ---------- 03 — parcours recruteur, carrousel dynamique sur bande sombre ---------- */
+    .wfc { position: relative; margin-top: 48px; }
+    .wfc-viewport { overflow: hidden; }
+    .wfc-track {
+      display: flex; gap: 28px;
+      overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px calc(100% - min(560px, 72%)) 4px 0;
+      scrollbar-width: none;
+      outline: none;
+    }
+    .wfc-track::-webkit-scrollbar { display: none; }
+    .wfc-track:focus-visible { box-shadow: inset 0 0 0 2px var(--gold); border-radius: 4px; }
+    .wfc-slide {
+      scroll-snap-align: start; flex: 0 0 min(560px, 72%);
+      opacity: .35; transform: scale(.94);
+      transition: opacity .45s ease, transform .45s ease;
+    }
+    .wfc-slide.is-active { opacity: 1; transform: scale(1); }
+    .wfc-visual {
+      position: relative; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden;
+      background-color: rgba(255,248,231,.04); background-size: cover; background-position: center;
+      border: 1px solid rgba(255,248,231,.16);
+    }
+    .wfc-visual::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26,34,34,.15) 0%, rgba(26,34,34,.85) 100%); }
+    .wfc-slot {
+      position: absolute; left: 18px; bottom: 16px; z-index: 1;
+      font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase;
+      color: rgba(255,248,231,.75); border: 1px solid rgba(255,248,231,.3); padding: 6px 12px; border-radius: 2px;
+      background: rgba(26,34,34,.5);
+    }
+    .wfc-num { position: absolute; top: 16px; left: 18px; z-index: 1; font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; color: var(--gold); }
+    .wfc-title { font-family: var(--font-sans); font-weight: 600; font-size: 21px; color: var(--cream); margin: 20px 0 8px; letter-spacing: -.01em; }
+    .wfc-text { font-family: var(--font-mono); font-size: 13px; line-height: 1.65; color: rgba(255,248,231,.7); max-width: 46ch; }
+    .wfc-arrow {
+      position: absolute; top: 36%; z-index: 3;
+      width: 52px; height: 52px; border-radius: 50%;
+      border: 1px solid rgba(201,168,106,.45); background: rgba(26,34,34,.8); backdrop-filter: blur(6px);
+      color: var(--gold); font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .wfc-arrow:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .wfc-arrow.prev { left: -8px; }
+    .wfc-arrow.next { right: -8px; }
+    .wfc-arrow:disabled { opacity: .3; cursor: default; }
+    .wfc-arrow:disabled:hover { background: rgba(26,34,34,.8); color: var(--gold); }
+    .wfc-controls { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 28px; }
+    .wfc-ticks { display: flex; gap: 18px; }
+    .wfc-tick { background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-display); font-size: 15px; letter-spacing: .03em; color: rgba(255,248,231,.28); transition: color .25s; }
+    .wfc-tick.is-active { color: var(--gold); }
+    .wfc-progress { flex: 1; min-width: 160px; height: 1px; background: rgba(255,248,231,.14); position: relative; }
+    .wfc-progress-bar { position: absolute; left: 0; top: 0; height: 1px; background: var(--gold); width: 16.66%; transition: width .4s cubic-bezier(.22,.9,.24,1); }
+    .wfc-counter { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; color: rgba(255,248,231,.5); white-space: nowrap; }
+    @media (max-width: 900px) {
+      .wfc-track { padding: 4px calc(100% - 84%) 4px 0; gap: 16px; }
+      .wfc-slide { flex-basis: 84%; }
+      .wfc-arrow { display: none; }
+      .wfc-title { font-size: 18px; }
+    }
 
     /* ---------- Bénéfices : blocs propres, sans icône ---------- */
     .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 44px; }
@@ -121,7 +175,7 @@
     @media (max-width: 900px) {
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
-      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid, .workflow-grid { grid-template-columns: 1fr; }
+      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
       .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
       .compare-vs-badge { display: none; }
       .pool-preview-grid { justify-items: stretch; }
@@ -234,37 +288,67 @@
       <h2 style="color:var(--cream)">Six actions, un seul espace.</h2>
       <p class="lede">De la recherche du bon profil jusqu'à l'évaluation sur mesure de vos propres candidats.</p>
 
-      <div class="workflow-grid">
-        <div class="workflow-item">
-          <div class="workflow-num">01</div>
-          <div class="workflow-title">Accédez au pool candidat</div>
-          <div class="workflow-desc">Consultez l'ensemble des profils déjà certifiés : score, dimensions, disponibilité.</div>
+      <div class="wfc" id="wfc">
+        <div class="wfc-viewport">
+          <div class="wfc-track" id="wfcTrack" tabindex="0" role="region" aria-label="Étapes de votre espace recruteur — faites défiler ou utilisez les flèches gauche/droite">
+            <article class="wfc-slide" data-index="0">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&amp;q=70')">
+                <span class="wfc-num">01</span>
+                <span class="wfc-slot">Illustration · pool candidat</span>
+              </div>
+              <h3 class="wfc-title">Accédez au pool candidat</h3>
+              <p class="wfc-text">Consultez l'ensemble des profils déjà certifiés : score, dimensions, disponibilité.</p>
+            </article>
+            <article class="wfc-slide" data-index="1">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&amp;q=70')">
+                <span class="wfc-num">02</span>
+                <span class="wfc-slot">Illustration · filtres</span>
+              </div>
+              <h3 class="wfc-title">Filtrez selon vos critères</h3>
+              <p class="wfc-text">Famille sectorielle, rôle, niveau, budget, disponibilité — ne gardez que les profils qui comptent pour vous.</p>
+            </article>
+            <article class="wfc-slide" data-index="2">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&amp;q=70')">
+                <span class="wfc-num">03</span>
+                <span class="wfc-slot">Illustration · prise de contact</span>
+              </div>
+              <h3 class="wfc-title">Contactez le candidat</h3>
+              <p class="wfc-text">Passez du profil à la prise de contact directement, sans intermédiaire.</p>
+            </article>
+            <article class="wfc-slide" data-index="3">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=1200&amp;q=70')">
+                <span class="wfc-num">04</span>
+                <span class="wfc-slot">Illustration · alerte</span>
+              </div>
+              <h3 class="wfc-title">Recevez une alerte</h3>
+              <p class="wfc-text">Soyez prévenu dès qu'un candidat correspondant à votre recherche rejoint le pool.</p>
+            </article>
+            <article class="wfc-slide" data-index="4">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&amp;q=70')">
+                <span class="wfc-num">05</span>
+                <span class="wfc-slot">Illustration · invitation</span>
+              </div>
+              <h3 class="wfc-title">Invitez vos propres candidats</h3>
+              <p class="wfc-text">Envoyez le test à un profil que vous avez sourcé ailleurs, et obtenez sa preuve avant de le rencontrer.</p>
+            </article>
+            <article class="wfc-slide" data-index="5">
+              <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=1200&amp;q=70')">
+                <span class="wfc-num">06</span>
+                <span class="wfc-slot">Illustration · scénario</span>
+              </div>
+              <h3 class="wfc-title">Créez votre scénario sur mesure</h3>
+              <p class="wfc-text">Faites passer une mise en situation calquée sur votre produit et vos objections terrain.</p>
+            </article>
+          </div>
         </div>
-        <div class="workflow-item">
-          <div class="workflow-num">02</div>
-          <div class="workflow-title">Filtrez selon vos critères</div>
-          <div class="workflow-desc">Famille sectorielle, rôle, niveau, budget, disponibilité — ne gardez que les profils qui comptent pour vous.</div>
-        </div>
-        <div class="workflow-item">
-          <div class="workflow-num">03</div>
-          <div class="workflow-title">Contactez le candidat</div>
-          <div class="workflow-desc">Passez du profil à la prise de contact directement, sans intermédiaire.</div>
-        </div>
-        <div class="workflow-item">
-          <div class="workflow-num">04</div>
-          <div class="workflow-title">Recevez une alerte</div>
-          <div class="workflow-desc">Soyez prévenu dès qu'un candidat correspondant à votre recherche rejoint le pool.</div>
-        </div>
-        <div class="workflow-item">
-          <div class="workflow-num">05</div>
-          <div class="workflow-title">Invitez vos propres candidats</div>
-          <div class="workflow-desc">Envoyez le test à un profil que vous avez sourcé ailleurs, et obtenez sa preuve avant de le rencontrer.</div>
-        </div>
-        <div class="workflow-item">
-          <div class="workflow-num">06</div>
-          <div class="workflow-title">Créez votre scénario sur mesure</div>
-          <div class="workflow-desc">Faites passer une mise en situation calquée sur votre produit et vos objections terrain.</div>
-        </div>
+        <button class="wfc-arrow prev" id="wfcPrev" aria-label="Étape précédente" type="button">&larr;</button>
+        <button class="wfc-arrow next" id="wfcNext" aria-label="Étape suivante" type="button">&rarr;</button>
+      </div>
+
+      <div class="wfc-controls">
+        <div class="wfc-ticks" id="wfcTicks"></div>
+        <div class="wfc-progress"><div class="wfc-progress-bar" id="wfcProgressBar"></div></div>
+        <div class="wfc-counter" id="wfcCounter">01 / 06</div>
       </div>
     </div>
   </section>
@@ -510,6 +594,87 @@
     burger.addEventListener('click', openDrawer);
     drawerClose.addEventListener('click', closeDrawer);
     backdrop.addEventListener('click', closeDrawer);
+  </script>
+
+  <!-- ---- Carrousel "Votre espace recruteur" ---- -->
+  <script>
+  (function () {
+    var track = document.getElementById('wfcTrack');
+    if (!track) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll('.wfc-slide'));
+    var prevBtn = document.getElementById('wfcPrev');
+    var nextBtn = document.getElementById('wfcNext');
+    var ticksEl = document.getElementById('wfcTicks');
+    var progressBar = document.getElementById('wfcProgressBar');
+    var counterEl = document.getElementById('wfcCounter');
+    var total = slides.length;
+    var current = 0;
+    var rafPending = false;
+
+    // ticks 01..N générés dynamiquement
+    var ticks = slides.map(function (slide, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'wfc-tick';
+      btn.textContent = String(i + 1).padStart(2, '0');
+      btn.setAttribute('aria-label', 'Aller à l’étape ' + (i + 1));
+      btn.addEventListener('click', function () { scrollToIndex(i); });
+      ticksEl.appendChild(btn);
+      return btn;
+    });
+
+    function pad(n) { return String(n + 1).padStart(2, '0'); }
+
+    function scrollToIndex(i) {
+      i = Math.max(0, Math.min(total - 1, i));
+      var trackRect = track.getBoundingClientRect();
+      var slideRect = slides[i].getBoundingClientRect();
+      var delta = slideRect.left - trackRect.left;
+      track.scrollTo({ left: track.scrollLeft + delta, behavior: 'smooth' });
+    }
+
+    function nearestIndex() {
+      var trackLeft = track.getBoundingClientRect().left;
+      var best = 0, bestDist = Infinity;
+      slides.forEach(function (slide, i) {
+        var dist = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+        if (dist < bestDist) { bestDist = dist; best = i; }
+      });
+      return best;
+    }
+
+    function updateActive() {
+      current = nearestIndex();
+      slides.forEach(function (slide, i) { slide.classList.toggle('is-active', i === current); });
+      ticks.forEach(function (tick, i) { tick.classList.toggle('is-active', i === current); });
+      counterEl.textContent = pad(current) + ' / ' + pad(total - 1);
+      progressBar.style.width = ((current + 1) / total * 100) + '%';
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+      rafPending = false;
+    }
+
+    track.addEventListener('scroll', function () {
+      if (!rafPending) { rafPending = true; requestAnimationFrame(updateActive); }
+    }, { passive: true });
+
+    prevBtn.addEventListener('click', function () { scrollToIndex(current - 1); });
+    nextBtn.addEventListener('click', function () { scrollToIndex(current + 1); });
+
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); scrollToIndex(current + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); scrollToIndex(current - 1); }
+    });
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () { scrollToIndex(current); }, 200);
+    });
+
+    updateActive();
+  })();
   </script>
 
 </body>
