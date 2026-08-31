@@ -57,23 +57,24 @@
     .wfc { position: relative; margin-top: 48px; }
     .wfc-viewport { overflow: hidden; }
     .wfc-track {
-      display: flex; gap: 28px;
+      display: flex; align-items: flex-start; gap: 28px;
       overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
       -webkit-overflow-scrolling: touch;
-      padding: 4px calc(100% - min(560px, 72%)) 4px 0;
+      padding: 4px calc(50% - 200px);
       scrollbar-width: none;
       outline: none;
     }
     .wfc-track::-webkit-scrollbar { display: none; }
     .wfc-track:focus-visible { box-shadow: inset 0 0 0 2px var(--gold); border-radius: 4px; }
     .wfc-slide {
-      scroll-snap-align: start; flex: 0 0 min(560px, 72%);
-      opacity: .35; transform: scale(.94);
+      scroll-snap-align: center; flex: 0 0 400px; max-width: 60vw;
+      opacity: .32; transform: scale(.92);
       transition: opacity .45s ease, transform .45s ease;
     }
     .wfc-slide.is-active { opacity: 1; transform: scale(1); }
+    .wfc-title { font-family: var(--font-sans); font-weight: 600; font-size: 19px; color: var(--cream); margin: 0 0 14px; letter-spacing: -.01em; }
     .wfc-visual {
-      position: relative; aspect-ratio: 16/10; border-radius: 8px; overflow: hidden;
+      position: relative; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden;
       background-color: rgba(255,248,231,.04); background-size: cover; background-position: center;
       border: 1px solid rgba(255,248,231,.16);
     }
@@ -85,10 +86,9 @@
       background: rgba(26,34,34,.5);
     }
     .wfc-num { position: absolute; top: 16px; left: 18px; z-index: 1; font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; color: var(--gold); }
-    .wfc-title { font-family: var(--font-sans); font-weight: 600; font-size: 21px; color: var(--cream); margin: 20px 0 8px; letter-spacing: -.01em; }
-    .wfc-text { font-family: var(--font-mono); font-size: 13px; line-height: 1.65; color: rgba(255,248,231,.7); max-width: 46ch; }
+    .wfc-text { font-family: var(--font-mono); font-size: 13px; line-height: 1.65; color: rgba(255,248,231,.7); max-width: 46ch; margin-top: 16px; }
     .wfc-arrow {
-      position: absolute; top: 36%; z-index: 3;
+      position: absolute; top: 50%; margin-top: 27px; z-index: 3;
       width: 52px; height: 52px; border-radius: 50%;
       border: 1px solid rgba(201,168,106,.45); background: rgba(26,34,34,.8); backdrop-filter: blur(6px);
       color: var(--gold); font-size: 18px; cursor: pointer;
@@ -108,10 +108,10 @@
     .wfc-progress-bar { position: absolute; left: 0; top: 0; height: 1px; background: var(--gold); width: 16.66%; transition: width .4s cubic-bezier(.22,.9,.24,1); }
     .wfc-counter { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .16em; color: rgba(255,248,231,.5); white-space: nowrap; }
     @media (max-width: 900px) {
-      .wfc-track { padding: 4px calc(100% - 84%) 4px 0; gap: 16px; }
-      .wfc-slide { flex-basis: 84%; }
+      .wfc-track { padding: 4px calc(50vw - 37vw); gap: 16px; }
+      .wfc-slide { flex-basis: 74vw; max-width: 74vw; }
       .wfc-arrow { display: none; }
-      .wfc-title { font-size: 18px; }
+      .wfc-title { font-size: 17px; }
     }
 
     /* ---------- Bénéfices : blocs propres, sans icône ---------- */
@@ -284,59 +284,58 @@
   <!-- 03 — VOTRE ESPACE RECRUTEUR -->
   <section class="band dark">
     <div class="container">
-      <span class="eyebrow" style="color:var(--gold)">Votre espace recruteur</span>
-      <h2 style="color:var(--cream)">Six actions, un seul espace.</h2>
-      <p class="lede">De la recherche du bon profil jusqu'à l'évaluation sur mesure de vos propres candidats.</p>
+      <span class="eyebrow" style="color:var(--gold)">Comment ça marche</span>
+      <h2 style="color:var(--cream)">Votre espace recruteur</h2>
 
       <div class="wfc" id="wfc">
         <div class="wfc-viewport">
           <div class="wfc-track" id="wfcTrack" tabindex="0" role="region" aria-label="Étapes de votre espace recruteur — faites défiler ou utilisez les flèches gauche/droite">
             <article class="wfc-slide" data-index="0">
+              <h3 class="wfc-title">Accédez au pool candidat</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&amp;q=70')">
                 <span class="wfc-num">01</span>
                 <span class="wfc-slot">Illustration · pool candidat</span>
               </div>
-              <h3 class="wfc-title">Accédez au pool candidat</h3>
               <p class="wfc-text">Consultez l'ensemble des profils déjà certifiés : score, dimensions, disponibilité.</p>
             </article>
             <article class="wfc-slide" data-index="1">
+              <h3 class="wfc-title">Filtrez selon vos critères</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&amp;q=70')">
                 <span class="wfc-num">02</span>
                 <span class="wfc-slot">Illustration · filtres</span>
               </div>
-              <h3 class="wfc-title">Filtrez selon vos critères</h3>
               <p class="wfc-text">Famille sectorielle, rôle, niveau, budget, disponibilité — ne gardez que les profils qui comptent pour vous.</p>
             </article>
             <article class="wfc-slide" data-index="2">
+              <h3 class="wfc-title">Contactez le candidat</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200&amp;q=70')">
                 <span class="wfc-num">03</span>
                 <span class="wfc-slot">Illustration · prise de contact</span>
               </div>
-              <h3 class="wfc-title">Contactez le candidat</h3>
               <p class="wfc-text">Passez du profil à la prise de contact directement, sans intermédiaire.</p>
             </article>
             <article class="wfc-slide" data-index="3">
+              <h3 class="wfc-title">Recevez une alerte</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=1200&amp;q=70')">
                 <span class="wfc-num">04</span>
                 <span class="wfc-slot">Illustration · alerte</span>
               </div>
-              <h3 class="wfc-title">Recevez une alerte</h3>
               <p class="wfc-text">Soyez prévenu dès qu'un candidat correspondant à votre recherche rejoint le pool.</p>
             </article>
             <article class="wfc-slide" data-index="4">
+              <h3 class="wfc-title">Invitez vos propres candidats</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&amp;q=70')">
                 <span class="wfc-num">05</span>
                 <span class="wfc-slot">Illustration · invitation</span>
               </div>
-              <h3 class="wfc-title">Invitez vos propres candidats</h3>
               <p class="wfc-text">Envoyez le test à un profil que vous avez sourcé ailleurs, et obtenez sa preuve avant de le rencontrer.</p>
             </article>
             <article class="wfc-slide" data-index="5">
+              <h3 class="wfc-title">Créez votre scénario sur mesure</h3>
               <div class="wfc-visual" style="background-image:url('https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?w=1200&amp;q=70')">
                 <span class="wfc-num">06</span>
                 <span class="wfc-slot">Illustration · scénario</span>
               </div>
-              <h3 class="wfc-title">Créez votre scénario sur mesure</h3>
               <p class="wfc-text">Faites passer une mise en situation calquée sur votre produit et vos objections terrain.</p>
             </article>
           </div>
@@ -627,18 +626,21 @@
     function pad(n) { return String(n + 1).padStart(2, '0'); }
 
     function scrollToIndex(i) {
-      i = Math.max(0, Math.min(total - 1, i));
+      i = (i + total) % total;
       var trackRect = track.getBoundingClientRect();
+      var trackCenter = trackRect.left + trackRect.width / 2;
       var slideRect = slides[i].getBoundingClientRect();
-      var delta = slideRect.left - trackRect.left;
-      track.scrollTo({ left: track.scrollLeft + delta, behavior: 'smooth' });
+      var slideCenter = slideRect.left + slideRect.width / 2;
+      track.scrollTo({ left: track.scrollLeft + (slideCenter - trackCenter), behavior: 'smooth' });
     }
 
     function nearestIndex() {
-      var trackLeft = track.getBoundingClientRect().left;
+      var trackRect = track.getBoundingClientRect();
+      var trackCenter = trackRect.left + trackRect.width / 2;
       var best = 0, bestDist = Infinity;
       slides.forEach(function (slide, i) {
-        var dist = Math.abs(slide.getBoundingClientRect().left - trackLeft);
+        var r = slide.getBoundingClientRect();
+        var dist = Math.abs((r.left + r.width / 2) - trackCenter);
         if (dist < bestDist) { bestDist = dist; best = i; }
       });
       return best;
@@ -650,8 +652,6 @@
       ticks.forEach(function (tick, i) { tick.classList.toggle('is-active', i === current); });
       counterEl.textContent = pad(current) + ' / ' + pad(total - 1);
       progressBar.style.width = ((current + 1) / total * 100) + '%';
-      prevBtn.disabled = current === 0;
-      nextBtn.disabled = current === total - 1;
       rafPending = false;
     }
 
@@ -659,12 +659,28 @@
       if (!rafPending) { rafPending = true; requestAnimationFrame(updateActive); }
     }, { passive: true });
 
-    prevBtn.addEventListener('click', function () { scrollToIndex(current - 1); });
-    nextBtn.addEventListener('click', function () { scrollToIndex(current + 1); });
+    /* ---- autoplay : avance toute seule, s'arrête définitivement dès que l'utilisateur interagit ---- */
+    var AUTOPLAY_DELAY = 4500;
+    var autoplayTimer = null;
+    function startAutoplay() {
+      stopAutoplay();
+      autoplayTimer = setInterval(function () { scrollToIndex(current + 1); }, AUTOPLAY_DELAY);
+    }
+    function stopAutoplay() {
+      if (autoplayTimer) { clearInterval(autoplayTimer); autoplayTimer = null; }
+    }
+    function stopAutoplayOnInteraction() { stopAutoplay(); }
+
+    prevBtn.addEventListener('click', function () { stopAutoplayOnInteraction(); scrollToIndex(current - 1); });
+    nextBtn.addEventListener('click', function () { stopAutoplayOnInteraction(); scrollToIndex(current + 1); });
+    ticks.forEach(function (tick) { tick.addEventListener('click', stopAutoplayOnInteraction); });
 
     track.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowRight') { e.preventDefault(); scrollToIndex(current + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); scrollToIndex(current - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); stopAutoplayOnInteraction(); scrollToIndex(current + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); stopAutoplayOnInteraction(); scrollToIndex(current - 1); }
+    });
+    ['pointerdown', 'touchstart', 'wheel'].forEach(function (evt) {
+      track.addEventListener(evt, stopAutoplayOnInteraction, { passive: true });
     });
 
     var resizeTimer;
@@ -674,6 +690,7 @@
     });
 
     updateActive();
+    startAutoplay();
   })();
   </script>
 
