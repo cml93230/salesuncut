@@ -46,17 +46,19 @@
     .change-visual-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
     .change-visual-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px,3.4vw,42px); text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; color: var(--cream); margin-bottom: 24px; }
     .change-visual .prose { font-family: var(--font-mono); font-size: 14.5px; line-height: 1.75; color: rgba(255,248,231,.82); }
-    .change-visual-steps { display: flex; flex-direction: column; gap: 24px; }
-    .cvs-item { display: flex; align-items: flex-start; gap: 16px; }
-    .cvs-num { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold-deep); width: 34px; flex-shrink: 0; line-height: 1; }
-    .cvs-title { font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--cream); margin-bottom: 4px; }
-    .cvs-txt { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .02em; color: rgba(255,248,231,.75); line-height: 1.5; }
 
     .radar-visual-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
     .radar-visual-name { font-family: var(--font-display); font-weight: 900; font-size: 16px; text-transform: uppercase; color: var(--cream); }
     .radar-visual-role { font-family: var(--font-mono); font-size: 10px; color: rgba(255,248,231,.55); margin-top: 3px; }
     .radar-visual-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold); text-align: right; }
     .radar-visual-score small { font-size: 11px; color: rgba(255,248,231,.5); font-weight: 400; }
+
+    /* ---------- 03 — parcours recruteur, bande sombre pleine largeur ---------- */
+    .workflow-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px 44px; margin-top: 48px; }
+    .workflow-item { border-top: 1px solid rgba(255,248,231,.18); padding-top: 20px; }
+    .workflow-num { font-family: var(--font-display); font-weight: 900; font-size: 30px; color: var(--gold); line-height: 1; margin-bottom: 12px; }
+    .workflow-title { font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--cream); margin-bottom: 7px; }
+    .workflow-desc { font-family: var(--font-mono); font-size: 12.5px; color: rgba(255,248,231,.7); line-height: 1.6; }
 
     /* ---------- Bénéfices : blocs propres, sans icône ---------- */
     .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 44px; }
@@ -119,7 +121,7 @@
     @media (max-width: 900px) {
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
-      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
+      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid, .workflow-grid { grid-template-columns: 1fr; }
       .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
       .compare-vs-badge { display: none; }
       .pool-preview-grid { justify-items: stretch; }
@@ -225,27 +227,43 @@
     </div>
   </section>
 
-  <!-- 03 — LE CONCEPT -->
-  <section class="band">
+  <!-- 03 — VOTRE ESPACE RECRUTEUR -->
+  <section class="band dark">
     <div class="container">
-      <span class="eyebrow">Comment ça marche</span>
-      <h2>Vous ne lui demandez plus s'il sait vendre.<br>Vous le mettez en situation.</h2>
+      <span class="eyebrow" style="color:var(--gold)">Votre espace recruteur</span>
+      <h2 style="color:var(--cream)">Six actions, un seul espace.</h2>
+      <p class="lede">De la recherche du bon profil jusqu'à l'évaluation sur mesure de vos propres candidats.</p>
 
-      <div class="change-visual" style="max-width: 620px; margin: 44px auto 0;">
-        <div class="change-visual-eyebrow">Le déroulé</div>
-        <div class="change-visual-steps">
-          <div class="cvs-item">
-            <div class="cvs-num">01</div>
-            <div><div class="cvs-title">Le candidat passe un appel</div><div class="cvs-txt">Il reçoit une situation commerciale et réalise un appel de vente face à un prospect simulé.</div></div>
-          </div>
-          <div class="cvs-item">
-            <div class="cvs-num">02</div>
-            <div><div class="cvs-title">SalesUncut analyse sa performance</div><div class="cvs-txt">L'appel est évalué selon les 6 dimensions commerciales.</div></div>
-          </div>
-          <div class="cvs-item">
-            <div class="cvs-num">03</div>
-            <div><div class="cvs-title">Vous obtenez une vision claire de son niveau</div><div class="cvs-txt">Vous disposez d'un score et d'une analyse pour comparer les candidats.</div></div>
-          </div>
+      <div class="workflow-grid">
+        <div class="workflow-item">
+          <div class="workflow-num">01</div>
+          <div class="workflow-title">Accédez au pool candidat</div>
+          <div class="workflow-desc">Consultez l'ensemble des profils déjà certifiés : score, dimensions, disponibilité.</div>
+        </div>
+        <div class="workflow-item">
+          <div class="workflow-num">02</div>
+          <div class="workflow-title">Filtrez selon vos critères</div>
+          <div class="workflow-desc">Famille sectorielle, rôle, niveau, budget, disponibilité — ne gardez que les profils qui comptent pour vous.</div>
+        </div>
+        <div class="workflow-item">
+          <div class="workflow-num">03</div>
+          <div class="workflow-title">Contactez le candidat</div>
+          <div class="workflow-desc">Passez du profil à la prise de contact directement, sans intermédiaire.</div>
+        </div>
+        <div class="workflow-item">
+          <div class="workflow-num">04</div>
+          <div class="workflow-title">Recevez une alerte</div>
+          <div class="workflow-desc">Soyez prévenu dès qu'un candidat correspondant à votre recherche rejoint le pool.</div>
+        </div>
+        <div class="workflow-item">
+          <div class="workflow-num">05</div>
+          <div class="workflow-title">Invitez vos propres candidats</div>
+          <div class="workflow-desc">Envoyez le test à un profil que vous avez sourcé ailleurs, et obtenez sa preuve avant de le rencontrer.</div>
+        </div>
+        <div class="workflow-item">
+          <div class="workflow-num">06</div>
+          <div class="workflow-title">Créez votre scénario sur mesure</div>
+          <div class="workflow-desc">Faites passer une mise en situation calquée sur votre produit et vos objections terrain.</div>
         </div>
       </div>
     </div>
