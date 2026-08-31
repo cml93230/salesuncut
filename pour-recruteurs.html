@@ -9,8 +9,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     /* ---------- Hero ---------- */
-    .rec-hero { padding: 56px 0 76px; overflow: hidden; }
-    .rec-hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; }
+    .rec-hero { padding: 56px 0 0; overflow: hidden; }
+    .rec-hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; padding-bottom: 56px; }
     .rec-hero h1 { font-size: clamp(38px,5vw,68px); margin: 20px 0 22px; }
     .rec-hero p.lede { font-size: 18px; color: var(--teal-2); max-width: 560px; margin-bottom: 30px; line-height: 1.55; }
     .rec-hero-caption { font-family: var(--font-mono); font-size: 13px; color: var(--teal-3); margin-top: 16px; letter-spacing: .02em; }
@@ -33,84 +33,61 @@
     .band.dark .lede { color: rgba(255,248,231,.75); }
     .band:not(.dark) .lede { color: var(--teal-2); }
 
-    .lift-card { transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s; }
-    .lift-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-card); }
+    /* ---------- Pattern repris de candidat.html : liste à gauche / panneau sombre à droite ---------- */
+    .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; margin-top: 40px; }
+    .change-list { display: flex; flex-direction: column; }
+    .change-item { display: flex; align-items: flex-start; gap: 18px; padding: 20px 0; border-bottom: 1px dashed var(--cream-3); }
+    .change-item:last-child { border-bottom: none; }
+    .change-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 14px; margin-top: 2px; }
+    .change-text { font-size: 16px; color: var(--ink); line-height: 1.5; }
+    .change-text .quote { font-family: var(--font-serif); font-style: italic; display: block; }
+    .change-text .question { display: block; margin-top: 4px; font-weight: 600; color: var(--rust); font-size: 14px; }
+    .change-text strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -.01em; }
+    .change-visual { background: var(--ink); border-radius: 10px; padding: 40px 36px; color: var(--cream); }
+    .change-visual-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .change-visual-title { font-family: var(--font-display); font-weight: 900; font-size: 28px; text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; color: var(--cream); margin-bottom: 18px; }
+    .change-visual .prose { font-family: var(--font-mono); font-size: 13px; line-height: 1.6; color: rgba(255,248,231,.8); }
+    .change-visual-steps { display: flex; flex-direction: column; gap: 24px; }
+    .cvs-item { display: flex; align-items: flex-start; gap: 16px; }
+    .cvs-num { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold-deep); width: 34px; flex-shrink: 0; line-height: 1; }
+    .cvs-title { font-family: var(--font-sans); font-weight: 600; font-size: 16px; color: var(--cream); margin-bottom: 4px; }
+    .cvs-txt { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .02em; color: rgba(255,248,231,.75); line-height: 1.5; }
 
-    /* ---------- Icon system (réutilisé sur toute la page) ---------- */
-    .icon-badge { width: 54px; height: 54px; border-radius: 50%; background: var(--cream); border: 1.5px solid var(--ink); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; flex-shrink: 0; }
-    .icon-badge svg { width: 24px; height: 24px; color: var(--ink); }
-    .band.tint .icon-badge { background: var(--cream); }
+    .radar-visual-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+    .radar-visual-name { font-family: var(--font-display); font-weight: 900; font-size: 16px; text-transform: uppercase; color: var(--cream); }
+    .radar-visual-role { font-family: var(--font-mono); font-size: 10px; color: rgba(255,248,231,.55); margin-top: 3px; }
+    .radar-visual-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold); text-align: right; }
+    .radar-visual-score small { font-size: 11px; color: rgba(255,248,231,.5); font-weight: 400; }
 
-    /* ---------- 02 — problème ---------- */
-    .problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin: 44px 0 60px; }
-    .problem-card { background: var(--cream); border: 1.5px solid var(--ink); border-radius: 8px; padding: 30px 26px; }
-    .problem-quote { font-family: var(--font-serif); font-style: italic; font-size: 21px; color: var(--ink); line-height: 1.3; margin: 6px 0 14px; }
-    .problem-question { font-weight: 600; font-size: 14px; color: var(--rust); }
-    .transition-block { text-align: center; padding-top: 8px; }
-    .transition-block h3 { font-size: clamp(28px,4vw,44px); margin-bottom: 12px; }
-    .transition-block p { font-size: 15px; color: var(--teal-2); max-width: 520px; margin: 0 auto; }
+    /* ---------- Bénéfices : blocs propres, sans icône ---------- */
+    .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 44px; }
+    .benefit-block { border-top: 3px solid var(--gold-deep); padding-top: 18px; }
+    .benefit-block h3 { font-size: 18px; margin-bottom: 10px; }
+    .benefit-block p { font-size: 14.5px; color: var(--teal-2); line-height: 1.55; }
 
-    /* ---------- 03 — process ---------- */
-    .process-flow { position: relative; max-width: 640px; margin: 48px auto 0; text-align: center; }
-    .process-flow::before { content: ''; position: absolute; top: 27px; bottom: 27px; left: 50%; width: 2px; background: var(--cream-3); transform: translateX(-50%); z-index: 0; }
-    .process-step { position: relative; z-index: 1; padding: 22px 0; }
-    .process-step .icon-badge { margin: 0 auto 16px; }
-    .process-step h3 { font-size: 21px; margin-bottom: 8px; }
-    .process-step p { font-size: 15px; color: var(--teal-2); max-width: 440px; margin: 0 auto; }
-
-    /* ---------- 04 — dimensions ---------- */
-    .dims-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin: 44px 0 8px; }
-    .dim-card { background: var(--cream); border: 1.5px solid var(--ink); border-radius: 8px; padding: 24px 22px; }
-    .dim-card .num { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--gold-deep); line-height: 1; margin-bottom: 6px; }
-    .dim-card h3 { font-size: 16px; margin-bottom: 6px; }
-    .dim-card p { font-size: 13.5px; color: var(--teal-2); line-height: 1.5; }
-
-    .radar-panel { max-width: 460px; margin: 56px auto 0; background: var(--cream); border: 1.5px solid var(--ink); border-radius: 10px; box-shadow: var(--shadow-card); overflow: hidden; }
-    .radar-panel-head { background: var(--ink); color: var(--cream); padding: 20px 26px; display: flex; justify-content: space-between; align-items: center; }
-    .radar-panel-name { font-family: var(--font-display); font-weight: 900; font-size: 18px; text-transform: uppercase; }
-    .radar-panel-role { font-family: var(--font-mono); font-size: 11px; color: rgba(255,248,231,.6); margin-top: 3px; }
-    .radar-panel-total { font-family: var(--font-display); font-weight: 900; font-size: 30px; color: var(--gold); line-height: 1; }
-    .radar-panel-total small { font-size: 12px; color: rgba(255,248,231,.5); font-weight: 400; }
-    .radar-panel-body { padding: 24px; }
-
-    /* ---------- 05 — bénéfices ---------- */
-    .benefit-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; margin-top: 44px; }
-    .benefit-card h3 { font-size: 18px; margin-bottom: 10px; }
-    .benefit-card p { font-size: 14.5px; color: var(--teal-2); line-height: 1.55; }
-
-    /* ---------- 06 — avant/après ---------- */
+    /* ---------- Avant / après ---------- */
     .compare-wrap { position: relative; }
     .compare-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid rgba(255,248,231,.2); border-radius: 8px; overflow: hidden; margin-top: 44px; }
     .compare-col { padding: 40px 36px; }
     .compare-col.before { background: rgba(255,248,231,.03); }
     .compare-col.after { background: rgba(201,168,106,.1); border-left: 1.5px solid rgba(255,248,231,.2); }
-    .compare-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 26px; }
+    .compare-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 22px; }
     .compare-col.before .compare-label { color: rgba(255,248,231,.4); }
     .compare-col.after .compare-label { color: var(--gold); }
-    .compare-quote { font-family: var(--font-serif); font-style: italic; font-size: 19px; margin-top: 24px; }
+    .compare-flow { font-family: var(--font-mono); font-size: 13.5px; letter-spacing: .02em; line-height: 2; }
+    .compare-col.before .compare-flow { color: rgba(255,248,231,.65); }
+    .compare-col.after .compare-flow { color: rgba(255,248,231,.9); }
+    .compare-flow .extra { color: var(--gold); font-weight: 700; }
+    .compare-quote { font-family: var(--font-serif); font-style: italic; font-size: 20px; margin-top: 26px; }
     .compare-col.before .compare-quote { color: rgba(255,248,231,.5); }
     .compare-col.after .compare-quote { color: var(--gold); }
-    .compare-vs-badge { position: absolute; top: 50%; left: 50%; width: 60px; height: 60px; border-radius: 50%; background: var(--gold-deep); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 22px; border: 3px solid var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,.4); transform: translate(-50%,-50%); z-index: 5; }
-
-    .flow-diagram { display: flex; align-items: center; }
-    .flow-node { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
-    .flow-dot { width: 13px; height: 13px; border-radius: 50%; border: 2px solid; box-sizing: border-box; }
-    .flow-label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; text-align: center; }
-    .flow-line { flex: 1; height: 2px; min-width: 10px; }
-    .compare-col.before .flow-dot { border-color: rgba(255,248,231,.4); background: transparent; }
-    .compare-col.before .flow-line { background: rgba(255,248,231,.25); }
-    .compare-col.before .flow-label { color: rgba(255,248,231,.55); }
-    .compare-col.after .flow-dot { border-color: var(--gold); background: var(--gold); }
-    .compare-col.after .flow-line { background: var(--gold); }
-    .compare-col.after .flow-label { color: var(--gold); }
-    .compare-col.after .flow-node.extra .flow-dot { box-shadow: 0 0 0 4px rgba(201,168,106,.3); }
-    .compare-col.after .flow-node.extra .flow-label { font-weight: 700; }
+    .compare-vs-badge { position: absolute; top: 50%; left: 50%; width: 58px; height: 58px; border-radius: 50%; background: var(--gold-deep); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 20px; border: 3px solid var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,.4); transform: translate(-50%,-50%); z-index: 5; }
 
     .promise-band { position: relative; overflow: hidden; }
     .promise-band::before { content: ''; position: absolute; top: 50%; left: 50%; width: 900px; height: 900px; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(201,168,106,.2) 0%, transparent 68%); pointer-events: none; }
     .promise-band .container { position: relative; z-index: 1; }
 
-    /* ---------- 07 — aperçu du pool (vraies cards) ---------- */
+    /* ---------- Aperçu du pool (vraies cards) ---------- */
     .pool-preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin: 44px 0 8px; justify-items: center; }
     .dash-card { width: 100%; max-width: 240px; background: var(--cream); border: 1.5px solid var(--ink); border-radius: 12px; box-shadow: var(--shadow-card); overflow: hidden; position: relative; transition: transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s; }
     .dash-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card-lg); }
@@ -132,22 +109,23 @@
     .dash-card-score { font-family: var(--font-display); font-weight: 900; font-size: 26px; color: var(--ink); line-height: 1; }
     .dash-card-score small { font-size: 12px; color: var(--teal-3); font-weight: 400; }
 
-    /* ---------- 08 — cas d'usage ---------- */
-    .usecase-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 44px; }
-    .usecase-card { background: var(--cream); border: 1.5px solid var(--ink); border-radius: 8px; padding: 26px 22px; }
-    .usecase-card .icon-badge { width: 46px; height: 46px; margin-bottom: 14px; }
-    .usecase-card .icon-badge svg { width: 20px; height: 20px; }
-    .usecase-card h3 { font-size: 15px; margin-bottom: 8px; }
-    .usecase-card p { font-size: 12.5px; color: var(--teal-2); line-height: 1.5; }
+    /* ---------- Tableau cas d'usage ---------- */
+    .usecase-table { border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; margin-top: 44px; }
+    .usecase-row { display: grid; grid-template-columns: 230px 1fr; gap: 20px; padding: 22px 28px; border-bottom: 1px solid var(--cream-3); align-items: center; }
+    .usecase-row:last-child { border-bottom: none; }
+    .usecase-row:nth-child(even) { background: var(--cream-2); }
+    .usecase-role { font-family: var(--font-display); font-weight: 900; font-size: 17px; text-transform: uppercase; letter-spacing: -.01em; }
+    .usecase-desc { font-size: 14.5px; color: var(--teal-2); line-height: 1.5; }
 
     @media (max-width: 900px) {
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
-      .problem-grid, .dims-grid, .benefit-grid, .compare-grid, .usecase-grid, .pool-preview-grid { grid-template-columns: 1fr; }
+      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
       .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
       .compare-vs-badge { display: none; }
       .pool-preview-grid { justify-items: stretch; }
       .dash-card { max-width: none; }
+      .usecase-row { grid-template-columns: 1fr; gap: 6px; }
     }
   </style>
 </head>
@@ -203,6 +181,20 @@
     </div>
   </section>
 
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Mise en situation réelle</span><span class="gold-text">&starf;</span>
+      <span>Comparez vos candidats côte à côte</span><span class="gold-text">&starf;</span>
+      <span>Décidez sur la preuve, pas sur l'impression</span><span class="gold-text">&starf;</span>
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Mise en situation réelle</span><span class="gold-text">&starf;</span>
+      <span>Comparez vos candidats côte à côte</span><span class="gold-text">&starf;</span>
+      <span>Décidez sur la preuve, pas sur l'impression</span><span class="gold-text">&starf;</span>
+    </div>
+  </div>
+
   <!-- 02 — LE PROBLÈME -->
   <section class="band tint">
     <div class="container">
@@ -210,30 +202,26 @@
       <h2>Un bon CV ne fait pas un bon vendeur.</h2>
       <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Mais pas forcément la capacité à vendre.</p>
 
-      <div class="problem-grid">
-        <div class="problem-card lift-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/><line x1="9" y1="12" x2="17" y2="12"/><line x1="9" y1="15" x2="17" y2="15"/><line x1="9" y1="18" x2="14" y2="18"/></svg></div>
-          <span class="eyebrow" style="color:var(--gold-deep)">Le CV</span>
-          <p class="problem-quote">« +3 ans d'expérience commerciale »</p>
-          <p class="problem-question">Mais sait-il prospecter ?</p>
+      <div class="change-grid">
+        <div class="change-list">
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>Le CV</strong><span class="quote">« +3 ans d'expérience commerciale »</span><span class="question">Mais sait-il prospecter ?</span></div>
+          </div>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>L'entretien</strong><span class="quote">« Je suis très orienté résultats »</span><span class="question">Mais sait-il convaincre ?</span></div>
+          </div>
+          <div class="change-item">
+            <div class="change-arrow">&rarr;</div>
+            <div class="change-text"><strong>Le discours</strong><span class="quote">« Je maîtrise parfaitement la vente »</span><span class="question">Mais que se passe-t-il quand il faut vraiment vendre ?</span></div>
+          </div>
         </div>
-        <div class="problem-card lift-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-4 4v-4H4z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="12.5" x2="13" y2="12.5"/></svg></div>
-          <span class="eyebrow" style="color:var(--gold-deep)">L'entretien</span>
-          <p class="problem-quote">« Je suis très orienté résultats »</p>
-          <p class="problem-question">Mais sait-il convaincre ?</p>
+        <div class="change-visual">
+          <div class="change-visual-eyebrow">La réponse</div>
+          <div class="change-visual-title">Alors, faites-le vendre.</div>
+          <p class="prose">SalesUncut transforme la compétence commerciale en quelque chose que vous pouvez réellement observer et mesurer.</p>
         </div>
-        <div class="problem-card lift-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></div>
-          <span class="eyebrow" style="color:var(--gold-deep)">Le discours</span>
-          <p class="problem-quote">« Je maîtrise parfaitement la vente »</p>
-          <p class="problem-question">Mais que se passe-t-il quand il faut vraiment vendre ?</p>
-        </div>
-      </div>
-
-      <div class="transition-block">
-        <h3>Alors, faites-le vendre.</h3>
-        <p>SalesUncut transforme la compétence commerciale en quelque chose que vous pouvez réellement observer et mesurer.</p>
       </div>
     </div>
   </section>
@@ -244,21 +232,21 @@
       <span class="eyebrow">Comment ça marche</span>
       <h2>Vous ne lui demandez plus s'il sait vendre.<br>Vous le mettez en situation.</h2>
 
-      <div class="process-flow">
-        <div class="process-step">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C10 21 3 14 3 6a2 2 0 0 1 2-2z"/></svg></div>
-          <h3>Le candidat passe un appel</h3>
-          <p>Il reçoit une situation commerciale et réalise un appel de vente face à un prospect simulé.</p>
-        </div>
-        <div class="process-step">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="13"/><line x1="10" y1="21" x2="10" y2="7"/><line x1="16" y1="21" x2="16" y2="11"/><line x1="20" y1="21" x2="4" y2="21"/></svg></div>
-          <h3>SalesUncut analyse sa performance</h3>
-          <p>L'appel est évalué selon les 6 dimensions commerciales.</p>
-        </div>
-        <div class="process-step">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/></svg></div>
-          <h3>Vous obtenez une vision claire de son niveau</h3>
-          <p>Vous disposez d'un score et d'une analyse pour comparer les candidats.</p>
+      <div class="change-visual" style="max-width: 620px; margin: 44px auto 0;">
+        <div class="change-visual-eyebrow">Le déroulé</div>
+        <div class="change-visual-steps">
+          <div class="cvs-item">
+            <div class="cvs-num">01</div>
+            <div><div class="cvs-title">Le candidat passe un appel</div><div class="cvs-txt">Il reçoit une situation commerciale et réalise un appel de vente face à un prospect simulé.</div></div>
+          </div>
+          <div class="cvs-item">
+            <div class="cvs-num">02</div>
+            <div><div class="cvs-title">SalesUncut analyse sa performance</div><div class="cvs-txt">L'appel est évalué selon les 6 dimensions commerciales.</div></div>
+          </div>
+          <div class="cvs-item">
+            <div class="cvs-num">03</div>
+            <div><div class="cvs-title">Vous obtenez une vision claire de son niveau</div><div class="cvs-txt">Vous disposez d'un score et d'une analyse pour comparer les candidats.</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -270,24 +258,23 @@
       <span class="eyebrow">Le référentiel</span>
       <h2>Un commercial ne se résume pas à un score.<br>Il se décompose en 6 compétences.</h2>
 
-      <div class="dims-grid">
-        <div class="dim-card"><div class="num">01</div><h3>Accroche</h3><p>Capacité à capter l'attention et installer rapidement un échange.</p></div>
-        <div class="dim-card"><div class="num">02</div><h3>Découverte</h3><p>Capacité à poser les bonnes questions et comprendre le prospect.</p></div>
-        <div class="dim-card"><div class="num">03</div><h3>Créer le besoin</h3><p>Capacité à faire émerger une problématique et sa valeur.</p></div>
-        <div class="dim-card"><div class="num">04</div><h3>Objections</h3><p>Capacité à écouter, répondre et faire avancer la conversation.</p></div>
-        <div class="dim-card"><div class="num">05</div><h3>Valeur</h3><p>Capacité à relier l'offre aux enjeux réels du prospect.</p></div>
-        <div class="dim-card"><div class="num">06</div><h3>Closing</h3><p>Capacité à obtenir un engagement et faire avancer la vente.</p></div>
-      </div>
-
-      <div class="radar-panel lift-card">
-        <div class="radar-panel-head">
-          <div>
-            <div class="radar-panel-name">Lucas Renaud</div>
-            <div class="radar-panel-role">Commercial SaaS</div>
-          </div>
-          <div class="radar-panel-total">78<small>/100</small></div>
+      <div class="change-grid">
+        <div class="change-list">
+          <div class="change-item"><div class="change-arrow">01</div><div class="change-text"><strong>Accroche</strong><br>Capacité à capter l'attention et installer rapidement un échange.</div></div>
+          <div class="change-item"><div class="change-arrow">02</div><div class="change-text"><strong>Découverte</strong><br>Capacité à poser les bonnes questions et comprendre le prospect.</div></div>
+          <div class="change-item"><div class="change-arrow">03</div><div class="change-text"><strong>Créer le besoin</strong><br>Capacité à faire émerger une problématique et sa valeur.</div></div>
+          <div class="change-item"><div class="change-arrow">04</div><div class="change-text"><strong>Objections</strong><br>Capacité à écouter, répondre et faire avancer la conversation.</div></div>
+          <div class="change-item"><div class="change-arrow">05</div><div class="change-text"><strong>Valeur</strong><br>Capacité à relier l'offre aux enjeux réels du prospect.</div></div>
+          <div class="change-item"><div class="change-arrow">06</div><div class="change-text"><strong>Closing</strong><br>Capacité à obtenir un engagement et faire avancer la vente.</div></div>
         </div>
-        <div class="radar-panel-body">
+        <div class="change-visual">
+          <div class="radar-visual-head">
+            <div>
+              <div class="radar-visual-name">Lucas Renaud</div>
+              <div class="radar-visual-role">Commercial SaaS</div>
+            </div>
+            <div class="radar-visual-score">78<small>/100</small></div>
+          </div>
           <canvas id="dimsRadar" width="380" height="320"></canvas>
         </div>
       </div>
@@ -300,19 +287,16 @@
       <span class="eyebrow">Pourquoi SalesUncut</span>
       <h2>Moins de « il a l'air bon ».<br>Plus de « voilà son niveau ».</h2>
 
-      <div class="benefit-grid">
-        <div class="benefit-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></div>
+      <div class="benefit-row">
+        <div class="benefit-block">
           <h3>Objectivez vos décisions</h3>
           <p>Comparez les candidats sur une base commune plutôt que sur la seule impression laissée en entretien.</p>
         </div>
-        <div class="benefit-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></div>
+        <div class="benefit-block">
           <h3>Identifiez les vrais vendeurs</h3>
           <p>Repérez les forces et faiblesses commerciales avant de faire une proposition.</p>
         </div>
-        <div class="benefit-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><line x1="12" y1="13" x2="12" y2="9"/><line x1="12" y1="13" x2="15" y2="14.5"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="12" y1="2" x2="12" y2="5"/></svg></div>
+        <div class="benefit-block">
           <h3>Gagnez du temps</h3>
           <p>Concentrez vos entretiens sur les candidats qui ont démontré un véritable potentiel commercial.</p>
         </div>
@@ -330,30 +314,12 @@
         <div class="compare-grid">
           <div class="compare-col before">
             <div class="compare-label">Avant SalesUncut</div>
-            <div class="flow-diagram">
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">CV</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">Entretien</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">Feeling</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">Décision</div></div>
-            </div>
+            <div class="compare-flow">CV &rarr; Entretien &rarr; Feeling &rarr; Décision</div>
             <p class="compare-quote">« Il a l'air bon. »</p>
           </div>
           <div class="compare-col after">
             <div class="compare-label">Avec SalesUncut</div>
-            <div class="flow-diagram">
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">CV</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">Entretien</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node extra"><div class="flow-dot"></div><div class="flow-label">Mise en<br>situation</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node extra"><div class="flow-dot"></div><div class="flow-label">Score</div></div>
-              <div class="flow-line"></div>
-              <div class="flow-node"><div class="flow-dot"></div><div class="flow-label">Décision</div></div>
-            </div>
+            <div class="compare-flow">CV &rarr; Entretien &rarr; <span class="extra">Mise en situation</span> &rarr; <span class="extra">Score</span> &rarr; Décision</div>
             <p class="compare-quote">« Voilà ce qu'il sait faire. »</p>
           </div>
         </div>
@@ -373,7 +339,7 @@
 
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:36px">
         <a href="recruiter.html" class="btn gold">Voir le pool complet &rarr;</a>
-        <a href="profil.html?id=c001" class="btn ink" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Voir une évaluation type &rarr;</a>
+        <a href="profil.html?id=c001" class="btn" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Voir une évaluation type &rarr;</a>
       </div>
     </div>
   </section>
@@ -384,23 +350,11 @@
       <span class="eyebrow">Cas d'usage</span>
       <h2>Un outil pour ceux qui recrutent des commerciaux.</h2>
 
-      <div class="usecase-grid">
-        <div class="usecase-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a12 12 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2C10 21 3 14 3 6a2 2 0 0 1 2-2z"/></svg></div>
-          <h3>SDR / BDR</h3><p>Prospection, qualification, prise de rendez-vous.</p>
-        </div>
-        <div class="usecase-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/></svg></div>
-          <h3>Account Executive</h3><p>Découverte, proposition de valeur, objections, closing.</p>
-        </div>
-        <div class="usecase-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="13"/><line x1="10" y1="21" x2="10" y2="7"/><line x1="16" y1="21" x2="16" y2="11"/><line x1="20" y1="21" x2="4" y2="21"/></svg></div>
-          <h3>Business Developer</h3><p>Prospection et développement commercial.</p>
-        </div>
-        <div class="usecase-card">
-          <div class="icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></div>
-          <h3>Sales Manager</h3><p>Évaluation et comparaison des profils commerciaux.</p>
-        </div>
+      <div class="usecase-table">
+        <div class="usecase-row"><div class="usecase-role">SDR / BDR</div><div class="usecase-desc">Prospection, qualification, prise de rendez-vous.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Account Executive</div><div class="usecase-desc">Découverte, proposition de valeur, objections, closing.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Business Developer</div><div class="usecase-desc">Prospection et développement commercial.</div></div>
+        <div class="usecase-row"><div class="usecase-role">Sales Manager</div><div class="usecase-desc">Évaluation et comparaison des profils commerciaux.</div></div>
       </div>
     </div>
   </section>
@@ -494,7 +448,7 @@
       document.getElementById('poolPreview').innerHTML = poolPreview.map(renderPoolCard).join('');
     }
 
-    /* ---- radar des 6 dimensions ---- */
+    /* ---- radar des 6 dimensions, sur fond sombre ---- */
     if (typeof Chart !== 'undefined') {
       new Chart(document.getElementById('dimsRadar'), {
         type: 'radar',
@@ -503,12 +457,12 @@
           datasets: [{
             label: 'Score',
             data: [81, 88, 80, 69, 81, 69],
-            borderColor: '#a3854f',
-            backgroundColor: 'rgba(163,133,79,.18)',
+            borderColor: '#c9a86a',
+            backgroundColor: 'rgba(201,168,106,.25)',
             borderWidth: 2.5,
-            pointBackgroundColor: '#a3854f',
+            pointBackgroundColor: '#c9a86a',
             pointRadius: 4,
-            pointBorderColor: '#fff8e7',
+            pointBorderColor: '#1a2222',
             pointBorderWidth: 1.5
           }]
         },
@@ -520,10 +474,10 @@
           scales: {
             r: {
               min: 0, max: 100,
-              ticks: { stepSize: 25, font: { size: 9 }, color: '#a3854f', backdropColor: 'transparent' },
-              grid: { color: '#ebe0c0' },
-              angleLines: { color: '#ebe0c0' },
-              pointLabels: { font: { size: 11, weight: '600' }, color: '#3e4f4f' }
+              ticks: { stepSize: 25, font: { size: 9 }, color: '#c9a86a', backdropColor: 'transparent' },
+              grid: { color: 'rgba(255,248,231,.15)' },
+              angleLines: { color: 'rgba(255,248,231,.15)' },
+              pointLabels: { font: { size: 11, weight: '600' }, color: '#fff8e7' }
             }
           }
         }
