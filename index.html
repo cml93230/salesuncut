@@ -52,7 +52,7 @@
     .hero-stage:hover .tcard:nth-child(3) { transform: translateX(190px) translateY(0) rotate(16deg); }
     .fork-lede { font-family: var(--font-mono); font-size: 14px; letter-spacing: .02em; color: var(--teal-3); max-width: 640px; margin: 0 0 28px; line-height: 1.5; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
-    .col { padding: 40px 48px; position: relative; min-height: 280px; }
+    .col { padding: 48px; position: relative; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
     .col-candidat { background: var(--ink); color: var(--cream); }
     .col-recruteur { background: var(--cream); color: var(--ink); border-left: 1.5px solid var(--ink); }
     .col h2 { font-size: 40px; margin: 20px 0 14px; line-height: 1.05; }
@@ -62,6 +62,9 @@
     .col p { font-size: 15px; line-height: 1.55; max-width: 440px; margin-bottom: 24px; }
     .col-candidat p { color: rgba(255,248,231,.8); }
     .col-recruteur p { color: var(--teal-2); }
+    .col-accroche { font-family: var(--font-sans); font-size: clamp(22px,2.4vw,28px); line-height: 1.35; font-weight: 500; max-width: 460px; margin: 14px 0 28px !important; }
+    .col-candidat .col-accroche { color: var(--cream); }
+    .col-recruteur .col-accroche { color: var(--ink); }
     .two-col-hints { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 16px; }
     .lb-cols {
       display: grid;
@@ -131,39 +134,13 @@
     <div style="flex:1" id="navDrawerBackdrop"></div>
   </div>
 
-  <!-- HERO -->
-  <section class="hero">
+  <!-- BLOC 1 — explication ultra concise + visuel -->
+  <section class="hero" style="padding: 32px 0 56px;">
     <div class="container">
       <div class="hero-grid">
         <div>
           <span class="eyebrow">Recrutement commercial, par la preuve.</span>
-          <h1>
-            UN CV<br>
-            <span class="strike">RACONTE.</span><br>
-            <span class="gold-word">Les appels,</span><br>
-            PROUVENT.
-          </h1>
-          <p class="lede">
-            Un CV peut mentir. Un vrai appel de vente, non. Un recrutement commercial rat&eacute; co&ucirc;te des mois de pipeline perdu &mdash; &eacute;coutez avant de signer, pas apr&egrave;s.
-          </p>
-          <div class="hero-cta">
-            <div class="hero-cta-item">
-              <p class="hero-nav-hint">Côté sales ↓</p>
-              <a href="candidat.html" class="btn-hero-sales">&blacktriangleright; Prouver ce que je vaux (29 min)</a>
-            </div>
-            <div class="hero-cta-item">
-              <p class="hero-nav-hint">Côté recruteur ↓</p>
-              <a href="recruiter.html" class="btn-hero-recruteur">
-                <span class="main-label">Voir le pool</span>
-                <span class="sub-label">Recruter sur la preuve</span>
-              </a>
-            </div>
-          </div>
-          <div class="hero-kpi">
-            <div><div class="kpi-num">30s</div><div class="kpi-lbl">Pour trancher</div></div>
-            <div><div class="kpi-num">100%</div><div class="kpi-lbl">Vérifié en direct</div></div>
-            <div><div class="kpi-num">218</div><div class="kpi-lbl">Vrais appels écoutés</div></div>
-          </div>
+          <h1 style="margin: 20px 0 0;">On score un appel de vente sur 6 dimensions.<br><span class="gold-word">Le résultat compte plus que le CV.</span></h1>
         </div>
         <div class="hero-stage">
           <div class="hero-card-stack" id="heroStack"></div>
@@ -172,21 +149,25 @@
     </div>
   </section>
 
-  <!-- MARQUEE -->
-  <div class="marquee">
-    <div class="marquee-track">
-      <span>&Eacute;coute &gt; CV</span><span class="gold-text">&starf;</span>
-      <span>30 min de vérité</span><span class="gold-text">&starf;</span>
-      <span>6 dimensions évaluées</span><span class="gold-text">&starf;</span>
-      <span>Filtre par score, pas par instinct</span><span class="gold-text">&starf;</span>
-      <span>&Eacute;coute &gt; CV</span><span class="gold-text">&starf;</span>
-      <span>30 min de vérité</span><span class="gold-text">&starf;</span>
-      <span>6 dimensions évaluées</span><span class="gold-text">&starf;</span>
-      <span>Filtre par score, pas par instinct</span><span class="gold-text">&starf;</span>
+  <!-- BLOC 2 — choix binaire immédiat -->
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="two-col">
+        <div class="col col-candidat">
+          <span class="eyebrow" style="color:var(--gold)">Je suis commercial</span>
+          <p class="col-accroche">Tu sais vendre, mais &ccedil;a ne se voit pas sur un CV. Ici, &ccedil;a s&rsquo;entend.</p>
+          <a href="candidat.html" class="btn gold">Prouver ma valeur &rarr;</a>
+        </div>
+        <div class="col col-recruteur">
+          <span class="eyebrow">Je recrute</span>
+          <p class="col-accroche">Un entretien classique ne dit rien des capacit&eacute;s d&rsquo;un commercial&nbsp;: vous les d&eacute;couvrez apr&egrave;s signature. Ou avant, avec nous.</p>
+          <a href="recruiter.html" class="btn">Voir le pool &rarr;</a>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- DERNIERS ARRIVANTS -->
+  <!-- DROP DE LA SEMAINE — élément de réassurance -->
   <section class="section">
     <div class="container">
       <div style="display:flex;justify-content:space-between;align-items:end;margin-bottom:24px;">
@@ -197,110 +178,6 @@
         <a href="recruiter.html" class="btn outline sm">Tout voir &rarr;</a>
       </div>
       <div class="cards-row" id="featuredCards"></div>
-    </div>
-  </section>
-
-  <!-- FORK CANDIDAT / RECRUTEUR -->
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <span class="eyebrow">Deux publics, deux preuves</span>
-      <h1 style="font-size:64px;margin:16px 0 12px;">Ici, on recrute autrement.</h1>
-      <p class="fork-lede">Un CV, &ccedil;a se r&eacute;&eacute;crit en 10 minutes sur ChatGPT. Un appel de 30 minutes face &agrave; un vrai prospect, non. Un seul appel, deux r&eacute;sultats imm&eacute;diats&nbsp;: vous savez ce que vous valez, ils savent qui recruter.</p>
-      <div class="two-col-hints">
-        <p class="hero-nav-hint">Côté sales ↓</p>
-        <p class="hero-nav-hint">Côté recruteur ↓</p>
-      </div>
-      <div class="two-col">
-        <div class="col col-candidat">
-          <span class="eyebrow" style="color:var(--gold)">Pour les sales</span>
-          <h2><small>Côté candidat</small>Ton CV ne prouve rien.<br>Ton prochain appel, si.</h2>
-          <p>Arr&ecirc;te d&rsquo;envoyer 80 candidatures pour 3 entretiens &agrave; cause d&rsquo;un CV mal format&eacute;. Prouve ce que tu sais faire, en vrai.</p>
-          <a href="candidat.html" class="btn gold">Prouver ma valeur &rarr;</a>
-        </div>
-        <div class="col col-recruteur">
-          <span class="eyebrow">Pour les recruteurs</span>
-          <h2><small>Côté recruteur</small>Un mauvais recrutement<br>co&ucirc;te cher. &Eacute;coutez avant.</h2>
-          <p>Un entretien classique ne r&eacute;v&egrave;le rien sur la vraie capacit&eacute; &agrave; closer. Vous le d&eacute;couvrez apr&egrave;s signature.</p>
-          <a href="recruiter.html" class="btn">Voir le pool &rarr;</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEADERBOARD -->
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <span class="eyebrow">Hall of fame</span>
-      <h1 style="font-size:56px;margin:12px 0 32px;">Top 8 du pool &middot; mai 2026</h1>
-      <div class="leaderboard">
-        <div class="lb-header" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>Classement général</span>
-          <span class="mono" style="font-size:12px;letter-spacing:.1em;">MIS &Agrave; JOUR EN TEMPS RÉEL</span>
-        </div>
-        <div class="lb-cols">
-          <span>#</span>
-          <span></span>
-          <span>Candidat</span>
-          <span>Secteur</span>
-          <span>Ville</span>
-          <span>Disponibilité</span>
-          <span class="score-col">Score</span>
-        </div>
-        <div id="leaderboardRows"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <span class="eyebrow">Questions fréquentes</span>
-      <h1 style="font-size:48px;margin:12px 0 16px;">Ce que tout le monde demande.</h1>
-      <p class="faq-intro">Vous savez d&eacute;j&agrave; pourquoi un CV ne suffit plus. Voici comment on transforme un appel en preuve v&eacute;rifiable.</p>
-      <div class="faq">
-        <details>
-          <summary>C&rsquo;est quoi le prix ?</summary>
-          <p>Bronze 39€ &middot; Silver 59€ &middot; Gold 89€. Un profil actif 18 mois dans le pool recruteurs.</p>
-        </details>
-        <details>
-          <summary>&Ccedil;a sert à quoi si j&rsquo;ai déjà un bon CV ?</summary>
-          <p>Le CV dit ce que tu as fait. L&rsquo;appel dit comment tu vends. Les recruteurs qui recrutent des sales veulent entendre le deuxième, pas lire le premier.</p>
-        </details>
-        <details>
-          <summary>Comment vous notez ?</summary>
-          <p>6 dimensions scorées sur 100 &mdash; accroche, découverte, objections, valeur, closing, création de valeur.</p>
-        </details>
-        <details>
-          <summary>Je peux retenter ?</summary>
-          <p>Oui, après 90 jours à -30%. Tu peux aussi passer une autre famille sectorielle pour montrer que ton profil tient sur plusieurs terrains.</p>
-        </details>
-        <details>
-          <summary>Et si mon score est mauvais ?</summary>
-          <p>Tu reçois ton rapport complet avec les axes de progression. Tu décides toi-même si tu publies ton profil dans le pool.</p>
-        </details>
-        <details>
-          <summary>Je suis recruteur. Comment j&rsquo;accède au pool ?</summary>
-          <p>Créez un compte recruteur gratuitement. 1 profil complet sans CB. Filtrez par score, secteur, disponibilité. Abonnement si vous voulez l&rsquo;accès complet.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA FINAL -->
-  <section style="background:var(--ink);color:var(--cream);padding:100px 0;position:relative;overflow:hidden;">
-    <div class="container" style="text-align:center;position:relative;">
-      <span class="eyebrow" style="color:var(--gold)">L&rsquo;heure de vérité</span>
-      <h1 style="font-size:clamp(64px,9vw,140px);margin:24px 0;color:var(--cream);">
-        Tu sais vendre.<br>
-        <span style="color:var(--gold);font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400;">Prouve-le.</span>
-      </h1>
-      <p style="font-size:18px;opacity:.7;max-width:480px;margin:0 auto 12px;">
-        Un CV ne convainc personne. Un appel, si. Laisse les recruteurs venir &agrave; toi sur des faits.
-      </p>
-      <a href="candidat.html" class="btn gold">&blacktriangleright; Montrer ce que je vaux</a>
-      <div>
-        <a href="recruiter.html" class="cta-final-secondary">Vous recrutez plut&ocirc;t ? Voir le pool &rarr;</a>
-      </div>
     </div>
   </section>
 
@@ -321,22 +198,6 @@
     const featuredCandidates = SU_DATA.candidates.filter(c => c.photo);
     document.getElementById('featuredCards').innerHTML =
       featuredCandidates.slice(0, 4).map(c => renderCard(c)).join('');
-
-    const top8 = [...SU_DATA.candidates].sort((a,b) => b.score - a.score).slice(0, 8);
-    document.getElementById('leaderboardRows').innerHTML = top8.map((c, i) => {
-      const fam = SU_DATA.getFamilyById(c.family);
-      const displayName = c.anonymous ? 'Anonyme' : c.name;
-      return `
-        <div class="lb-row ${i === 0 ? 'gold' : ''}">
-          <div class="lb-rank ${i === 0 ? 'gold' : ''}">${String(i+1).padStart(2,'0')}</div>
-          <div>${i===0?'👑':i===1?'🥈':i===2?'🥉':'·'}</div>
-          <div class="lb-name">${displayName}</div>
-          <div><span class="lb-tag">${fam.name}</span></div>
-          <div class="mono" style="font-size:12px;color:var(--teal-2);">${c.location}</div>
-          <div class="mono" style="font-size:12px;color:var(--teal-2);">${c.availability}</div>
-          <div class="lb-score">${c.score}</div>
-        </div>`;
-    }).join('');
 
     const burger = document.getElementById('navBurger');
     const drawer = document.getElementById('navDrawer');
