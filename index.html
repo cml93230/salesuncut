@@ -15,6 +15,7 @@
     .hero h1 .strike::after { content: ''; position: absolute; left: -4%; right: -4%; top: 50%; height: 8px; background: var(--rust); transform: rotate(-2deg); }
     .hero p.lede { font-size: 19px; color: var(--teal-2); max-width: 540px; margin-bottom: 36px; line-height: 1.55; }
     .hero-caption { font-family: var(--font-mono); font-size: 14px; letter-spacing: .01em; color: var(--teal-3); max-width: 480px; margin-top: 18px; line-height: 1.6; }
+    .hero-cta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
     .hero-cta { display: flex; gap: 16px; flex-wrap: nowrap; align-items: flex-start; }
     .hero-cta-item { display: flex; flex-direction: column; gap: 8px; }
     .btn-hero-sales {
@@ -135,35 +136,21 @@
     <div style="flex:1" id="navDrawerBackdrop"></div>
   </div>
 
-  <!-- BLOC 1 — explication ultra concise + visuel -->
+  <!-- BLOC 1 — explication ultra concise + visuel + choix binaire -->
   <section class="hero" style="padding: 32px 0 56px;">
     <div class="container">
       <div class="hero-grid">
         <div>
           <span class="eyebrow">Recrutement commercial, par la preuve.</span>
-          <h1 style="margin: 20px 0 0;">Un CV raconte un parcours.<br><span class="gold-word">Un appel de vente prouve un niveau.</span></h1>
+          <h1 style="margin: 20px 0 0;"><span class="gold-word">Un CV raconte un parcours.</span><br>Un appel de vente prouve un niveau.</h1>
           <p class="hero-caption">SalesUncut &eacute;value la capacit&eacute; r&eacute;elle &agrave; vendre par une mise en situation commerciale, une preuve aussi utile au candidat qu&rsquo;au recruteur.</p>
+          <div class="hero-cta-row">
+            <a href="recruiter.html" class="btn gold">Je suis recruteur &rarr;</a>
+            <a href="candidat.html" class="btn">Je suis candidat &rarr;</a>
+          </div>
         </div>
         <div class="hero-stage">
           <div class="hero-card-stack" id="heroStack"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BLOC 2 — choix binaire immédiat -->
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <div class="two-col">
-        <div class="col col-candidat">
-          <span class="eyebrow" style="color:var(--gold)">Je suis commercial</span>
-          <p class="col-accroche">Tu sais vendre, mais &ccedil;a ne se voit pas sur un CV. Ici, &ccedil;a s&rsquo;entend.</p>
-          <a href="candidat.html" class="btn gold">Prouver ma valeur &rarr;</a>
-        </div>
-        <div class="col col-recruteur">
-          <span class="eyebrow">Je recrute</span>
-          <p class="col-accroche">Un entretien classique ne dit rien des capacit&eacute;s d&rsquo;un commercial&nbsp;: vous les d&eacute;couvrez apr&egrave;s signature. Ou avant, avec nous.</p>
-          <a href="recruiter.html" class="btn">Voir le pool &rarr;</a>
         </div>
       </div>
     </div>
