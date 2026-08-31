@@ -140,7 +140,6 @@
     .compare-vs-badge { position: absolute; top: 50%; left: 50%; width: 58px; height: 58px; border-radius: 50%; background: var(--gold-deep); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 20px; border: 3px solid var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,.4); transform: translate(-50%,-50%); z-index: 5; }
 
     .promise-band { position: relative; overflow: hidden; }
-    .promise-band::before { content: ''; position: absolute; top: 50%; left: 50%; width: 900px; height: 900px; transform: translate(-50%,-50%); background: radial-gradient(circle, rgba(201,168,106,.2) 0%, transparent 68%); pointer-events: none; }
     .promise-band .container { position: relative; z-index: 1; }
 
     /* ---------- Aperçu du pool (vraies cards) ---------- */
@@ -341,35 +340,6 @@
     </div>
   </section>
 
-  <!-- 04 — LES 6 DIMENSIONS -->
-  <section class="band tint">
-    <div class="container">
-      <span class="eyebrow">Le référentiel</span>
-      <h2>Les 6 compétences évaluées</h2>
-
-      <div class="change-grid">
-        <div class="change-list">
-          <div class="change-item"><div class="change-arrow">01</div><div class="change-text"><strong>Accroche</strong><br>Capacité à capter l'attention et installer rapidement un échange.</div></div>
-          <div class="change-item"><div class="change-arrow">02</div><div class="change-text"><strong>Découverte</strong><br>Capacité à poser les bonnes questions et comprendre le prospect.</div></div>
-          <div class="change-item"><div class="change-arrow">03</div><div class="change-text"><strong>Créer le besoin</strong><br>Capacité à faire émerger une problématique et sa valeur.</div></div>
-          <div class="change-item"><div class="change-arrow">04</div><div class="change-text"><strong>Objections</strong><br>Capacité à écouter, répondre et faire avancer la conversation.</div></div>
-          <div class="change-item"><div class="change-arrow">05</div><div class="change-text"><strong>Valeur</strong><br>Capacité à relier l'offre aux enjeux réels du prospect.</div></div>
-          <div class="change-item"><div class="change-arrow">06</div><div class="change-text"><strong>Closing</strong><br>Capacité à obtenir un engagement et faire avancer la vente.</div></div>
-        </div>
-        <div class="change-visual">
-          <div class="radar-visual-head">
-            <div>
-              <div class="radar-visual-name">Lucas Renaud</div>
-              <div class="radar-visual-role">Commercial SaaS</div>
-            </div>
-            <div class="radar-visual-score">78<small>/100</small></div>
-          </div>
-          <canvas id="dimsRadar" width="380" height="320"></canvas>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- 05 — LE BÉNÉFICE RECRUTEUR -->
   <section class="band">
     <div class="container">
@@ -413,37 +383,6 @@
           </div>
         </div>
         <div class="compare-vs-badge">&rarr;</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 07 — APERÇU DU POOL -->
-  <section class="band tint">
-    <div class="container" style="text-align:center">
-      <span class="eyebrow">La preuve</span>
-      <h2 style="margin-left:auto;margin-right:auto">Vous voulez voir ce qu'il sait faire ?</h2>
-      <p class="lede" style="margin:0 auto">Un aperçu du pool de profils déjà certifiés — les mêmes cartes que celles que vous retrouverez dans votre espace recruteur.</p>
-
-      <div class="pool-preview-grid" id="poolPreview"></div>
-
-      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:36px">
-        <a href="recruiter.html" class="btn gold">Voir le pool complet &rarr;</a>
-        <a href="profil.html?id=c001" class="btn" style="background:var(--ink);color:var(--cream);border-color:var(--ink)">Voir une évaluation type &rarr;</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 08 — POUR QUELS RECRUTEMENTS -->
-  <section class="band">
-    <div class="container">
-      <span class="eyebrow">Cas d'usage</span>
-      <h2>Un outil pour ceux qui recrutent des commerciaux.</h2>
-
-      <div class="usecase-table">
-        <div class="usecase-row"><div class="usecase-role">SDR / BDR</div><div class="usecase-desc">Prospection, qualification, prise de rendez-vous.</div></div>
-        <div class="usecase-row"><div class="usecase-role">Account Executive</div><div class="usecase-desc">Découverte, proposition de valeur, objections, closing.</div></div>
-        <div class="usecase-row"><div class="usecase-role">Business Developer</div><div class="usecase-desc">Prospection et développement commercial.</div></div>
-        <div class="usecase-row"><div class="usecase-role">Sales Manager</div><div class="usecase-desc">Évaluation et comparaison des profils commerciaux.</div></div>
       </div>
     </div>
   </section>
@@ -532,13 +471,13 @@
         +'<div class="dash-card-score">'+c.score+'<small>/100</small></div>'
         +'</div></div></a>';
     }
-    if (typeof SU_DATA !== 'undefined') {
+    if (typeof SU_DATA !== 'undefined' && document.getElementById('poolPreview')) {
       var poolPreview = SU_DATA.candidates.filter(function(c){ return c.photo; }).slice(0, 3);
       document.getElementById('poolPreview').innerHTML = poolPreview.map(renderPoolCard).join('');
     }
 
     /* ---- radar des 6 dimensions, sur fond sombre ---- */
-    if (typeof Chart !== 'undefined') {
+    if (typeof Chart !== 'undefined' && document.getElementById('dimsRadar')) {
       new Chart(document.getElementById('dimsRadar'), {
         type: 'radar',
         data: {
