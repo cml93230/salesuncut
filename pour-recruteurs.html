@@ -142,23 +142,144 @@
     .benefit-block h3 { font-size: 20px; margin: 18px 0 12px; color: var(--gold-deep); }
     .benefit-block p { font-family: var(--font-mono); font-size: 13px; line-height: 1.75; color: var(--teal-2); max-width: 30ch; margin: 0 auto; }
 
-    /* ---------- Avant / après ---------- */
-    .compare-wrap { position: relative; }
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1.5px solid rgba(255,248,231,.2); border-radius: 8px; overflow: hidden; margin-top: 44px; }
-    .compare-col { padding: 40px 36px; }
-    .compare-col.before { background: rgba(255,248,231,.03); }
-    .compare-col.after { background: rgba(201,168,106,.1); border-left: 1.5px solid rgba(255,248,231,.2); }
-    .compare-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 22px; }
-    .compare-col.before .compare-label { color: rgba(255,248,231,.4); }
-    .compare-col.after .compare-label { color: var(--gold); }
-    .compare-flow { font-family: var(--font-mono); font-size: 13.5px; letter-spacing: .02em; line-height: 2; }
-    .compare-col.before .compare-flow { color: rgba(255,248,231,.65); }
-    .compare-col.after .compare-flow { color: rgba(255,248,231,.9); }
-    .compare-flow .extra { color: var(--gold); font-weight: 700; }
-    .compare-quote { font-family: var(--font-serif); font-style: italic; font-size: 20px; margin-top: 26px; }
-    .compare-col.before .compare-quote { color: rgba(255,248,231,.5); }
-    .compare-col.after .compare-quote { color: var(--gold); }
-    .compare-vs-badge { position: absolute; top: 50%; left: 50%; width: 58px; height: 58px; border-radius: 50%; background: var(--gold-deep); color: var(--ink); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 20px; border: 3px solid var(--ink); box-shadow: 0 10px 26px rgba(0,0,0,.4); transform: translate(-50%,-50%); z-index: 5; }
+    /* ---------- Avant / après : le constat qui se corrige ---------- */
+    #avant-apres {
+      background:
+        radial-gradient(120% 90% at 78% 6%, rgba(201,168,106,.10) 0%, rgba(201,168,106,0) 55%),
+        linear-gradient(180deg, var(--ink) 0%, #12191a 100%);
+    }
+    .corr-wrap { max-width: 900px; margin: 56px auto 0; }
+
+    .corr-headers { display: grid; grid-template-columns: 1fr 96px 1fr; gap: 0; align-items: end; padding-bottom: 20px; }
+    .corr-head-top { display: flex; align-items: center; gap: 12px; }
+    .corr-head-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .corr-head.before .corr-head-dot { background: var(--teal-3); }
+    .corr-head.after .corr-head-dot { background: var(--golden); box-shadow: 0 0 12px rgba(212,168,73,.8); }
+    .corr-head-label { margin: 0; font-family: var(--font-mono); font-size: 12px; letter-spacing: .32em; font-weight: 700; }
+    .corr-head.before .corr-head-label { color: rgba(255,248,231,.5); }
+    .corr-head.after .corr-head-label { color: var(--golden); }
+    .corr-head-sub { margin: 13px 0 0; font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .02em; }
+    .corr-head.before .corr-head-sub { color: rgba(255,248,231,.4); }
+    .corr-head.after .corr-head-sub { color: rgba(255,248,231,.45); }
+
+    .corr-rule { display: grid; grid-template-columns: 1fr 96px 1fr; gap: 0; margin-bottom: 4px; }
+    .corr-rule i { display: block; height: 1px; font-style: normal; }
+    .corr-rule .before-line { background: linear-gradient(90deg, rgba(255,248,231,.22), rgba(255,248,231,.04)); }
+    .corr-rule .after-line { background: linear-gradient(90deg, rgba(212,168,73,.55), rgba(212,168,73,.08)); }
+
+    .corr-row {
+      display: grid; grid-template-columns: 1fr 96px 1fr; align-items: center; gap: 0;
+      padding: 38px 0; border-bottom: 1px solid rgba(255,248,231,.08);
+    }
+
+    .corr-before {
+      position: relative; border: 1px solid rgba(255,248,231,.1); border-radius: 4px;
+      background: linear-gradient(180deg, rgba(255,248,231,.025), rgba(255,248,231,0));
+      padding: 26px 28px; margin-right: 24px;
+    }
+    .corr-before::before, .corr-before::after {
+      content: ''; position: absolute; width: 10px; height: 10px; border-color: rgba(255,248,231,.3); border-style: solid; border-width: 0;
+    }
+    .corr-before::before { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+    .corr-before::after { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+
+    .corr-quote {
+      margin: 0; font-family: var(--font-serif); font-style: italic; font-size: 19px; line-height: 1.5;
+      color: rgba(255,248,231,.72); text-wrap: pretty;
+      text-decoration-line: line-through; text-decoration-color: transparent; text-decoration-thickness: 1px;
+      transition: text-decoration-color .5s ease, color .5s ease;
+    }
+
+    .corr-arrow {
+      width: 38px; height: 38px; margin: 0 auto; border-radius: 50%; border: 1px solid rgba(212,168,73,.4);
+      display: flex; align-items: center; justify-content: center; color: var(--golden);
+      background: rgba(212,168,73,.06); font-size: 14px; opacity: 0; transition: opacity .4s ease;
+    }
+
+    .corr-after { padding-left: 24px; }
+    .corr-dim { display: block; font-family: var(--font-mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: rgba(255,248,231,.45); margin-bottom: 18px; }
+    .corr-score-row { display: flex; align-items: baseline; gap: 22px; }
+    .corr-score-num { display: flex; align-items: baseline; min-width: 108px; }
+    .corr-score {
+      font-family: var(--font-display); font-weight: 900; font-size: 44px; line-height: .9; letter-spacing: -.01em;
+      color: rgba(255,248,231,.22); font-variant-numeric: tabular-nums; transition: color .5s ease;
+    }
+    .corr-score-suffix { font-family: var(--font-mono); font-size: 15px; font-weight: 500; color: var(--gold-deep); margin-left: 4px; }
+    .corr-bar { flex: 1; height: 3px; background: rgba(255,248,231,.09); border-radius: 2px; overflow: hidden; }
+    .corr-bar i {
+      display: block; height: 100%; width: var(--w); border-radius: 2px; transform: scaleX(0); transform-origin: left;
+      background: linear-gradient(90deg, var(--gold-deep), var(--golden));
+      transition: transform .9s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
+    }
+
+    /* déclenchement séquentiel des trois premières lignes */
+    .corr-row[data-row="1"] .corr-quote { transition-delay: .15s; }
+    .corr-row[data-row="1"] .corr-arrow { transition-delay: .35s; }
+    .corr-row[data-row="1"] .corr-score { transition-delay: .55s; }
+    .corr-row[data-row="1"] .corr-bar i { transition-delay: .55s; }
+    .corr-row[data-row="2"] .corr-quote { transition-delay: .95s; }
+    .corr-row[data-row="2"] .corr-arrow { transition-delay: 1.15s; }
+    .corr-row[data-row="2"] .corr-score { transition-delay: 1.35s; }
+    .corr-row[data-row="2"] .corr-bar i { transition-delay: 1.35s; }
+    .corr-row[data-row="3"] .corr-quote { transition-delay: 1.75s; }
+    .corr-row[data-row="3"] .corr-arrow { transition-delay: 1.95s; }
+    .corr-row[data-row="3"] .corr-score { transition-delay: 2.15s; }
+    .corr-row[data-row="3"] .corr-bar i { transition-delay: 2.15s; }
+
+    .corr-wrap.is-live .corr-row .corr-quote { color: rgba(255,248,231,.38); text-decoration-color: var(--rust); }
+    .corr-wrap.is-live .corr-row .corr-arrow { opacity: 1; }
+    .corr-wrap.is-live .corr-row .corr-score { color: var(--golden); }
+    .corr-wrap.is-live .corr-row .corr-bar i { transform: scaleX(1); box-shadow: 0 0 14px rgba(212,168,73,.35); }
+
+    /* ---------- ligne finale : le twist ---------- */
+    .corr-final { grid-template-columns: 1fr 158px 1fr; border-bottom: none; padding-top: 50px; margin-top: 6px; border-top: 1px solid rgba(255,248,231,.16); align-items: stretch; }
+
+    .corr-before.verdict {
+      border-color: rgba(179,78,42,.35); background: linear-gradient(180deg, rgba(179,78,42,.08), rgba(179,78,42,.01));
+      display: flex; flex-direction: column; justify-content: center; margin-right: 24px;
+    }
+    .corr-before.verdict::before, .corr-before.verdict::after { border-color: rgba(179,78,42,.4); }
+    .corr-verdict-label { display: block; font-family: var(--font-mono); font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--rust); margin-bottom: 18px; }
+    .corr-final .corr-quote { font-size: 21px; color: rgba(255,248,231,.75); transition-delay: 2.55s; }
+    .corr-wrap.is-live .corr-final .corr-quote { color: rgba(255,248,231,.42); }
+
+    .corr-twist-col { display: flex; align-items: center; justify-content: center; padding: 0 6px; }
+    .corr-arrow.twist {
+      width: auto; height: auto; border-radius: 999px; padding: 8px 13px; border-color: rgba(179,78,42,.4); color: var(--rust);
+      background: rgba(179,78,42,.07); font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .15em;
+      text-transform: uppercase; white-space: nowrap; writing-mode: horizontal-tb; transition-delay: 2.75s;
+    }
+
+    .corr-after.seal {
+      position: relative; border: 1px solid rgba(212,168,73,.42); border-radius: 4px; padding: 32px 34px 34px;
+      background: linear-gradient(155deg, rgba(212,168,73,.14), rgba(212,168,73,.02) 60%, transparent);
+      box-shadow: 0 0 0 1px rgba(212,168,73,.06), 0 24px 60px -30px rgba(212,168,73,.55);
+    }
+    .corr-after.seal .corr-dim { color: var(--golden); }
+    .corr-final-score-row { display: flex; align-items: baseline; gap: 6px; }
+    .corr-final-score {
+      font-family: var(--font-display); font-weight: 900; font-size: 74px; line-height: .88; letter-spacing: -.02em;
+      color: rgba(240,223,164,0); font-variant-numeric: tabular-nums;
+      opacity: 0; transform: translateY(6px); transition: opacity .5s ease, transform .5s ease, color .5s ease;
+      transition-delay: 3s;
+    }
+    .corr-wrap.is-live .corr-final-score { color: #f0dfa4; opacity: 1; transform: translateY(0); }
+    .corr-final-score-suffix { font-family: var(--font-mono); font-size: 19px; font-weight: 500; color: var(--gold-deep); }
+    .corr-final-note {
+      margin: 22px 0 0; font-family: var(--font-sans); font-size: 14px; line-height: 1.6; color: rgba(255,248,231,.62);
+      opacity: 0; transition: opacity .5s ease; transition-delay: 3.3s;
+    }
+    .corr-wrap.is-live .corr-final-note { opacity: 1; }
+
+    .corr-caption {
+      max-width: 600px; margin: 40px auto 0; text-align: center; font-family: var(--font-serif); font-style: italic;
+      font-size: 17px; color: rgba(255,248,231,.6); opacity: 0; transition: opacity .6s ease; transition-delay: 3.5s;
+    }
+    .corr-wrap.is-live ~ .corr-caption { opacity: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .corr-quote, .corr-arrow, .corr-score, .corr-bar i, .corr-final-score, .corr-final-note, .corr-caption { transition: none !important; }
+    }
 
     .promise-band { position: relative; overflow: hidden; }
     .promise-band .container { position: relative; z-index: 1; }
@@ -196,10 +317,16 @@
     @media (max-width: 900px) {
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
-      .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
+      .change-grid, .benefit-row, .pool-preview-grid { grid-template-columns: 1fr; }
       .benefit-row { gap: 44px; }
-      .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
-      .compare-vs-badge { display: none; }
+      .corr-headers, .corr-rule, .corr-row, .corr-final { grid-template-columns: 1fr; }
+      .corr-row { row-gap: 14px; padding: 28px 0; }
+      .corr-before, .corr-before.verdict { margin-right: 0; }
+      .corr-after, .corr-after.seal { padding-left: 0; }
+      .corr-arrow { margin: 0; }
+      .corr-head.after { margin-top: 18px; }
+      .corr-rule .after-line { margin-top: 18px; }
+      .corr-final { border-top: 1px solid rgba(255,248,231,.16); }
       .pool-preview-grid { justify-items: stretch; }
       .dash-card { max-width: none; }
       .usecase-row { grid-template-columns: 1fr; gap: 6px; }
@@ -392,26 +519,84 @@
   </section>
 
   <!-- 06 — AVANT / APRÈS -->
-  <section class="band dark">
+  <section class="band dark" id="avant-apres">
     <div class="container">
       <span class="eyebrow" style="color:var(--gold)">Avant / après</span>
       <h2 style="color:var(--cream)">Ce que ça change concrètement.</h2>
 
-      <div class="compare-wrap">
-        <div class="compare-grid">
-          <div class="compare-col before">
-            <div class="compare-label">Avant SalesUncut</div>
-            <div class="compare-flow">CV &rarr; Entretien &rarr; Feeling &rarr; Décision</div>
-            <p class="compare-quote">« Il a l'air bon. »</p>
+      <div class="corr-wrap" id="corrWrap">
+        <div class="corr-headers">
+          <div class="corr-head before">
+            <div class="corr-head-top"><span class="corr-head-dot"></span><h3 class="corr-head-label">Avant</h3></div>
+            <p class="corr-head-sub">Le feeling du recruteur</p>
           </div>
-          <div class="compare-col after">
-            <div class="compare-label">Avec SalesUncut</div>
-            <div class="compare-flow">CV &rarr; Entretien &rarr; <span class="extra">Mise en situation</span> &rarr; <span class="extra">Score</span> &rarr; Décision</div>
-            <p class="compare-quote">« Voilà ce qu'il sait faire. »</p>
+          <div></div>
+          <div class="corr-head after">
+            <div class="corr-head-top"><span class="corr-head-dot"></span><h3 class="corr-head-label">Après</h3></div>
+            <p class="corr-head-sub">Ce que révèle la mise en situation</p>
           </div>
         </div>
-        <div class="compare-vs-badge">&rarr;</div>
+        <div class="corr-rule"><i class="before-line"></i><i></i><i class="after-line"></i></div>
+
+        <div class="corr-row" data-row="1">
+          <div class="corr-before">
+            <p class="corr-quote">Bon relationnel, l'échange était agréable dès le début.</p>
+          </div>
+          <div class="corr-arrow">&rarr;</div>
+          <div class="corr-after">
+            <span class="corr-dim">Accroche</span>
+            <div class="corr-score-row">
+              <div class="corr-score-num"><span class="corr-score">74</span><span class="corr-score-suffix">%</span></div>
+              <span class="corr-bar"><i style="--w:74%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="corr-row" data-row="2">
+          <div class="corr-before">
+            <p class="corr-quote">A un peu perdu ses moyens quand j'ai poussé sur le prix.</p>
+          </div>
+          <div class="corr-arrow">&rarr;</div>
+          <div class="corr-after">
+            <span class="corr-dim">Gestion des objections</span>
+            <div class="corr-score-row">
+              <div class="corr-score-num"><span class="corr-score">69</span><span class="corr-score-suffix">%</span></div>
+              <span class="corr-bar"><i style="--w:69%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="corr-row" data-row="3">
+          <div class="corr-before">
+            <p class="corr-quote">N'a pas vraiment amené la conversation vers une suite concrète.</p>
+          </div>
+          <div class="corr-arrow">&rarr;</div>
+          <div class="corr-after">
+            <span class="corr-dim">Closing</span>
+            <div class="corr-score-row">
+              <div class="corr-score-num"><span class="corr-score">71</span><span class="corr-score-suffix">%</span></div>
+              <span class="corr-bar"><i style="--w:71%"></i></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="corr-row corr-final" data-row="4">
+          <div class="corr-before verdict">
+            <span class="corr-verdict-label">Verdict d'entretien</span>
+            <p class="corr-quote">« On ne donne pas suite. »</p>
+          </div>
+          <div class="corr-twist-col"><div class="corr-arrow twist">Pourtant</div></div>
+          <div class="corr-after seal">
+            <span class="corr-dim">Score global</span>
+            <div class="corr-final-score-row">
+              <span class="corr-final-score">78</span><span class="corr-final-score-suffix">/100</span>
+            </div>
+            <p class="corr-final-note">Profil solide, potentiel commercial réel.</p>
+          </div>
+        </div>
       </div>
+
+      <p class="corr-caption">Le feeling avait tranché. Les faits disaient l'inverse — et ce recruteur est passé à côté d'un candidat à fort potentiel.</p>
     </div>
   </section>
 
@@ -539,6 +724,22 @@
         }
       });
     }
+
+    /* ---- Avant / après : déclenche la correction en direct au scroll ---- */
+    (function () {
+      var wrap = document.getElementById('corrWrap');
+      if (!wrap) return;
+      if (!('IntersectionObserver' in window)) { wrap.classList.add('is-live'); return; }
+      var corrIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            wrap.classList.add('is-live');
+            corrIo.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      corrIo.observe(wrap);
+    })();
 
     const burger = document.getElementById('navBurger');
     const drawer = document.getElementById('navDrawer');
