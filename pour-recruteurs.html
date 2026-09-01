@@ -115,11 +115,32 @@
       .wfc-title { font-size: 17px; }
     }
 
-    /* ---------- Bénéfices : blocs propres, sans icône ---------- */
-    .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; margin-top: 44px; }
-    .benefit-block { border-top: 3px solid var(--gold-deep); padding-top: 18px; }
-    .benefit-block h3 { font-size: 18px; margin-bottom: 10px; }
-    .benefit-block p { font-size: 14.5px; color: var(--teal-2); line-height: 1.55; }
+    /* ---------- Bénéfices : sceaux de dossier certifié (version claire) ---------- */
+    .benefit-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 56px; margin-top: 56px; }
+    .benefit-block { text-align: center; }
+    .benefit-seal {
+      width: 108px; height: 108px; margin: 0 auto 26px; border-radius: 50%;
+      border: 1.5px dashed var(--gold-deep);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      transform: rotate(-7deg);
+      transition: transform .5s cubic-bezier(.22,1.4,.36,1);
+    }
+    .benefit-block:nth-child(2) .benefit-seal { transform: rotate(4deg); }
+    .benefit-block:nth-child(3) .benefit-seal { transform: rotate(-3deg); }
+    .benefit-block:hover .benefit-seal { transform: rotate(0deg) scale(1.06); }
+    .benefit-seal-inner {
+      width: 82px; height: 82px; border-radius: 50%;
+      border: 1px solid var(--ink);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      background: radial-gradient(circle, rgba(26,34,34,.05) 0%, transparent 72%);
+    }
+    .benefit-seal-inner .n { font-weight: 900; font-size: 26px; line-height: 1; color: var(--ink); }
+    .benefit-seal-inner .ref { font-family: var(--font-mono); font-size: 8px; letter-spacing: .12em; margin-top: 3px; color: var(--gold-deep); }
+    .benefit-thread { width: 1px; height: 22px; background: linear-gradient(rgba(163,133,79,0), var(--gold-deep)); margin: 0 auto; }
+    .benefit-block h3 { font-size: 20px; margin: 18px 0 12px; }
+    .benefit-block p { font-family: var(--font-mono); font-size: 13px; line-height: 1.75; color: var(--teal-2); max-width: 30ch; margin: 0 auto; }
 
     /* ---------- Avant / après ---------- */
     .compare-wrap { position: relative; }
@@ -176,6 +197,7 @@
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
       .change-grid, .benefit-row, .compare-grid, .pool-preview-grid { grid-template-columns: 1fr; }
+      .benefit-row { gap: 44px; }
       .compare-col.after { border-left: none; border-top: 1.5px solid rgba(255,248,231,.2); }
       .compare-vs-badge { display: none; }
       .pool-preview-grid { justify-items: stretch; }
@@ -348,14 +370,20 @@
 
       <div class="benefit-row">
         <div class="benefit-block">
+          <div class="benefit-seal"><div class="benefit-seal-inner"><span class="n">01</span><span class="ref">RÉF. DÉCISION</span></div></div>
+          <div class="benefit-thread"></div>
           <h3>Objectivez vos décisions</h3>
           <p>Comparez les candidats sur une base commune plutôt que sur la seule impression laissée en entretien.</p>
         </div>
         <div class="benefit-block">
+          <div class="benefit-seal"><div class="benefit-seal-inner"><span class="n">02</span><span class="ref">RÉF. DÉTECTION</span></div></div>
+          <div class="benefit-thread"></div>
           <h3>Identifiez les vrais vendeurs</h3>
           <p>Repérez les forces et faiblesses commerciales avant de faire une proposition.</p>
         </div>
         <div class="benefit-block">
+          <div class="benefit-seal"><div class="benefit-seal-inner"><span class="n">03</span><span class="ref">RÉF. TEMPS</span></div></div>
+          <div class="benefit-thread"></div>
           <h3>Gagnez du temps</h3>
           <p>Concentrez vos entretiens sur les candidats qui ont démontré un véritable potentiel commercial.</p>
         </div>
