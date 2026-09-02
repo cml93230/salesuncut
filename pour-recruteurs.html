@@ -61,15 +61,10 @@
       content: ''; position: absolute; left: -3px; right: -3px; top: 52%; height: 3px;
       background: currentColor; opacity: .85; border-radius: 2px; transform: translateY(-50%) rotate(-8deg);
     }
-    .prob-frame .lede { color: rgba(255,248,231,.75); }
+    .band .prob-frame .lede { color: var(--cream); }
 
-    .prob-diag { position: relative; height: 138px; overflow: hidden; background: var(--cream); }
-    .prob-diag-fill { position: absolute; inset: 0; background: var(--ink); clip-path: polygon(0 0, 100% 0, 100% 28%, 0 100%); }
-    .prob-diag-txt {
-      position: absolute; left: 48px; top: 30px;
-      font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
-      font-size: clamp(30px,4.4vw,48px); line-height: 1; letter-spacing: -.01em; color: var(--gold);
-    }
+    .prob-diag { position: relative; height: 138px; overflow: hidden; background: var(--cream); margin-top: -1px; }
+    .prob-diag-fill { position: absolute; top: -1px; left: 0; right: 0; bottom: 0; background: var(--ink); clip-path: polygon(0 0, 100% 0, 100% 28%, 0 100%); }
 
     .prob-sol { background: var(--cream); padding: 12px 48px 56px; }
 
@@ -77,7 +72,6 @@
       .prob-block { border-radius: 10px; }
       .prob-frame { padding: 40px 28px 36px; }
       .prob-diag { height: 96px; }
-      .prob-diag-txt { left: 28px; top: 18px; font-size: clamp(24px,7vw,34px); }
       .prob-sol { padding: 8px 28px 44px; }
     }
 
@@ -448,7 +442,6 @@
         </div>
         <div class="prob-diag">
           <div class="prob-diag-fill"></div>
-          <p class="prob-diag-txt">Solution</p>
         </div>
         <div class="prob-sol">
           <h2 class="sol-title">Un appel, un score, des audios consultables<span class="line2">Une preuve, pas une promesse.</span></h2>
