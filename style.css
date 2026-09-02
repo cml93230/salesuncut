@@ -255,6 +255,15 @@ body.nav-locked { overflow: hidden; }
 .section-title { margin-bottom: 48px; }
 .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
 
+/* Bande claire pleine largeur (gabarit acté 02/09/2026) — casse la monotonie des blocs
+   posés à plat sur le fond de page ; le container intérieur reste à 1240px comme partout
+   ailleurs, seul le fond de la section va bord à bord. */
+.section.tint {
+  background: var(--cream-2);
+  border-top: 1px solid var(--cream-3);
+  border-bottom: 1px solid var(--cream-3);
+}
+
 /* ---------- Hero nav hint ---------- */
 .hero-nav-hint {
   font-family: var(--font-mono);
@@ -293,6 +302,15 @@ body.nav-locked { overflow: hidden; }
   line-height: 1;
 }
 @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+/* Marquee — variante claire (rythme secondaire, même gabarit que la version sombre) */
+.marquee.alt {
+  background: var(--cream-3);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.marquee.alt .marquee-track span { color: var(--ink); }
+.marquee.alt .marquee-track .gold-text { color: var(--gold-deep); }
 
 /* ---------- Trading Card ---------- */
 .tcard {
