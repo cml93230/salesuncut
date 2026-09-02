@@ -33,6 +33,16 @@
     .auth-error.visible{display:block}
     .auth-switch{text-align:center;margin-top:16px;font-size:13px;color:var(--teal-3)}
     .auth-switch a{color:var(--gold-deep);cursor:pointer;text-decoration:underline}
+    .auth-overlay-inner{display:grid;grid-template-columns:1.1fr 0.9fr;gap:56px;align-items:center;max-width:980px;width:100%}
+    .auth-pitch{color:var(--cream);padding-right:12px}
+    .auth-pitch-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+    .auth-pitch-title{font-family:var(--font-display);font-weight:900;font-size:clamp(28px,3.2vw,42px);text-transform:uppercase;line-height:1.1;margin:16px 0 20px;color:var(--cream)}
+    .auth-pitch-title .accent{color:var(--gold-deep);font-family:var(--font-serif);font-style:italic;text-transform:none;font-weight:400}
+    .auth-pitch-lede{font-size:15px;line-height:1.6;color:rgba(255,248,231,.75);margin-bottom:24px;max-width:440px}
+    .auth-pitch-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin:0;padding:0}
+    .auth-pitch-list li{font-size:14px;line-height:1.5;color:rgba(255,248,231,.85);padding-left:22px;position:relative}
+    .auth-pitch-list li::before{content:'→';position:absolute;left:0;color:var(--gold)}
+    @media (max-width:900px){.auth-overlay-inner{grid-template-columns:1fr;gap:32px;text-align:center}.auth-pitch{padding-right:0}.auth-pitch-list{text-align:left}}
     .dashboard{display:none}
     .dashboard.visible{display:block}
     .recruiter-bar{background:var(--ink);color:var(--cream);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:1px solid rgba(255,248,231,.1)}
@@ -195,38 +205,50 @@
 <body class="page-enter">
 
 <div class="auth-overlay" id="authOverlay">
-  <div class="auth-box">
-    <div class="auth-header">
-      <a href="index.html" class="auth-logo"><span class="dot"></span>SalesUncut</a>
-      <span class="auth-badge">Espace Recruteur</span>
+  <div class="auth-overlay-inner">
+    <div class="auth-pitch">
+      <span class="auth-pitch-eyebrow">Espace recruteur</span>
+      <h1 class="auth-pitch-title">Un CV ne vous dit pas s'il sait vendre.<br><span class="accent">Un appel, si.</span></h1>
+      <p class="auth-pitch-lede">Le co&ucirc;t moyen d'un recrutement commercial rat&eacute; se compte en mois de salaire charg&eacute; et en pipeline qui ne bouge pas. &Eacute;coutez comment un candidat vend r&eacute;ellement, avant que &ccedil;a vous co&ucirc;te quoi que ce soit.</p>
+      <ul class="auth-pitch-list">
+        <li>Vous entendez la gestion d'objections r&eacute;elle, pas ce qu'il pr&eacute;tend savoir faire en entretien</li>
+        <li>30 secondes d'&eacute;coute contre 20 minutes de pr&eacute;-quali qui ne prouve rien</li>
+        <li>1 profil complet offert, sans carte bancaire, pour juger par vous-m&ecirc;me</li>
+      </ul>
     </div>
-    <div class="auth-body">
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Connexion</button>
-        <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Cr&eacute;er un compte</button>
+    <div class="auth-box">
+      <div class="auth-header">
+        <a href="index.html" class="auth-logo"><span class="dot"></span>SalesUncut</a>
+        <span class="auth-badge">Espace Recruteur</span>
       </div>
-      <div id="formLogin">
-        <form class="auth-form" onsubmit="handleLogin(event)">
-          <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
-          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="loginPassword" class="form-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required/></div>
-          <div class="auth-error" id="loginError"></div>
-          <button type="submit" class="auth-submit" id="loginBtn">Se connecter &rarr;</button>
-        </form>
-        <div class="auth-switch">Pas encore de compte ? <a onclick="switchAuthTab('signup')">Cr&eacute;er un compte</a></div>
-      </div>
-      <div id="formSignup" style="display:none">
-        <form class="auth-form" onsubmit="handleSignup(event)">
-          <div class="form-group"><label class="form-label">Nom de l'entreprise</label><input type="text" id="signupCompany" class="form-input" placeholder="Acme Corp" required/></div>
-          <div class="form-row">
-            <div class="form-group"><label class="form-label">Pr&eacute;nom</label><input type="text" id="signupPrenom" class="form-input" placeholder="Marie" required/></div>
-            <div class="form-group"><label class="form-label">Nom</label><input type="text" id="signupNom" class="form-input" placeholder="Dupont" required/></div>
-          </div>
-          <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
-          <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="signupPassword" class="form-input" placeholder="8 caract&egrave;res minimum" required minlength="8"/></div>
-          <div class="auth-error" id="signupError"></div>
-          <button type="submit" class="auth-submit" id="signupBtn">Cr&eacute;er mon compte &rarr;</button>
-        </form>
-        <div class="auth-switch">D&eacute;j&agrave; un compte ? <a onclick="switchAuthTab('login')">Se connecter</a></div>
+      <div class="auth-body">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Connexion</button>
+          <button class="auth-tab" id="tabSignup" onclick="switchAuthTab('signup')">Cr&eacute;er un compte</button>
+        </div>
+        <div id="formLogin">
+          <form class="auth-form" onsubmit="handleLogin(event)">
+            <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="loginEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
+            <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="loginPassword" class="form-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required/></div>
+            <div class="auth-error" id="loginError"></div>
+            <button type="submit" class="auth-submit" id="loginBtn">Se connecter &rarr;</button>
+          </form>
+          <div class="auth-switch">Pas encore de compte ? <a onclick="switchAuthTab('signup')">Cr&eacute;er un compte</a></div>
+        </div>
+        <div id="formSignup" style="display:none">
+          <form class="auth-form" onsubmit="handleSignup(event)">
+            <div class="form-group"><label class="form-label">Nom de l'entreprise</label><input type="text" id="signupCompany" class="form-input" placeholder="Acme Corp" required/></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Pr&eacute;nom</label><input type="text" id="signupPrenom" class="form-input" placeholder="Marie" required/></div>
+              <div class="form-group"><label class="form-label">Nom</label><input type="text" id="signupNom" class="form-input" placeholder="Dupont" required/></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email professionnel</label><input type="email" id="signupEmail" class="form-input" placeholder="vous@entreprise.com" required/></div>
+            <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" id="signupPassword" class="form-input" placeholder="8 caract&egrave;res minimum" required minlength="8"/></div>
+            <div class="auth-error" id="signupError"></div>
+            <button type="submit" class="auth-submit" id="signupBtn">Cr&eacute;er mon compte &rarr;</button>
+          </form>
+          <div class="auth-switch">D&eacute;j&agrave; un compte ? <a onclick="switchAuthTab('login')">Se connecter</a></div>
+        </div>
       </div>
     </div>
   </div>
@@ -356,19 +378,19 @@ const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
 
 const DIMS=[
   {key:'accroche',    label:'Accroche',     max:16},
-  {key:'decouverte',  label:'D\u00e9couverte',   max:16},
-  {key:'creer_besoin',label:'Cr\u00e9er Besoin', max:20},
+  {key:'decouverte',  label:'Découverte',   max:16},
+  {key:'creer_besoin',label:'Créer Besoin', max:20},
   {key:'objections',  label:'Objections',   max:16},
   {key:'valeur',      label:'Valeur',        max:16},
   {key:'closing',     label:'Closing',       max:16}
 ];
-const DISPO_LABELS=['\u2264 1j','1 mois','2 mois','3 mois','Toutes'];
-const DISPO_ORDER={'Imm\u00e9diat':0,'1 mois':1,'2 mois':2,'3 mois':3};
+const DISPO_LABELS=['≤ 1j','1 mois','2 mois','3 mois','Toutes'];
+const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
 const LS_KEY='su_shortlist_v1';
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
 
-/* ── Bar\u00e8me certif : GOLD \u226580 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifi\u00e9) ── */
+/* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
 function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
 
 function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote;if(typeof ote==='object'&&ote.total){var ns=String(ote.total).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}var ns=String(ote).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}
@@ -379,7 +401,7 @@ function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}cat
 function normDemo(c){
   var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||'',icon:''};
   var rawLevel=c.level?c.level.toUpperCase():null;
-  /* Si le niveau est dans data.js, on le revalide contre le bar\u00e8me actuel */
+  /* Si le niveau est dans data.js, on le revalide contre le barème actuel */
   var level=rawLevel||lvl(c.score);
   var STAT_ALIASES={creer_besoin:'besoin'};
   function gs(key,idx){
@@ -432,18 +454,18 @@ function switchAuthTab(t){
 async function handleLogin(e){
   e.preventDefault();
   var btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
-  btn.disabled=true;btn.textContent='Connexion\u2026';err.classList.remove('visible');
+  btn.disabled=true;btn.textContent='Connexion…';err.classList.remove('visible');
   var r=await sb.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value});
-  if(r.error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter \u2192';}
+  if(r.error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter →';}
 }
 async function handleSignup(e){
   e.preventDefault();
   var btn=document.getElementById('signupBtn'),err=document.getElementById('signupError');
-  btn.disabled=true;btn.textContent='Cr\u00e9ation\u2026';err.classList.remove('visible');
+  btn.disabled=true;btn.textContent='Création…';err.classList.remove('visible');
   var email=document.getElementById('signupEmail').value,password=document.getElementById('signupPassword').value;
   var company=document.getElementById('signupCompany').value,prenom=document.getElementById('signupPrenom').value,nom=document.getElementById('signupNom').value;
   var r=await sb.auth.signUp({email,password});
-  if(r.error){err.textContent=r.error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Cr\u00e9er mon compte \u2192';return;}
+  if(r.error){err.textContent=r.error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Créer mon compte →';return;}
   if(r.data&&r.data.user)await sb.from('recruiters').insert({user_id:r.data.user.id,email,company_name:company,prenom,nom,plan:'free'});
 }
 async function handleLogout(){lsSave();await sb.auth.signOut();showAuth();}
@@ -468,7 +490,7 @@ async function loadRecruiterProfile(user){
     var d=r.data;
     document.getElementById('recruiterNameDisplay').textContent=d.company_name;
     document.getElementById('accCompany').textContent=d.company_name;
-    document.getElementById('accContact').textContent=((d.prenom||'')+' '+(d.nom||'')).trim()||'\u2014';
+    document.getElementById('accContact').textContent=((d.prenom||'')+' '+(d.nom||'')).trim()||'—';
     document.getElementById('accEmail').textContent=d.email;
     var pb=document.getElementById('accPlan');pb.textContent=d.plan.toUpperCase();pb.className='plan-badge '+d.plan;
   }
@@ -525,7 +547,7 @@ function applyFilters(){
 function updateStats(src){
   var bar=document.getElementById('statsBar');if(!src.length){bar.innerHTML='';return;}
   var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
-  var imm=src.filter(function(c){return c.availability==='Imm\u00e9diat';}).length;
+  var imm=src.filter(function(c){return c.availability==='Immédiat';}).length;
   var gold=src.filter(function(c){return c.level==='GOLD';}).length;
   bar.innerHTML=SI(src.length,'profils')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
 }
@@ -537,7 +559,7 @@ function applyShortlistFilters(){
   var total=all.length;
   if(!total){
     document.getElementById('shortlistContent').innerHTML=
-      '<div class="shortlist-empty"><div class="icon">\u2661</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
+      '<div class="shortlist-empty"><div class="icon">♡</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
     document.getElementById('slEmpty').style.display='none';
     document.getElementById('slStatsBar').innerHTML='';
     document.getElementById('slCountDisplay').textContent='0';
@@ -565,13 +587,13 @@ function applyShortlistFilters(){
   else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
   document.getElementById('slCountDisplay').textContent=src.length;
   var denomEl=document.getElementById('slTotalDisplay');
-  denomEl.textContent=(src.length<total?' sur '+total+' shortlist\u00e9s':' shortlist\u00e9'+(total>1?'s':''));
+  denomEl.textContent=(src.length<total?' sur '+total+' shortlistés':' shortlisté'+(total>1?'s':''));
   var bar=document.getElementById('slStatsBar');
   if(src.length){
     var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
-    var imm=src.filter(function(c){return c.availability==='Imm\u00e9diat';}).length;
+    var imm=src.filter(function(c){return c.availability==='Immédiat';}).length;
     var gold=src.filter(function(c){return c.level==='GOLD';}).length;
-    bar.innerHTML=SI(src.length,'shortlist\u00e9s')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
+    bar.innerHTML=SI(src.length,'shortlistés')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
   }else{bar.innerHTML='';}
   var container=document.getElementById('shortlistContent');
   var emptyEl=document.getElementById('slEmpty');
@@ -579,17 +601,17 @@ function applyShortlistFilters(){
   emptyEl.style.display='none';
   container.innerHTML='<div class="sl-list">'+src.map(function(c){
     var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
-    var levelLbl=c.level||'Non certifi\u00e9';
+    var levelLbl=c.level||'Non certifié';
     return'<div class="sl-row'+(isVS?' vs-on':'')+'\">'
       +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
       +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
-      +'<div class="sl-meta">'+levelLbl+' \u00b7 '+(c.famille||'\u2014')+(c.location?' \u00b7 '+c.location:'')+(c.availability?' \u00b7 '+c.availability:'')+'</div>'
+      +'<div class="sl-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.availability?' · '+c.availability:'')+'</div>'
       +'</div>'
       +'<div class="sl-score">'+c.score+'</div>'
       +'<div class="sl-actions">'
-      +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'\u2713 VS':'VS')+'</button>'
+      +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'✓ VS':'VS')+'</button>'
       +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
-      +'<button class="sl-btn remove" onclick="toggleShortlist(\''+c.id+'\',this)">\u2715</button>'
+      +'<button class="sl-btn remove" onclick="toggleShortlist(\''+c.id+'\',this)">✕</button>'
       +'</div></div>';
   }).join('')+'</div>';
 }
@@ -600,41 +622,41 @@ function renderCard(c){
   /* lc = classe CSS carte ; null-level → pas de classe niveau */
   var lc=(c.level||'').toLowerCase();
   var isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
-  var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'D\u00e9couverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
+  var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'Découverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
   return'<div class="dash-card'+(lc?' '+lc:'')+'" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="dash-card-portrait">'
-    +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">\uD83D\uDC64</div>')
+    +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">👤</div>')
     /* top-left : ville */
     +(c.location?'<span class="location-tag">'+c.location+'</span>':'')
     /* top-right : niveau — affiché seulement si certifié */
     +(c.level?'<span class="level-stamp '+c.level+'">'+c.level+'</span>':'')
     /* bottom-right : secteur */
-    +'<span class="family-tag">'+(c.famille||'\u2014')+'</span>'
+    +'<span class="family-tag">'+(c.famille||'—')+'</span>'
     /* bottom-left : shortlist */
-    +'<button class="dc-shortlist-portrait'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'\u2713 SHORTLIST':'+ SHORTLIST')+'</button>'
+    +'<button class="dc-shortlist-portrait'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'✓ SHORTLIST':'+ SHORTLIST')+'</button>'
     +'</div>'
     +'<div class="dash-card-body">'
     +'<div class="dash-card-name">'+name+'</div>'
-    +'<div class="dash-card-meta">'+(c.role_type||'Sales')+' \u00b7 '+(c.is_demo?'Profil d\u00e9mo':'Certifi\u00e9')+'</div>'
+    +'<div class="dash-card-meta">'+(c.role_type||'Sales')+' · '+(c.is_demo?'Profil démo':'Certifié')+'</div>'
     +'<div class="dash-card-score">'+c.score+'<small>/100</small></div>'
     +(dims4.length?'<div class="dash-card-dims">'+dims4.map(function(d){return'<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"><i style="width:'+Math.round(d.val/d.max*100)+'%"></i></div><span class="dim-mini-val">'+d.val+'</span></div>';}).join('')+'</div>':'')
-    +'<div class="dash-card-footer"><a class="btn-see-profile" href="profil.html?id='+c.id+'" onclick="event.stopPropagation()">Voir le profil \u2192</a></div>'
+    +'<div class="dash-card-footer"><a class="btn-see-profile" href="profil.html?id='+c.id+'" onclick="event.stopPropagation()">Voir le profil →</a></div>'
     +'</div></div>';
 }
 
 function renderRow(c){
   var lc=(c.level||'').toLowerCase(),name=c.name||'Anonyme';
   var av=c.photo?'<img src="'+c.photo+'" alt="">':'<span>'+(name[0]||'?')+'</span>';
-  var isImm=c.availability==='Imm\u00e9diat',oteStr=c.ote_max<999?c.ote_max+'k\u20ac':'\u2014';
+  var isImm=c.availability==='Immédiat',oteStr=c.ote_max<999?c.ote_max+'k€':'—';
   return'<div class="list-row" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="lr-avatar">'+av+'</div>'
     +'<div><div class="lr-name">'+name+'</div>'+(c.role_type?'<span class="lr-role-tag">'+c.role_type+'</span>':'')+'</div>'
     +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
-    +'<div class="lr-text">'+(c.famille||'\u2014')+'</div>'
-    +'<div class="lr-text">'+(c.location||'\u2014')+'</div>'
-    +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'\u2014')+'</div>'
+    +'<div class="lr-text">'+(c.famille||'—')+'</div>'
+    +'<div class="lr-text">'+(c.location||'—')+'</div>'
+    +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'—')+'</div>'
     +'<div class="lr-ote">'+oteStr+'</div>'
-    +'<div class="lr-action" onclick="event.stopPropagation()"><a href="profil.html?id='+c.id+'">Voir \u2192</a></div>'
+    +'<div class="lr-action" onclick="event.stopPropagation()"><a href="profil.html?id='+c.id+'">Voir →</a></div>'
     +'</div>';
 }
 
@@ -648,22 +670,22 @@ document.getElementById('btnList').addEventListener('click',function(){currentVi
 document.getElementById('searchInput').addEventListener('input',applyFilters);
 document.getElementById('sortBy').addEventListener('change',applyFilters);
 ['fFamille','fRole','fNiveau','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
-document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='\u2014 '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
+document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
 document.getElementById('resetFilters').addEventListener('click',function(){
   ['fFamille','fRole','fNiveau','fOte'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
-  document.getElementById('dispoVal').textContent='\u2014 toutes';document.getElementById('searchInput').value='';
+  document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
   applyFilters();
 });
 
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
 ['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
-document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='\u2014 '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
+document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
 document.getElementById('slResetFilters').addEventListener('click',function(){
   ['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
-  document.getElementById('slDispoVal').textContent='\u2014 toutes';document.getElementById('slSearch').value='';
+  document.getElementById('slDispoVal').textContent='— toutes';document.getElementById('slSearch').value='';
   applyShortlistFilters();
 });
 
@@ -672,12 +694,12 @@ function toggleShortlist(sid,btn){
   if(isSaved){
     shortlistedIds.delete(sid);lsSave();
     if(btn){btn.textContent='+ SHORTLIST';btn.classList.remove('on');}
-    showToast('Retir\u00e9 de la shortlist');
+    showToast('Retiré de la shortlist');
     if(currentRecruiter)sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',sid).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
   }else{
     shortlistedIds.add(sid);lsSave();
-    if(btn){btn.textContent='\u2713 SHORTLIST';btn.classList.add('on');}
-    showToast('Ajout\u00e9 \u00e0 la shortlist \u2713','success');
+    if(btn){btn.textContent='✓ SHORTLIST';btn.classList.add('on');}
+    showToast('Ajouté à la shortlist ✓','success');
     if(currentRecruiter)sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:sid}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
   }
   updateShortlistCount();renderShortlist();
@@ -697,7 +719,7 @@ function updateVSBar(){
   bar.classList.add('show');
   var cands=vsSelected.map(function(id){return allCandidates.find(function(c){return c.id===id;});}).filter(Boolean);
   document.getElementById('vsAvatars').innerHTML=cands.map(function(c){var n=c.name||'?';return'<div class="vs-av">'+(c.photo?'<img src="'+c.photo+'" alt="'+n+'">':n[0])+'</div>';}).join('');
-  document.getElementById('vsHint').textContent=vsSelected.length<2?'S\u00e9lectionne 1 profil de plus':cands.map(function(c){return(c.name||'?').split(' ')[0];}).join(' vs ');
+  document.getElementById('vsHint').textContent=vsSelected.length<2?'Sélectionne 1 profil de plus':cands.map(function(c){return(c.name||'?').split(' ')[0];}).join(' vs ');
   document.getElementById('btnVsOpen').disabled=vsSelected.length<2;
 }
 
@@ -726,28 +748,28 @@ function openVSModal(){
   if(Math.abs(diff)>10){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
     var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA,lName=diff>0?sB:sA;
-    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> domine sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions'+(wTop?' \u2014 \u00e9cart cl\u00e9 en <strong>'+wTop.label+'</strong>':'')+'.';
-    reco='<span style="color:'+wc+';font-weight:700">'+wn+'</span> s\u2019impose clairement.'+(lTop?' '+lName+' garde l\u2019avantage en <strong>'+lTop.label+'</strong> \u2014 pertinent si le poste est centr\u00e9 sur cet axe.':'');
+    summary='<span style="color:'+wc+';font-weight:900">'+wn+'</span> domine sur '+(diff>0?dimsA:dimsB).length+'/6 dimensions'+(wTop?' — écart clé en <strong>'+wTop.label+'</strong>':'')+'.';
+    reco='<span style="color:'+wc+';font-weight:700">'+wn+'</span> s’impose clairement.'+(lTop?' '+lName+' garde l’avantage en <strong>'+lTop.label+'</strong> — pertinent si le poste est centré sur cet axe.':'');
   }else if(Math.abs(diff)>3){
     var wn=diff>0?sA:sB,wc=diff>0?CA:CB;
     var wTop=diff>0?topA:topB,lTop=diff>0?topB:topA;
-    summary='<span style="color:'+wc+'">'+wn+'</span> l\u00e9g\u00e8rement devant (+'+Math.abs(diff)+' pts)'+(wTop?' \u2014 \u00e9cart principal sur <strong>'+wTop.label+'</strong>':'')+'.';
-    reco='Avantage <strong>'+wn+'</strong>'+(wTop?' en '+wTop.label:'')+'. '+(lTop?'L\u2019autre candidat r\u00e9pond mieux sur <strong>'+lTop.label+'</strong> \u2014 arbitrer selon le c\u0153ur du poste. ':'')+'Compl\u00e9ter par un entretien structur\u00e9.';
+    summary='<span style="color:'+wc+'">'+wn+'</span> légèrement devant (+'+Math.abs(diff)+' pts)'+(wTop?' — écart principal sur <strong>'+wTop.label+'</strong>':'')+'.';
+    reco='Avantage <strong>'+wn+'</strong>'+(wTop?' en '+wTop.label:'')+'. '+(lTop?'L’autre candidat répond mieux sur <strong>'+lTop.label+'</strong> — arbitrer selon le cœur du poste. ':'')+'Compléter par un entretien structuré.';
   }else{
     var huntDiff=a.hunting_pct-b.hunting_pct;
-    summary='Profils tr\u00e8s proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d\u2019\u00e9cart).'+(topA||topB?' Diff\u00e9renciation : '+(topA?'<strong>'+topA.label+'</strong> pour '+sA:'')+(topA&&topB?' \u00b7 ':'')+  (topB?'<strong>'+topB.label+'</strong> pour '+sB:'')+'.' :'');
-    reco='Profils \u00e9quivalents. D\u00e9cision sur l\u2019ad\u00e9quation poste : '+(Math.abs(huntDiff)>15?(huntDiff>0?sA+' plus chasse vs '+sB+' plus farming':sB+' plus chasse vs '+sA+' plus farming'):'profils de terrain comparables')+'. Culture d\u2019\u00e9quipe et feeling terrain seront d\u00e9terminants.';
+    summary='Profils très proches ('+Math.abs(diff)+' pt'+(Math.abs(diff)>1?'s':'')+' d’écart).'+(topA||topB?' Différenciation : '+(topA?'<strong>'+topA.label+'</strong> pour '+sA:'')+(topA&&topB?' · ':'')+  (topB?'<strong>'+topB.label+'</strong> pour '+sB:'')+'.' :'');
+    reco='Profils équivalents. Décision sur l’adéquation poste : '+(Math.abs(huntDiff)>15?(huntDiff>0?sA+' plus chasse vs '+sB+' plus farming':sB+' plus chasse vs '+sA+' plus farming'):'profils de terrain comparables')+'. Culture d’équipe et feeling terrain seront déterminants.';
   }
 
   function buildCtxCard(c,other,color,colorLight,dwon){
     var n=c.name||'Anonyme',fn=n.split(' ')[0],hunt=c.hunting_pct||50;
     var raw=c._raw||{};
     var items=[];
-    if(hunt>=80)items.push('Poste <strong>chasse pure</strong> \u2014 '+hunt+'\u202f% acquisition new biz');
-    else if(hunt>=60)items.push('Mix chasse/farming \u2014 <strong>'+hunt+'\u202f% hunting</strong>');
-    else items.push('Profil <strong>gestion de compte</strong> \u2014 '+(100-hunt)+'\u202f% farming');
-    var dl='';if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';if(c.sales_cycle)dl+=(dl?' \u00b7 ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';if(dl)items.push(dl);
-    var el='';if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirm\u00e9')+' \u2014 <strong>'+c.experience_years+' ans</strong>';if(raw.quota_attainment)el+=(el?' \u00b7 ':'')+'quota\u202f<strong>'+raw.quota_attainment+'%</strong>';if(el)items.push(el);
+    if(hunt>=80)items.push('Poste <strong>chasse pure</strong> — '+hunt+' % acquisition new biz');
+    else if(hunt>=60)items.push('Mix chasse/farming — <strong>'+hunt+' % hunting</strong>');
+    else items.push('Profil <strong>gestion de compte</strong> — '+(100-hunt)+' % farming');
+    var dl='';if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';if(c.sales_cycle)dl+=(dl?' · ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';if(dl)items.push(dl);
+    var el='';if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirmé')+' — <strong>'+c.experience_years+' ans</strong>';if(raw.quota_attainment)el+=(el?' · ':'')+'quota <strong>'+raw.quota_attainment+'%</strong>';if(el)items.push(el);
     if(raw.sectors_mastered&&raw.sectors_mastered.length)items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
     else items.push('Secteur <strong>'+c.famille+'</strong>');
     var advHtml='';
@@ -755,8 +777,8 @@ function openVSModal(){
       var topAdv=dwon.slice().sort(function(x,y){return((c.stats[y.key]||0)-(other.stats[y.key]||0))-((c.stats[x.key]||0)-(other.stats[x.key]||0));}).slice(0,3);
       advHtml='<div style="margin-top:10px;font-family:var(--font-mono);font-size:8px;letter-spacing:.12em;color:'+color+';text-transform:uppercase;font-weight:700;margin-bottom:4px">Avantage vs '+other.name.split(' ')[0]+'</div>'
         +topAdv.map(function(d){var my=c.stats[d.key]||0,op=other.stats[d.key]||0,delta=my-op;return'<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid '+color+'14"><span style="font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#555">'+d.label+'</span><div style="display:flex;align-items:center;gap:5px"><span style="font-family:var(--font-mono);font-size:8px;color:#aaa">'+my+'/'+d.max+'</span><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+color+';background:'+color+'1a;padding:1px 6px;border-radius:10px">+'+delta+'</span></div></div>';}).join('');
-    }else{advHtml='<div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:#bbb;font-style:italic">Pas de sup\u00e9riorit\u00e9 dimensionnelle</div>';}
-    return'<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden"><div style="background:'+color+';padding:8px 14px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)">Recruter '+fn+' si\u2026</div></div><div style="padding:11px 14px">'+items.map(function(t){return'<div style="font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid '+color+'14;line-height:1.5;display:flex;gap:5px"><span style="color:'+color+'">&#8250;</span><span>'+t+'</span></div>';}).join('')+advHtml+'</div></div>';
+    }else{advHtml='<div style="margin-top:8px;font-family:var(--font-mono);font-size:9px;color:#bbb;font-style:italic">Pas de supériorité dimensionnelle</div>';}
+    return'<div style="background:'+colorLight+';border:1.5px solid '+color+'22;border-radius:10px;overflow:hidden"><div style="background:'+color+';padding:8px 14px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.9)">Recruter '+fn+' si…</div></div><div style="padding:11px 14px">'+items.map(function(t){return'<div style="font-size:12px;color:#444;padding:4px 0;border-bottom:1px solid '+color+'14;line-height:1.5;display:flex;gap:5px"><span style="color:'+color+'">&#8250;</span><span>'+t+'</span></div>';}).join('')+advHtml+'</div></div>';
   }
 
   var gauges=DIMS.map(function(d,i){
@@ -772,17 +794,17 @@ function openVSModal(){
   modal.innerHTML=
     '<div onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:fixed;inset:0;background:rgba(8,8,12,.82);backdrop-filter:blur(14px);z-index:-1"></div>'
     +'<div style="background:#faf6ee;border-radius:18px;width:100%;max-width:800px;box-shadow:0 48px 120px rgba(0,0,0,.4);position:relative;margin:auto;overflow:hidden">'
-    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#999;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10">\u2715</button>'
+    +'<button onclick="document.getElementById(\'su-vs-modal\').remove()" style="position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#999;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:10">✕</button>'
     +'<div style="display:grid;grid-template-columns:1fr 44px 1fr">'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'+ava(a,CA)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' \u00b7 '+a.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div><div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(a.level||'Non certifi\u00e9')+'</div></div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CAL+'">'+ava(a,CA)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nA+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#999;text-align:center">'+a.famille+(a.location?' · '+a.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CA+';line-height:1">'+a.score+'<span style="font-size:12px;color:'+CA+'88">/100</span></div><div style="background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(a.level||'Non certifié')+'</div></div>'
     +'<div style="display:flex;align-items:center;justify-content:center;background:#faf6ee;border-left:1px solid #e8dfc8;border-right:1px solid #e8dfc8"><div style="font-family:var(--font-mono);font-size:9px;font-weight:900;color:#ccc4b0;letter-spacing:.2em;writing-mode:vertical-rl;transform:rotate(180deg)">VS</div></div>'
-    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'+ava(b,CB)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' \u00b7 '+b.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div><div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(b.level||'Non certifi\u00e9')+'</div></div>'
+    +'<div style="display:flex;flex-direction:column;align-items:center;padding:22px 14px 16px;gap:8px;background:'+CBL+'">'+ava(b,CB)+'<div style="font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;color:#1a2222;text-align:center">'+nB+'</div><div style="font-family:var(--font-mono);font-size:9px;color:#888;text-align:center">'+b.famille+(b.location?' · '+b.location:'')+'</div><div style="font-family:var(--font-display);font-weight:900;font-size:36px;color:'+CB+';line-height:1">'+b.score+'<span style="font-size:12px;color:#88827a">/100</span></div><div style="background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.12em;padding:3px 10px;border-radius:20px">'+(b.level||'Non certifié')+'</div></div>'
     +'</div>'
     +'<div data-radar-anchor style="padding:16px 22px 18px;background:#faf6ee"><div style="font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;margin-bottom:12px">Scores par dimension</div><div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:end">'+gauges+'</div><div style="display:flex;justify-content:center;gap:18px;margin-top:10px"><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CA+';display:inline-block;border-radius:2px"></span>'+sA+'</span><span style="display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;color:#888"><span style="width:14px;height:2px;background:'+CB+';display:inline-block;border-radius:2px"></span>'+sB+'</span></div></div>'
     +'<div style="background:#fff;border-top:1.5px solid #e8dfc8;padding:22px"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:'+CA+';letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Verdict</div><div style="font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;color:#1a2222;margin-bottom:16px;line-height:1.35">'+summary+'</div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">'+buildCtxCard(a,b,CA,CAL,dimsA)+buildCtxCard(b,a,CB,CBL,dimsB)+'</div>'
     +'<div style="background:#faf6ee;border:1.5px solid #e8dfc8;border-radius:8px;padding:12px 14px;margin-bottom:16px"><div style="font-family:var(--font-mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:#b0a080;font-weight:700;margin-bottom:5px">Recommandation recruteur</div><div style="font-size:13px;color:#444;line-height:1.65">'+reco+'</div></div>'
-    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' \u2192</a><a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' \u2192</a></div></div></div>';
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><a href="profil.html?id='+a.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CA+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sA+' →</a><a href="profil.html?id='+b.id+'" style="display:flex;align-items:center;justify-content:center;background:'+CB+';color:#fff8e7;font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px;border-radius:8px;text-decoration:none">Profil '+sB+' →</a></div></div></div>';
 
   document.body.appendChild(modal);
   requestAnimationFrame(function(){setTimeout(function(){modal.querySelectorAll('.vsg').forEach(function(el){el.style.height=el.dataset.pct+'%';});},100);});
@@ -792,7 +814,7 @@ function openVSModal(){
     var canvas=document.createElement('canvas');canvas.width=260;canvas.height=220;canvas.style.display='block';
     var anchor=modal.querySelector('[data-radar-anchor]');if(!anchor)return;
     var wrap=document.createElement('div');wrap.style.cssText='padding:14px 22px 0;background:#faf6ee;border-top:1px solid #ede8df';
-    var title=document.createElement('div');title.style.cssText='font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:10px 0 8px';title.textContent='Radar superpos\u00e9';
+    var title=document.createElement('div');title.style.cssText='font-family:var(--font-mono);font-size:8px;font-weight:700;color:#c8bea0;letter-spacing:.2em;text-transform:uppercase;text-align:center;padding:10px 0 8px';title.textContent='Radar superposé';
     var cw=document.createElement('div');cw.style.cssText='display:flex;justify-content:center';cw.appendChild(canvas);
     wrap.appendChild(title);wrap.appendChild(cw);anchor.parentNode.insertBefore(wrap,anchor);
     new Chart(canvas,{type:'radar',data:{labels:DIMS.map(function(d){return d.label;}),datasets:[{label:sA,data:DIMS.map(function(d){return Math.round((a.stats[d.key]||0)/d.max*100);}),borderColor:CA,backgroundColor:CA+'22',borderWidth:2.5,pointBackgroundColor:CA,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5},{label:sB,data:DIMS.map(function(d){return Math.round((b.stats[d.key]||0)/d.max*100);}),borderColor:CB,backgroundColor:'rgba(26,34,34,.08)',borderWidth:2.5,pointBackgroundColor:CB,pointRadius:4,pointBorderColor:'#faf6ee',pointBorderWidth:1.5}]},options:{responsive:false,animation:{duration:900,easing:'easeInOutQuart'},plugins:{legend:{display:false}},scales:{r:{min:0,max:100,ticks:{stepSize:25,font:{size:7},color:'#c8bea0',backdropColor:'transparent',callback:function(v){return v===50?'50':'\'\"';}},grid:{color:'#ddd8cc'},angleLines:{color:'#ddd8cc'},pointLabels:{font:{size:10,weight:'600'},color:'#555'}}}}});
