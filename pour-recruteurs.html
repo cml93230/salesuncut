@@ -55,6 +55,11 @@
     .prob-frame .eyebrow { color: var(--gold); }
     .prob-frame h2 { color: var(--cream); }
     .prob-frame h2 .accent { color: var(--gold); }
+    .prob-frame h2 .strike { position: relative; display: inline-block; }
+    .prob-frame h2 .strike::after {
+      content: ''; position: absolute; left: -3px; right: -3px; top: 52%; height: 3px;
+      background: currentColor; opacity: .85; border-radius: 2px; transform: translateY(-50%) rotate(-8deg);
+    }
     .prob-frame .lede { color: rgba(255,248,231,.75); }
     .prob-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-top: 56px; border-top: 1px solid rgba(255,248,231,.16); }
     .prob-col { padding: 26px 32px 0; border-left: 1px solid rgba(255,248,231,.16); }
@@ -73,8 +78,7 @@
 
     /* ---------- solution : titre + une seule ligne de légende, empilés ---------- */
     .sol-title { font-size: clamp(28px,3.6vw,42px); line-height: 1.08; max-width: 760px; }
-    .sol-title .line2 { display: block; margin-top: 8px; }
-    .sol-title .line2 .gold-word { color: var(--gold-deep); }
+    .sol-title .line2 { display: block; margin-top: 8px; color: var(--gold-deep); }
     .sol-prose-single { margin-top: 24px; max-width: 600px; font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--teal-2); }
 
     .radar-visual-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
@@ -429,11 +433,11 @@
   </div>
 
   <!-- 02 — LE PROBLÈME -->
-  <section class="band">
+  <section class="band" style="padding-bottom:32px">
     <div class="container">
       <div class="prob-frame">
         <span class="eyebrow">Le problème</span>
-        <h2>Un bon CV ne fait pas un <span class="accent">bon vendeur.</span></h2>
+        <h2>Un <span class="accent strike">bon CV</span> ne fait pas un <span class="accent">bon vendeur.</span></h2>
         <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Pas la capacité à vendre.</p>
 
         <div class="prob-cols">
@@ -458,9 +462,9 @@
   </section>
 
   <!-- 02bis — SOLUTION -->
-  <section class="section">
+  <section class="section" style="padding-top:32px">
     <div class="container">
-      <h2 class="sol-title">Un appel, un score, des audios consultables<span class="line2">Une <span class="gold-word">preuve</span>, pas une promesse.</span></h2>
+      <h2 class="sol-title">Un appel, un score, des audios consultables<span class="line2">Une preuve, pas une promesse.</span></h2>
       <p class="sol-prose-single">À partir d'un appel simulé, SalesUncut note chaque candidat sur 6 critères de vente.</p>
     </div>
   </section>
