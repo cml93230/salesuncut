@@ -765,11 +765,11 @@ function openVSModal(){
     var n=c.name||'Anonyme',fn=n.split(' ')[0],hunt=c.hunting_pct||50;
     var raw=c._raw||{};
     var items=[];
-    if(hunt>=80)items.push('Poste <strong>chasse pure</strong> — '+hunt+' % acquisition new biz');
-    else if(hunt>=60)items.push('Mix chasse/farming — <strong>'+hunt+' % hunting</strong>');
-    else items.push('Profil <strong>gestion de compte</strong> — '+(100-hunt)+' % farming');
+    if(hunt>=80)items.push('Poste <strong>chasse pure</strong> — '+hunt+'&#8239;% acquisition new biz');
+    else if(hunt>=60)items.push('Mix chasse/farming — <strong>'+hunt+'&#8239;% hunting</strong>');
+    else items.push('Profil <strong>gestion de compte</strong> — '+(100-hunt)+'&#8239;% farming');
     var dl='';if(c.deal_size)dl='Deals <strong>'+c.deal_size+'</strong>';if(c.sales_cycle)dl+=(dl?' · ':'')+' cycle <strong>'+c.sales_cycle+'</strong>';if(dl)items.push(dl);
-    var el='';if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirmé')+' — <strong>'+c.experience_years+' ans</strong>';if(raw.quota_attainment)el+=(el?' · ':'')+'quota <strong>'+raw.quota_attainment+'%</strong>';if(el)items.push(el);
+    var el='';if(c.experience_years)el=(c.experience_years>=5?'Senior':'Confirmé')+' — <strong>'+c.experience_years+' ans</strong>';if(raw.quota_attainment)el+=(el?' · ':'')+'quota&#8239;<strong>'+raw.quota_attainment+'%</strong>';if(el)items.push(el);
     if(raw.sectors_mastered&&raw.sectors_mastered.length)items.push('Expert '+(raw.sectors_mastered.slice(0,2).map(function(s){return'<strong>'+s+'</strong>';}).join(', ')));
     else items.push('Secteur <strong>'+c.famille+'</strong>');
     var advHtml='';
