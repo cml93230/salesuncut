@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SalesUncut — Passe la simulation, prouve ce que tu vaux.</title>
-  <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
+  <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
   <link rel="stylesheet" href="style.css">
   <style>
     .cand-hero { padding: 60px 0 80px; position: relative; overflow: hidden; }
@@ -35,6 +35,7 @@
     .cta-final h2 { font-size: clamp(48px, 7vw, 96px); margin: 16px 0 20px; }
     .cta-final h2 .accent { color: var(--gold-deep); font-family: var(--font-serif); font-style: italic; text-transform: none; font-weight: 400; }
     .cta-final p { font-size: 17px; color: var(--teal-2); max-width: 480px; margin: 0 auto 32px; }
+    .faq-intro { font-size: 15px; color: var(--teal-2); max-width: 520px; margin: -20px 0 28px; line-height: 1.5; }
     .faq { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
     .faq details { border-bottom: 1px solid var(--ink); padding: 16px 0; }
     .faq summary { cursor: pointer; font-family: var(--font-display); font-size: 20px; text-transform: uppercase; letter-spacing: -.01em; list-style: none; display: flex; justify-content: space-between; align-items: center; }
@@ -65,7 +66,7 @@
     <div class="nav-links">
       <a href="index.html">Accueil</a>
       <a href="candidat.html" class="active">Candidats</a>
-      <a href="recruiter.html">Recruteurs</a>
+      <a href="pour-recruteurs.html">Recruteurs</a>
       <a href="mon-profil.html">Mon espace</a>
     </div>
     <a href="auth.html" class="btn sm gold">Passer le test &rarr;</a>
@@ -81,7 +82,7 @@
       <nav class="nav-drawer-links">
         <a href="index.html">Accueil</a>
         <a href="candidat.html" class="active">Candidats</a>
-        <a href="recruiter.html">Recruteurs</a>
+        <a href="pour-recruteurs.html">Recruteurs</a>
         <a href="mon-profil.html">Mon espace</a>
       </nav>
       <div class="nav-drawer-cta">
@@ -103,8 +104,7 @@
             <span class="accent">Fais &eacute;couter ta vraie<br>valeur commerciale.</span>
           </h1>
           <p class="lede-sub">
-            SalesUncut transforme un appel de vente simul&eacute; en preuve concr&egrave;te&nbsp;:
-            score, extraits audio, rapport d&eacute;taill&eacute; et profil consultable par les recruteurs.
+            Combien de postes as-tu perdus &agrave; cause d&rsquo;un CV mal format&eacute;, pas &agrave; cause de tes comp&eacute;tences&nbsp;? Un appel de 30 minutes suffit pour que les recruteurs t&rsquo;entendent vendre &mdash; pas te lire.
           </p>
           <div class="cand-hero-cta">
             <a href="auth.html" class="btn gold">&blacktriangleright;&nbsp;Passer ma simulation &rarr;</a>
@@ -137,11 +137,11 @@
       <h1 style="font-size:clamp(36px,5vw,56px);margin:12px 0 0;">Ce que SalesUncut change<br>dans ta recherche.</h1>
       <div class="change-grid">
         <div class="change-list">
-          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu ne d&eacute;pends plus uniquement de ton CV.</div></div>
-          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu montres ta vraie posture commerciale.</div></div>
-          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu aides le recruteur &agrave; te qualifier plus vite.</div></div>
-          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu peux partager une preuve concr&egrave;te dans tes candidatures.</div></div>
-          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu transformes ton profil en actif visible pendant plusieurs mois.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu ne d&eacute;pends plus d&rsquo;un CV que 80% des recruteurs filtrent en moins de 10 secondes.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu montres ta vraie posture commerciale, celle qu&rsquo;aucun CV ne peut retranscrire.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Le recruteur te qualifie en 30 secondes au lieu de 3 semaines d&rsquo;allers-retours.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu peux enfin prouver ce que tu avances en entretien, au lieu de le d&eacute;clarer sur parole.</div></div>
+          <div class="change-item"><div class="change-arrow">&rarr;</div><div class="change-text">Tu transformes ton profil en actif visible pendant plusieurs mois, pas un CV qui dort dans un ATS.</div></div>
         </div>
         <div class="change-visual">
           <div class="change-visual-eyebrow">Comment &ccedil;a marche</div>
@@ -161,7 +161,8 @@
   <section class="section">
     <div class="container">
       <span class="eyebrow">Questions fr&eacute;quentes</span>
-      <h1 style="font-size:clamp(32px,4.5vw,48px);margin:12px 0 32px;">Ce que les sales nous demandent.</h1>
+      <h1 style="font-size:clamp(32px,4.5vw,48px);margin:12px 0 16px;">Ce que les sales nous demandent.</h1>
+      <p class="faq-intro">Tu sais d&eacute;j&agrave; pourquoi un CV ne suffit plus. Voici les questions qu&rsquo;on nous pose avant de se lancer.</p>
       <div class="faq">
         <details>
           <summary>L&rsquo;IA est vraiment cr&eacute;dible au t&eacute;l&eacute;phone&nbsp;?</summary>
@@ -196,7 +197,7 @@
     <div class="container">
       <span class="eyebrow">L&rsquo;heure de v&eacute;rit&eacute;</span>
       <h2>Tu sais vendre.<br><span class="accent">Prouve-le.</span></h2>
-      <p>30 minutes, un profil qui reste visible, des recruteurs qui t&rsquo;entendent avant de te rencontrer.</p>
+      <p>Arr&ecirc;te de perdre des entretiens sur un d&eacute;tail de mise en page. 30 minutes, un profil qui reste visible, des recruteurs qui t&rsquo;entendent avant de te juger.</p>
       <a href="auth.html" class="btn gold">&blacktriangleright;&nbsp;Passer ma simulation &rarr;</a>
     </div>
   </section>
