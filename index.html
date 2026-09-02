@@ -55,21 +55,37 @@
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
     .hero-stage:hover .tcard:nth-child(3) { transform: translateX(190px) translateY(0) rotate(16deg); }
     .fork-lede { font-family: var(--font-mono); font-size: 14px; letter-spacing: .02em; color: var(--teal-3); max-width: 640px; margin: 0 0 28px; line-height: 1.5; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
-    .col { padding: 48px; position: relative; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
-    .col-candidat { background: var(--ink); color: var(--cream); }
-    .col-recruteur { background: var(--cream); color: var(--ink); border-left: 1.5px solid var(--ink); }
-    .col h2 { font-size: 40px; margin: 20px 0 14px; line-height: 1.05; }
-    .col h2 small { display: block; font-size: 16px; font-family: var(--font-mono); letter-spacing: .2em; font-weight: 400; margin-bottom: 8px; }
-    .col-candidat h2 small { color: var(--gold); }
-    .col-recruteur h2 small { color: var(--gold-deep); }
-    .col p { font-size: 15px; line-height: 1.55; max-width: 440px; margin-bottom: 24px; }
-    .col-candidat p { color: rgba(255,248,231,.8); }
-    .col-recruteur p { color: var(--teal-2); }
-    .col-accroche { font-family: var(--font-sans); font-size: clamp(22px,2.4vw,28px); line-height: 1.35; font-weight: 500; max-width: 460px; margin: 14px 0 28px !important; }
-    .col-candidat .col-accroche { color: var(--cream); }
-    .col-recruteur .col-accroche { color: var(--ink); }
-    .two-col-hints { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 16px; }
+
+    /* ---------- split immédiat : bloc candidat/recruteur sous le hero ---------- */
+    .split-frame { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
+    .split-col { padding: 56px 48px 52px; display: flex; flex-direction: column; justify-content: flex-start; }
+    .split-candidat { background: var(--ink); color: var(--cream); }
+    .split-recruteur { background: var(--cream); color: var(--ink); border-left: 1.5px solid var(--ink); }
+    .split-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 14px; }
+    .split-candidat .split-eyebrow { color: var(--gold); }
+    .split-recruteur .split-eyebrow { color: var(--gold-deep); }
+    .split-col h2 { font-size: clamp(24px,2.8vw,32px); line-height: 1.05; margin-bottom: 22px; }
+    .split-tension { font-family: var(--font-serif); font-style: italic; font-size: 18px; line-height: 1.3; margin-bottom: 28px; }
+    .split-candidat .split-tension { color: rgba(255,248,231,.45); }
+    .split-recruteur .split-tension { color: var(--teal-3); }
+    .split-stat { display: flex; align-items: center; gap: 18px; margin-bottom: 14px; padding-top: 24px; border-top: 1px solid; }
+    .split-candidat .split-stat { border-color: rgba(255,248,231,.14); }
+    .split-recruteur .split-stat { border-color: var(--cream-3); }
+    .split-stat-num { font-family: var(--font-display); font-weight: 900; font-size: 52px; line-height: .85; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .split-candidat .split-stat-num { color: var(--gold); }
+    .split-recruteur .split-stat-num { color: var(--gold-deep); }
+    .split-stat-lbl { font-family: var(--font-mono); font-size: 12px; line-height: 1.45; max-width: 240px; }
+    .split-candidat .split-stat-lbl { color: rgba(255,248,231,.72); }
+    .split-recruteur .split-stat-lbl { color: var(--teal-2); }
+    .split-stat-extra { font-family: var(--font-mono); font-size: 12px; line-height: 1.55; margin: 0 0 30px; max-width: 320px; padding-left: 70px; }
+    .split-candidat .split-stat-extra { color: rgba(255,248,231,.72); }
+    .split-recruteur .split-stat-extra { color: var(--teal-2); }
+    .split-cta-row { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; margin-top: auto; }
+    .split-btn { font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 13px 24px; border-radius: 4px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; border: 1.5px solid; transition: all .2s; }
+    .split-candidat .split-btn { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+    .split-candidat .split-btn:hover { background: transparent; color: var(--gold); }
+    .split-recruteur .split-btn { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+    .split-recruteur .split-btn:hover { background: transparent; color: var(--ink); }
     .lb-cols {
       display: grid;
       grid-template-columns: 64px 40px 1fr 140px 120px 100px 64px;
@@ -93,11 +109,10 @@
       .lb-cols span:nth-child(5), .lb-cols span:nth-child(6) { display: none; }
     }
     @media (max-width: 900px) {
-      .hero-grid, .two-col, .faq { grid-template-columns: 1fr; }
-      .col-recruteur { border-left: none; border-top: 1.5px solid var(--ink); }
+      .hero-grid, .split-frame, .faq { grid-template-columns: 1fr; }
+      .split-recruteur { border-left: none; border-top: 1.5px solid var(--ink); }
       .hero-stage { display: none; }
       .hero-cta { flex-wrap: wrap; }
-      .two-col-hints { grid-template-columns: 1fr; }
       .lb-cols { grid-template-columns: 40px 32px 1fr 56px; }
       .lb-cols span:nth-child(4), .lb-cols span:nth-child(5), .lb-cols span:nth-child(6) { display: none; }
     }
@@ -153,6 +168,40 @@
         </div>
         <div class="hero-stage">
           <div class="hero-card-stack" id="heroStack"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LE SPLIT IMMÉDIAT — explication concise candidat/recruteur -->
+  <section class="section" style="padding: 0 0 64px;">
+    <div class="container">
+      <div class="split-frame">
+        <div class="split-col split-candidat">
+          <span class="split-eyebrow">Candidats</span>
+          <h2>Simule un appel de vente.<br>Prouve ton niveau.</h2>
+          <p class="split-tension">Ton CV dit que tu sais vendre. Ici, tu le prouves en vendant.</p>
+          <div class="split-stat">
+            <span class="split-stat-num">6</span>
+            <span class="split-stat-lbl">compétences de vente évaluées.</span>
+          </div>
+          <p class="split-stat-extra">De l'accroche au closing.<br>Un score qui fait venir les recruteurs à toi.</p>
+          <div class="split-cta-row">
+            <a href="auth.html" class="split-btn">Simuler mon appel &rarr;</a>
+          </div>
+        </div>
+        <div class="split-col split-recruteur">
+          <span class="split-eyebrow">Recruteurs</span>
+          <h2>Le score construit la shortlist,<br>l'écoute confirme le choix.</h2>
+          <p class="split-tension">Filtrez par spécialité, ville, OTE, etc... Puis écoutez si un doute persiste.</p>
+          <div class="split-stat">
+            <span class="split-stat-num">1</span>
+            <span class="split-stat-lbl">profil complet offert.</span>
+          </div>
+          <p class="split-stat-extra">Triez par score et vos critères pour une shortlist rapide, écoutez les finalistes pour trancher sans vous tromper.<br>Gagnez du temps en entretien.</p>
+          <div class="split-cta-row">
+            <a href="pour-recruteurs.html" class="split-btn">Écouter un candidat &rarr;</a>
+          </div>
         </div>
       </div>
     </div>
