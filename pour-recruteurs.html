@@ -51,7 +51,10 @@
     .band:not(.dark) .lede { color: var(--teal-2); }
 
     /* ---------- 02 — le problème + solution : un seul bloc englobé (cadre sombre, diagonale, solution) ---------- */
-    .prob-block { border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden; }
+    .prob-block {
+      border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden;
+      width: calc(100vw - 48px); margin-left: 50%; transform: translateX(-50%);
+    }
     .prob-frame { background: var(--ink); color: var(--cream); padding: 40px 40px 24px; }
     .prob-frame .eyebrow { color: var(--gold); }
     .prob-frame h2 { color: var(--cream); }
@@ -69,7 +72,7 @@
     .prob-sol { background: var(--cream); padding: 4px 40px 36px; }
 
     @media (max-width: 900px) {
-      .prob-block { border-radius: 10px; }
+      .prob-block { border-radius: 10px; width: calc(100vw - 24px); }
       .prob-frame { padding: 28px 24px 18px; }
       .prob-diag { height: 60px; }
       .prob-sol { padding: 2px 24px 28px; }
