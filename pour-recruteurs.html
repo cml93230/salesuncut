@@ -50,20 +50,25 @@
     .band.dark .lede { color: rgba(255,248,231,.75); }
     .band:not(.dark) .lede { color: var(--teal-2); }
 
-    /* ---------- 02 — le problème : constat en 3 colonnes numérotées ---------- */
-    .band h2 .accent { color: var(--gold-deep); }
-    .prob-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-top: 56px; border-top: 1px solid var(--cream-3); }
-    .prob-col { padding: 26px 32px 0; border-left: 1px solid var(--cream-3); }
+    /* ---------- 02 — le problème : cadre sombre sur fond beige, constat en 3 colonnes numérotées ---------- */
+    .prob-frame { background: var(--ink); color: var(--cream); border-radius: 14px; padding: 56px 48px 60px; }
+    .prob-frame .eyebrow { color: var(--gold); }
+    .prob-frame h2 { color: var(--cream); }
+    .prob-frame h2 .accent { color: var(--gold); }
+    .prob-frame .lede { color: rgba(255,248,231,.75); }
+    .prob-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-top: 56px; border-top: 1px solid rgba(255,248,231,.16); }
+    .prob-col { padding: 26px 32px 0; border-left: 1px solid rgba(255,248,231,.16); }
     .prob-col:first-child { border-left: none; padding-left: 0; }
     .prob-col:last-child { padding-right: 0; }
-    .prob-col-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal-3); margin-bottom: 20px; }
-    .prob-col-head .num { color: rgba(26,34,34,.3); font-weight: 700; }
-    .prob-quote { font-family: var(--font-serif); font-style: italic; font-size: 18px; line-height: 1.4; color: var(--ink); margin-bottom: 14px; }
-    .prob-answer { font-family: var(--font-sans); font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--gold-deep); }
+    .prob-col-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,248,231,.55); margin-bottom: 20px; }
+    .prob-col-head .num { color: rgba(255,248,231,.32); font-weight: 700; }
+    .prob-quote { font-family: var(--font-serif); font-style: italic; font-size: 18px; line-height: 1.4; color: rgba(255,248,231,.9); margin-bottom: 14px; }
+    .prob-answer { font-family: var(--font-sans); font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--gold); }
     @media (max-width: 900px) {
+      .prob-frame { padding: 40px 28px 44px; border-radius: 10px; }
       .prob-cols { grid-template-columns: 1fr; border-top: none; }
-      .prob-col { border-left: none; border-top: 1px solid var(--cream-3); padding: 24px 0 0; }
-      .prob-col:first-child { border-top: 1px solid var(--cream-3); }
+      .prob-col { border-left: none; border-top: 1px solid rgba(255,248,231,.16); padding: 24px 0 0; }
+      .prob-col:first-child { border-top: 1px solid rgba(255,248,231,.16); }
     }
 
     /* ---------- solution : titre + une seule ligne de légende, empilés ---------- */
@@ -424,27 +429,29 @@
   </div>
 
   <!-- 02 — LE PROBLÈME -->
-  <section class="band tint">
+  <section class="band">
     <div class="container">
-      <span class="eyebrow">Le problème</span>
-      <h2>Un bon CV ne fait pas un <span class="accent">bon vendeur.</span></h2>
-      <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Pas la capacité à vendre.</p>
+      <div class="prob-frame">
+        <span class="eyebrow">Le problème</span>
+        <h2>Un bon CV ne fait pas un <span class="accent">bon vendeur.</span></h2>
+        <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Pas la capacité à vendre.</p>
 
-      <div class="prob-cols">
-        <div class="prob-col">
-          <div class="prob-col-head"><span>Le CV</span><span class="num">01</span></div>
-          <p class="prob-quote">« +3 ans d'expérience commerciale »</p>
-          <p class="prob-answer">Mais sait-il prospecter ?</p>
-        </div>
-        <div class="prob-col">
-          <div class="prob-col-head"><span>L'entretien</span><span class="num">02</span></div>
-          <p class="prob-quote">« Je suis très orienté résultats »</p>
-          <p class="prob-answer">Mais sait-il convaincre ?</p>
-        </div>
-        <div class="prob-col">
-          <div class="prob-col-head"><span>Le discours</span><span class="num">03</span></div>
-          <p class="prob-quote">« Je maîtrise parfaitement la vente »</p>
-          <p class="prob-answer">Mais que se passe-t-il quand il faut vraiment vendre ?</p>
+        <div class="prob-cols">
+          <div class="prob-col">
+            <div class="prob-col-head"><span>Le CV</span><span class="num">01</span></div>
+            <p class="prob-quote">« +3 ans d'expérience commerciale »</p>
+            <p class="prob-answer">Mais sait-il prospecter ?</p>
+          </div>
+          <div class="prob-col">
+            <div class="prob-col-head"><span>L'entretien</span><span class="num">02</span></div>
+            <p class="prob-quote">« Je suis très orienté résultats »</p>
+            <p class="prob-answer">Mais sait-il convaincre ?</p>
+          </div>
+          <div class="prob-col">
+            <div class="prob-col-head"><span>Le discours</span><span class="num">03</span></div>
+            <p class="prob-quote">« Je maîtrise parfaitement la vente »</p>
+            <p class="prob-answer">Mais que se passe-t-il quand il faut vraiment vendre ?</p>
+          </div>
         </div>
       </div>
     </div>
