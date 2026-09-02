@@ -52,7 +52,7 @@
 
     /* ---------- 02 — le problème + solution : un seul bloc englobé (cadre sombre, diagonale, solution) ---------- */
     .prob-block { border: 1.5px solid var(--ink); border-radius: 14px; overflow: hidden; }
-    .prob-frame { background: var(--ink); color: var(--cream); padding: 56px 48px 48px; }
+    .prob-frame { background: var(--ink); color: var(--cream); padding: 40px 40px 24px; }
     .prob-frame .eyebrow { color: var(--gold); }
     .prob-frame h2 { color: var(--cream); }
     .prob-frame h2 .accent { color: var(--gold); }
@@ -63,16 +63,16 @@
     }
     .band .prob-frame .lede { color: var(--cream); }
 
-    .prob-diag { position: relative; height: 138px; overflow: hidden; background: var(--cream); margin-top: -1px; }
+    .prob-diag { position: relative; height: 86px; overflow: hidden; background: var(--cream); margin-top: -1px; }
     .prob-diag-fill { position: absolute; top: -1px; left: 0; right: 0; bottom: 0; background: var(--ink); clip-path: polygon(0 0, 100% 0, 100% 28%, 0 100%); }
 
-    .prob-sol { background: var(--cream); padding: 12px 48px 56px; }
+    .prob-sol { background: var(--cream); padding: 4px 40px 36px; }
 
     @media (max-width: 900px) {
       .prob-block { border-radius: 10px; }
-      .prob-frame { padding: 40px 28px 36px; }
-      .prob-diag { height: 96px; }
-      .prob-sol { padding: 8px 28px 44px; }
+      .prob-frame { padding: 28px 24px 18px; }
+      .prob-diag { height: 60px; }
+      .prob-sol { padding: 2px 24px 28px; }
     }
 
     /* ---------- solution : titre + une seule ligne de légende, empilés ---------- */
