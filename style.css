@@ -240,6 +240,17 @@ body.nav-locked { overflow: hidden; }
 
 /* ---------- Container & Sections ---------- */
 .container { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
+
+/* Hero élargi (acté 02/09/2026) — gabarit uniquement, s'applique en plus
+   du container de base ci-dessus. Le reste des blocs de chaque page garde
+   1240px. Sélecteurs : .hero (index.html) · .cand-hero (candidat.html) ·
+   .rec-hero (pour-recruteurs.html). */
+.hero .container,
+.cand-hero .container,
+.rec-hero .container {
+  max-width: 1440px;
+}
+
 .section { padding: 80px 0; }
 .section-title { margin-bottom: 48px; }
 .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
