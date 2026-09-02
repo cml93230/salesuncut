@@ -50,20 +50,27 @@
     .band.dark .lede { color: rgba(255,248,231,.75); }
     .band:not(.dark) .lede { color: var(--teal-2); }
 
-    /* ---------- Pattern repris de candidat.html : liste à gauche / panneau sombre à droite ---------- */
-    .change-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: stretch; margin-top: 40px; }
-    .change-list { display: flex; flex-direction: column; }
-    .change-item { display: flex; align-items: flex-start; gap: 18px; padding: 20px 0; border-bottom: 1px dashed var(--cream-3); }
-    .change-item:last-child { border-bottom: none; }
-    .change-arrow { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 14px; margin-top: 2px; }
-    .change-text { font-size: 16px; color: var(--ink); line-height: 1.5; }
-    .change-text .quote { font-family: var(--font-serif); font-style: italic; display: block; }
-    .change-text .question { display: block; margin-top: 4px; font-weight: 600; color: var(--rust); font-size: 14px; }
-    .change-text strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: -.01em; }
-    .change-visual { background: var(--ink); border-radius: 10px; padding: 40px 36px; color: var(--cream); display: flex; flex-direction: column; justify-content: center; }
-    .change-visual-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
-    .change-visual-title { font-family: var(--font-display); font-weight: 900; font-size: clamp(30px,3.4vw,42px); text-transform: uppercase; letter-spacing: -.01em; line-height: 1.05; color: var(--cream); margin-bottom: 24px; }
-    .change-visual .prose { font-family: var(--font-mono); font-size: 14.5px; line-height: 1.75; color: rgba(255,248,231,.82); }
+    /* ---------- 02 — le problème : constat en 3 colonnes numérotées ---------- */
+    .band h2 .accent { color: var(--gold-deep); }
+    .prob-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; margin-top: 56px; border-top: 1px solid var(--cream-3); }
+    .prob-col { padding: 26px 32px 0; border-left: 1px solid var(--cream-3); }
+    .prob-col:first-child { border-left: none; padding-left: 0; }
+    .prob-col:last-child { padding-right: 0; }
+    .prob-col-head { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--teal-3); margin-bottom: 20px; }
+    .prob-col-head .num { color: rgba(26,34,34,.3); font-weight: 700; }
+    .prob-quote { font-family: var(--font-serif); font-style: italic; font-size: 18px; line-height: 1.4; color: var(--ink); margin-bottom: 14px; }
+    .prob-answer { font-family: var(--font-sans); font-weight: 600; font-size: 15px; line-height: 1.4; color: var(--gold-deep); }
+    @media (max-width: 900px) {
+      .prob-cols { grid-template-columns: 1fr; border-top: none; }
+      .prob-col { border-left: none; border-top: 1px solid var(--cream-3); padding: 24px 0 0; }
+      .prob-col:first-child { border-top: 1px solid var(--cream-3); }
+    }
+
+    /* ---------- solution : titre + une seule ligne de légende, empilés ---------- */
+    .sol-title { font-size: clamp(28px,3.6vw,42px); line-height: 1.08; max-width: 760px; }
+    .sol-title .line2 { display: block; margin-top: 8px; }
+    .sol-title .line2 .gold-word { color: var(--gold-deep); }
+    .sol-prose-single { margin-top: 24px; max-width: 600px; font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--teal-2); }
 
     .radar-visual-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
     .radar-visual-name { font-family: var(--font-display); font-weight: 900; font-size: 16px; text-transform: uppercase; color: var(--cream); }
@@ -335,7 +342,7 @@
     @media (max-width: 900px) {
       .rec-hero-grid { grid-template-columns: 1fr; }
       .hero-stage { display: none; }
-      .change-grid, .benefit-row, .pool-preview-grid { grid-template-columns: 1fr; }
+      .benefit-row, .pool-preview-grid { grid-template-columns: 1fr; }
       .benefit-row { gap: 44px; }
       .corr-headers, .corr-rule, .corr-row, .corr-final { grid-template-columns: 1fr; }
       .corr-row { row-gap: 14px; padding: 28px 0; }
@@ -420,31 +427,34 @@
   <section class="band tint">
     <div class="container">
       <span class="eyebrow">Le problème</span>
-      <h2>Un bon CV ne fait pas un bon vendeur.</h2>
+      <h2>Un bon CV ne fait pas un <span class="accent">bon vendeur.</span></h2>
       <p class="lede">Expérience, diplômes, belles performances annoncées, aisance en entretien… tout cela raconte une histoire. Pas la capacité à vendre.</p>
 
-      <div class="change-grid">
-        <div class="change-list">
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text"><strong>Le CV</strong><span class="quote">« +3 ans d'expérience commerciale »</span><span class="question">Mais sait-il prospecter ?</span></div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text"><strong>L'entretien</strong><span class="quote">« Je suis très orienté résultats »</span><span class="question">Mais sait-il convaincre ?</span></div>
-          </div>
-          <div class="change-item">
-            <div class="change-arrow">&rarr;</div>
-            <div class="change-text"><strong>Le discours</strong><span class="quote">« Je maîtrise parfaitement la vente »</span><span class="question">Mais que se passe-t-il quand il faut vraiment vendre ?</span></div>
-          </div>
+      <div class="prob-cols">
+        <div class="prob-col">
+          <div class="prob-col-head"><span>Le CV</span><span class="num">01</span></div>
+          <p class="prob-quote">« +3 ans d'expérience commerciale »</p>
+          <p class="prob-answer">Mais sait-il prospecter ?</p>
         </div>
-        <div class="change-visual">
-          <div class="change-visual-eyebrow">Solution</div>
-          <div class="change-visual-title">La preuve, pas la promesse.</div>
-          <p class="prose" style="margin-bottom:16px">À partir d'un appel simulé, SalesUncut note chaque candidat sur 6 critères de vente.</p>
-          <p class="prose">Une note globale pour trancher en un coup d'œil, un enregistrement pour qui veut creuser.</p>
+        <div class="prob-col">
+          <div class="prob-col-head"><span>L'entretien</span><span class="num">02</span></div>
+          <p class="prob-quote">« Je suis très orienté résultats »</p>
+          <p class="prob-answer">Mais sait-il convaincre ?</p>
+        </div>
+        <div class="prob-col">
+          <div class="prob-col-head"><span>Le discours</span><span class="num">03</span></div>
+          <p class="prob-quote">« Je maîtrise parfaitement la vente »</p>
+          <p class="prob-answer">Mais que se passe-t-il quand il faut vraiment vendre ?</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- 02bis — SOLUTION -->
+  <section class="section">
+    <div class="container">
+      <h2 class="sol-title">Un appel, un score, des audios consultables<span class="line2">Une <span class="gold-word">preuve</span>, pas une promesse.</span></h2>
+      <p class="sol-prose-single">À partir d'un appel simulé, SalesUncut note chaque candidat sur 6 critères de vente.</p>
     </div>
   </section>
 
