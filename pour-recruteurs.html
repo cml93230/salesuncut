@@ -29,27 +29,35 @@
     .hero-fold { display: flex; flex-direction: column; min-height: calc(100vh - var(--nav-h, 76px)); }
     .rec-hero { flex: 1; display: flex; align-items: center; padding: 40px 0; overflow: hidden; }
     .rec-hero > .container { width: 100%; min-width: 0; }
-    /* bannière dynamique agrandie (propre à cette page — .marquee est aussi utilisée ailleurs) */
-    .hero-fold .marquee { padding: 32px 0; }
-    .hero-fold .marquee-track { gap: 96px; }
-    .hero-fold .marquee-track span { font-size: 28px; }
-    .hero-fold .marquee-track .gold-text { font-size: 32px; }
-    /* texte doublé : la 2 colonnes d'origine est trop étroite pour ce gabarit, le visuel
-       passe donc sous le texte plutôt qu'à côté, pour ne jamais chevaucher les mots. */
-    .rec-hero-grid { display: flex; flex-direction: column; align-items: flex-start; gap: 36px; width: 100%; }
-    .rec-hero-grid > div:first-child { width: 100%; min-width: 0; }
-    .rec-hero h1 { font-size: clamp(76px,10vw,136px); margin: 20px 0 22px; overflow-wrap: break-word; }
+    /* bannière dynamique réduite de 25 % (propre à cette page — .marquee est aussi utilisée ailleurs) */
+    .hero-fold .marquee { padding: 24px 0; }
+    .hero-fold .marquee-track { gap: 72px; }
+    .hero-fold .marquee-track span { font-size: 21px; }
+    .hero-fold .marquee-track .gold-text { font-size: 24px; }
+    /* titre ramené à gauche, réduit de 25 %, avec les cards de nouveau à droite */
+    .rec-hero-grid { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 68px; width: 100%; }
+    .rec-hero-grid > div:first-child { flex: 1 1 auto; min-width: 0; }
+    /* le titre doit rester dans l'écran (hero + bandeau = 100vh) même sur les fenêtres basses ;
+       la taille suit donc aussi la hauteur dispo, pas seulement la largeur (max 102px = -25%) */
+    .rec-hero h1 { font-size: clamp(48px, min(7.5vw, calc((100vh - var(--nav-h, 76px) - 465px) / 3.6)), 102px); margin: 15px 0 17px; overflow-wrap: break-word; }
     .rec-hero h1 .gold-word { color: var(--gold-deep); }
-    .rec-hero p.lede { font-size: 36px; color: var(--teal-2); max-width: 560px; margin-bottom: 30px; line-height: 1.4; }
-    .hero-stage { position: relative; aspect-ratio: 0.85; perspective: 1400px; overflow: visible; width: min(100%, 420px); }
+    .rec-hero p.lede { font-size: 27px; color: var(--teal-2); max-width: 480px; margin-bottom: 22px; line-height: 1.4; }
+    /* colonne visuel plus étroite qu'avant le doublement : la colonne de texte a besoin de
+       cette place pour ne pas replier le titre sur trop de lignes et dépasser l'écran */
+    .hero-stage {
+      --stage-w: clamp(140px, 16vw, 220px); --card-w: min(130px, var(--stage-w));
+      position: relative; aspect-ratio: 0.85; perspective: 1400px; overflow: visible; flex: 0 0 auto; width: var(--stage-w);
+    }
     .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
-    .hero-card-stack .tcard:nth-child(1) { transform: translateX(-100px) translateY(18px) rotate(-11deg); z-index: 1; }
+    /* écart entre les cards proportionnel à leur largeur réelle (qui rétrécit avec la colonne),
+       resserré par rapport à l'original pour ne jamais empiéter sur le titre à gauche */
+    .hero-card-stack .tcard:nth-child(1) { transform: translateX(calc(-0.14 * var(--card-w))) translateY(18px) rotate(-11deg); z-index: 1; }
     .hero-card-stack .tcard:nth-child(2) { transform: translateY(0) rotate(2deg); z-index: 3; }
-    .hero-card-stack .tcard:nth-child(3) { transform: translateX(100px) translateY(18px) rotate(9deg); z-index: 2; }
-    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-170px) translateY(0) rotate(-16deg); }
+    .hero-card-stack .tcard:nth-child(3) { transform: translateX(calc(0.14 * var(--card-w))) translateY(18px) rotate(9deg); z-index: 2; }
+    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(calc(-0.24 * var(--card-w))) translateY(0) rotate(-16deg); }
     .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-10px) rotate(0) scale(1.04); z-index: 4; }
-    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(170px) translateY(0) rotate(14deg); }
+    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(calc(0.24 * var(--card-w))) translateY(0) rotate(14deg); }
 
     /* ---------- Bands ---------- */
     .band { padding: 80px 0; }
@@ -361,11 +369,12 @@
     .usecase-desc { font-size: 14.5px; color: var(--teal-2); line-height: 1.5; }
 
     @media (max-width: 900px) {
-      /* sous 900px, le clamp du desktop reste bloqué à son minimum (76px) alors que la colonne
+      /* sous 900px, le clamp du desktop reste bloqué à son minimum alors que la colonne
          continue de rétrécir : on lui donne sa propre courbe pour que les mots les plus longs
          (« impression », « d'entretien ») continuent à tenir sans être coupés ni cassés. */
-      .rec-hero h1 { font-size: clamp(40px, 11vw, 90px); }
+      .rec-hero h1 { font-size: clamp(30px, 8.25vw, 68px); }
       .hero-stage { display: none; }
+      .rec-hero-grid { gap: 0; }
       .benefit-row, .pool-preview-grid { grid-template-columns: 1fr; }
       .benefit-row { gap: 44px; }
       .corr-headers, .corr-rule, .corr-row, .corr-final { grid-template-columns: 1fr; }
