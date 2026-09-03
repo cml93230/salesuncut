@@ -132,12 +132,13 @@
     .btn-see-profile{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;background:var(--ink);color:var(--cream);border-radius:3px;text-decoration:none;transition:background .2s}
     .btn-see-profile:hover{background:var(--gold-deep)}
     .pool-list{display:flex;flex-direction:column;gap:5px}
-    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 100px 90px 110px 90px 80px 72px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
+    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 88px 82px 68px 82px 62px 90px 90px 78px 68px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
     .list-header{background:var(--ink);color:rgba(255,248,231,.45);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;user-select:none}
     .lh-sort{cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:color .2s}
     .lh-sort:hover{color:var(--cream)}
     .lh-sort.active{color:var(--gold)}
-    .lh-arrow{font-size:7px;line-height:1}
+    .lh-arrow{font-size:7px;line-height:1;opacity:.45}
+    .lh-sort.active .lh-arrow{opacity:1}
     .list-row{background:var(--cream);border:1.5px solid var(--cream-3);cursor:pointer;transition:border-color .2s,background .15s}
     .list-row:hover{border-color:var(--gold);background:var(--cream-2)}
     .lr-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--cream-2);border:1.5px solid var(--cream-3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:var(--teal-3);flex-shrink:0}
@@ -153,10 +154,10 @@
     .lr-action{display:flex;flex-direction:column;gap:5px}
     .lr-action a{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 8px;border-radius:4px;background:var(--ink);color:var(--cream);white-space:nowrap;transition:background .2s;display:block;text-align:center;box-sizing:border-box}
     .lr-action a:hover{background:var(--gold-deep)}
-    .lr-sl-btn{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:4px;border:1px solid var(--cream-3);cursor:pointer;background:var(--cream-2);color:var(--ink);white-space:nowrap;transition:background .2s;display:block;width:100%;text-align:center;box-sizing:border-box}
-    .lr-sl-btn:hover{background:var(--cream-3)}
-    .lr-sl-btn.on{background:var(--cream-3)}
-    .lr-sl-btn.on:hover{background:var(--cream-2)}
+    .lr-sl-btn{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:4px;border:1.5px solid var(--cream-3);cursor:pointer;background:var(--cream);color:var(--teal-3);white-space:nowrap;transition:background .2s,border-color .2s,color .2s;display:block;width:100%;text-align:center;box-sizing:border-box}
+    .lr-sl-btn:hover{background:var(--cream-2);color:var(--ink)}
+    .lr-sl-btn.on{background:var(--cream-3);border-color:var(--gold-deep);color:var(--ink);font-weight:900}
+    .lr-sl-btn.on:hover{background:var(--cream-2);border-color:var(--gold-deep)}
     .shortlist-empty{text-align:center;padding:72px 40px;font-family:var(--font-mono);font-size:13px;color:var(--teal-3);letter-spacing:.08em}
     .shortlist-empty .icon{font-size:48px;margin-bottom:16px;opacity:.3}
     .sl-list{display:flex;flex-direction:column;gap:8px}
@@ -208,9 +209,15 @@
     .toast.show{transform:translateY(0);opacity:1}
     .toast.success{border-left-color:#4caf50}
     .toast.error{border-left-color:var(--rust)}
-    @media(max-width:1000px){.list-header,.list-row{grid-template-columns:34px 1fr 70px 80px 90px 70px 64px}}
+    @media(max-width:1000px){
+      .list-header>*:nth-child(4),.list-header>*:nth-child(5),.list-header>*:nth-child(6),.list-row>*:nth-child(4),.list-row>*:nth-child(5),.list-row>*:nth-child(6){display:none}
+      .list-header,.list-row{grid-template-columns:34px 1fr 76px 60px 84px 84px 74px 64px 84px}
+    }
     @media(max-width:900px){.recruiter-bar{padding:0 20px}.tab-panel{padding:24px 20px}.account-grid{grid-template-columns:1fr}.recruiter-bar-tabs{display:none}}
-    @media(max-width:600px){.list-header,.list-row{grid-template-columns:34px 1fr 70px 60px}.list-header>*:nth-child(n+5),.list-row>*:nth-child(n+5){display:none}}
+    @media(max-width:600px){
+      .list-header>*:nth-child(8),.list-header>*:nth-child(9),.list-header>*:nth-child(10),.list-header>*:nth-child(11),.list-row>*:nth-child(8),.list-row>*:nth-child(9),.list-row>*:nth-child(10),.list-row>*:nth-child(11){display:none}
+      .list-header,.list-row{grid-template-columns:32px 1fr 62px 52px 70px}
+    }
   </style>
 </head>
 <body class="page-enter">
@@ -315,7 +322,7 @@
       <div class="sort-row"><span>Tri</span><select class="sort-select" id="sortBy"><option value="score">Meilleur score</option><option value="recent">Plus r&eacute;cents</option><option value="dispo">Dispo imm&eacute;diate</option></select></div>
     </div>
     <div id="poolGrid" class="pool-grid"><div class="loading-state"><div class="spinner"></div> Chargement du pool&hellip;</div></div>
-    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="famille">Famille<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow"></i></span><span></span></div></div>
+    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="experience_level">Exp&eacute;rience<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="diplome">Dipl&ocirc;me<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="contract_type">Contrat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="famille">Famille<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow">↕</i></span><span></span></div></div>
     <div id="poolEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
   </div>
 
@@ -709,6 +716,9 @@ function renderRow(c){
     +'<div class="lr-avatar">'+av+'</div>'
     +'<div class="lr-name">'+name+'</div>'
     +'<div class="lr-text">'+(c.role_type||'—')+'</div>'
+    +'<div class="lr-text">'+(c.experience_level||'—')+'</div>'
+    +'<div class="lr-text">'+(c.diplome||'—')+'</div>'
+    +'<div class="lr-text">'+(c.contract_type||'—')+'</div>'
     +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
     +'<div class="lr-text">'+(c.famille||'—')+'</div>'
     +'<div class="lr-text">'+(c.location||'—')+'</div>'
@@ -755,9 +765,10 @@ function updateSortArrows(){
     var k=el.getAttribute('data-sort'),arrow=el.querySelector('.lh-arrow');
     var active=k===colSort.key;
     el.classList.toggle('active',active);
-    arrow.textContent=active?(colSort.dir>0?'▲':'▼'):'';
+    arrow.textContent=active?(colSort.dir>0?'▲':'▼'):'↕';
   });
 }
+updateSortArrows();
 
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
