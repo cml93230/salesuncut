@@ -450,9 +450,6 @@ const DIMS=[
 ];
 const DISPO_LABELS=['≤ 1j','1 mois','2 mois','3 mois','Toutes'];
 const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
-const LS_KEY='su_shortlist_v1';
-const LISTS_KEY='su_lists_v1';
-const MEMBERSHIP_KEY='su_membership_v1';
 const ACTIVE_LIST_KEY='su_active_list_v1';
 const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
 
@@ -466,14 +463,7 @@ function expLevel(y){if(y==null)return null;return y>=5?'Senior':y>=3?'Confirmé
 
 function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote;if(typeof ote==='object'&&ote.total){var ns=String(ote.total).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}var ns=String(ote).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}
 function dispoNum(d){return DISPO_ORDER[d]!=null?DISPO_ORDER[d]:99;}
-function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify([...shortlistedIds]));}catch(e){}}
-function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}catch(e){return[];}}
-
-/* ── Shortlists multiples ── */
-function listsSave(){try{localStorage.setItem(LISTS_KEY,JSON.stringify(customLists));}catch(e){}}
-function listsLoad(){try{return JSON.parse(localStorage.getItem(LISTS_KEY)||'[]');}catch(e){return[];}}
-function memberSave(){try{localStorage.setItem(MEMBERSHIP_KEY,JSON.stringify(membership));}catch(e){}}
-function memberLoad(){try{return JSON.parse(localStorage.getItem(MEMBERSHIP_KEY)||'{}');}catch(e){return{};}}
+/* ── Shortlists multiples (synchronisées par compte recruteur via Supabase) ── */
 function activeListSave(){try{localStorage.setItem(ACTIVE_LIST_KEY,activeShortlistId);}catch(e){}}
 function activeListLoad(){try{return localStorage.getItem(ACTIVE_LIST_KEY)||'default';}catch(e){return'default';}}
 function getAllLists(){return[DEFAULT_LIST].concat(customLists);}
@@ -483,26 +473,32 @@ function recomputeShortlistedIds(){
   Object.keys(membership).forEach(function(lid){(membership[lid]||[]).forEach(function(id){s.add(id);});});
   shortlistedIds=s;
 }
-function initShortlistState(){
-  customLists=listsLoad();
-  membership=memberLoad();
-  if(!membership.default){
-    membership.default=lsLoad().slice();
-    memberSave();
+async function initShortlistState(){
+  customLists=[];membership={default:[]};
+  if(currentRecruiter){
+    var rl=await sb.from('shortlist_lists').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
+    (rl.data||[]).forEach(function(l){
+      customLists.push({id:l.id,name:l.name,poste:l.poste||'',ville:l.ville||'',title:l.title});
+      membership[l.id]=[];
+    });
+    var rs=await sb.from('shortlists').select('candidate_id,list_id').eq('recruiter_id',currentRecruiter.id);
+    (rs.data||[]).forEach(function(row){
+      var lid=row.list_id||'default';
+      if(!membership[lid])membership[lid]=[];
+      if(membership[lid].indexOf(row.candidate_id)<0)membership[lid].push(row.candidate_id);
+    });
   }
-  Object.keys(membership).forEach(function(lid){if(!Array.isArray(membership[lid]))membership[lid]=[];});
   activeShortlistId=activeListLoad();
   if(!getListById(activeShortlistId))activeShortlistId='default';
   recomputeShortlistedIds();
   renderListSwitcher();
 }
 function addToList(listId,candidateId){
-  var wasShortlisted=shortlistedIds.has(candidateId);
   if(!membership[listId])membership[listId]=[];
   if(membership[listId].indexOf(candidateId)<0)membership[listId].push(candidateId);
-  memberSave();recomputeShortlistedIds();
-  if(!wasShortlisted&&currentRecruiter){
-    sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:candidateId}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
+  recomputeShortlistedIds();
+  if(currentRecruiter){
+    sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:candidateId,list_id:listId==='default'?null:listId}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
   }
 }
 function removeFromList(listId,candidateId){
@@ -510,9 +506,11 @@ function removeFromList(listId,candidateId){
     var idx=membership[listId].indexOf(candidateId);
     if(idx>=0)membership[listId].splice(idx,1);
   }
-  memberSave();recomputeShortlistedIds();
-  if(!shortlistedIds.has(candidateId)&&currentRecruiter){
-    sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
+  recomputeShortlistedIds();
+  if(currentRecruiter){
+    var q=sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId);
+    q=(listId==='default')?q.is('list_id',null):q.eq('list_id',listId);
+    q.then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
   }
 }
 function removeFromAllLists(candidateId){
@@ -520,7 +518,7 @@ function removeFromAllLists(candidateId){
     var idx=membership[lid].indexOf(candidateId);
     if(idx>=0)membership[lid].splice(idx,1);
   });
-  memberSave();recomputeShortlistedIds();
+  recomputeShortlistedIds();
   if(currentRecruiter){
     sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
   }
@@ -574,18 +572,26 @@ function openCreateListModal(){
     var poste=document.getElementById('clPoste').value;
     var ville=document.getElementById('clVille').value;
     var err=document.getElementById('clError');
+    var btn=document.getElementById('clSubmitBtn');
     if(!name){err.textContent='Merci de donner un nom à la shortlist.';err.classList.add('visible');return;}
-    var id='list_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    if(!currentRecruiter){err.textContent='Impossible de créer une shortlist pour le moment.';err.classList.add('visible');return;}
     var title=(poste?poste+' ':'')+(ville?ville.toUpperCase()+' ':'')+'"'+name+'"';
-    customLists.push({id:id,name:name,poste:poste,ville:ville,title:title});
-    listsSave();
-    membership[id]=[];
-    memberSave();
-    activeShortlistId=id;activeListSave();
-    modal.remove();
-    renderListSwitcher();
-    renderShortlist();
-    showToast('Shortlist créée ✓','success');
+    btn.disabled=true;btn.textContent='Création…';err.classList.remove('visible');
+    sb.from('shortlist_lists').insert({recruiter_id:currentRecruiter.id,name:name,poste:poste,ville:ville,title:title}).select().single().then(function(r){
+      if(r.error||!r.data){
+        err.textContent='Erreur lors de la création de la shortlist.';err.classList.add('visible');
+        btn.disabled=false;btn.textContent='Créer';
+        return;
+      }
+      var l=r.data;
+      customLists.push({id:l.id,name:l.name,poste:l.poste||'',ville:l.ville||'',title:l.title});
+      membership[l.id]=[];
+      activeShortlistId=l.id;activeListSave();
+      modal.remove();
+      renderListSwitcher();
+      renderShortlist();
+      showToast('Shortlist créée ✓','success');
+    });
   });
 }
 function openChooseListModal(candidateId,onChoose){
@@ -686,7 +692,7 @@ async function handleSignup(e){
   if(r.error){err.textContent=r.error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Créer mon compte →';return;}
   if(r.data&&r.data.user)await sb.from('recruiters').insert({user_id:r.data.user.id,email,company_name:company,prenom,nom,plan:'free'});
 }
-async function handleLogout(){lsSave();await sb.auth.signOut();showAuth();}
+async function handleLogout(){await sb.auth.signOut();showAuth();}
 function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
 function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
 
@@ -694,9 +700,10 @@ sb.auth.onAuthStateChange(function(event,session){
   if(session){
     showDashboard();
     setTimeout(function(){
-      initShortlistState();
-      updateShortlistCount();
-      loadRecruiterProfile(session.user).then(function(){loadCandidates();loadShortlist();});
+      loadRecruiterProfile(session.user).then(function(){
+        initShortlistState().then(function(){updateShortlistCount();renderShortlist();});
+        loadCandidates();
+      });
     },0);
   }else{showAuth();}
 });
@@ -731,15 +738,6 @@ function populateVilleOptions(){
     el.innerHTML=opts;
     if(villes.indexOf(cur)>=0)el.value=cur;
   });
-}
-
-async function loadShortlist(){
-  if(currentRecruiter){
-    var r=await sb.from('shortlists').select('candidate_id').eq('recruiter_id',currentRecruiter.id);
-    (r.data||[]).forEach(function(s){if(membership.default.indexOf(s.candidate_id)<0)membership.default.push(s.candidate_id);});
-    memberSave();recomputeShortlistedIds();
-  }
-  updateShortlistCount();renderShortlist();renderListSwitcher();
 }
 
 function applyFilters(){
@@ -1001,16 +999,17 @@ document.getElementById('slListPanel').addEventListener('click',function(e){
     var list=getListById(lid);
     if(!list)return;
     if(confirm('Supprimer la shortlist "'+list.title+'" ? Les candidats resteront dans vos autres shortlists si présents ailleurs.')){
-      customLists=customLists.filter(function(l){return l.id!==lid;});
-      listsSave();
-      delete membership[lid];
-      memberSave();
-      recomputeShortlistedIds();
-      if(activeShortlistId===lid){activeShortlistId='default';activeListSave();}
-      renderListSwitcher();
-      renderShortlist();
-      updateShortlistCount();
-      showToast('Shortlist supprimée');
+      sb.from('shortlist_lists').delete().eq('id',lid).then(function(r){
+        if(r.error){showToast('Erreur lors de la suppression','error');return;}
+        customLists=customLists.filter(function(l){return l.id!==lid;});
+        delete membership[lid];
+        recomputeShortlistedIds();
+        if(activeShortlistId===lid){activeShortlistId='default';activeListSave();}
+        renderListSwitcher();
+        renderShortlist();
+        updateShortlistCount();
+        showToast('Shortlist supprimée');
+      });
     }
     return;
   }
