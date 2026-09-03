@@ -7,7 +7,8 @@
   <meta name="description" content="SalesUncut certifie les commerciaux par simulation commerciale réelle. Recrutez sur la preuve, pas sur le CV. 6 dimensions scorées, extraits audio, pool filtrable.">
   <link rel="stylesheet" href="style.css">
   <style>
-    .hero { position: relative; min-height: calc(100vh - var(--nav-h, 76px)); display: flex; align-items: center; padding: 40px 0; overflow: hidden; }
+    .hero-fold { display: flex; flex-direction: column; height: calc(100vh - var(--nav-h, 76px)); }
+    .hero { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; padding: 24px 0; overflow: hidden; }
     .hero > .container { width: 100%; min-width: 0; }
     .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
     .hero h1 { font-size: clamp(56px, 7vw, 104px); margin: 24px 0 28px; }
@@ -167,6 +168,7 @@
   </div>
 
   <!-- BLOC 1 — explication ultra concise + visuel + choix binaire -->
+  <div class="hero-fold">
   <section class="hero">
     <div class="container">
       <div class="hero-grid">
@@ -185,6 +187,21 @@
       </div>
     </div>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>La preuve avant l&rsquo;entretien</span><span class="gold-text">&starf;</span>
+      <span>Candidats &amp; recruteurs, m&ecirc;me standard</span><span class="gold-text">&starf;</span>
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Simulation commerciale r&eacute;elle</span><span class="gold-text">&starf;</span>
+      <span>La preuve avant l&rsquo;entretien</span><span class="gold-text">&starf;</span>
+      <span>Candidats &amp; recruteurs, m&ecirc;me standard</span><span class="gold-text">&starf;</span>
+      <span>Score sur 6 dimensions</span><span class="gold-text">&starf;</span>
+      <span>Simulation commerciale r&eacute;elle</span><span class="gold-text">&starf;</span>
+    </div>
+  </div>
+  </div>
 
   <!-- LE SPLIT IMMÉDIAT — explication concise candidat/recruteur -->
   <section class="section" style="padding: 0 0 8px;">
