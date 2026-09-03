@@ -29,35 +29,22 @@
     .hero-fold { display: flex; flex-direction: column; min-height: calc(100vh - var(--nav-h, 76px)); }
     .rec-hero { flex: 1; display: flex; align-items: center; padding: 40px 0; overflow: hidden; }
     .rec-hero > .container { width: 100%; min-width: 0; }
-    /* bannière dynamique réduite de 25 % (propre à cette page — .marquee est aussi utilisée ailleurs) */
-    .hero-fold .marquee { padding: 24px 0; }
-    .hero-fold .marquee-track { gap: 72px; }
-    .hero-fold .marquee-track span { font-size: 21px; }
-    .hero-fold .marquee-track .gold-text { font-size: 24px; }
-    /* titre ramené à gauche, réduit de 25 %, avec les cards de nouveau à droite */
-    .rec-hero-grid { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 68px; width: 100%; }
-    .rec-hero-grid > div:first-child { flex: 1 1 auto; min-width: 0; }
+    /* titre ramené à gauche, avec les cards de nouveau à droite */
+    .rec-hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; width: 100%; }
     /* le titre doit rester dans l'écran (hero + bandeau = 100vh) même sur les fenêtres basses ;
        la taille suit donc aussi la hauteur dispo, pas seulement la largeur (max 102px = -25%) */
     .rec-hero h1 { font-size: clamp(48px, min(7.5vw, calc((100vh - var(--nav-h, 76px) - 465px) / 3.6)), 102px); margin: 15px 0 17px; overflow-wrap: break-word; }
     .rec-hero h1 .gold-word { color: var(--gold-deep); }
     .rec-hero p.lede { font-size: 27px; color: var(--teal-2); max-width: 480px; margin-bottom: 22px; line-height: 1.4; }
-    /* colonne visuel plus étroite qu'avant le doublement : la colonne de texte a besoin de
-       cette place pour ne pas replier le titre sur trop de lignes et dépasser l'écran */
-    .hero-stage {
-      --stage-w: clamp(140px, 16vw, 220px); --card-w: min(130px, var(--stage-w));
-      position: relative; aspect-ratio: 0.85; perspective: 1400px; overflow: visible; flex: 0 0 auto; width: var(--stage-w);
-    }
+    .hero-stage { position: relative; aspect-ratio: 0.8; perspective: 1400px; overflow: visible; }
     .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
-    /* écart entre les cards proportionnel à leur largeur réelle (qui rétrécit avec la colonne),
-       resserré par rapport à l'original pour ne jamais empiéter sur le titre à gauche */
-    .hero-card-stack .tcard:nth-child(1) { transform: translateX(calc(-0.14 * var(--card-w))) translateY(18px) rotate(-11deg); z-index: 1; }
+    .hero-card-stack .tcard:nth-child(1) { transform: translateX(-110px) translateY(20px) rotate(-12deg); z-index: 1; }
     .hero-card-stack .tcard:nth-child(2) { transform: translateY(0) rotate(2deg); z-index: 3; }
-    .hero-card-stack .tcard:nth-child(3) { transform: translateX(calc(0.14 * var(--card-w))) translateY(18px) rotate(9deg); z-index: 2; }
-    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(calc(-0.24 * var(--card-w))) translateY(0) rotate(-16deg); }
-    .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-10px) rotate(0) scale(1.04); z-index: 4; }
-    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(calc(0.24 * var(--card-w))) translateY(0) rotate(14deg); }
+    .hero-card-stack .tcard:nth-child(3) { transform: translateX(110px) translateY(20px) rotate(10deg); z-index: 2; }
+    .hero-stage:hover .tcard:nth-child(1) { transform: translateX(-190px) translateY(0) rotate(-18deg); }
+    .hero-stage:hover .tcard:nth-child(2) { transform: translateY(-12px) rotate(0) scale(1.04); z-index: 4; }
+    .hero-stage:hover .tcard:nth-child(3) { transform: translateX(190px) translateY(0) rotate(16deg); }
 
     /* ---------- Bands ---------- */
     .band { padding: 80px 0; }
@@ -373,8 +360,8 @@
          continue de rétrécir : on lui donne sa propre courbe pour que les mots les plus longs
          (« impression », « d'entretien ») continuent à tenir sans être coupés ni cassés. */
       .rec-hero h1 { font-size: clamp(30px, 8.25vw, 68px); }
+      .rec-hero-grid { grid-template-columns: 1fr; gap: 32px; }
       .hero-stage { display: none; }
-      .rec-hero-grid { gap: 0; }
       .benefit-row, .pool-preview-grid { grid-template-columns: 1fr; }
       .benefit-row { gap: 44px; }
       .corr-headers, .corr-rule, .corr-row, .corr-final { grid-template-columns: 1fr; }
@@ -444,7 +431,7 @@
         <div class="rec-hero-grid">
           <div>
             <span class="eyebrow">Pour les recruteurs</span>
-            <h1>Un <span class="gold-word">score</span> de vente, pas une <span class="gold-word">impression</span> d'entretien.</h1>
+            <h1>Un <span class="gold-word">score</span> de vente<br>pas une <span class="gold-word">impression</span> d'entretien.</h1>
             <p class="lede">Chaque candidat passe un appel de vente évalué sur 6 dimensions commerciales. Vous recrutez sur une donnée, pas sur un ressenti.</p>
             <a href="recruiter.html" class="btn gold">Se connecter &rarr;</a>
           </div>
