@@ -848,6 +848,15 @@ sb.auth.onAuthStateChange(function(event,session){
 
 async function loadRecruiterProfile(user){
   var r=await sb.from('recruiters').select('*').eq('user_id',user.id).single();
+  if(!r.data){
+    /* Auto-réparation : un compte auth sans ligne recruiters associée
+       (ex. ancien flux d'inscription interrompu, confirmation email
+       en attente au moment de l'insert d'origine) restait bloqué en
+       silence — currentRecruiter jamais renseigné, shortlists et
+       recherches enregistrées jamais synchronisées. On la recrée ici. */
+    var ins=await sb.from('recruiters').insert({user_id:user.id,email:user.email,company_name:(user.email||'').split('@')[0]||'Mon entreprise',plan:'free'}).select().single();
+    if(!ins.error)r.data=ins.data;else console.warn('SB recruiter auto-create:',ins.error.message);
+  }
   currentRecruiter=r.data;
   if(r.data){
     var d=r.data;
