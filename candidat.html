@@ -7,7 +7,9 @@
   <meta name="description" content="SalesUncut transforme un appel de vente simulé en preuve concrète : score, extraits audio, rapport détaillé et profil consultable par les recruteurs.">
   <link rel="stylesheet" href="style.css">
   <style>
-    .cand-hero { padding: 60px 0 80px; position: relative; overflow: hidden; }
+    .hero-fold { display: flex; flex-direction: column; min-height: calc(100vh - var(--nav-h, 76px)); }
+    .cand-hero { flex: 1; display: flex; align-items: center; padding: 40px 0; overflow: hidden; position: relative; }
+    .cand-hero > .container { width: 100%; min-width: 0; }
     .cand-hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
     .cand-hero h1 { font-size: clamp(48px, 6.5vw, 88px); margin: 20px 0 20px; }
     .cand-hero h1 .accent { color: var(--gold-deep); font-family: var(--font-serif); font-style: italic; text-transform: none; font-weight: 400; }
@@ -43,7 +45,6 @@
     .faq details[open] summary::after { content: '−'; }
     .faq p { margin-top: 12px; color: var(--teal-2); font-size: 15px; line-height: 1.55; }
     @media (max-width: 900px) {
-      .cand-hero { padding: 32px 0 56px; }
       .cand-hero-grid { grid-template-columns: 1fr; gap: 40px; }
       .cand-hero-visual { order: -1; }
       .cand-hero-visual .tcard { transform: rotate(-2deg) scale(.85); }
@@ -74,6 +75,18 @@
       <span></span><span></span><span></span>
     </button>
   </nav>
+  <script>
+    /* Le hero + la banderole occupent tout l'écran sous la nav (comme recruteur) : on mesure
+       la hauteur réelle de la nav (variable selon le breakpoint) pour caler --nav-h. */
+    (function () {
+      var navEl = document.querySelector('.nav');
+      if (!navEl) return;
+      function setNavH() { document.documentElement.style.setProperty('--nav-h', navEl.offsetHeight + 'px'); }
+      setNavH();
+      window.addEventListener('resize', setNavH);
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(setNavH); }
+    })();
+  </script>
 
   <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
     <div class="nav-drawer-inner">
@@ -93,6 +106,7 @@
   </div>
 
   <!-- HERO -->
+  <div class="hero-fold">
   <section class="cand-hero">
     <div class="container">
       <div class="cand-hero-grid">
@@ -128,6 +142,7 @@
       <span>Anonyme si tu veux</span><span class="gold-text">&starf;</span>
       <span>Badge LinkedIn certifi&eacute;</span><span class="gold-text">&starf;</span>
     </div>
+  </div>
   </div>
 
   <!-- CE QUE CA CHANGE -->
