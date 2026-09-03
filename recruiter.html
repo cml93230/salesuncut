@@ -132,14 +132,17 @@
     .btn-see-profile{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;background:var(--ink);color:var(--cream);border-radius:3px;text-decoration:none;transition:background .2s}
     .btn-see-profile:hover{background:var(--gold-deep)}
     .pool-list{display:flex;flex-direction:column;gap:5px}
-    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 90px 110px 90px 80px 72px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
+    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 100px 90px 110px 90px 80px 72px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
     .list-header{background:var(--ink);color:rgba(255,248,231,.45);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;user-select:none}
+    .lh-sort{cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:color .2s}
+    .lh-sort:hover{color:var(--cream)}
+    .lh-sort.active{color:var(--gold)}
+    .lh-arrow{font-size:7px;line-height:1}
     .list-row{background:var(--cream);border:1.5px solid var(--cream-3);cursor:pointer;transition:border-color .2s,background .15s}
     .list-row:hover{border-color:var(--gold);background:var(--cream-2)}
     .lr-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--cream-2);border:1.5px solid var(--cream-3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:13px;color:var(--teal-3);flex-shrink:0}
     .lr-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top}
     .lr-name{font-family:var(--font-display);font-weight:900;font-size:13px;text-transform:uppercase;letter-spacing:-.01em}
-    .lr-role-tag{display:inline-block;background:var(--rust);color:var(--cream);font-family:var(--font-mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 5px;border-radius:3px;margin-top:2px}
     .lr-score{font-family:var(--font-display);font-weight:900;font-size:18px}
     .lr-score-bar{height:3px;background:var(--cream-3);border-radius:2px;overflow:hidden;margin-top:3px}
     .lr-score-bar i{display:block;height:100%;background:var(--gold-deep);border-radius:2px}
@@ -150,8 +153,10 @@
     .lr-action{display:flex;flex-direction:column;gap:5px}
     .lr-action a{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 8px;border-radius:4px;background:var(--ink);color:var(--cream);white-space:nowrap;transition:background .2s;display:block;text-align:center;box-sizing:border-box}
     .lr-action a:hover{background:var(--gold-deep)}
-    .lr-sl-btn{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:4px;border:none;cursor:pointer;background:var(--gold-deep);color:var(--cream);white-space:nowrap;transition:background .2s;display:block;width:100%;text-align:center;box-sizing:border-box}
-    .lr-sl-btn:hover{background:var(--ink)}
+    .lr-sl-btn{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:4px;border:1px solid var(--cream-3);cursor:pointer;background:var(--cream-2);color:var(--ink);white-space:nowrap;transition:background .2s;display:block;width:100%;text-align:center;box-sizing:border-box}
+    .lr-sl-btn:hover{background:var(--cream-3)}
+    .lr-sl-btn.on{background:var(--cream-3)}
+    .lr-sl-btn.on:hover{background:var(--cream-2)}
     .shortlist-empty{text-align:center;padding:72px 40px;font-family:var(--font-mono);font-size:13px;color:var(--teal-3);letter-spacing:.08em}
     .shortlist-empty .icon{font-size:48px;margin-bottom:16px;opacity:.3}
     .sl-list{display:flex;flex-direction:column;gap:8px}
@@ -203,7 +208,7 @@
     .toast.show{transform:translateY(0);opacity:1}
     .toast.success{border-left-color:#4caf50}
     .toast.error{border-left-color:var(--rust)}
-    @media(max-width:1000px){.list-header,.list-row{grid-template-columns:34px 1fr 80px 90px 70px 64px}}
+    @media(max-width:1000px){.list-header,.list-row{grid-template-columns:34px 1fr 70px 80px 90px 70px 64px}}
     @media(max-width:900px){.recruiter-bar{padding:0 20px}.tab-panel{padding:24px 20px}.account-grid{grid-template-columns:1fr}.recruiter-bar-tabs{display:none}}
     @media(max-width:600px){.list-header,.list-row{grid-template-columns:34px 1fr 70px 60px}.list-header>*:nth-child(n+5),.list-row>*:nth-child(n+5){display:none}}
   </style>
@@ -293,6 +298,7 @@
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="fVille"><option value="">Toutes</option></select></div>
         <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="fExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
         <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="fDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
+        <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="fContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
@@ -309,7 +315,7 @@
       <div class="sort-row"><span>Tri</span><select class="sort-select" id="sortBy"><option value="score">Meilleur score</option><option value="recent">Plus r&eacute;cents</option><option value="dispo">Dispo imm&eacute;diate</option></select></div>
     </div>
     <div id="poolGrid" class="pool-grid"><div class="loading-state"><div class="spinner"></div> Chargement du pool&hellip;</div></div>
-    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span>Candidat</span><span>Score</span><span>Famille</span><span>Ville</span><span>Dispo</span><span>OTE</span><span></span></div></div>
+    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="famille">Famille<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow"></i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow"></i></span><span></span></div></div>
     <div id="poolEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
   </div>
 
@@ -330,6 +336,7 @@
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="slVille"><option value="">Toutes</option></select></div>
         <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="slExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
         <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="slDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
+        <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="slContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
@@ -440,7 +447,7 @@ function normDemo(c){
     },
     hunting_pct:c.hunting_pct||50,deal_size:c.deal_size||'',sales_cycle:c.sales_cycle||'',
     experience_years:c.experience_years||null,experience_level:c.experience_level||expLevel(c.experience_years),
-    diplome:c.diplome||'',is_demo:true,_raw:c
+    diplome:c.diplome||'',contract_type:c.contract_type||'',is_demo:true,_raw:c
   };
 }
 
@@ -455,7 +462,7 @@ function normSB(c){
     stats:{accroche:c.score_accroche||0,decouverte:c.score_decouverte||0,creer_besoin:c.score_creer_besoin||0,objections:c.score_objections||0,valeur:c.score_valeur||0,closing:c.score_closing||0},
     hunting_pct:c.hunting_pct||50,deal_size:c.deal_size||'',sales_cycle:c.sales_cycle||'',
     experience_years:c.experience_years||null,experience_level:c.experience_level||expLevel(c.experience_years),
-    diplome:c.diplome||'',is_demo:false,_raw:c
+    diplome:c.diplome||'',contract_type:c.contract_type||'',is_demo:false,_raw:c
   };
 }
 
@@ -542,6 +549,7 @@ function applyFilters(){
   var q=document.getElementById('searchInput').value.toLowerCase();
   var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fVille=document.getElementById('fVille').value;
   var fExp=document.getElementById('fExperience').value,fDip=document.getElementById('fDiplome').value;
+  var fContrat=document.getElementById('fContrat').value;
   var fScoreMinRaw=document.getElementById('fScoreMin').value,fScoreMaxRaw=document.getElementById('fScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('fOte').value)||0,fDispo=parseInt(document.getElementById('fDispo').value);
@@ -552,13 +560,21 @@ function applyFilters(){
     if(fVille&&c.location!==fVille)return false;
     if(fExp&&c.experience_level!==fExp)return false;
     if(fDip&&c.diplome!==fDip)return false;
+    if(fContrat&&c.contract_type!==fContrat)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
     if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
     return true;
   });
-  if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
+  if(colSort.key){
+    src.sort(function(a,b){
+      var av=colSort.key==='availability'?dispoNum(a.availability):a[colSort.key];
+      var bv=colSort.key==='availability'?dispoNum(b.availability):b[colSort.key];
+      if(typeof av==='string'||typeof bv==='string')return colSort.dir*(String(av||'').localeCompare(String(bv||''),'fr'));
+      return colSort.dir*((av||0)-(bv||0));
+    });
+  }else if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
   else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
   currentPoolIds=src.map(function(c){return c.id;});
   document.getElementById('countDisplay').textContent=src.length;
@@ -603,6 +619,7 @@ function applyShortlistFilters(){
   var fRole=document.getElementById('slRoleF').value;
   var fVille=document.getElementById('slVille').value;
   var fExp=document.getElementById('slExperience').value,fDip=document.getElementById('slDiplome').value;
+  var fContrat=document.getElementById('slContrat').value;
   var fScoreMinRaw=document.getElementById('slScoreMin').value,fScoreMaxRaw=document.getElementById('slScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('slOte').value)||0;
@@ -614,6 +631,7 @@ function applyShortlistFilters(){
     if(fVille&&c.location!==fVille)return false;
     if(fExp&&c.experience_level!==fExp)return false;
     if(fDip&&c.diplome!==fDip)return false;
+    if(fContrat&&c.contract_type!==fContrat)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
@@ -689,15 +707,16 @@ function renderRow(c){
   var isSL=shortlistedIds.has(c.id);
   return'<div class="list-row" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="lr-avatar">'+av+'</div>'
-    +'<div><div class="lr-name">'+name+'</div>'+(c.role_type?'<span class="lr-role-tag">'+c.role_type+'</span>':'')+'</div>'
+    +'<div class="lr-name">'+name+'</div>'
+    +'<div class="lr-text">'+(c.role_type||'—')+'</div>'
     +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
     +'<div class="lr-text">'+(c.famille||'—')+'</div>'
     +'<div class="lr-text">'+(c.location||'—')+'</div>'
     +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'—')+'</div>'
     +'<div class="lr-ote">'+oteStr+'</div>'
     +'<div class="lr-action" onclick="event.stopPropagation()">'
-    +'<a href="profil.html?id='+c.id+'">Voir →</a>'
-    +'<button class="lr-sl-btn'+(isSL?' on':'')+'" onclick="toggleShortlist(\''+c.id+'\',this)">'+(isSL?'✓ SHORTLIST':'+ SHORTLIST')+'</button>'
+    +'<a href="profil.html?id='+c.id+'">Voir</a>'
+    +'<button class="lr-sl-btn'+(isSL?' on':'')+'" onclick="toggleShortlist(\''+c.id+'\',this)">'+(isSL?'SHORTLIST ✓':'SHORTLIST +')+'</button>'
     +'</div>'
     +'</div>';
 }
@@ -711,23 +730,42 @@ document.getElementById('btnCards').addEventListener('click',function(){currentV
 document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
 document.getElementById('searchInput').addEventListener('input',applyFilters);
 document.getElementById('sortBy').addEventListener('change',applyFilters);
-['fFamille','fRole','fVille','fExperience','fDiplome','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fFamille','fRole','fVille','fExperience','fDiplome','fContrat','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
 ['fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
 document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
 document.getElementById('resetFilters').addEventListener('click',function(){
-  ['fFamille','fRole','fVille','fExperience','fDiplome','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['fFamille','fRole','fVille','fExperience','fDiplome','fContrat','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
   document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
+  colSort.key=null;colSort.dir=1;updateSortArrows();
   applyFilters();
 });
 
+var colSort={key:null,dir:1};
+document.getElementById('listHeader').addEventListener('click',function(e){
+  var el=e.target.closest('.lh-sort');
+  if(!el)return;
+  var k=el.getAttribute('data-sort');
+  if(colSort.key===k){colSort.dir*=-1;}else{colSort.key=k;colSort.dir=1;}
+  updateSortArrows();
+  applyFilters();
+});
+function updateSortArrows(){
+  document.querySelectorAll('#listHeader .lh-sort').forEach(function(el){
+    var k=el.getAttribute('data-sort'),arrow=el.querySelector('.lh-arrow');
+    var active=k===colSort.key;
+    el.classList.toggle('active',active);
+    arrow.textContent=active?(colSort.dir>0?'▲':'▼'):'';
+  });
+}
+
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
-['slFamille','slRoleF','slVille','slExperience','slDiplome','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+['slFamille','slRoleF','slVille','slExperience','slDiplome','slContrat','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
 ['slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyShortlistFilters);});
 document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
 document.getElementById('slResetFilters').addEventListener('click',function(){
-  ['slFamille','slRoleF','slVille','slExperience','slDiplome','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['slFamille','slRoleF','slVille','slExperience','slDiplome','slContrat','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
   document.getElementById('slDispoVal').textContent='— toutes';document.getElementById('slSearch').value='';
   applyShortlistFilters();
