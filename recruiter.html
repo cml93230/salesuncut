@@ -60,8 +60,7 @@
     .tab-panel{display:none;padding:32px 40px}
     .tab-panel.active{display:block}
     .search-row{position:relative;margin-bottom:14px}
-    .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--teal-3);pointer-events:none}
-    .search-input{width:100%;padding:11px 16px 11px 42px;border:1.5px solid var(--cream-3);border-radius:6px;font-family:var(--font-sans);font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s;box-sizing:border-box}
+    .search-input{width:100%;padding:11px 16px;border:1.5px solid var(--cream-3);border-radius:6px;font-family:var(--font-sans);font-size:14px;color:var(--ink);background:var(--cream);outline:none;transition:border-color .2s;box-sizing:border-box}
     .search-input:focus{border-color:var(--gold-deep)}
     .search-input::placeholder{color:var(--teal-3)}
     .stats-bar{display:flex;gap:20px;flex-wrap:wrap;padding:12px 18px;background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:6px;margin-bottom:14px}
@@ -73,7 +72,7 @@
     .filters-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
     .filters-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep)}
     .filters-reset{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);cursor:pointer;background:none;border:none;padding:0}
-    .filters-groups{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+    .filters-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
     .fg-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px}
     .fg-select{width:100%;padding:9px 26px 9px 10px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7'><path d='M1 1l4 4 4-4' stroke='%23a3854f' stroke-width='1.5' fill='none'/></svg>");background-repeat:no-repeat;background-position:right 9px center;outline:none}
     .fg-select:focus{border-color:var(--gold-deep)}
@@ -133,7 +132,7 @@
     .btn-see-profile{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;background:var(--ink);color:var(--cream);border-radius:3px;text-decoration:none;transition:background .2s}
     .btn-see-profile:hover{background:var(--gold-deep)}
     .pool-list{display:flex;flex-direction:column;gap:5px}
-    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 90px 110px 90px 80px 72px 72px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
+    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 90px 110px 90px 80px 72px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
     .list-header{background:var(--ink);color:rgba(255,248,231,.45);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;user-select:none}
     .list-row{background:var(--cream);border:1.5px solid var(--cream-3);cursor:pointer;transition:border-color .2s,background .15s}
     .list-row:hover{border-color:var(--gold);background:var(--cream-2)}
@@ -148,8 +147,11 @@
     .lr-text{font-family:var(--font-mono);font-size:10px;letter-spacing:.07em;color:var(--teal-2);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .lr-dispo.imm{color:#16a34a;font-weight:700}
     .lr-ote{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--ink)}
-    .lr-action a{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 10px;border-radius:4px;background:var(--gold-deep);color:var(--cream);white-space:nowrap;transition:background .2s;display:inline-block}
-    .lr-action a:hover{background:var(--ink)}
+    .lr-action{display:flex;flex-direction:column;gap:5px}
+    .lr-action a{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;padding:6px 8px;border-radius:4px;background:var(--ink);color:var(--cream);white-space:nowrap;transition:background .2s;display:block;text-align:center;box-sizing:border-box}
+    .lr-action a:hover{background:var(--gold-deep)}
+    .lr-sl-btn{font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:4px;border:none;cursor:pointer;background:var(--gold-deep);color:var(--cream);white-space:nowrap;transition:background .2s;display:block;width:100%;text-align:center;box-sizing:border-box}
+    .lr-sl-btn:hover{background:var(--ink)}
     .shortlist-empty{text-align:center;padding:72px 40px;font-family:var(--font-mono);font-size:13px;color:var(--teal-3);letter-spacing:.08em}
     .shortlist-empty .icon{font-size:48px;margin-bottom:16px;opacity:.3}
     .sl-list{display:flex;flex-direction:column;gap:8px}
@@ -201,9 +203,8 @@
     .toast.show{transform:translateY(0);opacity:1}
     .toast.success{border-left-color:#4caf50}
     .toast.error{border-left-color:var(--rust)}
-    @media(max-width:1200px){.filters-groups{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:1000px){.list-header,.list-row{grid-template-columns:34px 1fr 80px 90px 70px 64px}}
-    @media(max-width:900px){.recruiter-bar{padding:0 20px}.tab-panel{padding:24px 20px}.account-grid{grid-template-columns:1fr}.recruiter-bar-tabs{display:none}.filters-groups{grid-template-columns:1fr 1fr}}
+    @media(max-width:900px){.recruiter-bar{padding:0 20px}.tab-panel{padding:24px 20px}.account-grid{grid-template-columns:1fr}.recruiter-bar-tabs{display:none}}
     @media(max-width:600px){.list-header,.list-row{grid-template-columns:34px 1fr 70px 60px}.list-header>*:nth-child(n+5),.list-row>*:nth-child(n+5){display:none}}
   </style>
 </head>
@@ -278,7 +279,6 @@
   <!-- ── POOL PANEL ── -->
   <div class="tab-panel active" id="panelPool">
     <div class="search-row">
-      <span class="search-icon">&#128269;</span>
       <input type="text" id="searchInput" class="search-input" placeholder="Rechercher par nom, secteur, ville, canal&#8230;">
     </div>
     <div class="stats-bar" id="statsBar"></div>
@@ -291,6 +291,8 @@
         <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="fRole"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="fVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="fExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
+        <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="fDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
@@ -314,7 +316,6 @@
   <!-- ── SHORTLIST PANEL ── -->
   <div class="tab-panel" id="panelShortlist">
     <div class="search-row">
-      <span class="search-icon">&#128269;</span>
       <input type="text" id="slSearch" class="search-input" placeholder="Rechercher dans la shortlist&#8230;">
     </div>
     <div class="stats-bar" id="slStatsBar"></div>
@@ -327,6 +328,8 @@
         <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="slVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="slExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
+        <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="slDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
@@ -399,6 +402,8 @@ let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[
 
 /* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
 function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
+/* ── Fallback niveau d'expérience à partir des années, si non fourni ── */
+function expLevel(y){if(y==null)return null;return y>=5?'Senior':y>=3?'Confirmé':'Junior';}
 
 function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote;if(typeof ote==='object'&&ote.total){var ns=String(ote.total).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}var ns=String(ote).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}
 function dispoNum(d){return DISPO_ORDER[d]!=null?DISPO_ORDER[d]:99;}
@@ -434,7 +439,8 @@ function normDemo(c){
       closing:     gs('closing',5)
     },
     hunting_pct:c.hunting_pct||50,deal_size:c.deal_size||'',sales_cycle:c.sales_cycle||'',
-    experience_years:c.experience_years||null,is_demo:true,_raw:c
+    experience_years:c.experience_years||null,experience_level:c.experience_level||expLevel(c.experience_years),
+    diplome:c.diplome||'',is_demo:true,_raw:c
   };
 }
 
@@ -448,7 +454,8 @@ function normSB(c){
     role_type:c.role_type||c.role_label||'',ote_max:c.ote_max||999,
     stats:{accroche:c.score_accroche||0,decouverte:c.score_decouverte||0,creer_besoin:c.score_creer_besoin||0,objections:c.score_objections||0,valeur:c.score_valeur||0,closing:c.score_closing||0},
     hunting_pct:c.hunting_pct||50,deal_size:c.deal_size||'',sales_cycle:c.sales_cycle||'',
-    experience_years:c.experience_years||null,is_demo:false,_raw:c
+    experience_years:c.experience_years||null,experience_level:c.experience_level||expLevel(c.experience_years),
+    diplome:c.diplome||'',is_demo:false,_raw:c
   };
 }
 
@@ -534,6 +541,7 @@ async function loadShortlist(){
 function applyFilters(){
   var q=document.getElementById('searchInput').value.toLowerCase();
   var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fVille=document.getElementById('fVille').value;
+  var fExp=document.getElementById('fExperience').value,fDip=document.getElementById('fDiplome').value;
   var fScoreMinRaw=document.getElementById('fScoreMin').value,fScoreMaxRaw=document.getElementById('fScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('fOte').value)||0,fDispo=parseInt(document.getElementById('fDispo').value);
@@ -542,6 +550,8 @@ function applyFilters(){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
     if(fVille&&c.location!==fVille)return false;
+    if(fExp&&c.experience_level!==fExp)return false;
+    if(fDip&&c.diplome!==fDip)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
@@ -592,6 +602,7 @@ function applyShortlistFilters(){
   var fFam=document.getElementById('slFamille').value;
   var fRole=document.getElementById('slRoleF').value;
   var fVille=document.getElementById('slVille').value;
+  var fExp=document.getElementById('slExperience').value,fDip=document.getElementById('slDiplome').value;
   var fScoreMinRaw=document.getElementById('slScoreMin').value,fScoreMaxRaw=document.getElementById('slScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('slOte').value)||0;
@@ -601,6 +612,8 @@ function applyShortlistFilters(){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
     if(fVille&&c.location!==fVille)return false;
+    if(fExp&&c.experience_level!==fExp)return false;
+    if(fDip&&c.diplome!==fDip)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
@@ -673,6 +686,7 @@ function renderRow(c){
   var lc=(c.level||'').toLowerCase(),name=c.name||'Anonyme';
   var av=c.photo?'<img src="'+c.photo+'" alt="">':'<span>'+(name[0]||'?')+'</span>';
   var isImm=c.availability==='Immédiat',oteStr=c.ote_max<999?c.ote_max+'k€':'—';
+  var isSL=shortlistedIds.has(c.id);
   return'<div class="list-row" onclick="goToProfile(\''+c.id+'\')">'
     +'<div class="lr-avatar">'+av+'</div>'
     +'<div><div class="lr-name">'+name+'</div>'+(c.role_type?'<span class="lr-role-tag">'+c.role_type+'</span>':'')+'</div>'
@@ -681,7 +695,10 @@ function renderRow(c){
     +'<div class="lr-text">'+(c.location||'—')+'</div>'
     +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'—')+'</div>'
     +'<div class="lr-ote">'+oteStr+'</div>'
-    +'<div class="lr-action" onclick="event.stopPropagation()"><a href="profil.html?id='+c.id+'">Voir →</a></div>'
+    +'<div class="lr-action" onclick="event.stopPropagation()">'
+    +'<a href="profil.html?id='+c.id+'">Voir →</a>'
+    +'<button class="lr-sl-btn'+(isSL?' on':'')+'" onclick="toggleShortlist(\''+c.id+'\',this)">'+(isSL?'✓ SHORTLIST':'+ SHORTLIST')+'</button>'
+    +'</div>'
     +'</div>';
 }
 
@@ -694,11 +711,11 @@ document.getElementById('btnCards').addEventListener('click',function(){currentV
 document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
 document.getElementById('searchInput').addEventListener('input',applyFilters);
 document.getElementById('sortBy').addEventListener('change',applyFilters);
-['fFamille','fRole','fVille','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fFamille','fRole','fVille','fExperience','fDiplome','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
 ['fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
 document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
 document.getElementById('resetFilters').addEventListener('click',function(){
-  ['fFamille','fRole','fVille','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['fFamille','fRole','fVille','fExperience','fDiplome','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
   document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
   applyFilters();
@@ -706,11 +723,11 @@ document.getElementById('resetFilters').addEventListener('click',function(){
 
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
-['slFamille','slRoleF','slVille','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+['slFamille','slRoleF','slVille','slExperience','slDiplome','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
 ['slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyShortlistFilters);});
 document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
 document.getElementById('slResetFilters').addEventListener('click',function(){
-  ['slFamille','slRoleF','slVille','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['slFamille','slRoleF','slVille','slExperience','slDiplome','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
   document.getElementById('slDispoVal').textContent='— toutes';document.getElementById('slSearch').value='';
   applyShortlistFilters();
