@@ -7,8 +7,9 @@
   <meta name="description" content="SalesUncut certifie les commerciaux par simulation commerciale réelle. Recrutez sur la preuve, pas sur le CV. 6 dimensions scorées, extraits audio, pool filtrable.">
   <link rel="stylesheet" href="style.css">
   <style>
-    .hero { position: relative; padding: 16px 0 120px; overflow: hidden; }
-    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: flex-start; }
+    .hero { position: relative; min-height: calc(100vh - var(--nav-h, 76px)); display: flex; align-items: center; padding: 40px 0; overflow: hidden; }
+    .hero > .container { width: 100%; min-width: 0; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; }
     .hero h1 { font-size: clamp(56px, 7vw, 104px); margin: 24px 0 28px; }
     .hero h1 .gold-word { color: var(--gold-deep); font-family: var(--font-serif); font-style: italic; text-transform: none; font-weight: 400; letter-spacing: -.02em; }
     .hero h1 .strike { position: relative; color: var(--teal-3); }
@@ -134,6 +135,18 @@
       <span></span><span></span><span></span>
     </button>
   </nav>
+  <script>
+    /* Le hero occupe tout l'écran sous la nav (comme candidat/recruteur) : on mesure
+       la hauteur réelle de la nav (variable selon le breakpoint) pour caler --nav-h. */
+    (function () {
+      var navEl = document.querySelector('.nav');
+      if (!navEl) return;
+      function setNavH() { document.documentElement.style.setProperty('--nav-h', navEl.offsetHeight + 'px'); }
+      setNavH();
+      window.addEventListener('resize', setNavH);
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(setNavH); }
+    })();
+  </script>
 
   <!-- Drawer mobile -->
   <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Menu navigation">
@@ -154,7 +167,7 @@
   </div>
 
   <!-- BLOC 1 — explication ultra concise + visuel + choix binaire -->
-  <section class="hero" style="padding: 32px 0 56px;">
+  <section class="hero">
     <div class="container">
       <div class="hero-grid">
         <div>
