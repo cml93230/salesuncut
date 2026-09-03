@@ -132,7 +132,7 @@
     .btn-see-profile{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;background:var(--ink);color:var(--cream);border-radius:3px;text-decoration:none;transition:background .2s}
     .btn-see-profile:hover{background:var(--gold-deep)}
     .pool-list{display:flex;flex-direction:column;gap:5px}
-    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 88px 82px 68px 82px 62px 90px 90px 78px 68px 88px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
+    .list-header,.list-row{display:grid;grid-template-columns:36px 1fr 82px 76px 70px 62px 64px 76px 60px 84px 84px 74px 62px 84px;align-items:center;gap:10px;padding:10px 16px;border-radius:6px}
     .list-header{background:var(--ink);color:rgba(255,248,231,.45);font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;user-select:none}
     .lh-sort{cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:color .2s}
     .lh-sort:hover{color:var(--cream)}
@@ -210,12 +210,12 @@
     .toast.success{border-left-color:#4caf50}
     .toast.error{border-left-color:var(--rust)}
     @media(max-width:1000px){
-      .list-header>*:nth-child(4),.list-header>*:nth-child(5),.list-header>*:nth-child(6),.list-row>*:nth-child(4),.list-row>*:nth-child(5),.list-row>*:nth-child(6){display:none}
+      .list-header>*:nth-child(4),.list-header>*:nth-child(5),.list-header>*:nth-child(6),.list-header>*:nth-child(7),.list-header>*:nth-child(8),.list-row>*:nth-child(4),.list-row>*:nth-child(5),.list-row>*:nth-child(6),.list-row>*:nth-child(7),.list-row>*:nth-child(8){display:none}
       .list-header,.list-row{grid-template-columns:34px 1fr 76px 60px 84px 84px 74px 64px 84px}
     }
     @media(max-width:900px){.recruiter-bar{padding:0 20px}.tab-panel{padding:24px 20px}.account-grid{grid-template-columns:1fr}.recruiter-bar-tabs{display:none}}
     @media(max-width:600px){
-      .list-header>*:nth-child(8),.list-header>*:nth-child(9),.list-header>*:nth-child(10),.list-header>*:nth-child(11),.list-row>*:nth-child(8),.list-row>*:nth-child(9),.list-row>*:nth-child(10),.list-row>*:nth-child(11){display:none}
+      .list-header>*:nth-child(10),.list-header>*:nth-child(11),.list-header>*:nth-child(12),.list-header>*:nth-child(13),.list-row>*:nth-child(10),.list-row>*:nth-child(11),.list-row>*:nth-child(12),.list-row>*:nth-child(13){display:none}
       .list-header,.list-row{grid-template-columns:32px 1fr 62px 52px 70px}
     }
   </style>
@@ -303,7 +303,9 @@
         <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="fRole"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="fVille"><option value="">Toutes</option></select></div>
-        <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="fExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
+        <div><div class="fg-lbl">Profil</div><select class="fg-select" id="fProfil"><option value="">Tous</option><option>Chasseur</option><option>Farmer</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Type</div><select class="fg-select" id="fType"><option value="">Tous</option><option>Terrain</option><option>Digital</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience (ans)</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fExpMin" min="0" max="40" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fExpMax" min="0" max="40" placeholder="Max"></div></div>
         <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="fDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
         <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="fContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fScoreMax" min="0" max="100" placeholder="Max"></div></div>
@@ -322,7 +324,7 @@
       <div class="sort-row"><span>Tri</span><select class="sort-select" id="sortBy"><option value="score">Meilleur score</option><option value="recent">Plus r&eacute;cents</option><option value="dispo">Dispo imm&eacute;diate</option></select></div>
     </div>
     <div id="poolGrid" class="pool-grid"><div class="loading-state"><div class="spinner"></div> Chargement du pool&hellip;</div></div>
-    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="experience_level">Exp&eacute;rience<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="diplome">Dipl&ocirc;me<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="contract_type">Contrat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="famille">Famille<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow">↕</i></span><span></span></div></div>
+    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="profil_type">Profil<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="mode_vente">Type<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="experience_years">Exp&eacute;rience<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="diplome">Dipl&ocirc;me<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="contract_type">Contrat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="famille">Famille<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow">↕</i></span><span></span></div></div>
     <div id="poolEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
   </div>
 
@@ -341,7 +343,9 @@
         <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
         <div><div class="fg-lbl">Ville</div><select class="fg-select" id="slVille"><option value="">Toutes</option></select></div>
-        <div><div class="fg-lbl">Exp&eacute;rience</div><select class="fg-select" id="slExperience"><option value="">Toutes</option><option>Junior</option><option>Confirm&eacute;</option><option>Senior</option></select></div>
+        <div><div class="fg-lbl">Profil</div><select class="fg-select" id="slProfil"><option value="">Tous</option><option>Chasseur</option><option>Farmer</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Type</div><select class="fg-select" id="slType"><option value="">Tous</option><option>Terrain</option><option>Digital</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience (ans)</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slExpMin" min="0" max="40" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slExpMax" min="0" max="40" placeholder="Max"></div></div>
         <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="slDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
         <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="slContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
         <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slScoreMax" min="0" max="100" placeholder="Max"></div></div>
@@ -443,6 +447,7 @@ function normDemo(c){
     id:c.id,name:c.anonymous?'Anonyme':c.name,photo:c.photo||null,
     level:level,score:c.score,famille:famObj.name,family_id:c.family,
     location:c.location||'',availability:c.availability||'',role_type:c.role_type||'AE',
+    profil_type:c.profil_type||'',mode_vente:c.mode_vente||'',
     ote_max:parseOteMax(c.ote),
     stats:{
       accroche:    gs('accroche',0),
@@ -465,7 +470,9 @@ function normSB(c){
     id:c.simulation_id||c.id,name:name,photo:c.photo_url||null,
     level:level,score:c.score_global||0,famille:c.famille||'',family_id:null,
     location:c.ville||c.location||'',availability:c.disponibilite||c.availability||'',
-    role_type:c.role_type||c.role_label||'',ote_max:c.ote_max||999,
+    role_type:c.role_type||c.role_label||'',
+    profil_type:c.profil_type||'',mode_vente:c.mode_vente||'',
+    ote_max:c.ote_max||999,
     stats:{accroche:c.score_accroche||0,decouverte:c.score_decouverte||0,creer_besoin:c.score_creer_besoin||0,objections:c.score_objections||0,valeur:c.score_valeur||0,closing:c.score_closing||0},
     hunting_pct:c.hunting_pct||50,deal_size:c.deal_size||'',sales_cycle:c.sales_cycle||'',
     experience_years:c.experience_years||null,experience_level:c.experience_level||expLevel(c.experience_years),
@@ -555,7 +562,10 @@ async function loadShortlist(){
 function applyFilters(){
   var q=document.getElementById('searchInput').value.toLowerCase();
   var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fVille=document.getElementById('fVille').value;
-  var fExp=document.getElementById('fExperience').value,fDip=document.getElementById('fDiplome').value;
+  var fProfil=document.getElementById('fProfil').value,fType=document.getElementById('fType').value;
+  var fExpMinRaw=document.getElementById('fExpMin').value,fExpMaxRaw=document.getElementById('fExpMax').value;
+  var fExpMin=fExpMinRaw!==''?parseInt(fExpMinRaw):0,fExpMax=fExpMaxRaw!==''?parseInt(fExpMaxRaw):99;
+  var fDip=document.getElementById('fDiplome').value;
   var fContrat=document.getElementById('fContrat').value;
   var fScoreMinRaw=document.getElementById('fScoreMin').value,fScoreMaxRaw=document.getElementById('fScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
@@ -565,7 +575,10 @@ function applyFilters(){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
     if(fVille&&c.location!==fVille)return false;
-    if(fExp&&c.experience_level!==fExp)return false;
+    if(fProfil&&c.profil_type!==fProfil)return false;
+    if(fType&&c.mode_vente!==fType)return false;
+    var expY=c.experience_years||0;
+    if(expY<fExpMin||expY>fExpMax)return false;
     if(fDip&&c.diplome!==fDip)return false;
     if(fContrat&&c.contract_type!==fContrat)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
@@ -625,7 +638,10 @@ function applyShortlistFilters(){
   var fFam=document.getElementById('slFamille').value;
   var fRole=document.getElementById('slRoleF').value;
   var fVille=document.getElementById('slVille').value;
-  var fExp=document.getElementById('slExperience').value,fDip=document.getElementById('slDiplome').value;
+  var fProfil=document.getElementById('slProfil').value,fType=document.getElementById('slType').value;
+  var fExpMinRaw=document.getElementById('slExpMin').value,fExpMaxRaw=document.getElementById('slExpMax').value;
+  var fExpMin=fExpMinRaw!==''?parseInt(fExpMinRaw):0,fExpMax=fExpMaxRaw!==''?parseInt(fExpMaxRaw):99;
+  var fDip=document.getElementById('slDiplome').value;
   var fContrat=document.getElementById('slContrat').value;
   var fScoreMinRaw=document.getElementById('slScoreMin').value,fScoreMaxRaw=document.getElementById('slScoreMax').value;
   var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
@@ -636,7 +652,10 @@ function applyShortlistFilters(){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
     if(fVille&&c.location!==fVille)return false;
-    if(fExp&&c.experience_level!==fExp)return false;
+    if(fProfil&&c.profil_type!==fProfil)return false;
+    if(fType&&c.mode_vente!==fType)return false;
+    var expY=c.experience_years||0;
+    if(expY<fExpMin||expY>fExpMax)return false;
     if(fDip&&c.diplome!==fDip)return false;
     if(fContrat&&c.contract_type!==fContrat)return false;
     if(c.score<fScoreMin||c.score>fScoreMax)return false;
@@ -716,7 +735,9 @@ function renderRow(c){
     +'<div class="lr-avatar">'+av+'</div>'
     +'<div class="lr-name">'+name+'</div>'
     +'<div class="lr-text">'+(c.role_type||'—')+'</div>'
-    +'<div class="lr-text">'+(c.experience_level||'—')+'</div>'
+    +'<div class="lr-text">'+(c.profil_type||'—')+'</div>'
+    +'<div class="lr-text">'+(c.mode_vente||'—')+'</div>'
+    +'<div class="lr-text">'+(c.experience_years!=null?c.experience_years+' an'+(c.experience_years>1?'s':''):'—')+'</div>'
     +'<div class="lr-text">'+(c.diplome||'—')+'</div>'
     +'<div class="lr-text">'+(c.contract_type||'—')+'</div>'
     +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
@@ -740,11 +761,11 @@ document.getElementById('btnCards').addEventListener('click',function(){currentV
 document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
 document.getElementById('searchInput').addEventListener('input',applyFilters);
 document.getElementById('sortBy').addEventListener('change',applyFilters);
-['fFamille','fRole','fVille','fExperience','fDiplome','fContrat','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
-['fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
+['fFamille','fRole','fVille','fProfil','fType','fDiplome','fContrat','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fScoreMin','fScoreMax','fExpMin','fExpMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
 document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
 document.getElementById('resetFilters').addEventListener('click',function(){
-  ['fFamille','fRole','fVille','fExperience','fDiplome','fContrat','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['fFamille','fRole','fVille','fProfil','fType','fDiplome','fContrat','fOte','fScoreMin','fScoreMax','fExpMin','fExpMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
   document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
   colSort.key=null;colSort.dir=1;updateSortArrows();
@@ -772,11 +793,11 @@ updateSortArrows();
 
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
-['slFamille','slRoleF','slVille','slExperience','slDiplome','slContrat','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
-['slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyShortlistFilters);});
+['slFamille','slRoleF','slVille','slProfil','slType','slDiplome','slContrat','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+['slScoreMin','slScoreMax','slExpMin','slExpMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyShortlistFilters);});
 document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
 document.getElementById('slResetFilters').addEventListener('click',function(){
-  ['slFamille','slRoleF','slVille','slExperience','slDiplome','slContrat','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
+  ['slFamille','slRoleF','slVille','slProfil','slType','slDiplome','slContrat','slOte','slScoreMin','slScoreMax','slExpMin','slExpMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
   document.getElementById('slDispoVal').textContent='— toutes';document.getElementById('slSearch').value='';
   applyShortlistFilters();
