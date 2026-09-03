@@ -97,6 +97,35 @@
     .view-btn.active{background:var(--ink);color:var(--cream);border-color:var(--ink)}
     .sort-row{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3)}
     .sort-select{padding:7px 11px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;outline:none}
+    .sl-list-switcher{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .sl-list-dropdown-wrap{position:relative}
+    .sl-list-dropdown-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sl-list-dropdown-btn:hover{border-color:var(--gold-deep)}
+    .sl-list-caret{font-size:9px;color:var(--teal-3);flex-shrink:0}
+    .sl-list-dropdown-panel{position:absolute;top:calc(100% + 6px);left:0;z-index:50;min-width:340px;max-width:420px;background:var(--cream);border:1.5px solid var(--ink);border-radius:8px;box-shadow:0 12px 32px rgba(26,34,34,.25);padding:6px;max-height:280px;overflow-y:auto}
+    .sl-list-dropdown-panel[hidden]{display:none}
+    .sl-list-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:9px 10px;border-radius:5px}
+    .sl-list-row:hover{background:var(--cream-2)}
+    .sl-list-row.active{background:rgba(201,168,106,.14)}
+    .sl-list-row-name{font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .sl-list-row-count{color:var(--teal-3)}
+    .sl-list-row-del{font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--rust);cursor:pointer;flex-shrink:0;padding:3px 6px;border-radius:3px;white-space:nowrap}
+    .sl-list-row-del:hover{background:rgba(179,78,42,.12)}
+    .sl-list-create-btn{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:4px;border:1.5px dashed var(--gold-deep);background:none;color:var(--gold-deep);cursor:pointer;white-space:nowrap;transition:all .2s}
+    .sl-list-create-btn:hover{background:rgba(201,168,106,.12)}
+    .su-modal-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
+    .su-modal-backdrop{position:fixed;inset:0;background:rgba(26,34,34,.7);backdrop-filter:blur(6px)}
+    .su-modal-box{position:relative;z-index:2;background:var(--cream);border:1.5px solid var(--ink);border-radius:10px;width:100%;max-width:440px;box-shadow:0 32px 80px rgba(26,34,34,.4);overflow:hidden}
+    .su-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--ink);color:var(--cream);font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+    .su-modal-x{background:none;border:none;color:rgba(255,248,231,.6);font-size:14px;cursor:pointer}
+    .su-modal-x:hover{color:var(--cream)}
+    .su-modal-body{padding:20px;display:flex;flex-direction:column;gap:14px}
+    .su-modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--cream-3)}
+    .su-modal-error{font-size:12px;color:var(--rust);display:none}
+    .su-modal-error.visible{display:block}
+    .su-choose-list-options{display:flex;flex-direction:column;gap:8px}
+    .su-choose-list-opt{text-align:left;padding:10px 14px;border-radius:5px;border:1.5px solid var(--cream-3);background:var(--cream-2);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;transition:all .2s}
+    .su-choose-list-opt:hover{border-color:var(--gold-deep);background:rgba(201,168,106,.1)}
     .pool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:22px}
     .dash-card{background:var(--cream-2);border:1.5px solid var(--ink);border-radius:12px;box-shadow:var(--shadow-card);overflow:hidden;position:relative;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s;cursor:pointer}
     .dash-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card-lg)}
@@ -355,6 +384,13 @@
     </div>
     <div class="results-bar">
       <div class="results-left">
+        <div class="sl-list-switcher">
+          <div class="sl-list-dropdown-wrap">
+            <button type="button" class="sl-list-dropdown-btn" id="slListBtn"><span id="slListBtnLabel">Shortlist par d&eacute;faut</span><i class="sl-list-caret">&#9662;</i></button>
+            <div class="sl-list-dropdown-panel" id="slListPanel" hidden></div>
+          </div>
+          <button type="button" class="sl-list-create-btn" id="slCreateListBtn">+ Cr&eacute;er une shortlist</button>
+        </div>
         <div class="results-count"><span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span></div>
       </div>
       <div class="sort-row"><span>Tri</span>
@@ -415,8 +451,13 @@ const DIMS=[
 const DISPO_LABELS=['≤ 1j','1 mois','2 mois','3 mois','Toutes'];
 const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
 const LS_KEY='su_shortlist_v1';
+const LISTS_KEY='su_lists_v1';
+const MEMBERSHIP_KEY='su_membership_v1';
+const ACTIVE_LIST_KEY='su_active_list_v1';
+const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
+let customLists=[],membership={},activeShortlistId='default';
 
 /* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
 function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
@@ -427,6 +468,148 @@ function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote
 function dispoNum(d){return DISPO_ORDER[d]!=null?DISPO_ORDER[d]:99;}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify([...shortlistedIds]));}catch(e){}}
 function lsLoad(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'[]');}catch(e){return[];}}
+
+/* ── Shortlists multiples ── */
+function listsSave(){try{localStorage.setItem(LISTS_KEY,JSON.stringify(customLists));}catch(e){}}
+function listsLoad(){try{return JSON.parse(localStorage.getItem(LISTS_KEY)||'[]');}catch(e){return[];}}
+function memberSave(){try{localStorage.setItem(MEMBERSHIP_KEY,JSON.stringify(membership));}catch(e){}}
+function memberLoad(){try{return JSON.parse(localStorage.getItem(MEMBERSHIP_KEY)||'{}');}catch(e){return{};}}
+function activeListSave(){try{localStorage.setItem(ACTIVE_LIST_KEY,activeShortlistId);}catch(e){}}
+function activeListLoad(){try{return localStorage.getItem(ACTIVE_LIST_KEY)||'default';}catch(e){return'default';}}
+function getAllLists(){return[DEFAULT_LIST].concat(customLists);}
+function getListById(id){return getAllLists().find(function(l){return l.id===id;});}
+function recomputeShortlistedIds(){
+  var s=new Set();
+  Object.keys(membership).forEach(function(lid){(membership[lid]||[]).forEach(function(id){s.add(id);});});
+  shortlistedIds=s;
+}
+function initShortlistState(){
+  customLists=listsLoad();
+  membership=memberLoad();
+  if(!membership.default){
+    membership.default=lsLoad().slice();
+    memberSave();
+  }
+  Object.keys(membership).forEach(function(lid){if(!Array.isArray(membership[lid]))membership[lid]=[];});
+  activeShortlistId=activeListLoad();
+  if(!getListById(activeShortlistId))activeShortlistId='default';
+  recomputeShortlistedIds();
+  renderListSwitcher();
+}
+function addToList(listId,candidateId){
+  var wasShortlisted=shortlistedIds.has(candidateId);
+  if(!membership[listId])membership[listId]=[];
+  if(membership[listId].indexOf(candidateId)<0)membership[listId].push(candidateId);
+  memberSave();recomputeShortlistedIds();
+  if(!wasShortlisted&&currentRecruiter){
+    sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:candidateId}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
+  }
+}
+function removeFromList(listId,candidateId){
+  if(membership[listId]){
+    var idx=membership[listId].indexOf(candidateId);
+    if(idx>=0)membership[listId].splice(idx,1);
+  }
+  memberSave();recomputeShortlistedIds();
+  if(!shortlistedIds.has(candidateId)&&currentRecruiter){
+    sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
+  }
+}
+function removeFromAllLists(candidateId){
+  Object.keys(membership).forEach(function(lid){
+    var idx=membership[lid].indexOf(candidateId);
+    if(idx>=0)membership[lid].splice(idx,1);
+  });
+  memberSave();recomputeShortlistedIds();
+  if(currentRecruiter){
+    sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
+  }
+}
+function removeFromActiveList(candidateId){
+  removeFromList(activeShortlistId,candidateId);
+  showToast('Retiré de cette shortlist');
+  updateShortlistCount();renderShortlist();renderListSwitcher();
+}
+function renderListSwitcher(){
+  var btnLbl=document.getElementById('slListBtnLabel');
+  if(!btnLbl)return;
+  var active=getListById(activeShortlistId)||DEFAULT_LIST;
+  btnLbl.textContent=active.title;
+  var panel=document.getElementById('slListPanel');
+  var lists=getAllLists();
+  panel.innerHTML=lists.map(function(l){
+    var cnt=(membership[l.id]||[]).length;
+    return'<div class="sl-list-row'+(l.id===activeShortlistId?' active':'')+'">'
+      +'<span class="sl-list-row-name" data-select-list="'+l.id+'">'+l.title+' <span class="sl-list-row-count">('+cnt+')</span></span>'
+      +(l.id!=='default'?'<span class="sl-list-row-del" data-delete-list="'+l.id+'">Supprimer</span>':'')
+      +'</div>';
+  }).join('');
+}
+function openCreateListModal(){
+  var existing=document.getElementById('su-createlist-modal');if(existing)existing.remove();
+  var villes=allCandidates.map(function(c){return c.location;}).filter(Boolean);
+  villes=villes.filter(function(v,i){return villes.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'fr');});
+  var villeOpts=villes.map(function(v){return'<option value="'+v+'">'+v+'</option>';}).join('');
+  var ROLE_OPTS=[{v:'AE',l:'AE · Account Executive'},{v:'SDR',l:'SDR · Sales Dev Rep'},{v:'BDM',l:'BDM · Business Dev'},{v:'AM',l:'AM · Account Manager'},{v:'KAM',l:'KAM · Key Account'},{v:'CSM',l:'CSM · Customer Success'}];
+  var posteOpts=ROLE_OPTS.map(function(r){return'<option value="'+r.v+'">'+r.l+'</option>';}).join('');
+  var modal=document.createElement('div');
+  modal.id='su-createlist-modal';modal.className='su-modal-overlay';
+  modal.innerHTML=
+    '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-createlist-modal\').remove()"></div>'
+    +'<div class="su-modal-box">'
+    +'<div class="su-modal-header"><span>Nouvelle shortlist</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-createlist-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body">'
+    +'<div class="form-group"><label class="form-label">Nom de la shortlist</label><input type="text" id="clName" class="form-input" placeholder="Ex: Recrutement Q3" maxlength="40"/></div>'
+    +'<div class="form-row">'
+    +'<div class="form-group"><label class="form-label">Poste</label><select id="clPoste" class="fg-select" style="padding:12px 26px 12px 12px;font-size:13px">'+posteOpts+'</select></div>'
+    +'<div class="form-group"><label class="form-label">Ville</label><select id="clVille" class="fg-select" style="padding:12px 26px 12px 12px;font-size:13px">'+(villeOpts||'<option value="">—</option>')+'</select></div>'
+    +'</div>'
+    +'<div class="su-modal-error" id="clError"></div>'
+    +'</div>'
+    +'<div class="su-modal-footer"><button type="button" class="filters-reset" onclick="document.getElementById(\'su-createlist-modal\').remove()">Annuler</button><button type="button" class="auth-submit" style="width:auto;padding:10px 20px" id="clSubmitBtn">Créer</button></div>'
+    +'</div>';
+  document.body.appendChild(modal);
+  document.getElementById('clSubmitBtn').addEventListener('click',function(){
+    var name=document.getElementById('clName').value.trim();
+    var poste=document.getElementById('clPoste').value;
+    var ville=document.getElementById('clVille').value;
+    var err=document.getElementById('clError');
+    if(!name){err.textContent='Merci de donner un nom à la shortlist.';err.classList.add('visible');return;}
+    var id='list_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    var title=(poste?poste+' ':'')+(ville?ville.toUpperCase()+' ':'')+'"'+name+'"';
+    customLists.push({id:id,name:name,poste:poste,ville:ville,title:title});
+    listsSave();
+    membership[id]=[];
+    memberSave();
+    activeShortlistId=id;activeListSave();
+    modal.remove();
+    renderListSwitcher();
+    renderShortlist();
+    showToast('Shortlist créée ✓','success');
+  });
+}
+function openChooseListModal(candidateId,onChoose){
+  var existing=document.getElementById('su-chooselist-modal');if(existing)existing.remove();
+  var lists=getAllLists();
+  var modal=document.createElement('div');
+  modal.id='su-chooselist-modal';modal.className='su-modal-overlay';
+  modal.innerHTML=
+    '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-chooselist-modal\').remove()"></div>'
+    +'<div class="su-modal-box" style="max-width:380px">'
+    +'<div class="su-modal-header"><span>Ajouter à quelle shortlist ?</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-chooselist-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body"><div class="su-choose-list-options">'
+    +lists.map(function(l){return'<button type="button" class="su-choose-list-opt" data-choose-list="'+l.id+'">'+l.title+'</button>';}).join('')
+    +'</div></div>'
+    +'</div>';
+  document.body.appendChild(modal);
+  modal.querySelectorAll('[data-choose-list]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var lid=btn.getAttribute('data-choose-list');
+      modal.remove();
+      onChoose(lid);
+    });
+  });
+}
 
 function normDemo(c){
   var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||'',icon:''};
@@ -511,7 +694,7 @@ sb.auth.onAuthStateChange(function(event,session){
   if(session){
     showDashboard();
     setTimeout(function(){
-      lsLoad().forEach(function(id){shortlistedIds.add(id);});
+      initShortlistState();
       updateShortlistCount();
       loadRecruiterProfile(session.user).then(function(){loadCandidates();loadShortlist();});
     },0);
@@ -553,10 +736,10 @@ function populateVilleOptions(){
 async function loadShortlist(){
   if(currentRecruiter){
     var r=await sb.from('shortlists').select('candidate_id').eq('recruiter_id',currentRecruiter.id);
-    (r.data||[]).forEach(function(s){shortlistedIds.add(s.candidate_id);});
-    lsSave();
+    (r.data||[]).forEach(function(s){if(membership.default.indexOf(s.candidate_id)<0)membership.default.push(s.candidate_id);});
+    memberSave();recomputeShortlistedIds();
   }
-  updateShortlistCount();renderShortlist();
+  updateShortlistCount();renderShortlist();renderListSwitcher();
 }
 
 function applyFilters(){
@@ -623,11 +806,13 @@ function SI(n,l){return'<div class="stat-item"><div class="stat-num">'+n+'</div>
 function SEP(){return'<div class="stat-sep"></div>';}
 
 function applyShortlistFilters(){
-  var all=allCandidates.filter(function(c){return shortlistedIds.has(c.id);});
+  var activeList=getListById(activeShortlistId)||DEFAULT_LIST;
+  var memberIds=membership[activeShortlistId]||[];
+  var all=allCandidates.filter(function(c){return memberIds.indexOf(c.id)>=0;});
   var total=all.length;
   if(!total){
     document.getElementById('shortlistContent').innerHTML=
-      '<div class="shortlist-empty"><div class="icon">♡</div>Votre shortlist est vide.<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
+      '<div class="shortlist-empty"><div class="icon">♡</div>'+(activeShortlistId==='default'?'Votre shortlist est vide.':'La shortlist "'+activeList.title+'" est vide.')+'<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
     document.getElementById('slEmpty').style.display='none';
     document.getElementById('slStatsBar').innerHTML='';
     document.getElementById('slCountDisplay').textContent='0';
@@ -693,7 +878,7 @@ function applyShortlistFilters(){
       +'<div class="sl-actions">'
       +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'✓ VS':'VS')+'</button>'
       +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
-      +'<button class="sl-btn remove" onclick="toggleShortlist(\''+c.id+'\',this)">✕</button>'
+      +'<button class="sl-btn remove" onclick="removeFromActiveList(\''+c.id+'\')">✕</button>'
       +'</div></div>';
   }).join('')+'</div>';
 }
@@ -803,20 +988,71 @@ document.getElementById('slResetFilters').addEventListener('click',function(){
   applyShortlistFilters();
 });
 
+document.getElementById('slListBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  var panel=document.getElementById('slListPanel');
+  panel.hidden=!panel.hidden;
+});
+document.getElementById('slListPanel').addEventListener('click',function(e){
+  var delEl=e.target.closest('[data-delete-list]');
+  if(delEl){
+    e.stopPropagation();
+    var lid=delEl.getAttribute('data-delete-list');
+    var list=getListById(lid);
+    if(!list)return;
+    if(confirm('Supprimer la shortlist "'+list.title+'" ? Les candidats resteront dans vos autres shortlists si présents ailleurs.')){
+      customLists=customLists.filter(function(l){return l.id!==lid;});
+      listsSave();
+      delete membership[lid];
+      memberSave();
+      recomputeShortlistedIds();
+      if(activeShortlistId===lid){activeShortlistId='default';activeListSave();}
+      renderListSwitcher();
+      renderShortlist();
+      updateShortlistCount();
+      showToast('Shortlist supprimée');
+    }
+    return;
+  }
+  var selEl=e.target.closest('[data-select-list]');
+  if(selEl){
+    activeShortlistId=selEl.getAttribute('data-select-list');
+    activeListSave();
+    renderListSwitcher();
+    document.getElementById('slListPanel').hidden=true;
+    renderShortlist();
+  }
+});
+document.addEventListener('click',function(e){
+  var panel=document.getElementById('slListPanel');
+  if(panel&&!panel.hidden&&!e.target.closest('.sl-list-dropdown-wrap')){panel.hidden=true;}
+});
+document.getElementById('slCreateListBtn').addEventListener('click',openCreateListModal);
+
 function toggleShortlist(sid,btn){
   var isSaved=shortlistedIds.has(sid);
   if(isSaved){
-    shortlistedIds.delete(sid);lsSave();
+    removeFromAllLists(sid);
     if(btn){btn.textContent='+ SHORTLIST';btn.classList.remove('on');}
     showToast('Retiré de la shortlist');
-    if(currentRecruiter)sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',sid).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
+    updateShortlistCount();renderShortlist();renderListSwitcher();
   }else{
-    shortlistedIds.add(sid);lsSave();
-    if(btn){btn.textContent='✓ SHORTLIST';btn.classList.add('on');}
-    showToast('Ajouté à la shortlist ✓','success');
-    if(currentRecruiter)sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:sid}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
+    var lists=getAllLists();
+    if(lists.length<=1){
+      addToList('default',sid);
+      if(btn){btn.textContent='✓ SHORTLIST';btn.classList.add('on');}
+      showToast('Ajouté à la shortlist ✓','success');
+      updateShortlistCount();renderShortlist();renderListSwitcher();
+    }else{
+      openChooseListModal(sid,function(chosenId){
+        addToList(chosenId,sid);
+        if(btn){btn.textContent='✓ SHORTLIST';btn.classList.add('on');}
+        var lst=getListById(chosenId);
+        showToast('Ajouté à "'+(lst?lst.title:'la shortlist')+'" ✓','success');
+        updateShortlistCount();renderShortlist();renderListSwitcher();
+      });
+    }
   }
-  updateShortlistCount();renderShortlist();
 }
 
 function updateShortlistCount(){var el=document.getElementById('shortlistCount');el.textContent=shortlistedIds.size>0?shortlistedIds.size:'';}
