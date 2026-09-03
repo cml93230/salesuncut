@@ -87,6 +87,30 @@
     .dispo-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--gold-deep);border:2px solid var(--cream);cursor:pointer}
     .dispo-labels{display:flex;justify-content:space-between;margin-top:5px}
     .dispo-labels span{font-family:var(--font-mono);font-size:8px;color:var(--teal-3)}
+    .saved-search-row{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--cream-3);flex-wrap:wrap}
+    .ss-action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--cream-3);background:var(--cream);color:var(--ink);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+    .ss-action-btn:hover{border-color:var(--gold-deep);background:var(--cream)}
+    .ss-action-btn.ss-alert-btn{border-color:var(--gold-deep);color:var(--gold-deep)}
+    .ss-action-btn.ss-alert-btn:hover{background:var(--gold-deep);color:var(--cream)}
+    .ss-info{position:relative;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--teal-3);color:var(--teal-3);font-size:10px;font-family:var(--font-mono);cursor:default;flex-shrink:0}
+    .ss-info .ss-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:220px;background:var(--ink);color:var(--cream);font-family:var(--font-sans);font-size:12px;line-height:1.5;font-weight:400;text-transform:none;letter-spacing:0;padding:10px 12px;border-radius:6px;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .ss-info .ss-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink)}
+    .ss-info:hover .ss-tooltip,.ss-info:focus .ss-tooltip{display:block}
+    .saved-searches-panel{margin-top:12px}
+    .ss-panel-header{display:flex;align-items:center;gap:8px;cursor:pointer;font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-3);padding:4px 0;user-select:none}
+    .ss-count{background:var(--cream-3);color:var(--ink);border-radius:10px;padding:1px 7px;font-size:9px}
+    .ss-caret{margin-left:auto;transition:transform .2s;font-style:normal}
+    .saved-searches-panel.open .ss-caret{transform:rotate(180deg)}
+    .ss-list{display:none;flex-direction:column;gap:6px;margin-top:10px}
+    .saved-searches-panel.open .ss-list{display:flex}
+    .ss-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;background:var(--cream);border:1.5px solid var(--cream-3)}
+    .ss-item-label{flex:1;font-family:var(--font-sans);font-size:13px;color:var(--ink);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .ss-item-label:hover{text-decoration:underline;color:var(--gold-deep)}
+    .ss-bell-toggle{border:none;background:none;cursor:pointer;font-size:15px;opacity:.35;filter:grayscale(1);transition:all .2s;flex-shrink:0}
+    .ss-bell-toggle.on{opacity:1;filter:none}
+    .ss-item-del{border:none;background:none;cursor:pointer;color:var(--teal-3);font-size:13px;flex-shrink:0}
+    .ss-item-del:hover{color:var(--rust)}
+    .ss-empty{font-family:var(--font-mono);font-size:11px;color:var(--teal-3);padding:6px 0}
     .results-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--cream-3);gap:16px;flex-wrap:wrap}
     .results-left{display:flex;align-items:center;gap:14px}
     .results-count{font-family:var(--font-display);font-weight:900;font-size:20px;text-transform:uppercase;letter-spacing:-.01em}
@@ -341,6 +365,18 @@
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
+      <div class="saved-search-row">
+        <button class="ss-action-btn" id="btnSaveSearch" onclick="saveCurrentSearch(false)">&#128190; Enregistrer</button>
+        <span class="ss-info" tabindex="0">i<span class="ss-tooltip">Sauvegardez cette combinaison de filtres pour la retrouver en un clic, sans avoir &agrave; tout re-s&eacute;lectionner &agrave; chaque visite.</span></span>
+        <button class="ss-action-btn ss-alert-btn" id="btnSaveAlert" onclick="saveCurrentSearch(true)">&#128276; Alerte</button>
+        <span class="ss-info" tabindex="0">i<span class="ss-tooltip">Activez la cloche pour recevoir un email d&egrave;s qu'un nouveau candidat correspondant &agrave; cette recherche rejoint le pool. Modifiable &agrave; tout moment depuis la liste ci-dessous.</span></span>
+      </div>
+      <div class="saved-searches-panel" id="savedSearchesPanel">
+        <div class="ss-panel-header" id="savedSearchesToggle" onclick="toggleSavedSearchesPanel()">
+          <span>Mes recherches enregistr&eacute;es</span><span class="ss-count" id="ssCount">0</span><i class="ss-caret">&#9662;</i>
+        </div>
+        <div class="ss-list" id="savedSearchesList"></div>
+      </div>
     </div>
     <div class="results-bar">
       <div class="results-left">
@@ -492,6 +528,107 @@ async function initShortlistState(){
   if(!getListById(activeShortlistId))activeShortlistId='default';
   recomputeShortlistedIds();
   renderListSwitcher();
+}
+/* ---- Recherches enregistrées + alertes ---- */
+var savedSearches=[];
+var DISPO_FILTER_LABELS={0:'Immédiat',1:'sous 1 mois',2:'sous 2 mois',3:'sous 3 mois',4:'Toutes dispo'};
+function getCurrentFilterState(){
+  return {
+    famille:document.getElementById('fFamille').value,
+    role:document.getElementById('fRole').value,
+    ville:document.getElementById('fVille').value,
+    profil:document.getElementById('fProfil').value,
+    type:document.getElementById('fType').value,
+    expMin:document.getElementById('fExpMin').value,
+    expMax:document.getElementById('fExpMax').value,
+    diplome:document.getElementById('fDiplome').value,
+    contrat:document.getElementById('fContrat').value,
+    scoreMin:document.getElementById('fScoreMin').value,
+    scoreMax:document.getElementById('fScoreMax').value,
+    ote:document.getElementById('fOte').value,
+    dispo:document.getElementById('fDispo').value
+  };
+}
+function filterStateLabel(f){
+  var parts=[];
+  if(f.famille)parts.push(f.famille);
+  if(f.role)parts.push(f.role);
+  if(f.ville)parts.push(f.ville);
+  if(f.scoreMin||f.scoreMax)parts.push('Score '+(f.scoreMin||'0')+'-'+(f.scoreMax||'100'));
+  if(f.ote)parts.push('OTE < '+f.ote+'k€');
+  if(f.dispo!==undefined&&f.dispo!=='4')parts.push(DISPO_FILTER_LABELS[parseInt(f.dispo)]||'');
+  return parts.length?parts.join(' · '):'Tous profils';
+}
+async function loadSavedSearches(){
+  savedSearches=[];
+  if(!currentRecruiter)return renderSavedSearches();
+  var r=await sb.from('saved_searches').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
+  savedSearches=r.data||[];
+  renderSavedSearches();
+}
+function renderSavedSearches(){
+  var list=document.getElementById('savedSearchesList'),count=document.getElementById('ssCount');
+  if(!list)return;
+  count.textContent=savedSearches.length;
+  if(!savedSearches.length){list.innerHTML='<div class="ss-empty">Aucune recherche enregistrée pour le moment.</div>';return;}
+  list.innerHTML=savedSearches.map(function(s){
+    return '<div class="ss-item">'
+      +'<span class="ss-item-label" title="Appliquer cette recherche" onclick="applySavedSearch(\''+s.id+'\')">'+(s.label||filterStateLabel(s.filters||{}))+'</span>'
+      +'<button class="ss-bell-toggle'+(s.alert_enabled?' on':'')+'" title="'+(s.alert_enabled?'Alerte activée — cliquer pour désactiver':'Activer l’alerte email')+'" onclick="toggleSearchAlert(\''+s.id+'\','+(!s.alert_enabled)+')">&#128276;</button>'
+      +'<button class="ss-item-del" title="Supprimer" onclick="deleteSavedSearch(\''+s.id+'\')">&#10005;</button>'
+      +'</div>';
+  }).join('');
+}
+function toggleSavedSearchesPanel(){
+  document.getElementById('savedSearchesPanel').classList.toggle('open');
+}
+async function saveCurrentSearch(withAlert){
+  if(!currentRecruiter){showToast('Connectez-vous pour enregistrer une recherche');return;}
+  var filters=getCurrentFilterState();
+  var label=filterStateLabel(filters);
+  var r=await sb.from('saved_searches').insert({recruiter_id:currentRecruiter.id,label:label,filters:filters,alert_enabled:!!withAlert}).select().single();
+  if(r.error){console.warn('SB saved_search insert:',r.error.message);showToast('Erreur à l’enregistrement');return;}
+  savedSearches.push(r.data);
+  renderSavedSearches();
+  document.getElementById('savedSearchesPanel').classList.add('open');
+  showToast(withAlert?'Recherche enregistrée — alerte activée':'Recherche enregistrée');
+}
+function applySavedSearch(id){
+  var s=savedSearches.find(function(x){return x.id===id;});
+  if(!s)return;
+  var f=s.filters||{};
+  document.getElementById('fFamille').value=f.famille||'';
+  document.getElementById('fRole').value=f.role||'';
+  document.getElementById('fVille').value=f.ville||'';
+  document.getElementById('fProfil').value=f.profil||'';
+  document.getElementById('fType').value=f.type||'';
+  document.getElementById('fExpMin').value=f.expMin||'';
+  document.getElementById('fExpMax').value=f.expMax||'';
+  document.getElementById('fDiplome').value=f.diplome||'';
+  document.getElementById('fContrat').value=f.contrat||'';
+  document.getElementById('fScoreMin').value=f.scoreMin||'';
+  document.getElementById('fScoreMax').value=f.scoreMax||'';
+  document.getElementById('fOte').value=f.ote||'';
+  document.getElementById('fDispo').value=f.dispo!==undefined?f.dispo:4;
+  document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(document.getElementById('fDispo').value)];
+  applyFilters();
+  showToast('Recherche appliquée');
+}
+async function toggleSearchAlert(id,enabled){
+  var s=savedSearches.find(function(x){return x.id===id;});
+  if(!s)return;
+  s.alert_enabled=enabled;
+  renderSavedSearches();
+  var r=await sb.from('saved_searches').update({alert_enabled:enabled}).eq('id',id);
+  if(r.error){console.warn('SB saved_search update:',r.error.message);}
+  showToast(enabled?'Alerte activée pour cette recherche':'Alerte désactivée');
+}
+async function deleteSavedSearch(id){
+  if(!confirm('Supprimer cette recherche enregistrée ?'))return;
+  savedSearches=savedSearches.filter(function(x){return x.id!==id;});
+  renderSavedSearches();
+  var r=await sb.from('saved_searches').delete().eq('id',id);
+  if(r.error){console.warn('SB saved_search delete:',r.error.message);}
 }
 function addToList(listId,candidateId){
   if(!membership[listId])membership[listId]=[];
@@ -703,6 +840,7 @@ sb.auth.onAuthStateChange(function(event,session){
       loadRecruiterProfile(session.user).then(function(){
         initShortlistState().then(function(){updateShortlistCount();renderShortlist();});
         loadCandidates();
+        loadSavedSearches();
       });
     },0);
   }else{showAuth();}
