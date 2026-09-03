@@ -832,7 +832,7 @@
       btn.type = 'button';
       btn.className = 'wfc-tick';
       btn.textContent = String(i + 1).padStart(2, '0');
-      btn.setAttribute('aria-label', 'Aller à l'étape ' + (i + 1));
+      btn.setAttribute('aria-label', 'Aller à l’étape ' + (i + 1));
       btn.addEventListener('click', function () { stopAutoplayOnInteraction(); goTo(i + 1); });
       ticksEl.appendChild(btn);
       return btn;
