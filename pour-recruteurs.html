@@ -31,9 +31,9 @@
     .rec-hero > .container { width: 100%; min-width: 0; }
     /* titre ramené à gauche, avec les cards de nouveau à droite */
     .rec-hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 60px; align-items: center; width: 100%; }
-    /* le titre doit rester dans l'écran (hero + bandeau = 100vh) même sur les fenêtres basses ;
-       la taille suit donc aussi la hauteur dispo, pas seulement la largeur (max 102px = -25%) */
-    .rec-hero h1 { font-size: clamp(48px, min(7.5vw, calc((100vh - var(--nav-h, 76px) - 465px) / 3.6)), 102px); margin: 15px 0 17px; overflow-wrap: break-word; }
+    /* taille stable basée uniquement sur la largeur (comme accueil/candidat) — ne dépend
+       plus de la hauteur de fenêtre, qui la faisait s'effondrer sur les fenêtres basses */
+    .rec-hero h1 { font-size: clamp(48px, 7.5vw, 102px); margin: 15px 0 17px; overflow-wrap: break-word; }
     .rec-hero h1 .gold-word { color: var(--gold-deep); }
     .rec-hero p.lede { font-size: 14px; color: var(--teal-2); max-width: 480px; margin-bottom: 22px; line-height: 1.4; }
     .hero-stage { position: relative; aspect-ratio: 0.8; perspective: 1400px; overflow: visible; }
