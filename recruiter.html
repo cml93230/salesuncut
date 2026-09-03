@@ -73,10 +73,15 @@
     .filters-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
     .filters-title{font-family:var(--font-mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep)}
     .filters-reset{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);cursor:pointer;background:none;border:none;padding:0}
-    .filters-groups{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    .filters-groups{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
     .fg-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-3);margin-bottom:6px}
     .fg-select{width:100%;padding:9px 26px 9px 10px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7'><path d='M1 1l4 4 4-4' stroke='%23a3854f' stroke-width='1.5' fill='none'/></svg>");background-repeat:no-repeat;background-position:right 9px center;outline:none}
     .fg-select:focus{border-color:var(--gold-deep)}
+    .fg-score-range{display:flex;align-items:center;gap:6px}
+    .fg-score-input{width:100%;min-width:0;padding:9px 8px;border-radius:4px;border:1.5px solid var(--cream-3);background:var(--cream);font-family:var(--font-mono);font-size:11px;color:var(--ink);outline:none;text-align:center;-moz-appearance:textfield}
+    .fg-score-input::-webkit-outer-spin-button,.fg-score-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .fg-score-input:focus{border-color:var(--gold-deep)}
+    .fg-score-sep{font-family:var(--font-mono);font-size:11px;color:var(--teal-3);flex-shrink:0}
     .dispo-val{font-family:var(--font-mono);font-size:10px;font-weight:700;color:var(--gold-deep);margin-bottom:5px;display:block}
     .dispo-slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:var(--cream-3);outline:none;cursor:pointer;margin:0}
     .dispo-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold-deep);border:2px solid var(--cream);cursor:pointer}
@@ -283,9 +288,10 @@
         <button class="filters-reset" id="resetFilters">&#10005; R&eacute;initialiser</button>
       </div>
       <div class="filters-groups">
-        <div><div class="fg-lbl">Famille</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
+        <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="fRole"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
-        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="fNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (50&ndash;59)</option></select></div>
+        <div><div class="fg-lbl">Ville</div><select class="fg-select" id="fVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
@@ -318,9 +324,10 @@
         <button class="filters-reset" id="slResetFilters">&#10005; R&eacute;initialiser</button>
       </div>
       <div class="filters-groups">
-        <div><div class="fg-lbl">Famille</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
+        <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
         <div><div class="fg-lbl">R&ocirc;le</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
-        <div><div class="fg-lbl">Niveau</div><select class="fg-select" id="slNiveau"><option value="">Tous</option><option value="GOLD">GOLD (80+)</option><option value="SILVER">SILVER (60&ndash;79)</option><option value="BRONZE">BRONZE (50&ndash;59)</option></select></div>
+        <div><div class="fg-lbl">Ville</div><select class="fg-select" id="slVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slScoreMax" min="0" max="100" placeholder="Max"></div></div>
         <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
         <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
       </div>
@@ -500,7 +507,19 @@ async function loadCandidates(){
   var demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(normDemo):[];
   var r=await sb.from('candidates').select('*').eq('is_public',true).order('score_global',{ascending:false});
   allCandidates=demo.concat((r.data||[]).map(normSB));
+  populateVilleOptions();
   applyFilters();renderShortlist();
+}
+
+function populateVilleOptions(){
+  var villes=allCandidates.map(function(c){return c.location;}).filter(Boolean);
+  villes=villes.filter(function(v,i){return villes.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'fr');});
+  var opts='<option value="">Toutes</option>'+villes.map(function(v){return'<option value="'+v+'">'+v+'</option>';}).join('');
+  ['fVille','slVille'].forEach(function(id){
+    var el=document.getElementById(id),cur=el.value;
+    el.innerHTML=opts;
+    if(villes.indexOf(cur)>=0)el.value=cur;
+  });
 }
 
 async function loadShortlist(){
@@ -514,13 +533,16 @@ async function loadShortlist(){
 
 function applyFilters(){
   var q=document.getElementById('searchInput').value.toLowerCase();
-  var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fNiv=document.getElementById('fNiveau').value;
+  var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fVille=document.getElementById('fVille').value;
+  var fScoreMinRaw=document.getElementById('fScoreMin').value,fScoreMaxRaw=document.getElementById('fScoreMax').value;
+  var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('fOte').value)||0,fDispo=parseInt(document.getElementById('fDispo').value);
   var sortBy=document.getElementById('sortBy').value;
   var src=allCandidates.filter(function(c){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
-    if(fNiv&&c.level!==fNiv)return false;
+    if(fVille&&c.location!==fVille)return false;
+    if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
     if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
@@ -569,14 +591,17 @@ function applyShortlistFilters(){
   var q=document.getElementById('slSearch').value.toLowerCase();
   var fFam=document.getElementById('slFamille').value;
   var fRole=document.getElementById('slRoleF').value;
-  var fNiv=document.getElementById('slNiveau').value;
+  var fVille=document.getElementById('slVille').value;
+  var fScoreMinRaw=document.getElementById('slScoreMin').value,fScoreMaxRaw=document.getElementById('slScoreMax').value;
+  var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
   var fOte=parseInt(document.getElementById('slOte').value)||0;
   var fDispo=parseInt(document.getElementById('slDispo').value);
   var sortBy=document.getElementById('slSortBy').value;
   var src=all.filter(function(c){
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
-    if(fNiv&&c.level!==fNiv)return false;
+    if(fVille&&c.location!==fVille)return false;
+    if(c.score<fScoreMin||c.score>fScoreMax)return false;
     if(fOte&&c.ote_max>fOte)return false;
     if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
     if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
@@ -669,10 +694,11 @@ document.getElementById('btnCards').addEventListener('click',function(){currentV
 document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
 document.getElementById('searchInput').addEventListener('input',applyFilters);
 document.getElementById('sortBy').addEventListener('change',applyFilters);
-['fFamille','fRole','fNiveau','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fFamille','fRole','fVille','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
 document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
 document.getElementById('resetFilters').addEventListener('click',function(){
-  ['fFamille','fRole','fNiveau','fOte'].forEach(function(id){document.getElementById(id).value='';});
+  ['fFamille','fRole','fVille','fOte','fScoreMin','fScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
   document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
   applyFilters();
@@ -680,10 +706,11 @@ document.getElementById('resetFilters').addEventListener('click',function(){
 
 document.getElementById('slSearch').addEventListener('input',applyShortlistFilters);
 document.getElementById('slSortBy').addEventListener('change',applyShortlistFilters);
-['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+['slFamille','slRoleF','slVille','slOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyShortlistFilters);});
+['slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyShortlistFilters);});
 document.getElementById('slDispo').addEventListener('input',function(){document.getElementById('slDispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyShortlistFilters();});
 document.getElementById('slResetFilters').addEventListener('click',function(){
-  ['slFamille','slRoleF','slNiveau','slOte'].forEach(function(id){document.getElementById(id).value='';});
+  ['slFamille','slRoleF','slVille','slOte','slScoreMin','slScoreMax'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('slSortBy').value='score';document.getElementById('slDispo').value=4;
   document.getElementById('slDispoVal').textContent='— toutes';document.getElementById('slSearch').value='';
   applyShortlistFilters();
