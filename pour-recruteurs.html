@@ -35,7 +35,7 @@
        la taille suit donc aussi la hauteur dispo, pas seulement la largeur (max 102px = -25%) */
     .rec-hero h1 { font-size: clamp(48px, min(7.5vw, calc((100vh - var(--nav-h, 76px) - 465px) / 3.6)), 102px); margin: 15px 0 17px; overflow-wrap: break-word; }
     .rec-hero h1 .gold-word { color: var(--gold-deep); }
-    .rec-hero p.lede { font-size: 27px; color: var(--teal-2); max-width: 480px; margin-bottom: 22px; line-height: 1.4; }
+    .rec-hero p.lede { font-size: 14px; color: var(--teal-2); max-width: 480px; margin-bottom: 22px; line-height: 1.4; }
     .hero-stage { position: relative; aspect-ratio: 0.8; perspective: 1400px; overflow: visible; }
     .hero-card-stack { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .hero-card-stack .tcard { position: absolute; transition: transform .7s cubic-bezier(.22,1,.36,1); }
@@ -832,7 +832,7 @@
       btn.type = 'button';
       btn.className = 'wfc-tick';
       btn.textContent = String(i + 1).padStart(2, '0');
-      btn.setAttribute('aria-label', 'Aller à l’étape ' + (i + 1));
+      btn.setAttribute('aria-label', 'Aller à l'étape ' + (i + 1));
       btn.addEventListener('click', function () { stopAutoplayOnInteraction(); goTo(i + 1); });
       ticksEl.appendChild(btn);
       return btn;
