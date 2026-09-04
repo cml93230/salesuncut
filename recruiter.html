@@ -142,6 +142,9 @@
     .sl-list-row-del:hover{background:rgba(179,78,42,.12)}
     .sl-list-create-btn{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:4px;border:1.5px dashed var(--gold-deep);background:none;color:var(--gold-deep);cursor:pointer;white-space:nowrap;transition:all .2s}
     .sl-list-create-btn:hover{background:rgba(201,168,106,.12)}
+    .sl-status-filter-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:5px;font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;white-space:nowrap}
+    .sl-status-filter-row:hover{background:var(--cream-2)}
+    .sl-status-filter-row input{accent-color:var(--gold-deep);width:14px;height:14px;flex-shrink:0;cursor:pointer}
     .su-modal-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
     .su-modal-backdrop{position:fixed;inset:0;background:rgba(26,34,34,.7);backdrop-filter:blur(6px)}
     .su-modal-box{position:relative;z-index:2;background:var(--cream);border:1.5px solid var(--ink);border-radius:10px;width:100%;max-width:440px;box-shadow:0 32px 80px rgba(26,34,34,.4);overflow:hidden}
@@ -524,8 +527,8 @@
       <div class="results-left">
         <div class="results-count"><span class="num" id="countDisplay">0</span> profils</div>
         <div class="view-toggle">
-          <button class="view-btn active" id="btnCards" title="Vue cartes">&#8862;</button>
-          <button class="view-btn" id="btnList" title="Vue liste">&#8801;</button>
+          <button class="view-btn" id="btnCards" title="Vue cartes">&#8862;</button>
+          <button class="view-btn active" id="btnList" title="Vue liste">&#8801;</button>
         </div>
       </div>
       <div class="sort-row"><span>Tri</span><select class="sort-select" id="sortBy"><option value="score">Meilleur score</option><option value="recent">Plus r&eacute;cents</option><option value="dispo">Dispo imm&eacute;diate</option></select></div>
@@ -568,6 +571,10 @@
             <div class="sl-list-dropdown-panel" id="slListPanel" hidden></div>
           </div>
           <button type="button" class="sl-list-create-btn" id="slCreateListBtn">+ Cr&eacute;er une shortlist</button>
+          <div class="sl-list-dropdown-wrap">
+            <button type="button" class="sl-list-dropdown-btn" id="slStatusFilterBtn"><span id="slStatusFilterLabel">Tous les statuts</span><i class="sl-list-caret">&#9662;</i></button>
+            <div class="sl-list-dropdown-panel" id="slStatusFilterPanel" hidden></div>
+          </div>
         </div>
         <div class="results-count"><span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span></div>
       </div>
@@ -631,8 +638,9 @@ const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
 const ACTIVE_LIST_KEY='su_active_list_v1';
 const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
 const STATUS_OPTS=[{v:'saved',l:'À contacter'},{v:'contacted',l:'Contacté'},{v:'interview',l:'Entretien programmé'},{v:'rejected',l:'Refusé'},{v:'hired',l:'Embauché'}];
+var statusFilterState={};STATUS_OPTS.forEach(function(o){statusFilterState[o.v]=true;});
 
-let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
+let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='list',currentPoolIds=[];
 let customLists=[],membership={},activeShortlistId='default',candidateStatus={},contactedAt={};
 
 /* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
@@ -1060,6 +1068,20 @@ function renderListSwitcher(){
       +'</div>';
   }).join('');
 }
+function renderStatusFilterPanel(){
+  var panel=document.getElementById('slStatusFilterPanel');
+  if(!panel)return;
+  panel.innerHTML=STATUS_OPTS.map(function(o){
+    return'<label class="sl-status-filter-row"><input type="checkbox" data-status-filter="'+o.v+'"'+(statusFilterState[o.v]?' checked':'')+'>'+o.l+'</label>';
+  }).join('');
+  updateStatusFilterLabel();
+}
+function updateStatusFilterLabel(){
+  var lbl=document.getElementById('slStatusFilterLabel');
+  if(!lbl)return;
+  var checkedCount=STATUS_OPTS.filter(function(o){return statusFilterState[o.v];}).length;
+  lbl.textContent=checkedCount===STATUS_OPTS.length?'Tous les statuts':(checkedCount===0?'Aucun statut':checkedCount+' statut'+(checkedCount>1?'s':''));
+}
 function openCreateListModal(){
   var existing=document.getElementById('su-createlist-modal');if(existing)existing.remove();
   var villes=allCandidates.map(function(c){return c.location;}).filter(Boolean);
@@ -1363,6 +1385,7 @@ function applyShortlistFilters(){
   var fDispo=parseInt(document.getElementById('slDispo').value);
   var sortBy=document.getElementById('slSortBy').value;
   var src=all.filter(function(c){
+    if(!statusFilterState[candidateStatus[c.id]||'saved'])return false;
     if(fFam&&c.famille!==fFam)return false;
     if(fRole&&c.role_type!==fRole)return false;
     if(fVille&&c.location!==fVille)return false;
@@ -1558,8 +1581,23 @@ document.getElementById('slListPanel').addEventListener('click',function(e){
 });
 document.addEventListener('click',function(e){
   var panel=document.getElementById('slListPanel');
-  if(panel&&!panel.hidden&&!e.target.closest('.sl-list-dropdown-wrap')){panel.hidden=true;}
+  if(panel&&!panel.hidden&&!e.target.closest('#slListBtn')&&!e.target.closest('#slListPanel')){panel.hidden=true;}
+  var sfPanel=document.getElementById('slStatusFilterPanel');
+  if(sfPanel&&!sfPanel.hidden&&!e.target.closest('#slStatusFilterBtn')&&!e.target.closest('#slStatusFilterPanel')){sfPanel.hidden=true;}
 });
+document.getElementById('slStatusFilterBtn').addEventListener('click',function(e){
+  e.stopPropagation();
+  var panel=document.getElementById('slStatusFilterPanel');
+  panel.hidden=!panel.hidden;
+});
+document.getElementById('slStatusFilterPanel').addEventListener('change',function(e){
+  var cb=e.target.closest('[data-status-filter]');
+  if(!cb)return;
+  statusFilterState[cb.getAttribute('data-status-filter')]=cb.checked;
+  updateStatusFilterLabel();
+  renderShortlist();
+});
+renderStatusFilterPanel();
 document.getElementById('slCreateListBtn').addEventListener('click',openCreateListModal);
 
 function toggleShortlist(sid,btn){
