@@ -57,6 +57,10 @@
     .ob-step-num{font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;color:rgba(255,248,231,.3);text-transform:uppercase;}
     .ob-step-num.active{color:var(--gold);}
     .ob-step-num.done{color:rgba(255,248,231,.5);}
+    .ob-invite-banner{background:rgba(212,175,55,.1);border:1.5px solid var(--gold-deep);border-radius:6px;padding:12px 16px;margin-bottom:20px;display:none;}
+    .ob-invite-banner.visible{display:block;}
+    .ob-invite-banner-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:4px;}
+    .ob-invite-banner-desc{font-size:13px;color:var(--teal-2);line-height:1.4;}
   </style>
 </head>
 <body class="page-enter">
@@ -66,6 +70,11 @@
     <span class="dot"></span>
     <span class="ob-logo-text">SalesUncut</span>
   </a>
+
+  <div class="ob-invite-banner" id="obInviteBanner">
+    <div class="ob-invite-banner-title">Invitation reçue</div>
+    <div class="ob-invite-banner-desc" id="obInviteBannerDesc">Un recruteur t'invite à passer la certification SalesUncut.</div>
+  </div>
 
   <div class="ob-progress" id="obProgress">
     <div class="ob-step-dot active" id="dot1"></div>
@@ -96,7 +105,7 @@
         <div class="ob-error" id="s1Error"></div>
         <button class="ob-btn" id="s1Btn" onclick="handleSignup()">Créer mon compte →</button>
       </div>
-      <div class="ob-switch">Déjà un compte ? <a onclick="goLogin()">Se connecter</a></div>
+      <div class="ob-switch">Déjà un compte ? <a onclick="goLogin()">Se connecter</a></div>
       <div style="margin-top:24px;text-align:center"><span class="ob-hint">Gratuit · Aucune carte requise · 2 minutes</span></div>
     </div>
   </div>
@@ -162,7 +171,7 @@
       <!-- État : appel prêt -->
       <div class="call-ready" id="callReady">
         <div class="call-ready-icon">📞</div>
-        <div class="call-ready-title">Ton prospect est prêt !</div>
+        <div class="call-ready-title">Ton prospect est prêt !</div>
         <div class="call-ready-sub">Clique pour rejoindre l'appel. Assure-toi d'être dans un endroit calme.</div>
         <a id="callJoinBtn" href="#" target="_blank" class="call-join-btn">Rejoindre l'appel →</a>
         <a href="mon-profil.html" class="call-profil-link">Accéder à mon espace →</a>
@@ -181,6 +190,8 @@ const sb = window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.c
 let currentUser = null;
 let currentStep = 1;
 let pollInterval = null;
+let inviteToken = new URLSearchParams(window.location.search).get('invite');
+let inviteRecruiterId = null;
 
 const MAKE_WEBHOOK_LAUNCH = 'https://hook.eu1.make.com/pg8pm0ehnfm9egd9l0uxi6g5ai1vo6vw';
 
@@ -198,17 +209,36 @@ const VAPI_IDS = {
 };
 
 const SCENARIO_DESC = {
-  F1:'Tu appelles Jacques Morel, DRH d\'une PME industrielle. Il manque de temps et déteste le pitch générique. Produit : Huma RH.',
-  F2:'Franck Delorme pilote les ventes d\'un scale-up SaaS. Il veut des références secteur. Produit : PipelineIQ CRM.',
-  F3:'Isabelle Marchand est DAF d\'une ETI. Elle reporte toujours à plus tard. Produit : Clearflow Finance.',
-  F4:'Bernard Roux est directeur opérations dans l\'industrie. Il parle terrain, pas tech. Produit : Factorly ERP.',
-  F5:'Stéphane Moreau est DSI d\'une ETI. Il testait des POC sans fin. Produit : Shieldwork Cyber.',
-  F6:'Thierry Basset gère une TPE commerce. Il reporte au comptable. Produit : VigilHome Pro.',
-  F7:'Sandrine Leclercq dirige une agence marketing. Elle s\'emballe puis se ferme. Produit : GrowthLab Agency.',
-  F8:'Élise Fontaine est directrice d\'un site industriel. Elle tourne en boucle sans décider. Produit : Voltaïq Énergie.',
-  F9:'Michel Aubert pilote l\'IT d\'une PME. Il doit tout valider avec Sébastien. Produit : Connecta Pro Télécom.',
-  F10:'Patrick Lemaire est DRH d\'un grand compte. Il dit oui à tout mais ne signe jamais. Produit : Covertis Assurance.'
+  F1:'Tu appelles Jacques Morel, DRH d\'une PME industrielle. Il manque de temps et déteste le pitch générique. Produit : Huma RH.',
+  F2:'Franck Delorme pilote les ventes d\'un scale-up SaaS. Il veut des références secteur. Produit : PipelineIQ CRM.',
+  F3:'Isabelle Marchand est DAF d\'une ETI. Elle reporte toujours à plus tard. Produit : Clearflow Finance.',
+  F4:'Bernard Roux est directeur opérations dans l\'industrie. Il parle terrain, pas tech. Produit : Factorly ERP.',
+  F5:'Stéphane Moreau est DSI d\'une ETI. Il testait des POC sans fin. Produit : Shieldwork Cyber.',
+  F6:'Thierry Basset gère une TPE commerce. Il reporte au comptable. Produit : VigilHome Pro.',
+  F7:'Sandrine Leclercq dirige une agence marketing. Elle s\'emballe puis se ferme. Produit : GrowthLab Agency.',
+  F8:'Élise Fontaine est directrice d\'un site industriel. Elle tourne en boucle sans décider. Produit : Voltaïq Énergie.',
+  F9:'Michel Aubert pilote l\'IT d\'une PME. Il doit tout valider avec Sébastien. Produit : Connecta Pro Télécom.',
+  F10:'Patrick Lemaire est DRH d\'un grand compte. Il dit oui à tout mais ne signe jamais. Produit : Covertis Assurance.'
 };
+
+if(inviteToken){
+  sb.rpc('get_invite_by_token',{p_token:inviteToken}).then(function(r){
+    if(r.error||!r.data||!r.data.length){return;}
+    var inv=r.data[0];
+    if(inv.status!=='pending'){return;}
+    inviteRecruiterId=inv.recruiter_id;
+    var emailInput=document.getElementById('s1Email');
+    if(emailInput&&inv.candidate_email){emailInput.value=inv.candidate_email;}
+    var prenomInput=document.getElementById('s2Prenom');
+    if(prenomInput&&inv.candidate_prenom){prenomInput.value=inv.candidate_prenom;}
+    var banner=document.getElementById('obInviteBanner');
+    var bannerDesc=document.getElementById('obInviteBannerDesc');
+    if(banner){
+      bannerDesc.textContent=inv.company_name?('Tu es invité(e) par '+inv.company_name+' à passer la certification SalesUncut.'):'Un recruteur t\'invite à passer la certification SalesUncut.';
+      banner.classList.add('visible');
+    }
+  });
+}
 
 sb.auth.getSession().then(function(r){
   if(r.data&&r.data.session){
@@ -241,15 +271,20 @@ async function handleIdentite(){
   err.classList.remove('visible');
   if(!prenom||!nom){showErr(err,'Prénom et nom requis.');return;}
   btn.disabled=true;btn.textContent='Enregistrement...';
-  var r=await sb.from('candidates').upsert({
+  var payload={
     user_id:currentUser.id,
     email:currentUser.email,
     prenom:prenom,
     nom:nom,
     is_public:false,
     updated_at:new Date().toISOString()
-  },{onConflict:'user_id'});
-  if(r.error){showErr(err,'Erreur : '+r.error.message);btn.disabled=false;btn.textContent='Choisir mon scénario →';return;}
+  };
+  if(inviteRecruiterId){payload.invited_by_recruiter_id=inviteRecruiterId;}
+  var r=await sb.from('candidates').upsert(payload,{onConflict:'user_id'}).select().single();
+  if(r.error){showErr(err,'Erreur : '+r.error.message);btn.disabled=false;btn.textContent='Choisir mon scénario →';return;}
+  if(inviteToken&&r.data&&r.data.id){
+    try{await sb.rpc('accept_invite',{p_token:inviteToken,p_candidate_id:r.data.id});}catch(e){}
+  }
   goStep(3);
 }
 
@@ -285,7 +320,7 @@ async function handleLancer(){
     });
     if(!resp.ok){throw new Error('HTTP '+resp.status);}
   }catch(e){
-    showErr(err,'Erreur lors du lancement : '+e.message);
+    showErr(err,'Erreur lors du lancement : '+e.message);
     btn.disabled=false;btn.textContent='Lancer ma simulation →';
     return;
   }
