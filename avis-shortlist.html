@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avis sur la shortlist — SalesUncut</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="data.js"></script>
+  <style>
+    body{background:var(--cream-2)}
+    .avis-bar{background:var(--ink);color:var(--cream);padding:0 24px;display:flex;align-items:center;height:56px;border-bottom:1px solid rgba(255,248,231,.1)}
+    .avis-logo{font-family:var(--font-display);font-weight:900;font-size:16px;color:var(--cream);text-transform:uppercase;letter-spacing:.05em;text-decoration:none;display:flex;align-items:center;gap:6px}
+    .avis-logo .dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+    .avis-wrap{max-width:760px;margin:0 auto;padding:40px 20px 80px}
+    .avis-hero{text-align:center;margin-bottom:32px}
+    .avis-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep)}
+    .avis-title{font-family:var(--font-display);font-weight:900;font-size:clamp(22px,3.5vw,32px);text-transform:uppercase;line-height:1.15;margin:10px 0 8px;color:var(--ink)}
+    .avis-sub{font-size:14px;color:var(--teal-3);max-width:520px;margin:0 auto}
+    .avis-loading,.avis-error{text-align:center;padding:80px 20px;font-family:var(--font-mono);font-size:13px;color:var(--teal-3);letter-spacing:.08em}
+    .avis-error .big{font-size:44px;margin-bottom:14px;opacity:.3}
+    .spinner{width:22px;height:22px;border-radius:50%;border:2px solid var(--cream-3);border-top-color:var(--gold-deep);animation:spin .7s linear infinite;margin:0 auto 14px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .avis-list{display:flex;flex-direction:column;gap:14px}
+    .avis-card{background:var(--cream);border:1.5px solid var(--cream-3);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow-card);transition:border-color .2s}
+    .avis-card.done{border-color:rgba(201,168,106,.5)}
+    .avis-card-top{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+    .avis-avatar{width:52px;height:52px;border-radius:50%;background:var(--cream-3);overflow:hidden;flex-shrink:0;border:1.5px solid var(--cream-3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:var(--teal-3)}
+    .avis-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top}
+    .avis-info{flex:1;min-width:0}
+    .avis-name{font-family:var(--font-display);font-weight:900;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;margin-bottom:2px}
+    .avis-meta{font-family:var(--font-mono);font-size:10px;color:var(--teal-3);letter-spacing:.05em}
+    .avis-score{font-family:var(--font-display);font-weight:900;font-size:26px;color:var(--gold-deep);flex-shrink:0;line-height:1}
+    .avis-score small{font-size:11px;color:var(--teal-3);font-weight:400}
+    .avis-status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+    .avis-status-opt{padding:9px 8px;border-radius:6px;border:1.5px solid var(--cream-3);background:var(--cream-2);font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-align:center;cursor:pointer;transition:all .15s;color:var(--teal-2)}
+    .avis-status-opt:hover{border-color:var(--gold-deep)}
+    .avis-status-opt.on{color:#fff8e7;border-color:transparent}
+    .avis-extra{display:none;flex-direction:column;gap:10px;margin-bottom:12px}
+    .avis-extra.show{display:flex}
+    .avis-extra textarea{width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid var(--cream-3);border-radius:6px;font-family:var(--font-sans);font-size:13px;color:var(--ink);background:var(--cream);outline:none;resize:vertical;min-height:56px}
+    .avis-extra textarea:focus{border-color:var(--gold-deep)}
+    .avis-extra input[type="datetime-local"]{padding:9px 12px;border:1.5px solid var(--cream-3);border-radius:6px;font-family:var(--font-sans);font-size:13px;color:var(--ink);background:var(--cream);outline:none}
+    .avis-extra input[type="datetime-local"]:focus{border-color:var(--gold-deep)}
+    .avis-card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .avis-save-btn{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px 18px;border-radius:4px;border:none;background:var(--gold-deep);color:var(--cream);cursor:pointer;transition:background .2s}
+    .avis-save-btn:hover{background:var(--ink)}
+    .avis-save-btn:disabled{opacity:.5;cursor:not-allowed}
+    .avis-saved-tag{font-family:var(--font-mono);font-size:10px;color:#16a34a;letter-spacing:.05em;display:none;align-items:center;gap:5px}
+    .avis-saved-tag.show{display:flex}
+    .avis-footer-note{text-align:center;margin-top:36px;font-family:var(--font-mono);font-size:11px;color:var(--teal-3);letter-spacing:.05em}
+    .toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:var(--cream);padding:14px 20px;border-radius:6px;font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;border-left:3px solid var(--gold);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.error{border-left-color:var(--rust)}
+    @media(max-width:600px){.avis-card-top{flex-wrap:wrap}.avis-score{margin-left:auto}}
+  </style>
+</head>
+<body>
+
+<div class="avis-bar">
+  <a href="index.html" class="avis-logo"><span class="dot"></span>SalesUncut</a>
+</div>
+
+<div class="avis-wrap">
+  <div id="avisLoading" class="avis-loading"><div class="spinner"></div>Chargement de la shortlist&hellip;</div>
+  <div id="avisError" class="avis-error" style="display:none"><div class="big">&#128269;</div>Ce lien de partage est invalide ou a expiré.<br>Demandez au recruteur de vous en renvoyer un.</div>
+  <div id="avisContent" style="display:none">
+    <div class="avis-hero">
+      <div class="avis-eyebrow">Shortlist partagée</div>
+      <h1 class="avis-title" id="avisTitle">&mdash;</h1>
+      <p class="avis-sub">Donnez votre avis candidat par candidat &mdash; votre statut est enregistré automatiquement dès que vous cliquez sur "Enregistrer".</p>
+    </div>
+    <div id="avisList" class="avis-list"></div>
+    <p class="avis-footer-note">Propulsé par SalesUncut &mdash; certification de performance commerciale par simulation IA.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL='https://svtyzkypmzmtcqunzfyy.supabase.co';
+const SUPABASE_KEY='sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB';
+const{createClient}=supabase;
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const FB_STATUS_OPTS=[
+  {v:'en_attente',          l:'En attente',        color:'#8a8478'},
+  {v:'refuse',               l:'Refusé',            color:'#b34e2a'},
+  {v:'accepte',              l:'Accepté',           color:'#16a34a'},
+  {v:'entretien_programme',  l:'Entretien prévu',   color:'#b8922a'},
+  {v:'entretien_passe',      l:'Entretien passé',   color:'#2f6f6b'}
+];
+function fbOptFor(status){return FB_STATUS_OPTS.find(function(o){return o.v===status;})||FB_STATUS_OPTS[0];}
+
+function getToken(){
+  var p=new URLSearchParams(window.location.search);
+  return p.get('token');
+}
+
+function normDemo(c){
+  var famObj=(typeof SU_DATA!=='undefined'&&SU_DATA.getFamilyById)?SU_DATA.getFamilyById(c.family):{name:c.family||''};
+  return{id:c.id,name:c.anonymous?'Anonyme':c.name,photo:c.photo||null,score:c.score,level:(c.level||'').toUpperCase()||null,famille:famObj.name,location:c.location||'',role_type:c.role_type||''};
+}
+function normSB(c){
+  var name=[c.prenom,c.nom].filter(Boolean).join(' ')||'Anonyme';
+  var score=c.score_global||0;
+  var level=score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;
+  return{id:c.simulation_id||c.id,name:name,photo:c.photo_url||null,score:score,level:level,famille:c.famille||'',location:c.ville||c.location||'',role_type:c.role_type||c.role_label||''};
+}
+
+function showToast(msg,type){
+  var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+function candidateCardHTML(c,fb){
+  var status=fb&&fb.fb_status?fb.fb_status:'en_attente';
+  var comment=(fb&&fb.fb_comment)||'';
+  var interviewAt=(fb&&fb.fb_interview_at)||'';
+  var levelLbl=c.level||'Non certifié';
+  var opts=FB_STATUS_OPTS.map(function(o){
+    return '<div class="avis-status-opt'+(o.v===status?' on':'')+'" data-status="'+o.v+'" style="'+(o.v===status?'background:'+o.color+';':'')+'" onclick="selectStatus(\''+c.id+'\',\''+o.v+'\')">'+o.l+'</div>';
+  }).join('');
+  var interviewVal=interviewAt?new Date(interviewAt).toISOString().slice(0,16):'';
+  return '<div class="avis-card" id="avis-card-'+c.id+'">'
+    +'<div class="avis-card-top">'
+    +'<div class="avis-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+c.name+'">':(c.name||'?')[0])+'</div>'
+    +'<div class="avis-info"><div class="avis-name">'+c.name+'</div><div class="avis-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.role_type?' · '+c.role_type:'')+'</div></div>'
+    +'<div class="avis-score">'+c.score+'<small>/100</small></div>'
+    +'</div>'
+    +'<div class="avis-status-row" data-status-row>'+opts+'</div>'
+    +'<div class="avis-extra'+(status==='entretien_programme'?' show':'')+'" data-extra-interview><label class="form-label" style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:4px;display:block">Date de l’entretien</label><input type="datetime-local" data-interview value="'+interviewVal+'"></div>'
+    +'<div class="avis-extra show" data-extra-comment><label class="form-label" style="font-family:var(--font-mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-3);margin-bottom:4px;display:block">Commentaire (optionnel)</label><textarea data-comment placeholder="Pourquoi ce statut ?">'+comment+'</textarea></div>'
+    +'<div class="avis-card-footer">'
+    +'<button type="button" class="avis-save-btn" onclick="saveFeedback(\''+c.id+'\')">Enregistrer</button>'
+    +'<span class="avis-saved-tag" data-saved-tag>&#10003; Enregistré</span>'
+    +'</div>'
+    +'</div>';
+}
+
+var pendingStatus={};
+
+function selectStatus(candidateId,status){
+  pendingStatus[candidateId]=status;
+  var card=document.getElementById('avis-card-'+candidateId);
+  if(!card)return;
+  card.querySelectorAll('[data-status]').forEach(function(el){
+    var on=el.getAttribute('data-status')===status;
+    el.classList.toggle('on',on);
+    var opt=fbOptFor(el.getAttribute('data-status'));
+    el.style.background=on?opt.color:'';
+  });
+  var interviewBox=card.querySelector('[data-extra-interview]');
+  if(interviewBox)interviewBox.classList.toggle('show',status==='entretien_programme');
+}
+
+async function saveFeedback(candidateId){
+  var token=getToken();
+  var card=document.getElementById('avis-card-'+candidateId);
+  if(!card)return;
+  var btn=card.querySelector('.avis-save-btn');
+  var savedTag=card.querySelector('[data-saved-tag]');
+  var status=pendingStatus[candidateId]||(card.querySelector('.avis-status-opt.on')&&card.querySelector('.avis-status-opt.on').getAttribute('data-status'))||'en_attente';
+  var comment=card.querySelector('[data-comment]').value.trim();
+  var interviewInput=card.querySelector('[data-interview]');
+  var interviewAt=(status==='entretien_programme'&&interviewInput&&interviewInput.value)?new Date(interviewInput.value).toISOString():null;
+  btn.disabled=true;btn.textContent='Enregistrement…';
+  savedTag.classList.remove('show');
+  var r=await sb.rpc('submit_shortlist_feedback',{p_token:token,p_candidate_id:candidateId,p_status:status,p_comment:comment||null,p_interview_at:interviewAt});
+  btn.disabled=false;btn.textContent='Enregistrer';
+  if(r.error||r.data!==true){
+    showToast('Erreur lors de l’enregistrement — réessayez.','error');
+    return;
+  }
+  card.classList.add('done');
+  savedTag.classList.add('show');
+  showToast('Avis enregistré ✓','success');
+}
+
+async function loadShortlist(){
+  var token=getToken();
+  if(!token){showError();return;}
+  var r=await sb.rpc('get_shared_shortlist',{p_token:token});
+  if(r.error||!r.data||!r.data.length){showError();return;}
+  var rows=r.data;
+  var listTitle=rows[0].list_title||'Shortlist';
+
+  var demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(normDemo):[];
+  var sbRes=await sb.from('candidates').select('*').eq('is_public',true);
+  var allCandidates=demo.concat(((sbRes.data)||[]).map(normSB));
+  var byId={};
+  allCandidates.forEach(function(c){byId[c.id]=c;});
+
+  document.getElementById('avisTitle').textContent=listTitle;
+  var listEl=document.getElementById('avisList');
+  var cardsHtml=rows.map(function(row){
+    var c=byId[row.candidate_id];
+    if(!c)return'';
+    var fb={fb_status:row.fb_status,fb_comment:row.fb_comment,fb_interview_at:row.fb_interview_at};
+    return candidateCardHTML(c,fb);
+  }).filter(Boolean).join('');
+  listEl.innerHTML=cardsHtml||'<p style="text-align:center;color:var(--teal-3);font-family:var(--font-mono);font-size:12px">Cette shortlist est vide pour le moment.</p>';
+
+  document.getElementById('avisLoading').style.display='none';
+  document.getElementById('avisContent').style.display='block';
+}
+
+function showError(){
+  document.getElementById('avisLoading').style.display='none';
+  document.getElementById('avisError').style.display='block';
+}
+
+loadShortlist().catch(function(e){console.error(e);showError();});
+</script>
+</body>
+</html>

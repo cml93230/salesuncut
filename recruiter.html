@@ -145,6 +145,10 @@
     .sl-status-filter-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:5px;font-family:var(--font-mono);font-size:11px;color:var(--ink);cursor:pointer;white-space:nowrap}
     .sl-status-filter-row:hover{background:var(--cream-2)}
     .sl-status-filter-row input{accent-color:var(--gold-deep);width:14px;height:14px;flex-shrink:0;cursor:pointer}
+    .sl-fb-badge{position:relative;display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;border:1px solid;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:default;white-space:nowrap;flex-shrink:0}
+    .sl-fb-badge .fb-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:200px;background:var(--ink);color:var(--cream);font-family:var(--font-sans);font-size:12px;line-height:1.5;font-weight:400;text-transform:none;letter-spacing:0;padding:10px 12px;border-radius:6px;z-index:20;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .sl-fb-badge .fb-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink)}
+    .sl-fb-badge:hover .fb-tooltip,.sl-fb-badge:focus .fb-tooltip{display:block}
     .su-modal-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:20px}
     .su-modal-backdrop{position:fixed;inset:0;background:rgba(26,34,34,.7);backdrop-filter:blur(6px)}
     .su-modal-box{position:relative;z-index:2;background:var(--cream);border:1.5px solid var(--ink);border-radius:10px;width:100%;max-width:440px;box-shadow:0 32px 80px rgba(26,34,34,.4);overflow:hidden}
@@ -571,6 +575,7 @@
             <div class="sl-list-dropdown-panel" id="slListPanel" hidden></div>
           </div>
           <button type="button" class="sl-list-create-btn" id="slCreateListBtn">+ Cr&eacute;er une shortlist</button>
+          <button type="button" class="sl-list-create-btn" id="slShareBtn">&#128279; Partager</button>
           <div class="sl-list-dropdown-wrap">
             <button type="button" class="sl-list-dropdown-btn" id="slStatusFilterBtn"><span id="slStatusFilterLabel">Tous les statuts</span><i class="sl-list-caret">&#9662;</i></button>
             <div class="sl-list-dropdown-panel" id="slStatusFilterPanel" hidden></div>
@@ -639,6 +644,15 @@ const ACTIVE_LIST_KEY='su_active_list_v1';
 const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
 const STATUS_OPTS=[{v:'saved',l:'À contacter'},{v:'contacted',l:'Contacté'},{v:'interview',l:'Entretien programmé'},{v:'rejected',l:'Refusé'},{v:'hired',l:'Embauché'}];
 var statusFilterState={};STATUS_OPTS.forEach(function(o){statusFilterState[o.v]=true;});
+/* ── Avis du hiring manager (partage shortlist, feature #6) ── */
+const FB_STATUS_OPTS=[
+  {v:'en_attente',          l:'En attente',        color:'#8a8478'},
+  {v:'refuse',               l:'Refusé',            color:'#b34e2a'},
+  {v:'accepte',              l:'Accepté',           color:'#16a34a'},
+  {v:'entretien_programme',  l:'Entretien prévu',   color:'#b8922a'},
+  {v:'entretien_passe',      l:'Entretien passé',   color:'#2f6f6b'}
+];
+function fbOptFor(status){return FB_STATUS_OPTS.find(function(o){return o.v===status;})||FB_STATUS_OPTS[0];}
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='list',currentPoolIds=[];
 let customLists=[],membership={},activeShortlistId='default',candidateStatus={},contactedAt={};
@@ -684,6 +698,137 @@ async function initShortlistState(){
   if(!getListById(activeShortlistId))activeShortlistId='default';
   recomputeShortlistedIds();
   renderListSwitcher();
+}
+/* ---- Partage de shortlist avec le hiring manager (feature #6) ---- */
+var currentShares={},shareFeedbackByList={};
+function shareKeyFor(listId){return listId||'default';}
+function activeListIdRaw(){return activeShortlistId==='default'?null:activeShortlistId;}
+async function loadSharesAndFeedback(){
+  currentShares={};shareFeedbackByList={};
+  if(!currentRecruiter)return;
+  var rs=await sb.from('shortlist_shares').select('*').eq('recruiter_id',currentRecruiter.id);
+  if(rs.error){console.warn('SB shares load:',rs.error.message);}
+  (rs.data||[]).forEach(function(sh){currentShares[shareKeyFor(sh.list_id)]=sh;});
+  var rf=await sb.from('shortlist_feedback').select('*, shortlist_shares(list_id)');
+  if(rf.error){console.warn('SB feedback load:',rf.error.message);}
+  (rf.data||[]).forEach(function(f){
+    var relShare=f.shortlist_shares;
+    if(!relShare)return;
+    var lk=shareKeyFor(relShare.list_id);
+    if(!shareFeedbackByList[lk])shareFeedbackByList[lk]={};
+    shareFeedbackByList[lk][f.candidate_id]=f;
+  });
+}
+function daysSince(iso){
+  if(!iso)return 0;
+  var ms=Date.now()-new Date(iso).getTime();
+  return Math.max(0,Math.floor(ms/86400000));
+}
+function shareLinkFor(share){return window.location.origin+'/avis-shortlist.html?token='+share.token;}
+function reminderMailto(share){
+  var days=daysSince(share.created_at);
+  var subject=encodeURIComponent('Rappel — Votre avis sur la shortlist SalesUncut');
+  var body=encodeURIComponent('Bonjour,\n\nPetit rappel : votre avis est attendu depuis '+days+' jour'+(days>1?'s':'')+' sur la shortlist de candidats que je vous ai partagée :\n'+shareLinkFor(share)+'\n\nMerci d’avance,\n'+((currentRecruiter&&currentRecruiter.company_name)||''));
+  return 'mailto:'+(share.manager_email?encodeURIComponent(share.manager_email):'')+'?subject='+subject+'&body='+body;
+}
+function fbBadgeHTML(candidateId){
+  var lk=shareKeyFor(activeListIdRaw());
+  var share=currentShares[lk];
+  if(!share)return'';
+  var fb=(shareFeedbackByList[lk]||{})[candidateId];
+  var status=fb?fb.status:'en_attente';
+  var opt=fbOptFor(status);
+  var tip;
+  if(status==='entretien_programme'&&fb&&fb.interview_at)tip='Entretien prévu le '+fmtDateShort(fb.interview_at);
+  else if(fb&&fb.comment)tip=fb.comment;
+  else tip='Avis du hiring manager : '+opt.l;
+  return '<span class="sl-fb-badge" style="background:'+opt.color+'22;color:'+opt.color+';border-color:'+opt.color+'66" tabindex="0">'+opt.l+'<span class="fb-tooltip">'+tip+'</span></span>';
+}
+function shareModalBodyHTML(share){
+  if(!share){
+    return '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-share-modal\').remove()"></div>'
+      +'<div class="su-modal-box">'
+      +'<div class="su-modal-header"><span>Partager la shortlist</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-share-modal\').remove()">✕</button></div>'
+      +'<div class="su-modal-body">'
+      +'<p style="font-size:13px;color:var(--teal-2);line-height:1.55;margin:0">Générez un lien public, sans compte à créer, pour que le hiring manager donne son avis candidat par candidat sur <strong>'+((getListById(activeShortlistId)||DEFAULT_LIST).title)+'</strong>.</p>'
+      +'<div class="form-group"><label class="form-label">Email du hiring manager (optionnel)</label><input type="email" id="shareManagerEmail" class="form-input" placeholder="manager@entreprise.com"/></div>'
+      +'<div class="su-modal-error" id="shareError"></div>'
+      +'</div>'
+      +'<div class="su-modal-footer"><button type="button" class="filters-reset" onclick="document.getElementById(\'su-share-modal\').remove()">Annuler</button><button type="button" class="auth-submit" style="width:auto;padding:10px 20px" id="shareCreateBtn">Générer le lien</button></div>'
+      +'</div>';
+  }
+  var link=shareLinkFor(share);
+  var days=daysSince(share.created_at);
+  return '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-share-modal\').remove()"></div>'
+    +'<div class="su-modal-box">'
+    +'<div class="su-modal-header"><span>Partager la shortlist</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-share-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body">'
+    +'<div class="invite-link-row"><span class="invite-link-text">'+link+'</span><button type="button" class="invite-copy-btn" id="shareCopyBtn">Copier</button></div>'
+    +'<div class="form-group"><label class="form-label">Email du hiring manager</label><input type="email" id="shareManagerEmail" class="form-input" placeholder="manager@entreprise.com" value="'+(share.manager_email||'')+'"/></div>'
+    +'<p style="font-size:12px;color:var(--teal-3);margin:0">Partagé il y a '+days+' jour'+(days>1?'s':'')+(share.reminder_count?' · '+share.reminder_count+' rappel'+(share.reminder_count>1?'s':'')+' envoyé'+(share.reminder_count>1?'s':''):'')+'.</p>'
+    +'<div class="su-modal-error" id="shareError"></div>'
+    +'</div>'
+    +'<div class="su-modal-footer"><button type="button" class="filters-reset" id="shareSaveEmailBtn">Enregistrer l’email</button><a href="'+reminderMailto(share)+'" class="btn gold sm" id="shareReminderBtn">&#9993; Envoyer un rappel</a></div>'
+    +'</div>';
+}
+function wireShareModal(share,listId){
+  var copyBtn=document.getElementById('shareCopyBtn');
+  if(copyBtn)copyBtn.addEventListener('click',function(){copyInviteLink(shareLinkFor(share),copyBtn);});
+  var createBtn=document.getElementById('shareCreateBtn');
+  if(createBtn){
+    createBtn.addEventListener('click',async function(){
+      var email=document.getElementById('shareManagerEmail').value.trim();
+      var err=document.getElementById('shareError');
+      err.classList.remove('visible');
+      createBtn.disabled=true;createBtn.textContent='Génération…';
+      var token=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));
+      var r=await sb.from('shortlist_shares').insert({recruiter_id:currentRecruiter.id,list_id:listId,manager_email:email||null,token:token}).select().single();
+      if(r.error||!r.data){
+        err.textContent='Erreur lors de la création du lien de partage.';err.classList.add('visible');
+        createBtn.disabled=false;createBtn.textContent='Générer le lien';
+        return;
+      }
+      currentShares[shareKeyFor(listId)]=r.data;
+      var modal=document.getElementById('su-share-modal');
+      if(modal){modal.innerHTML=shareModalBodyHTML(r.data);wireShareModal(r.data,listId);}
+      renderShortlist();
+      showToast('Lien de partage généré ✓','success');
+    });
+  }
+  var saveEmailBtn=document.getElementById('shareSaveEmailBtn');
+  if(saveEmailBtn&&share){
+    saveEmailBtn.addEventListener('click',async function(){
+      var email=document.getElementById('shareManagerEmail').value.trim();
+      var r=await sb.from('shortlist_shares').update({manager_email:email||null}).eq('id',share.id).select().single();
+      if(!r.error&&r.data){
+        currentShares[shareKeyFor(listId)]=r.data;
+        var reminderBtn=document.getElementById('shareReminderBtn');
+        if(reminderBtn)reminderBtn.setAttribute('href',reminderMailto(r.data));
+        showToast('Email enregistré ✓','success');
+      }else{
+        showToast('Erreur lors de l’enregistrement','error');
+      }
+    });
+  }
+  var reminderBtn=document.getElementById('shareReminderBtn');
+  if(reminderBtn&&share){
+    reminderBtn.addEventListener('click',function(){
+      sb.from('shortlist_shares').update({last_reminder_at:new Date().toISOString(),reminder_count:(share.reminder_count||0)+1}).eq('id',share.id).select().single().then(function(r){
+        if(!r.error&&r.data)currentShares[shareKeyFor(listId)]=r.data;
+      });
+    });
+  }
+}
+function openShareModal(){
+  var listId=activeListIdRaw();
+  var lk=shareKeyFor(listId);
+  var share=currentShares[lk];
+  var existing=document.getElementById('su-share-modal');if(existing)existing.remove();
+  var modal=document.createElement('div');
+  modal.id='su-share-modal';modal.className='su-modal-overlay';
+  modal.innerHTML=shareModalBodyHTML(share);
+  document.body.appendChild(modal);
+  wireShareModal(share,listId);
 }
 /* ---- Recherches enregistrées + alertes ---- */
 var savedSearches=[];
@@ -1244,6 +1389,7 @@ sb.auth.onAuthStateChange(function(event,session){
         loadCandidates();
         loadSavedSearches();
         loadInvites();
+        loadSharesAndFeedback().then(function(){renderShortlist();});
       });
     },0);
   }else{showAuth();}
@@ -1427,6 +1573,7 @@ function applyShortlistFilters(){
       +'<div class="sl-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.availability?' · '+c.availability:'')+'</div>'
       +(contactedAt[c.id]?'<div class="sl-contact-trace">✓ Contacté le '+fmtDateShort(contactedAt[c.id])+'</div>':'')
       +'</div>'
+      +fbBadgeHTML(c.id)
       +statusSelectHTML(c.id)
       +'<div class="sl-score">'+c.score+'</div>'
       +'<div class="sl-actions">'
@@ -1599,6 +1746,7 @@ document.getElementById('slStatusFilterPanel').addEventListener('change',functio
 });
 renderStatusFilterPanel();
 document.getElementById('slCreateListBtn').addEventListener('click',openCreateListModal);
+document.getElementById('slShareBtn').addEventListener('click',openShareModal);
 
 function toggleShortlist(sid,btn){
   var isSaved=shortlistedIds.has(sid);
