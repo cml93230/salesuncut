@@ -243,6 +243,11 @@
     .sl-status.st-interview{border-color:var(--gold-deep);color:var(--gold-deep)}
     .sl-status.st-rejected{border-color:var(--rust);color:var(--rust)}
     .sl-status.st-hired{background-color:var(--gold-deep);border-color:var(--gold-deep);color:var(--cream)}
+    .sl-btn.contact{background:none;color:var(--teal-2);border-color:var(--teal-2)}
+    .sl-btn.contact:hover{background:var(--teal-2);color:var(--cream)}
+    .sl-btn.contact[disabled]{opacity:.4;cursor:not-allowed;color:var(--teal-3);border-color:var(--cream-3)}
+    .sl-btn.contact[disabled]:hover{background:none;color:var(--teal-3)}
+    .sl-contact-trace{font-family:var(--font-mono);font-size:9px;letter-spacing:.04em;color:var(--teal-2);margin-top:2px}
     .vs-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;background:var(--ink);color:var(--cream);padding:12px 32px;display:none;align-items:center;gap:16px;box-shadow:0 -4px 24px rgba(26,34,34,.45)}
     .vs-bar.show{display:flex}
     .vs-bar-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,248,231,.45);white-space:nowrap}
@@ -628,7 +633,7 @@ const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par 
 const STATUS_OPTS=[{v:'saved',l:'À contacter'},{v:'contacted',l:'Contacté'},{v:'interview',l:'Entretien programmé'},{v:'rejected',l:'Refusé'},{v:'hired',l:'Embauché'}];
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
-let customLists=[],membership={},activeShortlistId='default',candidateStatus={};
+let customLists=[],membership={},activeShortlistId='default',candidateStatus={},contactedAt={};
 
 /* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
 function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
@@ -648,7 +653,7 @@ function recomputeShortlistedIds(){
   shortlistedIds=s;
 }
 async function initShortlistState(){
-  customLists=[];membership={default:[]};candidateStatus={};
+  customLists=[];membership={default:[]};candidateStatus={};contactedAt={};
   if(currentRecruiter){
     var rl=await sb.from('shortlist_lists').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
     (rl.data||[]).forEach(function(l){
@@ -661,6 +666,10 @@ async function initShortlistState(){
       if(!membership[lid])membership[lid]=[];
       if(membership[lid].indexOf(row.candidate_id)<0)membership[lid].push(row.candidate_id);
       candidateStatus[row.candidate_id]=row.status||'saved';
+    });
+    var rc=await sb.from('candidate_contacts').select('candidate_id,contacted_at').eq('recruiter_id',currentRecruiter.id).order('contacted_at',{ascending:false});
+    (rc.data||[]).forEach(function(row){
+      if(!contactedAt[row.candidate_id])contactedAt[row.candidate_id]=row.contacted_at;
     });
   }
   activeShortlistId=activeListLoad();
@@ -889,7 +898,6 @@ function openUpgradeModal(){
     +cta('pro','Passer &agrave; Premium')
     +'</div>'
     +'</div>'
-    +'</div>'
     +'</div>';
   document.body.appendChild(modal);
 }
@@ -1005,6 +1013,31 @@ function updateCandidateStatus(id,newStatus,selEl){
       showToast('Erreur lors de la mise à jour du statut','error');
     }
   });
+}
+function fmtDateShort(iso){
+  if(!iso)return'';
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return'';
+  var dd=('0'+d.getDate()).slice(-2),mm=('0'+(d.getMonth()+1)).slice(-2);
+  return dd+'/'+mm;
+}
+function contactCandidate(id,emailEnc,nameEnc,btnEl){
+  var email=decodeURIComponent(emailEnc||''),name=decodeURIComponent(nameEnc||'');
+  if(!email||!currentRecruiter)return;
+  var subject=encodeURIComponent('Opportunité commerciale — '+(currentRecruiter.company_name||''));
+  var body=encodeURIComponent('Bonjour '+(name||'')+',\n\nVotre profil sur SalesUncut a retenu notre attention pour une opportunité au sein de notre équipe. Seriez-vous disponible pour échanger ?\n\nBien à vous,\n'+(currentRecruiter.company_name||''));
+  window.open('mailto:'+email+'?subject='+subject+'&body='+body,'_blank');
+  var wasNew=!contactedAt[id];
+  contactedAt[id]=new Date().toISOString();
+  if((candidateStatus[id]||'saved')==='saved'){
+    candidateStatus[id]='contacted';
+    sb.from('shortlists').update({status:'contacted'}).eq('recruiter_id',currentRecruiter.id).eq('candidate_id',id).then(function(r){if(r.error)console.warn('SB status auto:',r.error.message);});
+  }
+  if(wasNew){
+    sb.from('candidate_contacts').insert({recruiter_id:currentRecruiter.id,candidate_id:id,channel:'email'}).then(function(r){if(r.error)console.warn('SB contact trace:',r.error.message);});
+  }
+  showToast('Email de contact ouvert');
+  renderShortlist();
 }
 function removeFromActiveList(candidateId){
   removeFromList(activeShortlistId,candidateId);
@@ -1139,7 +1172,7 @@ function normSB(c){
   var name=[c.prenom,c.nom].filter(Boolean).join(' ')||'Anonyme';
   var level=lvl(c.score_global||0);
   return{
-    id:c.simulation_id||c.id,name:name,photo:c.photo_url||null,
+    id:c.simulation_id||c.id,name:name,photo:c.photo_url||null,email:c.email||null,
     level:level,score:c.score_global||0,famille:c.famille||'',family_id:null,
     location:c.ville||c.location||'',availability:c.disponibilite||c.availability||'',
     role_type:c.role_type||c.role_label||'',
@@ -1368,10 +1401,12 @@ function applyShortlistFilters(){
       +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
       +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
       +'<div class="sl-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.availability?' · '+c.availability:'')+'</div>'
+      +(contactedAt[c.id]?'<div class="sl-contact-trace">✓ Contacté le '+fmtDateShort(contactedAt[c.id])+'</div>':'')
       +'</div>'
       +statusSelectHTML(c.id)
       +'<div class="sl-score">'+c.score+'</div>'
       +'<div class="sl-actions">'
+      +(c.email?'<button class="sl-btn contact" onclick="contactCandidate(\''+c.id+'\',\''+encodeURIComponent(c.email)+'\',\''+encodeURIComponent(name)+'\',this)">✉ Contacter</button>':'<button class="sl-btn contact" disabled title="Email non disponible pour ce profil">✉ Contacter</button>')
       +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'✓ VS':'VS')+'</button>'
       +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
       +'<button class="sl-btn remove" onclick="removeFromActiveList(\''+c.id+'\')">✕</button>'
