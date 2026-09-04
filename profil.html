@@ -220,7 +220,7 @@
     <section class="profil-hero"><div class="container"><div class="profil-hero-grid"><div id="profil-card"></div><div id="profil-info"></div></div></div></section>
     <hr class="profil-divider">
     <div class="profil-action-bar"><div class="container"><div class="profil-action-inner">
-      <div><div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div><div class="profil-action-sub" id="action-sub">★ Vérifié</div></div>
+      <div><div class="profil-action-title" id="action-title">Ce profil est dispo immédiatement</div><div class="profil-action-sub" id="action-sub">★ Vérifié</div><div class="profil-action-sub" id="contactTrace" style="margin-top:4px;display:none;color:var(--gold)"></div></div>
       <div class="profil-action-btns" id="action-btns"></div>
     </div></div></div>
   </div>
@@ -267,6 +267,39 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     var sb=window.supabase.createClient('https://svtyzkypmzmtcqunzfyy.supabase.co','sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB');
+    /* ── Prise de contact réelle (promesse Niveau 1 #5) ── */
+    var contactRecruiterId=null;
+    var contactInitPromise=initContactState();
+    async function initContactState(){
+      try{
+        var s=await sb.auth.getSession();
+        if(!s.data||!s.data.session)return;
+        var r=await sb.from('recruiters').select('id').eq('user_id',s.data.session.user.id).maybeSingle();
+        if(r.data)contactRecruiterId=r.data.id;
+      }catch(e){}
+    }
+    function renderContactTrace(d){
+      var el=document.getElementById('contactTrace');
+      if(!el)return;
+      el.textContent='✓ Contacté le '+d.toLocaleDateString('fr-FR');
+      el.style.display='block';
+    }
+    async function checkExistingContact(candidateId){
+      if(!contactRecruiterId||!candidateId)return;
+      var r=await sb.from('candidate_contacts').select('contacted_at').eq('recruiter_id',contactRecruiterId).eq('candidate_id',candidateId).order('contacted_at',{ascending:false}).limit(1).maybeSingle();
+      if(r.data)renderContactTrace(new Date(r.data.contacted_at));
+    }
+    async function handleContactClick(candidateId,email,candidateName){
+      if(!email){alert('Email non disponible pour ce profil.');return;}
+      if(!contactRecruiterId)await contactInitPromise;
+      if(!contactRecruiterId){window.location.href='recruiter.html';return;}
+      var subject=encodeURIComponent('SalesUncut — '+candidateName);
+      var body=encodeURIComponent('Bonjour '+(candidateName.split(' ')[0]||'')+',\n\nJ’ai consulté votre profil SalesUncut et j’aimerais échanger avec vous.\n\nÀ bientôt.');
+      window.location.href='mailto:'+encodeURIComponent(email)+'?subject='+subject+'&body='+body;
+      sb.from('candidate_contacts').insert({recruiter_id:contactRecruiterId,candidate_id:candidateId}).then(function(r){
+        if(!r.error)renderContactTrace(new Date());
+      });
+    }
     var navEl=document.getElementById('main-nav');
     if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px');
     window.addEventListener('load',function(){if(navEl)document.documentElement.style.setProperty('--nav-height',navEl.offsetHeight+'px');});
@@ -287,8 +320,11 @@
       document.getElementById('profil-info').innerHTML='<div class="profil-eyebrow">Profil '+(c.location||'France')+' · Certifié SalesUncut</div><div class="profil-name">'+name.replace(' ','<br>')+'</div><div class="profil-tags">'+(level?'<span class="profil-tag gold-tag">★ '+level+' · '+score+'/100</span>':'')+(c.role_type?'<span class="profil-tag role-tag">'+c.role_type+'</span>':'')+(c.famille?'<span class="profil-tag">'+c.famille+'</span>':'')+(c.experience_years?'<span class="profil-tag">'+c.experience_years+' ans</span>':'')+'</div><div class="profil-meta"><div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">'+(c.location||'—')+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">OTE Total visé</div><div class="profil-meta-value">'+(c.ote_total?c.ote_total.toLocaleString('fr-FR')+' €':'—')+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Disponibilité</div><div class="profil-meta-value">'+(c.availability||'—')+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Certification</div><div class="profil-meta-value">'+(level||'En attente')+'</div></div></div>';
       document.getElementById('action-title').textContent=c.availability==='Immédiat'?'Ce profil est dispo immédiatement':'Disponible : '+(c.availability||'nous contacter');
       document.getElementById('action-sub').innerHTML='★ Vérifié · Certification SalesUncut';
-      document.getElementById('action-btns').innerHTML='<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button><a href="recruiter.html" class="action-btn primary">★ Contacter ce sales</a>'+(c.linkedin_url?'<a href="'+c.linkedin_url+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'');
+      var contactSafeName=name.replace(/'/g,"\\'");
+      var contactSafeEmail=(c.email||'').replace(/'/g,"\\'");
+      document.getElementById('action-btns').innerHTML='<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button>'+(c.email?'<button type="button" class="action-btn primary" onclick="handleContactClick(\''+c.id+'\',\''+contactSafeEmail+'\',\''+contactSafeName+'\')">★ Contacter ce sales</button>':'<span class="action-btn primary" style="opacity:.45;cursor:not-allowed" title="Email non disponible pour ce profil">★ Contacter ce sales</span>')+(c.linkedin_url?'<a href="'+c.linkedin_url+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'');
       document.getElementById('prevnext-bar').style.display='none';
+      contactInitPromise.then(function(){checkExistingContact(c.id);});
       buildRadar(dims,fake);
       var audioHtml=dims.map(function(d){var val=c['score_'+d.key]||0;var justif=c['justif_'+d.key]||'';return'<div class="audio-card"><div class="audio-header"><div><div class="audio-dim-name">'+d.label+'</div>'+(justif?'<div class="audio-moment">'+justif.slice(0,60)+(justif.length>60?'…':'')+'</div>':'')+'</div><div class="audio-score">'+val+'/'+(d.max||16)+'</div></div><div class="audio-player"><button class="audio-play-btn" disabled>⏰ bientôt</button><div class="waveform">'+makeWave(24,0)+'</div></div></div>';}).join('');
       if(c.recording_url){audioHtml+='<div class="audio-card audio-full" onclick="toggleFullAudio()"><div class="audio-header"><div><div class="audio-dim-name">🎧  Audio complet</div><div class="audio-moment">Écouter l’appel intégral →</div></div></div><div class="audio-player"><button class="audio-play-btn" id="fullPlayBtn">&#9654;</button><div class="waveform">'+makeWave(24,0)+'</div></div><div class="audio-full-player" id="fullPlayerWrap"><audio class="full-audio" controls preload="none" id="fullAudioEl"><source src="'+c.recording_url+'">Non supporté.</audio></div></div>';}
@@ -346,7 +382,7 @@
       document.getElementById('profil-info').innerHTML='<div class="profil-eyebrow">Profil '+c.location+' · Certifié SalesUncut<span class="view-badge">👁 '+viewCount+' vues cette semaine</span></div><div class="profil-name">'+displayName.replace(' ','<br>')+'</div><div class="profil-quote">« '+finalQuote+' »</div><div class="profil-tags">'+tagsHtml+'</div>'+bmHtml+'<div class="profil-meta"><div class="profil-meta-cell"><div class="profil-meta-label">Localisation</div><div class="profil-meta-value">'+c.location+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">OTE Total visé</div><div class="profil-meta-value">'+c.ote.total+'€</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Disponibilité</div><div class="profil-meta-value">'+c.availability+'</div></div><div class="profil-meta-cell"><div class="profil-meta-label">Valide jusqu\'a</div><div class="profil-meta-value">'+validity+'</div></div></div>';
       document.getElementById('action-title').textContent=c.availability==='Immédiat'?'Ce profil est dispo immédiatement':'Disponible dans '+c.availability;
       document.getElementById('action-sub').innerHTML='★ Vérifié · '+new Date(c.date).toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})+' · Certification valide 18 mois';
-      document.getElementById('action-btns').innerHTML=['<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button>','<a href="#" class="action-btn primary">★ Contacter ce sales</a>',c.linkedin?'<a href="'+c.linkedin+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'',c.cv?'<a href="'+c.cv+'" download class="action-btn secondary">↓ CV</a>':'<span class="action-btn secondary" style="opacity:.4;cursor:not-allowed">CV non fourni</span>'].filter(Boolean).join('');
+      document.getElementById('action-btns').innerHTML=['<button onclick="copyProfilLink()" class="action-btn copy-btn" id="copy-btn">🔗 Copier le lien</button>','<span class="action-btn primary" style="opacity:.45;cursor:not-allowed" title="Profil de démonstration — contact indisponible">★ Contacter ce sales</span>',c.linkedin?'<a href="'+c.linkedin+'" target="_blank" rel="noopener" class="action-btn linkedin-btn">in LinkedIn</a>':'',c.cv?'<a href="'+c.cv+'" download class="action-btn secondary">↓ CV</a>':'<span class="action-btn secondary" style="opacity:.4;cursor:not-allowed">CV non fourni</span>'].filter(Boolean).join('');
       buildRadar(dims,c);
       var audioHtml=audioMoments.map(function(m,idx){var dim=dims.find(function(d){return d.key===m.key;});var val=c.stats[m.key]||0;var played=Math.round(24*idx/audioMoments.length);var label=dim?dim.label:m.key;var url='/audio/'+c.id+'_'+m.key+'.mp3';return'<div class="audio-card '+(m.featured?'featured':'')+'">'+'<div class="audio-header"><div><div class="audio-dim-name">'+label+'</div><div class="audio-moment">'+m.moment+'</div></div><div class="audio-score">'+val+'/'+(dim?dim.max:'?')+'</div></div><div class="audio-player"><button class="audio-play-btn" data-url="'+url+'" data-dim="'+label+'" data-ts="'+m.ts+'">&#9654;</button><div class="waveform">'+makeWave(24,played)+'</div><div class="audio-meta">'+m.ts+' · '+m.dur+'</div></div></div>';}).join('')+'<div class="full-call-box"><div class="full-call-title">Écouter l\'appel complet ?</div><p class="full-call-desc">Téléchargement audio brut + transcript intégral réservé aux comptes recruteurs abonnés.</p><a href="recruiter.html" class="full-call-btn">Accéder au pool complet →</a></div>';
       document.getElementById('audio-list').innerHTML=audioHtml;
