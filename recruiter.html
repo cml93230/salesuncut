@@ -559,6 +559,11 @@ function filterStateLabel(f){
   if(f.famille)parts.push(f.famille);
   if(f.role)parts.push(f.role);
   if(f.ville)parts.push(f.ville);
+  if(f.profil)parts.push(f.profil);
+  if(f.type)parts.push(f.type);
+  if(f.expMin||f.expMax)parts.push((f.expMin||'0')+'-'+(f.expMax||'40')+' ans');
+  if(f.diplome)parts.push(f.diplome);
+  if(f.contrat)parts.push(f.contrat);
   if(f.scoreMin||f.scoreMax)parts.push('Score '+(f.scoreMin||'0')+'-'+(f.scoreMax||'100'));
   if(f.ote)parts.push('OTE < '+f.ote+'k€');
   if(f.dispo!==undefined&&f.dispo!=='4')parts.push(DISPO_FILTER_LABELS[parseInt(f.dispo)]||'');
