@@ -445,3 +445,456 @@
       <div class="dash-hero-actions">
         <button type="button" class="dash-invite-btn" onclick="openInviteModal()">
           <span class="dash-invite-icon">&#9993;</span>
+          <span class="dash-invite-copy">
+            <span class="dash-invite-title">Inviter un candidat</span>
+            <span class="dash-invite-sub">Envoyer un lien de test &agrave; un profil sourc&eacute; ailleurs</span>
+          </span>
+        </button>
+        <button type="button" class="dash-scenario-btn" onclick="openScenarioEntry()">
+          <span class="dash-invite-icon">&#127919;</span>
+          <span class="dash-invite-copy">
+            <span class="dash-invite-title">Cr&eacute;er mon sc&eacute;nario personnalis&eacute;</span>
+            <span class="dash-invite-sub">Une simulation con&ccedil;ue sur mesure pour votre poste</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="dash-stats-grid">
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatPool">0</div>
+        <div class="dash-stat-lbl">Profils dans le pool</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatShortlist">0</div>
+        <div class="dash-stat-lbl">Shortlist&eacute;s</div>
+      </div>
+      <div class="dash-stat-card gold">
+        <div class="dash-stat-num" id="dashStatGold">0</div>
+        <div class="dash-stat-lbl">Niveau GOLD</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatSearches">0</div>
+        <div class="dash-stat-lbl">Recherches enregistr&eacute;es</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatInvited">0</div>
+        <div class="dash-stat-lbl">Candidats invit&eacute;s</div>
+      </div>
+    </div>
+
+    <div class="dash-cols">
+      <div class="dash-col-card">
+        <div class="dash-col-header">
+          <span>Recherches enregistr&eacute;es r&eacute;centes</span>
+          <span class="dash-col-link" onclick="switchToPoolTab()">Voir tout &rarr;</span>
+        </div>
+        <div id="dashRecentSearches" class="dash-col-list"></div>
+      </div>
+      <div class="dash-col-card">
+        <div class="dash-col-header">
+          <span>Invitations envoy&eacute;es</span>
+        </div>
+        <div id="dashRecentInvites" class="dash-col-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── POOL PANEL ── -->
+  <div class="tab-panel" id="panelPool">
+    <div class="search-row">
+      <input type="text" id="searchInput" class="search-input" placeholder="Rechercher par nom, secteur, ville, canal&#8230;">
+    </div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="filters-panel">
+      <div class="filters-header">
+        <div class="filters-title">Filtres</div>
+        <button class="filters-reset" id="resetFilters">&#10005; R&eacute;initialiser</button>
+      </div>
+      <div class="filters-groups">
+        <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="fFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
+        <div><div class="fg-lbl">Poste</div><select class="fg-select" id="fRole"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
+        <div><div class="fg-lbl">Ville</div><select class="fg-select" id="fVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Profil</div><select class="fg-select" id="fProfil"><option value="">Tous</option><option>Chasseur</option><option>Farmer</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Type</div><select class="fg-select" id="fType"><option value="">Tous</option><option>Terrain</option><option>Digital</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience (ans)</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fExpMin" min="0" max="40" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fExpMax" min="0" max="40" placeholder="Max"></div></div>
+        <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="fDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
+        <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="fContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
+        <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="fScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="fScoreMax" min="0" max="100" placeholder="Max"></div></div>
+        <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="fOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
+        <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="dispoVal">&mdash; toutes</span></div><input type="range" id="fDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
+      </div>
+      <div class="saved-search-row">
+        <button class="ss-action-btn" id="btnSaveSearch" onclick="saveCurrentSearch(false)">&#128190; Enregistrer</button>
+        <span class="ss-info" tabindex="0">i<span class="ss-tooltip">Sauvegardez cette combinaison de filtres pour la retrouver en un clic, sans avoir &agrave; tout re-s&eacute;lectionner &agrave; chaque visite.</span></span>
+        <button class="ss-action-btn ss-alert-btn" id="btnSaveAlert" onclick="saveCurrentSearch(true)">&#128276; Alerte</button>
+        <span class="ss-info" tabindex="0">i<span class="ss-tooltip">Activez la cloche pour recevoir un email d&egrave;s qu'un nouveau candidat correspondant &agrave; cette recherche rejoint le pool. Modifiable &agrave; tout moment depuis la liste ci-dessous.</span></span>
+      </div>
+      <div class="saved-searches-panel" id="savedSearchesPanel">
+        <div class="ss-panel-header" id="savedSearchesToggle" onclick="toggleSavedSearchesPanel()">
+          <span>Mes recherches enregistr&eacute;es</span><span class="ss-count" id="ssCount">0</span><i class="ss-caret">&#9662;</i>
+        </div>
+        <div class="ss-list" id="savedSearchesList"></div>
+      </div>
+    </div>
+    <div class="results-bar">
+      <div class="results-left">
+        <div class="results-count"><span class="num" id="countDisplay">0</span> profils</div>
+        <div class="view-toggle">
+          <button class="view-btn" id="btnCards" title="Vue cartes">&#8862;</button>
+          <button class="view-btn active" id="btnList" title="Vue liste">&#8801;</button>
+        </div>
+      </div>
+      <div class="sort-row"><span>Tri</span><select class="sort-select" id="sortBy"><option value="score">Meilleur score</option><option value="recent">Plus r&eacute;cents</option><option value="dispo">Dispo imm&eacute;diate</option></select></div>
+    </div>
+    <div id="poolGrid" class="pool-grid"><div class="loading-state"><div class="spinner"></div> Chargement du pool&hellip;</div></div>
+    <div id="poolList" class="pool-list" style="display:none"><div class="list-header" id="listHeader"><span></span><span class="lh-sort" data-sort="name">Candidat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="role_type">Poste<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="profil_type">Profil<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="mode_vente">Type<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="experience_years">Exp<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="diplome">Dipl&ocirc;me<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="contract_type">Contrat<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="score">Score<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="famille">Sp&eacute;cialit&eacute;<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="location">Ville<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="availability">Dispo<i class="lh-arrow">↕</i></span><span class="lh-sort" data-sort="ote_max">OTE<i class="lh-arrow">↕</i></span><span></span></div></div>
+    <div id="poolEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
+  </div>
+
+  <!-- ── SHORTLIST PANEL ── -->
+  <div class="tab-panel" id="panelShortlist">
+    <div class="search-row">
+      <input type="text" id="slSearch" class="search-input" placeholder="Rechercher dans la shortlist&#8230;">
+    </div>
+    <div class="stats-bar" id="slStatsBar"></div>
+    <div class="filters-panel">
+      <div class="filters-header">
+        <div class="filters-title">Filtres</div>
+        <button class="filters-reset" id="slResetFilters">&#10005; R&eacute;initialiser</button>
+      </div>
+      <div class="filters-groups">
+        <div><div class="fg-lbl">Sp&eacute;cialit&eacute;</div><select class="fg-select" id="slFamille"><option value="">Toutes</option><option>SaaS RH</option><option>SaaS Sales</option><option>Finance</option><option>Ops ERP</option><option>Cyber</option><option>S&eacute;curit&eacute;</option><option>Marketing</option><option>&Eacute;nergie</option><option>T&eacute;l&eacute;com</option><option>Assurance</option></select></div>
+        <div><div class="fg-lbl">Poste</div><select class="fg-select" id="slRoleF"><option value="">Tous</option><option value="AE">AE &middot; Account Executive</option><option value="SDR">SDR &middot; Sales Dev Rep</option><option value="BDM">BDM &middot; Business Dev</option><option value="AM">AM &middot; Account Manager</option><option value="KAM">KAM &middot; Key Account</option><option value="CSM">CSM &middot; Customer Success</option></select></div>
+        <div><div class="fg-lbl">Ville</div><select class="fg-select" id="slVille"><option value="">Toutes</option></select></div>
+        <div><div class="fg-lbl">Profil</div><select class="fg-select" id="slProfil"><option value="">Tous</option><option>Chasseur</option><option>Farmer</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Type</div><select class="fg-select" id="slType"><option value="">Tous</option><option>Terrain</option><option>Digital</option><option>Hybride</option></select></div>
+        <div><div class="fg-lbl">Exp&eacute;rience (ans)</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slExpMin" min="0" max="40" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slExpMax" min="0" max="40" placeholder="Max"></div></div>
+        <div><div class="fg-lbl">Dipl&ocirc;me</div><select class="fg-select" id="slDiplome"><option value="">Tous</option><option>Bac</option><option>Bac+2</option><option>Bac+3</option><option>Bac+5</option></select></div>
+        <div><div class="fg-lbl">Type de contrat</div><select class="fg-select" id="slContrat"><option value="">Tous</option><option>CDI</option><option>CDD</option><option>Freelance</option><option>Stage</option><option>Alternance</option></select></div>
+        <div><div class="fg-lbl">Score</div><div class="fg-score-range"><input type="number" class="fg-score-input" id="slScoreMin" min="0" max="100" placeholder="Min"><span class="fg-score-sep">&ndash;</span><input type="number" class="fg-score-input" id="slScoreMax" min="0" max="100" placeholder="Max"></div></div>
+        <div><div class="fg-lbl">OTE max</div><select class="fg-select" id="slOte"><option value="">Tous budgets</option><option value="60">&lt; 60k&euro;</option><option value="75">&lt; 75k&euro;</option><option value="90">&lt; 90k&euro;</option><option value="120">&lt; 120k&euro;</option></select></div>
+        <div><div class="fg-lbl">Dispo sous <span class="dispo-val" id="slDispoVal">&mdash; toutes</span></div><input type="range" id="slDispo" class="dispo-slider" min="0" max="4" step="1" value="4"><div class="dispo-labels"><span>Imm.</span><span>1m</span><span>2m</span><span>3m</span><span>Tous</span></div></div>
+      </div>
+    </div>
+    <div class="results-bar">
+      <div class="results-left">
+        <div class="sl-list-switcher">
+          <div class="sl-list-dropdown-wrap">
+            <button type="button" class="sl-list-dropdown-btn" id="slListBtn"><span id="slListBtnLabel">Shortlist par d&eacute;faut</span><i class="sl-list-caret">&#9662;</i></button>
+            <div class="sl-list-dropdown-panel" id="slListPanel" hidden></div>
+          </div>
+          <button type="button" class="sl-list-create-btn" id="slCreateListBtn">+ Cr&eacute;er une shortlist</button>
+          <div class="sl-list-dropdown-wrap">
+            <button type="button" class="sl-list-dropdown-btn" id="slStatusFilterBtn"><span id="slStatusFilterLabel">Tous les statuts</span><i class="sl-list-caret">&#9662;</i></button>
+            <div class="sl-list-dropdown-panel" id="slStatusFilterPanel" hidden></div>
+          </div>
+          <button type="button" class="sl-share-btn" id="slShareBtn">&#128279; Partager</button>
+        </div>
+        <div class="results-count"><span class="num" id="slCountDisplay">0</span><span class="denom" id="slTotalDisplay"></span></div>
+      </div>
+      <div class="sort-row"><span>Tri</span>
+        <select class="sort-select" id="slSortBy">
+          <option value="score">Meilleur score</option>
+          <option value="alpha">Alphab&eacute;tique</option>
+          <option value="dispo">Dispo imm&eacute;diate</option>
+        </select>
+      </div>
+    </div>
+    <div id="shortlistContent"></div>
+    <div id="slEmpty" class="empty-state" style="display:none"><div class="big">&#128269;</div>Aucun profil ne correspond &agrave; ces filtres.</div>
+  </div>
+
+  <!-- ── ACCOUNT PANEL ── -->
+  <div class="tab-panel" id="panelAccount">
+    <div class="account-grid">
+      <div class="account-card">
+        <div class="account-card-title">Informations</div>
+        <div class="account-info-row"><span class="account-info-lbl">Entreprise</span><span class="account-info-val" id="accCompany">&mdash;</span></div>
+        <div class="account-info-row"><span class="account-info-lbl">Contact</span><span class="account-info-val" id="accContact">&mdash;</span></div>
+        <div class="account-info-row"><span class="account-info-lbl">Email</span><span class="account-info-val" id="accEmail">&mdash;</span></div>
+      </div>
+      <div class="account-card">
+        <div class="account-card-title">Abonnement</div>
+        <div class="account-info-row"><span class="account-info-lbl">Plan actuel</span><span class="account-info-val"><span class="plan-badge free" id="accPlan">Free</span></span></div>
+        <div class="account-info-row" style="margin-top:12px"><span class="account-info-lbl">Acc&egrave;s pool</span><span class="account-info-val" id="accAccess">1 profil complet</span></div>
+        <a href="mailto:contact@salesuncut.com?subject=Upgrade recruteur" class="btn gold sm" style="margin-top:16px;display:inline-flex;">Upgrader mon plan &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="vs-bar" id="vsBar">
+  <span class="vs-bar-label">VS</span>
+  <div class="vs-avatars" id="vsAvatars"></div>
+  <span class="vs-hint" id="vsHint"></span>
+  <button class="btn-vs" id="btnVsOpen" disabled onclick="openVSModal()">Comparer &rarr;</button>
+  <button class="btn-vs-clear" onclick="clearVS()" title="Effacer">&#10005;</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script>
+const SUPABASE_URL='https://svtyzkypmzmtcqunzfyy.supabase.co';
+const SUPABASE_KEY='sb_publishable_EV-3DNccOU1oZ8TVQMQuGA_hikbGMfB';
+const{createClient}=supabase;
+const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+
+const DIMS=[
+  {key:'accroche',    label:'Accroche',     max:16},
+  {key:'decouverte',  label:'Découverte',   max:16},
+  {key:'creer_besoin',label:'Créer Besoin', max:20},
+  {key:'objections',  label:'Objections',   max:16},
+  {key:'valeur',      label:'Valeur',        max:16},
+  {key:'closing',     label:'Closing',       max:16}
+];
+const DISPO_LABELS=['≤ 1j','1 mois','2 mois','3 mois','Toutes'];
+const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
+const ACTIVE_LIST_KEY='su_active_list_v1';
+const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
+const STATUS_OPTS=[{v:'saved',l:'À contacter'},{v:'contacted',l:'Contacté'},{v:'interview',l:'Entretien programmé'},{v:'rejected',l:'Refusé'},{v:'hired',l:'Embauché'}];
+var statusFilterState={};STATUS_OPTS.forEach(function(o){statusFilterState[o.v]=true;});
+
+let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='list',currentPoolIds=[];
+let customLists=[],membership={},activeShortlistId='default',candidateStatus={},contactedAt={};
+let shortlistShares={},shortlistFeedback={};
+
+/* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
+function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
+/* ── Fallback niveau d'expérience à partir des années, si non fourni ── */
+function expLevel(y){if(y==null)return null;return y>=5?'Senior':y>=3?'Confirmé':'Junior';}
+
+function parseOteMax(ote){if(!ote)return 999;if(typeof ote==='number')return ote;if(typeof ote==='object'&&ote.total){var ns=String(ote.total).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}var ns=String(ote).match(/\d+/g);return ns?Math.max.apply(null,ns.map(Number)):999;}
+function dispoNum(d){return DISPO_ORDER[d]!=null?DISPO_ORDER[d]:99;}
+/* ── Shortlists multiples (synchronisées par compte recruteur via Supabase) ── */
+function activeListSave(){try{localStorage.setItem(ACTIVE_LIST_KEY,activeShortlistId);}catch(e){}}
+function activeListLoad(){try{return localStorage.getItem(ACTIVE_LIST_KEY)||'default';}catch(e){return'default';}}
+function getAllLists(){return[DEFAULT_LIST].concat(customLists);}
+function getListById(id){return getAllLists().find(function(l){return l.id===id;});}
+function recomputeShortlistedIds(){
+  var s=new Set();
+  Object.keys(membership).forEach(function(lid){(membership[lid]||[]).forEach(function(id){s.add(id);});});
+  shortlistedIds=s;
+}
+async function initShortlistState(){
+  customLists=[];membership={default:[]};candidateStatus={};contactedAt={};
+  if(currentRecruiter){
+    var rl=await sb.from('shortlist_lists').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
+    (rl.data||[]).forEach(function(l){
+      customLists.push({id:l.id,name:l.name,poste:l.poste||'',ville:l.ville||'',title:l.title});
+      membership[l.id]=[];
+    });
+    var rs=await sb.from('shortlists').select('candidate_id,list_id,status').eq('recruiter_id',currentRecruiter.id);
+    (rs.data||[]).forEach(function(row){
+      var lid=row.list_id||'default';
+      if(!membership[lid])membership[lid]=[];
+      if(membership[lid].indexOf(row.candidate_id)<0)membership[lid].push(row.candidate_id);
+      candidateStatus[row.candidate_id]=row.status||'saved';
+    });
+    var rc=await sb.from('candidate_contacts').select('candidate_id,contacted_at').eq('recruiter_id',currentRecruiter.id).order('contacted_at',{ascending:false});
+    (rc.data||[]).forEach(function(row){
+      if(!contactedAt[row.candidate_id])contactedAt[row.candidate_id]=row.contacted_at;
+    });
+    await loadShortlistShares();
+  }
+  activeShortlistId=activeListLoad();
+  if(!getListById(activeShortlistId))activeShortlistId='default';
+  recomputeShortlistedIds();
+  renderListSwitcher();
+}
+async function loadShortlistShares(){
+  shortlistShares={};shortlistFeedback={};
+  if(!currentRecruiter)return;
+  var rs=await sb.from('shortlist_shares').select('*').eq('recruiter_id',currentRecruiter.id);
+  (rs.data||[]).forEach(function(row){
+    shortlistShares[row.list_id||'default']=row;
+  });
+  var shareIds=Object.keys(shortlistShares).map(function(k){return shortlistShares[k].id;});
+  if(!shareIds.length)return;
+  var rf=await sb.from('shortlist_feedback').select('*').in('share_id',shareIds);
+  (rf.data||[]).forEach(function(row){
+    shortlistFeedback[row.share_id+'|'+row.candidate_id]=row;
+  });
+}
+function getActiveShare(){return shortlistShares[activeShortlistId];}
+function fbBadgeHTML(candidateId){
+  var share=getActiveShare();
+  if(!share)return'';
+  var fb=shortlistFeedback[share.id+'|'+candidateId];
+  var status=fb?fb.status:'en_attente';
+  var LBL={en_attente:'En attente',refuse:'Refusé',accepte:'Accepté',entretien_programme:'Entretien prévu',entretien_passe:'Entretien passé'};
+  var tip='';
+  if(status==='refuse'||status==='accepte'){tip=(fb&&fb.comment)?fb.comment:'Aucun commentaire laissé par le manager.';}
+  else if(status==='entretien_programme'){tip=(fb&&fb.interview_at)?'Entretien prévu le '+fmtDateTimeShort(fb.interview_at):'Date non précisée.';}
+  else if(status==='entretien_passe'){tip='Entretien passé — en attente du verdict final du manager.';}
+  else{tip='Le hiring manager n\'a pas encore donné suite.';}
+  return'<span class="sl-fb-badge fb-'+status+'"><span class="sl-fb-dot"></span>'+LBL[status]+'</span>'
+    +'<span class="ss-info" tabindex="0">i<span class="ss-tooltip">'+tip.replace(/</g,'&lt;')+'</span></span>';
+}
+function fmtDateTimeShort(iso){
+  var d=new Date(iso);
+  if(isNaN(d.getTime()))return'';
+  var dd=('0'+d.getDate()).slice(-2),mm=('0'+(d.getMonth()+1)).slice(-2),hh=('0'+d.getHours()).slice(-2),mn=('0'+d.getMinutes()).slice(-2);
+  return dd+'/'+mm+' à '+hh+'h'+mn;
+}
+/* ---- Recherches enregistrées + alertes ---- */
+var savedSearches=[];
+var DISPO_FILTER_LABELS={0:'Immédiat',1:'sous 1 mois',2:'sous 2 mois',3:'sous 3 mois',4:'Toutes dispo'};
+function getCurrentFilterState(){
+  return {
+    famille:document.getElementById('fFamille').value,
+    role:document.getElementById('fRole').value,
+    ville:document.getElementById('fVille').value,
+    profil:document.getElementById('fProfil').value,
+    type:document.getElementById('fType').value,
+    expMin:document.getElementById('fExpMin').value,
+    expMax:document.getElementById('fExpMax').value,
+    diplome:document.getElementById('fDiplome').value,
+    contrat:document.getElementById('fContrat').value,
+    scoreMin:document.getElementById('fScoreMin').value,
+    scoreMax:document.getElementById('fScoreMax').value,
+    ote:document.getElementById('fOte').value,
+    dispo:document.getElementById('fDispo').value
+  };
+}
+function filterStateLabel(f){
+  var parts=[];
+  if(f.famille)parts.push(f.famille);
+  if(f.role)parts.push(f.role);
+  if(f.ville)parts.push(f.ville);
+  if(f.profil)parts.push(f.profil);
+  if(f.type)parts.push(f.type);
+  if(f.expMin||f.expMax)parts.push((f.expMin||'0')+'-'+(f.expMax||'40')+' ans');
+  if(f.diplome)parts.push(f.diplome);
+  if(f.contrat)parts.push(f.contrat);
+  if(f.scoreMin||f.scoreMax)parts.push('Score '+(f.scoreMin||'0')+'-'+(f.scoreMax||'100'));
+  if(f.ote)parts.push('OTE < '+f.ote+'k€');
+  if(f.dispo!==undefined&&f.dispo!=='4')parts.push(DISPO_FILTER_LABELS[parseInt(f.dispo)]||'');
+  return parts.length?parts.join(' · '):'Tous profils';
+}
+async function loadSavedSearches(){
+  savedSearches=[];
+  if(!currentRecruiter)return renderSavedSearches();
+  var r=await sb.from('saved_searches').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
+  savedSearches=r.data||[];
+  renderSavedSearches();
+}
+function renderSavedSearches(){
+  var list=document.getElementById('savedSearchesList'),count=document.getElementById('ssCount');
+  if(!list)return;
+  count.textContent=savedSearches.length;
+  if(!savedSearches.length){list.innerHTML='<div class="ss-empty">Aucune recherche enregistrée pour le moment.</div>';return;}
+  list.innerHTML=savedSearches.map(function(s){
+    return '<div class="ss-item">'
+      +'<span class="ss-item-label" title="Appliquer cette recherche" onclick="applySavedSearch(\''+s.id+'\')">'+(s.label||filterStateLabel(s.filters||{}))+'</span>'
+      +'<button class="ss-bell-toggle'+(s.alert_enabled?' on':'')+'" title="'+(s.alert_enabled?'Alerte activée — cliquer pour désactiver':'Activer l’alerte email')+'" onclick="toggleSearchAlert(\''+s.id+'\','+(!s.alert_enabled)+')">&#128276;</button>'
+      +'<button class="ss-item-del" title="Supprimer" onclick="deleteSavedSearch(\''+s.id+'\')">&#10005;</button>'
+      +'</div>';
+  }).join('');
+  renderDashboard();
+}
+function toggleSavedSearchesPanel(){
+  document.getElementById('savedSearchesPanel').classList.toggle('open');
+}
+async function saveCurrentSearch(withAlert){
+  if(!currentRecruiter){showToast('Connectez-vous pour enregistrer une recherche');return;}
+  var filters=getCurrentFilterState();
+  var label=filterStateLabel(filters);
+  var r=await sb.from('saved_searches').insert({recruiter_id:currentRecruiter.id,label:label,filters:filters,alert_enabled:!!withAlert}).select().single();
+  if(r.error){console.warn('SB saved_search insert:',r.error.message);showToast('Erreur à l’enregistrement');return;}
+  savedSearches.push(r.data);
+  renderSavedSearches();
+  document.getElementById('savedSearchesPanel').classList.add('open');
+  showToast(withAlert?'Recherche enregistrée — alerte activée':'Recherche enregistrée');
+}
+function applySavedSearch(id){
+  var s=savedSearches.find(function(x){return x.id===id;});
+  if(!s)return;
+  var f=s.filters||{};
+  document.getElementById('fFamille').value=f.famille||'';
+  document.getElementById('fRole').value=f.role||'';
+  document.getElementById('fVille').value=f.ville||'';
+  document.getElementById('fProfil').value=f.profil||'';
+  document.getElementById('fType').value=f.type||'';
+  document.getElementById('fExpMin').value=f.expMin||'';
+  document.getElementById('fExpMax').value=f.expMax||'';
+  document.getElementById('fDiplome').value=f.diplome||'';
+  document.getElementById('fContrat').value=f.contrat||'';
+  document.getElementById('fScoreMin').value=f.scoreMin||'';
+  document.getElementById('fScoreMax').value=f.scoreMax||'';
+  document.getElementById('fOte').value=f.ote||'';
+  document.getElementById('fDispo').value=f.dispo!==undefined?f.dispo:4;
+  document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(document.getElementById('fDispo').value)];
+  applyFilters();
+  showToast('Recherche appliquée');
+}
+async function toggleSearchAlert(id,enabled){
+  var s=savedSearches.find(function(x){return x.id===id;});
+  if(!s)return;
+  s.alert_enabled=enabled;
+  renderSavedSearches();
+  var r=await sb.from('saved_searches').update({alert_enabled:enabled}).eq('id',id);
+  if(r.error){console.warn('SB saved_search update:',r.error.message);}
+  showToast(enabled?'Alerte activée pour cette recherche':'Alerte désactivée');
+}
+async function deleteSavedSearch(id){
+  if(!confirm('Supprimer cette recherche enregistrée ?'))return;
+  savedSearches=savedSearches.filter(function(x){return x.id!==id;});
+  renderSavedSearches();
+  var r=await sb.from('saved_searches').delete().eq('id',id);
+  if(r.error){console.warn('SB saved_search delete:',r.error.message);}
+}
+/* ---- Dashboard + invitations candidats ---- */
+var recruiterInvites=[];
+async function loadInvites(){
+  recruiterInvites=[];
+  if(!currentRecruiter)return renderDashboard();
+  var r=await sb.from('recruiter_invites').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:false});
+  recruiterInvites=r.data||[];
+  renderDashboard();
+}
+function renderDashboard(){
+  var poolEl=document.getElementById('dashStatPool');if(poolEl)poolEl.textContent=allCandidates.length;
+  var slEl=document.getElementById('dashStatShortlist');if(slEl)slEl.textContent=shortlistedIds.size;
+  var goldEl=document.getElementById('dashStatGold');if(goldEl)goldEl.textContent=allCandidates.filter(function(c){return c.level==='GOLD';}).length;
+  var searchEl=document.getElementById('dashStatSearches');if(searchEl)searchEl.textContent=savedSearches.length;
+  var invEl=document.getElementById('dashStatInvited');if(invEl)invEl.textContent=recruiterInvites.length;
+
+  var rsEl=document.getElementById('dashRecentSearches');
+  if(rsEl){
+    if(!savedSearches.length){rsEl.innerHTML='<div class="dash-col-empty">Aucune recherche enregistrée pour le moment.</div>';}
+    else{
+      var recent=savedSearches.slice(-4).reverse();
+      rsEl.innerHTML=recent.map(function(s){
+        return '<div class="dash-row">'
+          +'<span class="dash-row-name dash-row-link" onclick="dashApplySearch(\''+s.id+'\')">'+(s.label||filterStateLabel(s.filters||{}))+'</span>'
+          +(s.alert_enabled?'<span class="dash-badge alert">&#128276; alerte</span>':'')
+          +'</div>';
+      }).join('');
+    }
+  }
+  var riEl=document.getElementById('dashRecentInvites');
+  if(riEl){
+    if(!recruiterInvites.length){riEl.innerHTML='<div class="dash-col-empty">Aucune invitation envoyée pour le moment.</div>';}
+    else{
+      riEl.innerHTML=recruiterInvites.slice(0,6).map(function(inv){
+        var lbl=(inv.candidate_prenom?inv.candidate_prenom+' · ':'')+inv.candidate_email;
+        var isSigned=inv.status==='signed_up';
+        return '<div class="dash-row">'
+          +'<span class="dash-row-name">'+lbl+'</span>'
+          +'<span class="dash-badge '+(isSigned?'signed_up':'pending')+'">'+(isSigned?'Inscrit':'En attente')+'</span>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+function switchToPoolTab(){
+  var tabs=document.querySelectorAll('.recruiter-bar-tab');
+  for(var i=0;i<tabs.length;i++){
+    if((tabs[i].getAttribute('onclick')||'').indexOf("'pool'")>=0){switchTab('pool',tabs[i]);return;}
+  }
+}
+function dashApplySearch(id){
+  switchToPoolTab();
+  applySavedSearch(id);
+}
