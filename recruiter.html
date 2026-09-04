@@ -236,6 +236,13 @@
     .sl-btn.vs.on{background:var(--gold-deep);color:var(--cream);border-color:var(--gold-deep)}
     .sl-btn.remove{background:none;color:var(--teal-3);border-color:var(--cream-3)}
     .sl-btn.remove:hover{border-color:var(--rust);color:var(--rust)}
+    .sl-status{flex-shrink:0;padding:7px 24px 7px 10px;border-radius:3px;border:1.5px solid var(--cream-3);background-color:var(--cream);font-family:var(--font-mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-3);cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;transition:all .2s;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='6'><path d='M1 1l3.5 3.5L8 1' stroke='%23a3854f' stroke-width='1.4' fill='none'/></svg>");background-repeat:no-repeat;background-position:right 8px center}
+    .sl-status:focus{border-color:var(--gold-deep)}
+    .sl-status.st-saved{border-color:var(--cream-3);color:var(--teal-3)}
+    .sl-status.st-contacted{border-color:var(--teal-2);color:var(--teal-2)}
+    .sl-status.st-interview{border-color:var(--gold-deep);color:var(--gold-deep)}
+    .sl-status.st-rejected{border-color:var(--rust);color:var(--rust)}
+    .sl-status.st-hired{background-color:var(--gold-deep);border-color:var(--gold-deep);color:var(--cream)}
     .vs-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;background:var(--ink);color:var(--cream);padding:12px 32px;display:none;align-items:center;gap:16px;box-shadow:0 -4px 24px rgba(26,34,34,.45)}
     .vs-bar.show{display:flex}
     .vs-bar-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,248,231,.45);white-space:nowrap}
@@ -618,9 +625,10 @@ const DISPO_LABELS=['≤ 1j','1 mois','2 mois','3 mois','Toutes'];
 const DISPO_ORDER={'Immédiat':0,'1 mois':1,'2 mois':2,'3 mois':3};
 const ACTIVE_LIST_KEY='su_active_list_v1';
 const DEFAULT_LIST={id:'default',name:'',poste:'',ville:'',title:'Shortlist par défaut'};
+const STATUS_OPTS=[{v:'saved',l:'À contacter'},{v:'contacted',l:'Contacté'},{v:'interview',l:'Entretien programmé'},{v:'rejected',l:'Refusé'},{v:'hired',l:'Embauché'}];
 
 let currentRecruiter=null,allCandidates=[],shortlistedIds=new Set(),vsSelected=[],currentView='cards',currentPoolIds=[];
-let customLists=[],membership={},activeShortlistId='default';
+let customLists=[],membership={},activeShortlistId='default',candidateStatus={};
 
 /* ── Barème certif : GOLD ≥80 · SILVER 60-79 · BRONZE 50-59 · null <50 (non certifié) ── */
 function lvl(score){return score>=80?'GOLD':score>=60?'SILVER':score>=50?'BRONZE':null;}
@@ -640,18 +648,19 @@ function recomputeShortlistedIds(){
   shortlistedIds=s;
 }
 async function initShortlistState(){
-  customLists=[];membership={default:[]};
+  customLists=[];membership={default:[]};candidateStatus={};
   if(currentRecruiter){
     var rl=await sb.from('shortlist_lists').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:true});
     (rl.data||[]).forEach(function(l){
       customLists.push({id:l.id,name:l.name,poste:l.poste||'',ville:l.ville||'',title:l.title});
       membership[l.id]=[];
     });
-    var rs=await sb.from('shortlists').select('candidate_id,list_id').eq('recruiter_id',currentRecruiter.id);
+    var rs=await sb.from('shortlists').select('candidate_id,list_id,status').eq('recruiter_id',currentRecruiter.id);
     (rs.data||[]).forEach(function(row){
       var lid=row.list_id||'default';
       if(!membership[lid])membership[lid]=[];
       if(membership[lid].indexOf(row.candidate_id)<0)membership[lid].push(row.candidate_id);
+      candidateStatus[row.candidate_id]=row.status||'saved';
     });
   }
   activeShortlistId=activeListLoad();
@@ -949,6 +958,7 @@ function fallbackCopyInvite(link,cb){
 function addToList(listId,candidateId){
   if(!membership[listId])membership[listId]=[];
   if(membership[listId].indexOf(candidateId)<0)membership[listId].push(candidateId);
+  if(!candidateStatus[candidateId])candidateStatus[candidateId]='saved';
   recomputeShortlistedIds();
   if(currentRecruiter){
     sb.from('shortlists').insert({recruiter_id:currentRecruiter.id,candidate_id:candidateId,list_id:listId==='default'?null:listId}).then(function(r){if(r.error)console.warn('SB sl insert:',r.error.message);});
@@ -959,6 +969,7 @@ function removeFromList(listId,candidateId){
     var idx=membership[listId].indexOf(candidateId);
     if(idx>=0)membership[listId].splice(idx,1);
   }
+  delete candidateStatus[candidateId];
   recomputeShortlistedIds();
   if(currentRecruiter){
     var q=sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId);
@@ -971,10 +982,29 @@ function removeFromAllLists(candidateId){
     var idx=membership[lid].indexOf(candidateId);
     if(idx>=0)membership[lid].splice(idx,1);
   });
+  delete candidateStatus[candidateId];
   recomputeShortlistedIds();
   if(currentRecruiter){
     sb.from('shortlists').delete().eq('recruiter_id',currentRecruiter.id).eq('candidate_id',candidateId).then(function(r){if(r.error)console.warn('SB sl remove:',r.error.message);});
   }
+}
+function statusSelectHTML(id){
+  var cur=candidateStatus[id]||'saved';
+  var opts=STATUS_OPTS.map(function(o){return'<option value="'+o.v+'"'+(o.v===cur?' selected':'')+'>'+o.l+'</option>';}).join('');
+  return'<select class="sl-status st-'+cur+'" onchange="updateCandidateStatus(\''+id+'\',this.value,this)">'+opts+'</select>';
+}
+function updateCandidateStatus(id,newStatus,selEl){
+  var old=candidateStatus[id]||'saved';
+  candidateStatus[id]=newStatus;
+  if(selEl)selEl.className='sl-status st-'+newStatus;
+  if(!currentRecruiter)return;
+  sb.from('shortlists').update({status:newStatus}).eq('recruiter_id',currentRecruiter.id).eq('candidate_id',id).then(function(r){
+    if(r.error){
+      candidateStatus[id]=old;
+      if(selEl){selEl.className='sl-status st-'+old;selEl.value=old;}
+      showToast('Erreur lors de la mise à jour du statut','error');
+    }
+  });
 }
 function removeFromActiveList(candidateId){
   removeFromList(activeShortlistId,candidateId);
@@ -1339,6 +1369,7 @@ function applyShortlistFilters(){
       +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
       +'<div class="sl-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.availability?' · '+c.availability:'')+'</div>'
       +'</div>'
+      +statusSelectHTML(c.id)
       +'<div class="sl-score">'+c.score+'</div>'
       +'<div class="sl-actions">'
       +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'✓ VS':'VS')+'</button>'
