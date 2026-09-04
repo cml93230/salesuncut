@@ -267,6 +267,26 @@
     .dash-invite-copy{display:flex;flex-direction:column;gap:3px}
     .dash-invite-title{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
     .dash-invite-sub{font-size:11px;color:rgba(255,248,231,.65);font-family:var(--font-sans)}
+    .dash-hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .dash-scenario-btn{display:flex;align-items:center;gap:14px;background:var(--cream);color:var(--ink);border:1.5px solid var(--ink);border-radius:10px;padding:16px 22px;cursor:pointer;transition:all .2s;text-align:left;flex-shrink:0}
+    .dash-scenario-btn:hover{border-color:var(--gold-deep);background:var(--cream-2);transform:translateY(-2px);box-shadow:var(--shadow-card)}
+    .dash-scenario-btn .dash-invite-icon{background:rgba(26,34,34,.08)}
+    .dash-scenario-btn .dash-invite-sub{color:var(--teal-2)}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .pricing-card{background:var(--cream);border:1.5px solid var(--cream-3);border-radius:10px;padding:20px 16px;display:flex;flex-direction:column;gap:12px}
+    .pricing-card.featured{border-color:var(--gold-deep);border-width:2px;background:linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%);position:relative}
+    .pricing-card-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold-deep);color:var(--cream);font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:20px;white-space:nowrap}
+    .pricing-card-name{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-deep)}
+    .pricing-card-price{font-family:var(--font-display);font-weight:900;font-size:22px;color:var(--ink)}
+    .pricing-card-price small{font-size:11px;font-weight:400;color:var(--teal-3)}
+    .pricing-card-feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;flex:1}
+    .pricing-card-feats li{font-size:12px;color:var(--teal-2);line-height:1.4;padding-left:16px;position:relative}
+    .pricing-card-feats li::before{content:'✓';position:absolute;left:0;color:var(--gold-deep);font-weight:700}
+    .pricing-card-cta{font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:9px;border-radius:4px;text-align:center;text-decoration:none;transition:background .2s}
+    .pricing-card-cta.current{background:var(--cream-3);color:var(--teal-2);cursor:default}
+    .pricing-card-cta.upgrade{background:var(--ink);color:var(--cream)}
+    .pricing-card-cta.upgrade:hover{background:var(--gold-deep)}
+    @media(max-width:700px){.pricing-grid{grid-template-columns:1fr}}
     .dash-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:28px}
     .dash-stat-card{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:10px;padding:20px}
     .dash-stat-card.gold{border-color:var(--golden);background:linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%)}
@@ -393,13 +413,22 @@
         <h1 class="dash-hero-title">Bonjour, <span id="dashGreetName">&mdash;</span></h1>
         <p class="dash-hero-sub">Votre activit&eacute; de recrutement en un coup d&rsquo;&oelig;il.</p>
       </div>
-      <button type="button" class="dash-invite-btn" onclick="openInviteModal()">
-        <span class="dash-invite-icon">&#9993;</span>
-        <span class="dash-invite-copy">
-          <span class="dash-invite-title">Inviter un candidat</span>
-          <span class="dash-invite-sub">Envoyer un lien de test &agrave; un profil sourc&eacute; ailleurs</span>
-        </span>
-      </button>
+      <div class="dash-hero-actions">
+        <button type="button" class="dash-invite-btn" onclick="openInviteModal()">
+          <span class="dash-invite-icon">&#9993;</span>
+          <span class="dash-invite-copy">
+            <span class="dash-invite-title">Inviter un candidat</span>
+            <span class="dash-invite-sub">Envoyer un lien de test &agrave; un profil sourc&eacute; ailleurs</span>
+          </span>
+        </button>
+        <button type="button" class="dash-scenario-btn" onclick="openScenarioEntry()">
+          <span class="dash-invite-icon">&#127919;</span>
+          <span class="dash-invite-copy">
+            <span class="dash-invite-title">Cr&eacute;er mon sc&eacute;nario personnalis&eacute;</span>
+            <span class="dash-invite-sub">Une simulation con&ccedil;ue sur mesure pour votre poste</span>
+          </span>
+        </button>
+      </div>
     </div>
 
     <div class="dash-stats-grid">
@@ -790,6 +819,70 @@ function switchToPoolTab(){
 function dashApplySearch(id){
   switchToPoolTab();
   applySavedSearch(id);
+}
+/* ---- Scénario personnalisé (promesse #3) ---- */
+var PLAN_LABELS={free:'Free',starter:'Classique',pro:'Premium'};
+function openScenarioEntry(){
+  var plan=currentRecruiter?currentRecruiter.plan:'free';
+  if(plan==='pro'){openScenarioInfoModal();}else{openUpgradeModal();}
+}
+function openScenarioInfoModal(){
+  var existing=document.getElementById('su-scenario-modal');if(existing)existing.remove();
+  var modal=document.createElement('div');
+  modal.id='su-scenario-modal';modal.className='su-modal-overlay';
+  var mailto='mailto:contact@salesuncut.com?subject='+encodeURIComponent('Demande de RDV — Scénario personnalisé')+'&body='+encodeURIComponent('Bonjour,\n\nJe souhaite programmer un rendez-vous pour construire un scénario de simulation personnalisé pour mon poste.\n\nEntreprise : '+((currentRecruiter&&currentRecruiter.company_name)||'')+'\n\nÀ bientôt.');
+  modal.innerHTML=
+    '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-scenario-modal\').remove()"></div>'
+    +'<div class="su-modal-box">'
+    +'<div class="su-modal-header"><span>Scénario personnalisé</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-scenario-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body">'
+    +'<p style="font-size:13px;color:var(--teal-2);line-height:1.6;margin:0">Un scénario sur mesure reproduit fid&egrave;lement <strong>votre</strong> poste&nbsp;: votre produit, votre client type, vos objections r&eacute;currentes. Pour que la simulation soit fid&egrave;le, chaque d&eacute;tail est cal&eacute; ensemble lors d&rsquo;un rendez-vous avec le fondateur, avant la mise en production du sc&eacute;nario.</p>'
+    +'<p style="font-size:13px;color:var(--teal-2);line-height:1.6;margin:0">Cette option est incluse dans votre forfait <strong>Premium</strong>.</p>'
+    +'</div>'
+    +'<div class="su-modal-footer"><button type="button" class="filters-reset" onclick="document.getElementById(\'su-scenario-modal\').remove()">Fermer</button><a href="'+mailto+'" class="btn gold sm">Prise de RDV &rarr;</a></div>'
+    +'</div>';
+  document.body.appendChild(modal);
+}
+function openUpgradeModal(){
+  var existing=document.getElementById('su-upgrade-modal');if(existing)existing.remove();
+  var plan=currentRecruiter?currentRecruiter.plan:'free';
+  var modal=document.createElement('div');
+  modal.id='su-upgrade-modal';modal.className='su-modal-overlay';
+  function cta(target,label){
+    if(plan===target)return'<span class="pricing-card-cta current">Forfait actuel</span>';
+    var mailto='mailto:contact@salesuncut.com?subject='+encodeURIComponent('Upgrade recruteur — '+PLAN_LABELS[target])+'&body='+encodeURIComponent('Bonjour,\n\nJe souhaite passer au forfait '+PLAN_LABELS[target]+'.\n\nEntreprise : '+((currentRecruiter&&currentRecruiter.company_name)||'')+'\n\nÀ bientôt.');
+    return'<a href="'+mailto+'" class="pricing-card-cta upgrade">'+label+'</a>';
+  }
+  modal.innerHTML=
+    '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-upgrade-modal\').remove()"></div>'
+    +'<div class="su-modal-box" style="max-width:720px">'
+    +'<div class="su-modal-header"><span>Choisir un forfait</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-upgrade-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body">'
+    +'<p style="font-size:13px;color:var(--teal-2);line-height:1.55;margin:0 0 4px">Le sc&eacute;nario de simulation personnalis&eacute; est r&eacute;serv&eacute; au forfait Premium.</p>'
+    +'<div class="pricing-grid">'
+    +'<div class="pricing-card">'
+    +'<div class="pricing-card-name">Free</div>'
+    +'<div class="pricing-card-price">0&euro;<small> /mois</small></div>'
+    +'<ul class="pricing-card-feats"><li>1 profil complet offert</li><li>D&eacute;couverte de la plateforme</li></ul>'
+    +cta('free','Choisir Free')
+    +'</div>'
+    +'<div class="pricing-card">'
+    +'<div class="pricing-card-name">Classique</div>'
+    +'<div class="pricing-card-price">Tarif sur demande</div>'
+    +'<ul class="pricing-card-feats"><li>Acc&egrave;s complet au pool de candidats</li><li>Recherches enregistr&eacute;es &amp; alertes</li><li>Shortlists illimit&eacute;es</li></ul>'
+    +cta('starter','Passer &agrave; Classique')
+    +'</div>'
+    +'<div class="pricing-card featured">'
+    +'<span class="pricing-card-badge">Recommand&eacute;</span>'
+    +'<div class="pricing-card-name">Premium</div>'
+    +'<div class="pricing-card-price">Tarif sur demande</div>'
+    +'<ul class="pricing-card-feats"><li>Tout Classique, plus&nbsp;:</li><li>Sc&eacute;nario de simulation personnalis&eacute;</li><li>Rendez-vous avec le fondateur pour le cahier des charges</li></ul>'
+    +cta('pro','Passer &agrave; Premium')
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+  document.body.appendChild(modal);
 }
 function openInviteModal(){
   var existing=document.getElementById('su-invite-modal');if(existing)existing.remove();
