@@ -258,6 +258,44 @@
     .plan-badge.free{background:var(--cream-3);color:var(--teal-2)}
     .plan-badge.starter{background:rgba(201,168,106,.15);color:var(--gold-deep);border:1px solid var(--gold)}
     .plan-badge.pro{background:var(--ink);color:var(--gold)}
+    .dash-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid var(--cream-3)}
+    .dash-hero-title{font-size:34px;margin-top:8px}
+    .dash-hero-sub{font-size:14px;color:var(--teal-3);margin-top:8px}
+    .dash-invite-btn{display:flex;align-items:center;gap:14px;background:var(--ink);color:var(--cream);border:1.5px solid var(--ink);border-radius:10px;padding:16px 22px;cursor:pointer;transition:all .2s;text-align:left;box-shadow:var(--shadow-card);flex-shrink:0}
+    .dash-invite-btn:hover{background:var(--gold-deep);border-color:var(--gold-deep);transform:translateY(-2px);box-shadow:var(--shadow-card-lg)}
+    .dash-invite-icon{font-size:20px;width:40px;height:40px;border-radius:50%;background:rgba(255,248,231,.14);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .dash-invite-copy{display:flex;flex-direction:column;gap:3px}
+    .dash-invite-title{font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    .dash-invite-sub{font-size:11px;color:rgba(255,248,231,.65);font-family:var(--font-sans)}
+    .dash-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-bottom:28px}
+    .dash-stat-card{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:10px;padding:20px}
+    .dash-stat-card.gold{border-color:var(--golden);background:linear-gradient(160deg,#fdf6e3 0%,#f5ead0 100%)}
+    .dash-stat-num{font-family:var(--font-display);font-weight:900;font-size:34px;color:var(--ink);line-height:1}
+    .dash-stat-card.gold .dash-stat-num{color:var(--gold-deep)}
+    .dash-stat-lbl{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3);margin-top:6px}
+    .dash-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .dash-col-card{background:var(--cream-2);border:1.5px solid var(--cream-3);border-radius:10px;padding:20px}
+    .dash-col-header{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--teal-3);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--cream-3)}
+    .dash-col-link{color:var(--gold-deep);cursor:pointer}
+    .dash-col-link:hover{text-decoration:underline}
+    .dash-col-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding-right:2px}
+    .dash-col-list::-webkit-scrollbar{width:6px}
+    .dash-col-list::-webkit-scrollbar-track{background:transparent}
+    .dash-col-list::-webkit-scrollbar-thumb{background:var(--cream-3);border-radius:3px}
+    .dash-col-empty{font-family:var(--font-mono);font-size:11px;color:var(--teal-3);padding:6px 0}
+    .dash-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:6px;background:var(--cream);border:1.5px solid var(--cream-3)}
+    .dash-row-name{flex:1;font-family:var(--font-sans);font-size:13px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .dash-row-link{cursor:pointer}
+    .dash-row-link:hover{text-decoration:underline;color:var(--gold-deep)}
+    .dash-badge{font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:20px;flex-shrink:0;white-space:nowrap}
+    .dash-badge.pending{background:var(--cream-3);color:var(--teal-2)}
+    .dash-badge.signed_up{background:rgba(201,168,106,.18);color:var(--gold-deep)}
+    .dash-badge.alert{background:rgba(201,168,106,.18);color:var(--gold-deep)}
+    .invite-link-row{display:flex;gap:8px;align-items:center;background:var(--cream);border:1.5px solid var(--cream-3);border-radius:6px;padding:10px 12px;margin-bottom:14px}
+    .invite-link-text{flex:1;font-family:var(--font-mono);font-size:11px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .invite-copy-btn{border:none;background:none;cursor:pointer;color:var(--gold-deep);font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;flex-shrink:0}
+    .invite-copy-btn:hover{color:var(--ink)}
+    @media(max-width:900px){.dash-cols{grid-template-columns:1fr}.dash-hero{flex-direction:column;align-items:stretch}.dash-invite-btn{justify-content:center}}
     .loading-state{display:flex;align-items:center;justify-content:center;padding:80px;gap:12px;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-3)}
     .spinner{width:20px;height:20px;border-radius:50%;border:2px solid var(--cream-3);border-top-color:var(--gold-deep);animation:spin .7s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -335,7 +373,8 @@
     <div class="recruiter-bar-left">
       <a href="index.html" class="recruiter-bar-logo"><span class="dot"></span>SalesUncut</a>
       <div class="recruiter-bar-tabs">
-        <div class="recruiter-bar-tab active" onclick="switchTab('pool',this)">Pool candidats</div>
+        <div class="recruiter-bar-tab active" onclick="switchTab('dashboard',this)">Dashboard</div>
+        <div class="recruiter-bar-tab" onclick="switchTab('pool',this)">Pool candidats</div>
         <div class="recruiter-bar-tab" onclick="switchTab('shortlist',this)">Ma shortlist <span id="shortlistCount" style="margin-left:6px;background:var(--gold-deep);color:var(--cream);padding:2px 7px;border-radius:10px;font-size:9px;"></span></div>
         <div class="recruiter-bar-tab" onclick="switchTab('account',this)">Mon compte</div>
       </div>
@@ -346,8 +385,65 @@
     </div>
   </div>
 
+  <!-- ── DASHBOARD PANEL ── -->
+  <div class="tab-panel active" id="panelDashboard">
+    <div class="dash-hero">
+      <div class="dash-hero-text">
+        <div class="eyebrow">Vue d&rsquo;ensemble</div>
+        <h1 class="dash-hero-title">Bonjour, <span id="dashGreetName">&mdash;</span></h1>
+        <p class="dash-hero-sub">Votre activit&eacute; de recrutement en un coup d&rsquo;&oelig;il.</p>
+      </div>
+      <button type="button" class="dash-invite-btn" onclick="openInviteModal()">
+        <span class="dash-invite-icon">&#9993;</span>
+        <span class="dash-invite-copy">
+          <span class="dash-invite-title">Inviter un candidat</span>
+          <span class="dash-invite-sub">Envoyer un lien de test &agrave; un profil sourc&eacute; ailleurs</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="dash-stats-grid">
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatPool">0</div>
+        <div class="dash-stat-lbl">Profils dans le pool</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatShortlist">0</div>
+        <div class="dash-stat-lbl">Shortlist&eacute;s</div>
+      </div>
+      <div class="dash-stat-card gold">
+        <div class="dash-stat-num" id="dashStatGold">0</div>
+        <div class="dash-stat-lbl">Niveau GOLD</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatSearches">0</div>
+        <div class="dash-stat-lbl">Recherches enregistr&eacute;es</div>
+      </div>
+      <div class="dash-stat-card">
+        <div class="dash-stat-num" id="dashStatInvited">0</div>
+        <div class="dash-stat-lbl">Candidats invit&eacute;s</div>
+      </div>
+    </div>
+
+    <div class="dash-cols">
+      <div class="dash-col-card">
+        <div class="dash-col-header">
+          <span>Recherches enregistr&eacute;es r&eacute;centes</span>
+          <span class="dash-col-link" onclick="switchToPoolTab()">Voir tout &rarr;</span>
+        </div>
+        <div id="dashRecentSearches" class="dash-col-list"></div>
+      </div>
+      <div class="dash-col-card">
+        <div class="dash-col-header">
+          <span>Invitations envoy&eacute;es</span>
+        </div>
+        <div id="dashRecentInvites" class="dash-col-list"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ── POOL PANEL ── -->
-  <div class="tab-panel active" id="panelPool">
+  <div class="tab-panel" id="panelPool">
     <div class="search-row">
       <input type="text" id="searchInput" class="search-input" placeholder="Rechercher par nom, secteur, ville, canal&#8230;">
     </div>
@@ -588,6 +684,7 @@ function renderSavedSearches(){
       +'<button class="ss-item-del" title="Supprimer" onclick="deleteSavedSearch(\''+s.id+'\')">&#10005;</button>'
       +'</div>';
   }).join('');
+  renderDashboard();
 }
 function toggleSavedSearchesPanel(){
   document.getElementById('savedSearchesPanel').classList.toggle('open');
@@ -639,6 +736,122 @@ async function deleteSavedSearch(id){
   renderSavedSearches();
   var r=await sb.from('saved_searches').delete().eq('id',id);
   if(r.error){console.warn('SB saved_search delete:',r.error.message);}
+}
+/* ---- Dashboard + invitations candidats ---- */
+var recruiterInvites=[];
+async function loadInvites(){
+  recruiterInvites=[];
+  if(!currentRecruiter)return renderDashboard();
+  var r=await sb.from('recruiter_invites').select('*').eq('recruiter_id',currentRecruiter.id).order('created_at',{ascending:false});
+  recruiterInvites=r.data||[];
+  renderDashboard();
+}
+function renderDashboard(){
+  var poolEl=document.getElementById('dashStatPool');if(poolEl)poolEl.textContent=allCandidates.length;
+  var slEl=document.getElementById('dashStatShortlist');if(slEl)slEl.textContent=shortlistedIds.size;
+  var goldEl=document.getElementById('dashStatGold');if(goldEl)goldEl.textContent=allCandidates.filter(function(c){return c.level==='GOLD';}).length;
+  var searchEl=document.getElementById('dashStatSearches');if(searchEl)searchEl.textContent=savedSearches.length;
+  var invEl=document.getElementById('dashStatInvited');if(invEl)invEl.textContent=recruiterInvites.length;
+
+  var rsEl=document.getElementById('dashRecentSearches');
+  if(rsEl){
+    if(!savedSearches.length){rsEl.innerHTML='<div class="dash-col-empty">Aucune recherche enregistrée pour le moment.</div>';}
+    else{
+      var recent=savedSearches.slice(-4).reverse();
+      rsEl.innerHTML=recent.map(function(s){
+        return '<div class="dash-row">'
+          +'<span class="dash-row-name dash-row-link" onclick="dashApplySearch(\''+s.id+'\')">'+(s.label||filterStateLabel(s.filters||{}))+'</span>'
+          +(s.alert_enabled?'<span class="dash-badge alert">&#128276; alerte</span>':'')
+          +'</div>';
+      }).join('');
+    }
+  }
+  var riEl=document.getElementById('dashRecentInvites');
+  if(riEl){
+    if(!recruiterInvites.length){riEl.innerHTML='<div class="dash-col-empty">Aucune invitation envoyée pour le moment.</div>';}
+    else{
+      riEl.innerHTML=recruiterInvites.slice(0,6).map(function(inv){
+        var lbl=(inv.candidate_prenom?inv.candidate_prenom+' · ':'')+inv.candidate_email;
+        var isSigned=inv.status==='signed_up';
+        return '<div class="dash-row">'
+          +'<span class="dash-row-name">'+lbl+'</span>'
+          +'<span class="dash-badge '+(isSigned?'signed_up':'pending')+'">'+(isSigned?'Inscrit':'En attente')+'</span>'
+          +'</div>';
+      }).join('');
+    }
+  }
+}
+function switchToPoolTab(){
+  var tabs=document.querySelectorAll('.recruiter-bar-tab');
+  for(var i=0;i<tabs.length;i++){
+    if((tabs[i].getAttribute('onclick')||'').indexOf("'pool'")>=0){switchTab('pool',tabs[i]);return;}
+  }
+}
+function dashApplySearch(id){
+  switchToPoolTab();
+  applySavedSearch(id);
+}
+function openInviteModal(){
+  var existing=document.getElementById('su-invite-modal');if(existing)existing.remove();
+  var modal=document.createElement('div');
+  modal.id='su-invite-modal';modal.className='su-modal-overlay';
+  modal.innerHTML=
+    '<div class="su-modal-backdrop" onclick="document.getElementById(\'su-invite-modal\').remove()"></div>'
+    +'<div class="su-modal-box">'
+    +'<div class="su-modal-header"><span>Inviter un candidat</span><button type="button" class="su-modal-x" onclick="document.getElementById(\'su-invite-modal\').remove()">✕</button></div>'
+    +'<div class="su-modal-body" id="inviteModalBody">'
+    +'<p style="font-size:13px;color:var(--teal-2);line-height:1.55;margin-bottom:4px">Envoyez un lien de simulation à un candidat que vous avez sourcé ailleurs (LinkedIn, votre ATS&hellip;) pour obtenir une preuve avant de le rencontrer.</p>'
+    +'<div class="form-group"><label class="form-label">Prénom (optionnel)</label><input type="text" id="invPrenom" class="form-input" placeholder="Marie"/></div>'
+    +'<div class="form-group"><label class="form-label">Email du candidat</label><input type="email" id="invEmail" class="form-input" placeholder="marie@exemple.com" required/></div>'
+    +'<div class="su-modal-error" id="invError"></div>'
+    +'</div>'
+    +'<div class="su-modal-footer" id="inviteModalFooter"><button type="button" class="filters-reset" onclick="document.getElementById(\'su-invite-modal\').remove()">Annuler</button><button type="button" class="auth-submit" style="width:auto;padding:10px 20px" id="invSubmitBtn" onclick="submitInvite()">Générer le lien</button></div>'
+    +'</div>';
+  document.body.appendChild(modal);
+}
+async function submitInvite(){
+  var email=document.getElementById('invEmail').value.trim();
+  var prenom=document.getElementById('invPrenom').value.trim();
+  var err=document.getElementById('invError');
+  var btn=document.getElementById('invSubmitBtn');
+  err.classList.remove('visible');
+  if(!email||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){err.textContent='Merci de renseigner un email valide.';err.classList.add('visible');return;}
+  if(!currentRecruiter){err.textContent='Impossible d’inviter un candidat pour le moment.';err.classList.add('visible');return;}
+  btn.disabled=true;btn.textContent='Génération…';
+  var token=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2));
+  var r=await sb.from('recruiter_invites').insert({recruiter_id:currentRecruiter.id,token:token,candidate_email:email,candidate_prenom:prenom||null,status:'pending'}).select().single();
+  if(r.error){err.textContent='Erreur lors de la création de l’invitation.';err.classList.add('visible');btn.disabled=false;btn.textContent='Générer le lien';return;}
+  recruiterInvites.unshift(r.data);
+  renderDashboard();
+  showInviteLink(token,email,prenom);
+}
+function showInviteLink(token,email,prenom){
+  var link=window.location.origin+'/onboarding.html?invite='+token;
+  var subject=encodeURIComponent('Passez le test SalesUncut');
+  var bodyText=(prenom?'Bonjour '+prenom+',\n\n':'Bonjour,\n\n')+'Je vous invite à passer notre simulation d’appel commercial SalesUncut, ça ne prend que quelques minutes :\n'+link+'\n\nÀ bientôt.';
+  var mailto='mailto:'+encodeURIComponent(email)+'?subject='+subject+'&body='+encodeURIComponent(bodyText);
+  var bodyEl=document.getElementById('inviteModalBody');
+  if(!bodyEl)return;
+  bodyEl.innerHTML=
+    '<p style="font-size:13px;color:var(--teal-2);line-height:1.55;margin-bottom:14px">Lien généré ✓ Envoyez-le au candidat par email, LinkedIn ou SMS.</p>'
+    +'<div class="invite-link-row">'
+    +'<span class="invite-link-text">'+link+'</span>'
+    +'<button type="button" class="invite-copy-btn" onclick="copyInviteLink(\''+link+'\',this)">Copier</button>'
+    +'</div>'
+    +'<a href="'+mailto+'" class="btn gold sm" style="width:100%;justify-content:center;box-sizing:border-box">&#9993; Envoyer par email &rarr;</a>';
+  var footer=document.getElementById('inviteModalFooter');
+  if(footer)footer.innerHTML='<button type="button" class="filters-reset" onclick="document.getElementById(\'su-invite-modal\').remove()">Fermer</button>';
+}
+function copyInviteLink(link,btn){
+  function done(){var old=btn.textContent;btn.textContent='Copié ✓';setTimeout(function(){btn.textContent=old;},1500);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(done).catch(function(){fallbackCopyInvite(link,done);});}
+  else{fallbackCopyInvite(link,done);}
+}
+function fallbackCopyInvite(link,cb){
+  var ta=document.createElement('textarea');ta.value=link;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+  if(cb)cb();
 }
 function addToList(listId,candidateId){
   if(!membership[listId])membership[listId]=[];
@@ -851,6 +1064,7 @@ sb.auth.onAuthStateChange(function(event,session){
         initShortlistState().then(function(){updateShortlistCount();renderShortlist();});
         loadCandidates();
         loadSavedSearches();
+        loadInvites();
       });
     },0);
   }else{showAuth();}
@@ -875,7 +1089,9 @@ async function loadRecruiterProfile(user){
     document.getElementById('accContact').textContent=((d.prenom||'')+' '+(d.nom||'')).trim()||'—';
     document.getElementById('accEmail').textContent=d.email;
     var pb=document.getElementById('accPlan');pb.textContent=d.plan.toUpperCase();pb.className='plan-badge '+d.plan;
+    var greet=document.getElementById('dashGreetName');if(greet)greet.textContent=d.prenom||d.company_name||'';
   }
+  renderDashboard();
 }
 
 async function loadCandidates(){
@@ -884,6 +1100,7 @@ async function loadCandidates(){
   allCandidates=demo.concat((r.data||[]).map(normSB));
   populateVilleOptions();
   applyFilters();renderShortlist();
+  renderDashboard();
 }
 
 function populateVilleOptions(){
