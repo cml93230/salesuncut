@@ -186,11 +186,14 @@
     .dash-card-portrait{width:100%;aspect-ratio:1;background:var(--cream-3);position:relative;overflow:hidden}
     .dash-card-portrait img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
     .dash-card-portrait .no-photo{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:46px;opacity:.3}
+    /* Niveau badge — top-right */
     .level-stamp{position:absolute;top:8px;right:8px;font-family:var(--font-display);font-weight:900;font-size:10px;letter-spacing:.08em;padding:4px 10px;border-radius:3px;z-index:3}
     .level-stamp.GOLD{background:var(--golden);color:var(--ink)}
     .level-stamp.SILVER{background:var(--silver);color:var(--ink)}
     .level-stamp.BRONZE{background:var(--bronze);color:var(--cream)}
+    /* Badge ville — top-left */
     .location-tag{position:absolute;top:8px;left:8px;background:rgba(26,34,34,.72);color:#fff8e7;font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;padding:3px 7px;border-radius:3px;z-index:2;backdrop-filter:blur(3px);max-width:calc(50% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    /* Badge secteur — bottom-right */
     .family-tag{position:absolute;bottom:8px;right:8px;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:9px;letter-spacing:.1em;padding:3px 7px;border-radius:3px;z-index:2;max-width:calc(50% - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .dash-card-body{padding:13px}
     .dash-card-name{font-family:var(--font-display);font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1;margin-bottom:2px}
@@ -1336,3 +1339,327 @@ function normSB(c){
     diplome:c.diplome||'',contract_type:c.contract_type||'',is_demo:false,_raw:c
   };
 }
+
+function switchAuthTab(t){
+  document.getElementById('formLogin').style.display=t==='login'?'block':'none';
+  document.getElementById('formSignup').style.display=t==='signup'?'block':'none';
+  document.getElementById('tabLogin').classList.toggle('active',t==='login');
+  document.getElementById('tabSignup').classList.toggle('active',t==='signup');
+}
+async function handleLogin(e){
+  e.preventDefault();
+  var btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
+  btn.disabled=true;btn.textContent='Connexion…';err.classList.remove('visible');
+  var r=await sb.auth.signInWithPassword({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value});
+  if(r.error){err.textContent='Email ou mot de passe incorrect.';err.classList.add('visible');btn.disabled=false;btn.textContent='Se connecter →';}
+}
+async function handleSignup(e){
+  e.preventDefault();
+  var btn=document.getElementById('signupBtn'),err=document.getElementById('signupError');
+  btn.disabled=true;btn.textContent='Création…';err.classList.remove('visible');
+  var email=document.getElementById('signupEmail').value,password=document.getElementById('signupPassword').value;
+  var company=document.getElementById('signupCompany').value,prenom=document.getElementById('signupPrenom').value,nom=document.getElementById('signupNom').value;
+  var r=await sb.auth.signUp({email,password});
+  if(r.error){err.textContent=r.error.message;err.classList.add('visible');btn.disabled=false;btn.textContent='Créer mon compte →';return;}
+  if(r.data&&r.data.user)await sb.from('recruiters').insert({user_id:r.data.user.id,email,company_name:company,prenom,nom,plan:'free'});
+}
+async function handleLogout(){await sb.auth.signOut();showAuth();}
+function showAuth(){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('dashboard').classList.remove('visible');}
+function showDashboard(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('dashboard').classList.add('visible');}
+
+sb.auth.onAuthStateChange(function(event,session){
+  if(session){
+    showDashboard();
+    setTimeout(function(){
+      loadRecruiterProfile(session.user).then(function(){
+        initShortlistState().then(function(){updateShortlistCount();renderShortlist();});
+        loadCandidates();
+        loadSavedSearches();
+        loadInvites();
+      });
+    },0);
+  }else{showAuth();}
+});
+
+async function loadRecruiterProfile(user){
+  var r=await sb.from('recruiters').select('*').eq('user_id',user.id).single();
+  if(!r.data){
+    /* Auto-réparation : un compte auth sans ligne recruiters associée
+       (ex. ancien flux d'inscription interrompu, confirmation email
+       en attente au moment de l'insert d'origine) restait bloqué en
+       silence — currentRecruiter jamais renseigné, shortlists et
+       recherches enregistrées jamais synchronisées. On la recrée ici. */
+    var ins=await sb.from('recruiters').insert({user_id:user.id,email:user.email,company_name:(user.email||'').split('@')[0]||'Mon entreprise',plan:'free'}).select().single();
+    if(!ins.error)r.data=ins.data;else console.warn('SB recruiter auto-create:',ins.error.message);
+  }
+  currentRecruiter=r.data;
+  if(r.data){
+    var d=r.data;
+    document.getElementById('recruiterNameDisplay').textContent=d.company_name;
+    document.getElementById('accCompany').textContent=d.company_name;
+    document.getElementById('accContact').textContent=((d.prenom||'')+' '+(d.nom||'')).trim()||'—';
+    document.getElementById('accEmail').textContent=d.email;
+    var pb=document.getElementById('accPlan');pb.textContent=d.plan.toUpperCase();pb.className='plan-badge '+d.plan;
+    var greet=document.getElementById('dashGreetName');if(greet)greet.textContent=d.prenom||d.company_name||'';
+  }
+  renderDashboard();
+}
+
+async function loadCandidates(){
+  var demo=(typeof SU_DATA!=='undefined')?SU_DATA.candidates.map(normDemo):[];
+  var r=await sb.from('candidates').select('*').eq('is_public',true).order('score_global',{ascending:false});
+  allCandidates=demo.concat((r.data||[]).map(normSB));
+  populateVilleOptions();
+  applyFilters();renderShortlist();
+  renderDashboard();
+}
+
+function populateVilleOptions(){
+  var villes=allCandidates.map(function(c){return c.location;}).filter(Boolean);
+  villes=villes.filter(function(v,i){return villes.indexOf(v)===i;}).sort(function(a,b){return a.localeCompare(b,'fr');});
+  var opts='<option value="">Toutes</option>'+villes.map(function(v){return'<option value="'+v+'">'+v+'</option>';}).join('');
+  ['fVille','slVille'].forEach(function(id){
+    var el=document.getElementById(id),cur=el.value;
+    el.innerHTML=opts;
+    if(villes.indexOf(cur)>=0)el.value=cur;
+  });
+}
+
+function applyFilters(){
+  var q=document.getElementById('searchInput').value.toLowerCase();
+  var fFam=document.getElementById('fFamille').value,fRole=document.getElementById('fRole').value,fVille=document.getElementById('fVille').value;
+  var fProfil=document.getElementById('fProfil').value,fType=document.getElementById('fType').value;
+  var fExpMinRaw=document.getElementById('fExpMin').value,fExpMaxRaw=document.getElementById('fExpMax').value;
+  var fExpMin=fExpMinRaw!==''?parseInt(fExpMinRaw):0,fExpMax=fExpMaxRaw!==''?parseInt(fExpMaxRaw):99;
+  var fDip=document.getElementById('fDiplome').value;
+  var fContrat=document.getElementById('fContrat').value;
+  var fScoreMinRaw=document.getElementById('fScoreMin').value,fScoreMaxRaw=document.getElementById('fScoreMax').value;
+  var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
+  var fOte=parseInt(document.getElementById('fOte').value)||0,fDispo=parseInt(document.getElementById('fDispo').value);
+  var sortBy=document.getElementById('sortBy').value;
+  var src=allCandidates.filter(function(c){
+    if(fFam&&c.famille!==fFam)return false;
+    if(fRole&&c.role_type!==fRole)return false;
+    if(fVille&&c.location!==fVille)return false;
+    if(fProfil&&c.profil_type!==fProfil)return false;
+    if(fType&&c.mode_vente!==fType)return false;
+    var expY=c.experience_years||0;
+    if(expY<fExpMin||expY>fExpMax)return false;
+    if(fDip&&c.diplome!==fDip)return false;
+    if(fContrat&&c.contract_type!==fContrat)return false;
+    if(c.score<fScoreMin||c.score>fScoreMax)return false;
+    if(fOte&&c.ote_max>fOte)return false;
+    if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
+    if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+  if(colSort.key){
+    src.sort(function(a,b){
+      var av=colSort.key==='availability'?dispoNum(a.availability):a[colSort.key];
+      var bv=colSort.key==='availability'?dispoNum(b.availability):b[colSort.key];
+      if(typeof av==='string'||typeof bv==='string')return colSort.dir*(String(av||'').localeCompare(String(bv||''),'fr'));
+      return colSort.dir*((av||0)-(bv||0));
+    });
+  }else if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
+  else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
+  currentPoolIds=src.map(function(c){return c.id;});
+  document.getElementById('countDisplay').textContent=src.length;
+  updateStats(src);
+  var grid=document.getElementById('poolGrid'),list=document.getElementById('poolList'),empty=document.getElementById('poolEmpty'),hdr=document.getElementById('listHeader');
+  if(!src.length){grid.style.display='none';list.style.display='none';empty.style.display='block';return;}
+  empty.style.display='none';
+  if(currentView==='cards'){
+    grid.style.display='grid';list.style.display='none';
+    grid.innerHTML=src.map(renderCard).join('');
+  }else{
+    grid.style.display='none';list.style.display='flex';
+    list.innerHTML='';list.appendChild(hdr);
+    src.forEach(function(c){list.insertAdjacentHTML('beforeend',renderRow(c));});
+  }
+}
+
+function updateStats(src){
+  var bar=document.getElementById('statsBar');if(!src.length){bar.innerHTML='';return;}
+  var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
+  var imm=src.filter(function(c){return c.availability==='Immédiat';}).length;
+  var gold=src.filter(function(c){return c.level==='GOLD';}).length;
+  bar.innerHTML=SI(src.length,'profils')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
+}
+function SI(n,l){return'<div class="stat-item"><div class="stat-num">'+n+'</div><div class="stat-lbl">'+l+'</div></div>';}
+function SEP(){return'<div class="stat-sep"></div>';}
+
+function applyShortlistFilters(){
+  var activeList=getListById(activeShortlistId)||DEFAULT_LIST;
+  var memberIds=membership[activeShortlistId]||[];
+  var all=allCandidates.filter(function(c){return memberIds.indexOf(c.id)>=0;});
+  var total=all.length;
+  if(!total){
+    document.getElementById('shortlistContent').innerHTML=
+      '<div class="shortlist-empty"><div class="icon">♡</div>'+(activeShortlistId==='default'?'Votre shortlist est vide.':'La shortlist "'+activeList.title+'" est vide.')+'<br>Ajoutez des profils depuis le pool en cliquant sur + SHORTLIST</div>';
+    document.getElementById('slEmpty').style.display='none';
+    document.getElementById('slStatsBar').innerHTML='';
+    document.getElementById('slCountDisplay').textContent='0';
+    document.getElementById('slTotalDisplay').textContent='';
+    return;
+  }
+  var q=document.getElementById('slSearch').value.toLowerCase();
+  var fFam=document.getElementById('slFamille').value;
+  var fRole=document.getElementById('slRoleF').value;
+  var fVille=document.getElementById('slVille').value;
+  var fProfil=document.getElementById('slProfil').value,fType=document.getElementById('slType').value;
+  var fExpMinRaw=document.getElementById('slExpMin').value,fExpMaxRaw=document.getElementById('slExpMax').value;
+  var fExpMin=fExpMinRaw!==''?parseInt(fExpMinRaw):0,fExpMax=fExpMaxRaw!==''?parseInt(fExpMaxRaw):99;
+  var fDip=document.getElementById('slDiplome').value;
+  var fContrat=document.getElementById('slContrat').value;
+  var fScoreMinRaw=document.getElementById('slScoreMin').value,fScoreMaxRaw=document.getElementById('slScoreMax').value;
+  var fScoreMin=fScoreMinRaw!==''?parseInt(fScoreMinRaw):0,fScoreMax=fScoreMaxRaw!==''?parseInt(fScoreMaxRaw):100;
+  var fOte=parseInt(document.getElementById('slOte').value)||0;
+  var fDispo=parseInt(document.getElementById('slDispo').value);
+  var sortBy=document.getElementById('slSortBy').value;
+  var src=all.filter(function(c){
+    if(!statusFilterState[candidateStatus[c.id]||'saved'])return false;
+    if(fFam&&c.famille!==fFam)return false;
+    if(fRole&&c.role_type!==fRole)return false;
+    if(fVille&&c.location!==fVille)return false;
+    if(fProfil&&c.profil_type!==fProfil)return false;
+    if(fType&&c.mode_vente!==fType)return false;
+    var expY=c.experience_years||0;
+    if(expY<fExpMin||expY>fExpMax)return false;
+    if(fDip&&c.diplome!==fDip)return false;
+    if(fContrat&&c.contract_type!==fContrat)return false;
+    if(c.score<fScoreMin||c.score>fScoreMax)return false;
+    if(fOte&&c.ote_max>fOte)return false;
+    if(fDispo<4&&dispoNum(c.availability)>fDispo)return false;
+    if(q){var hay=[c.name,c.famille,c.location,c.role_type,c.availability].join(' ').toLowerCase();if(!hay.includes(q))return false;}
+    return true;
+  });
+  if(sortBy==='score')src.sort(function(a,b){return b.score-a.score;});
+  else if(sortBy==='alpha')src.sort(function(a,b){return(a.name||'').localeCompare(b.name||'','fr');});
+  else if(sortBy==='dispo')src.sort(function(a,b){return dispoNum(a.availability)-dispoNum(b.availability);});
+  document.getElementById('slCountDisplay').textContent=src.length;
+  var denomEl=document.getElementById('slTotalDisplay');
+  denomEl.textContent=(src.length<total?' sur '+total+' shortlistés':' shortlisté'+(total>1?'s':''));
+  var bar=document.getElementById('slStatsBar');
+  if(src.length){
+    var avg=Math.round(src.reduce(function(s,c){return s+c.score;},0)/src.length);
+    var imm=src.filter(function(c){return c.availability==='Immédiat';}).length;
+    var gold=src.filter(function(c){return c.level==='GOLD';}).length;
+    bar.innerHTML=SI(src.length,'shortlistés')+SEP()+SI(avg,'score moyen')+SEP()+SI(imm,'dispo imm.')+SEP()+SI(gold,'GOLD');
+  }else{bar.innerHTML='';}
+  var container=document.getElementById('shortlistContent');
+  var emptyEl=document.getElementById('slEmpty');
+  if(!src.length){container.innerHTML='';emptyEl.style.display='block';return;}
+  emptyEl.style.display='none';
+  container.innerHTML='<div class="sl-list">'+src.map(function(c){
+    var name=c.name||'Anonyme',isVS=vsSelected.indexOf(c.id)>=0;
+    var levelLbl=c.level||'Non certifié';
+    return'<div class="sl-row'+(isVS?' vs-on':'')+'\">'
+      +'<div class="sl-avatar">'+(c.photo?'<img src="'+c.photo+'" alt="'+name+'">':'')+'</div>'
+      +'<div class="sl-info"><div class="sl-name">'+name+'</div>'
+      +'<div class="sl-meta">'+levelLbl+' · '+(c.famille||'—')+(c.location?' · '+c.location:'')+(c.availability?' · '+c.availability:'')+'</div>'
+      +(contactedAt[c.id]?'<div class="sl-contact-trace">✓ Contacté le '+fmtDateShort(contactedAt[c.id])+'</div>':'')
+      +'</div>'
+      +statusSelectHTML(c.id)
+      +fbBadgeHTML(c.id)
+      +'<div class="sl-score">'+c.score+'</div>'
+      +'<div class="sl-actions">'
+      +(c.email?'<button class="sl-btn contact" onclick="contactCandidate(\''+c.id+'\',\''+encodeURIComponent(c.email)+'\',\''+encodeURIComponent(name)+'\',this)">✉ Contacter</button>':'<button class="sl-btn contact" disabled title="Email non disponible pour ce profil">✉ Contacter</button>')
+      +'<button class="sl-btn vs'+(isVS?' on':'')+'" onclick="toggleVS(\''+c.id+'\',this)">'+(isVS?'✓ VS':'VS')+'</button>'
+      +'<a href="profil.html?id='+c.id+'" class="sl-btn view">Voir</a>'
+      +'<button class="sl-btn remove" onclick="removeFromActiveList(\''+c.id+'\')">✕</button>'
+      +'</div></div>';
+  }).join('')+'</div>';
+}
+
+function renderShortlist(){applyShortlistFilters();}
+
+function renderCard(c){
+  /* lc = classe CSS carte ; null-level → pas de classe niveau */
+  var lc=(c.level||'').toLowerCase();
+  var isSL=shortlistedIds.has(c.id),name=c.name||'Anonyme';
+  var dims4=[{lbl:'Accroche',val:c.stats.accroche,max:16},{lbl:'Découverte',val:c.stats.decouverte,max:16},{lbl:'Objections',val:c.stats.objections,max:16},{lbl:'Closing',val:c.stats.closing,max:16}].filter(function(d){return d.val>0;});
+  return'<div class="dash-card'+(lc?' '+lc:'')+'" onclick="goToProfile(\''+c.id+'\')">'
+    +'<div class="dash-card-portrait">'
+    +(c.photo?'<img src="'+c.photo+'" alt="'+name+'" loading="lazy"/>':'<div class="no-photo">👤</div>')
+    /* top-left : ville */
+    +(c.location?'<span class="location-tag">'+c.location+'</span>':'')
+    /* top-right : niveau — affiché seulement si certifié */
+    +(c.level?'<span class="level-stamp '+c.level+'">'+c.level+'</span>':'')
+    /* bottom-right : secteur */
+    +'<span class="family-tag">'+(c.famille||'—')+'</span>'
+    /* bottom-left : shortlist */
+    +'<button class="dc-shortlist-portrait'+(isSL?' on':'')+'" onclick="event.stopPropagation();toggleShortlist(\''+c.id+'\',this)">'+(isSL?'✓ SHORTLIST':'+ SHORTLIST')+'</button>'
+    +'</div>'
+    +'<div class="dash-card-body">'
+    +'<div class="dash-card-name">'+name+'</div>'
+    +'<div class="dash-card-meta">'+(c.role_type||'Sales')+' · '+(c.is_demo?'Profil démo':'Certifié')+'</div>'
+    +'<div class="dash-card-score">'+c.score+'<small>/100</small></div>'
+    +(dims4.length?'<div class="dash-card-dims">'+dims4.map(function(d){return'<div class="dim-mini"><span class="dim-mini-lbl">'+d.lbl+'</span><div class="dim-mini-bar"><i style="width:'+Math.round(d.val/d.max*100)+'%"></i></div><span class="dim-mini-val">'+d.val+'</span></div>';}).join('')+'</div>':'')
+    +'<div class="dash-card-footer"><a class="btn-see-profile" href="profil.html?id='+c.id+'" onclick="event.stopPropagation()">Voir le profil →</a></div>'
+    +'</div></div>';
+}
+
+function renderRow(c){
+  var lc=(c.level||'').toLowerCase(),name=c.name||'Anonyme';
+  var av=c.photo?'<img src="'+c.photo+'" alt="">':'<span>'+(name[0]||'?')+'</span>';
+  var isImm=c.availability==='Immédiat',oteStr=c.ote_max<999?c.ote_max+'k€':'—';
+  var isSL=shortlistedIds.has(c.id);
+  return'<div class="list-row" onclick="goToProfile(\''+c.id+'\')">'
+    +'<div class="lr-avatar">'+av+'</div>'
+    +'<div class="lr-name">'+name+'</div>'
+    +'<div class="lr-text">'+(c.role_type||'—')+'</div>'
+    +'<div class="lr-text">'+(c.profil_type||'—')+'</div>'
+    +'<div class="lr-text">'+(c.mode_vente||'—')+'</div>'
+    +'<div class="lr-text">'+(c.experience_years!=null?c.experience_years+' an'+(c.experience_years>1?'s':''):'—')+'</div>'
+    +'<div class="lr-text">'+(c.diplome||'—')+'</div>'
+    +'<div class="lr-text">'+(c.contract_type||'—')+'</div>'
+    +'<div><div class="lr-score'+(lc?' '+lc:'')+'">'+c.score+'</div><div class="lr-score-bar"><i style="width:'+c.score+'%"></i></div></div>'
+    +'<div class="lr-text">'+(c.famille||'—')+'</div>'
+    +'<div class="lr-text">'+(c.location||'—')+'</div>'
+    +'<div class="lr-text'+(isImm?' lr-dispo imm':'')+'">'+(c.availability||'—')+'</div>'
+    +'<div class="lr-ote">'+oteStr+'</div>'
+    +'<div class="lr-action" onclick="event.stopPropagation()">'
+    +'<a href="profil.html?id='+c.id+'">Voir</a>'
+    +'<button class="lr-sl-btn'+(isSL?' on':'')+'" onclick="toggleShortlist(\''+c.id+'\',this)">'+(isSL?'SHORTLIST ✓':'SHORTLIST +')+'</button>'
+    +'</div>'
+    +'</div>';
+}
+
+function goToProfile(id){
+  try{sessionStorage.setItem('SU_POOL',JSON.stringify(currentPoolIds));}catch(e){}
+  location.href='profil.html?id='+id;
+}
+
+document.getElementById('btnCards').addEventListener('click',function(){currentView='cards';this.classList.add('active');document.getElementById('btnList').classList.remove('active');applyFilters();});
+document.getElementById('btnList').addEventListener('click',function(){currentView='list';this.classList.add('active');document.getElementById('btnCards').classList.remove('active');applyFilters();});
+document.getElementById('searchInput').addEventListener('input',applyFilters);
+document.getElementById('sortBy').addEventListener('change',applyFilters);
+['fFamille','fRole','fVille','fProfil','fType','fDiplome','fContrat','fOte'].forEach(function(id){document.getElementById(id).addEventListener('change',applyFilters);});
+['fScoreMin','fScoreMax','fExpMin','fExpMax'].forEach(function(id){document.getElementById(id).addEventListener('input',applyFilters);});
+document.getElementById('fDispo').addEventListener('input',function(){document.getElementById('dispoVal').textContent='— '+DISPO_LABELS[parseInt(this.value)];applyFilters();});
+document.getElementById('resetFilters').addEventListener('click',function(){
+  ['fFamille','fRole','fVille','fProfil','fType','fDiplome','fContrat','fOte','fScoreMin','fScoreMax','fExpMin','fExpMax'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('sortBy').value='score';document.getElementById('fDispo').value=4;
+  document.getElementById('dispoVal').textContent='— toutes';document.getElementById('searchInput').value='';
+  colSort.key=null;colSort.dir=1;updateSortArrows();
+  applyFilters();
+});
+
+var colSort={key:null,dir:1};
+document.getElementById('listHeader').addEventListener('click',function(e){
+  var el=e.target.closest('.lh-sort');
+  if(!el)return;
+  var k=el.getAttribute('data-sort');
+  if(colSort.key===k){colSort.dir*=-1;}else{colSort.key=k;colSort.dir=1;}
+  updateSortArrows();
+  applyFilters();
+});
+function updateSortArrows(){
+  document.querySelectorAll('#listHeader .lh-sort').forEach(function(el){
+    var k=el.getAttribute('data-sort'),arrow=el.querySelector('.lh-arrow');
+    var active=k===colSort.key;
+    el.classList.toggle('active',active);
+    arrow.textContent=active?(colSort.dir>0?'▲':'▼'):'↕';
+  });
+}
+updateSortArrows();
